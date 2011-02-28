@@ -17,7 +17,7 @@ Setup your environment
   * Create a new project for the Beintoo SDK in your Eclipse workspace. 
   * Select __File__ -> __New__ -> __Project__, choose __Android Project__ (inside the Android folder), and then click __Next__.
   * Select "Create project from existing source".
-  * Select the __beintoo__ subdirectory from within the git repository. You should see the project properties populated (you might want to change the project name to something like "BeintooSDK").
+  * Select the __BeintooSDK__ subdirectory from within the git repository. You should see the project properties populated (you might want to change the project name to something like "BeintooSDK").
   * Click Finish to continue.
 
 The Beintoo SDK is now configured and ready to go.  
@@ -27,10 +27,10 @@ The Beintoo SDK is now configured and ready to go.
 Integrate with an existing application
 -----------
 
-To use Beintoo in your applications you you will need to add a reference to the BeintooSDK project. To do this open the properties window for your app (File -> Properties), select the Android item from the list, then press the Add... button in the Library area and select the Beintoo SDK project created above.
+To use Beintoo in your applications you you will need to add a reference to the BeintooSDK project. To do this open the properties window for your app (__File__ -> __Properties__), select the Android item from the list, then press the __Add…__ button in the Library area and select the Beintoo SDK project created above.
 
-Once the Beintoo SDK is referenced you need to modify the app manifest.xml 
-You need to add this permissions
+Once the Beintoo SDK is referenced you need to modify the app __manifest.xml__ 
+You need to add this __permissions__
 <code>
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -46,13 +46,13 @@ For example
 </code>
 Finally you have to add the gson framework which is included in the BeintooSDK directory
 
-To include gson Select your application project -> Properties -> Java build path -> Libraries -> Add External JARs and then select gson-1.6.jar in the BeintooSDK directory
+To include gson Select your application project then __Properties__ -> __Java build path__ -> __Libraries__ -> __Add External JARs__ and then select gson-1.6.jar in the BeintooSDK directory
 
 
 Start using Beintoo
 -----------
 
-First of all you need to set your apikey, for example you can do this in your first activity by calling 
+First of all you need to set your __apikey__, you can do this in your first activity by calling 
 <code>
 Beintoo.setApiKey("YOUR-API-KEY");
 </code>
