@@ -31,19 +31,21 @@ To use Beintoo in your applications you you will need to add a reference to the 
 
 Once the Beintoo SDK is referenced you need to modify the app __manifest.xml__ 
 You need to add this __permissions__
-<code>
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-</code>                        
+
+	<code>
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	</code>                        
+
 You need to edit the configuration in the manifest.xml of every activity where you will call the Beintoo.BeintooStart() method by adding
 android:configChanges="orientation|keyboardHidden"
 
 For example
-<code>
-<activity android:name="myMainAppActivity" android:configChanges="orientation|keyboardHidden">
-</code>
+	<code>
+	<activity android:name="myMainAppActivity" android:configChanges="orientation|keyboardHidden">
+	</code>
 Finally you have to add the gson framework which is included in the BeintooSDK directory
 
 To include gson Select your application project then __Properties__ -> __Java build path__ -> __Libraries__ -> __Add External JARs__ and then select __gson-1.6.jar__ in the BeintooSDK directory
@@ -53,32 +55,32 @@ Start using Beintoo
 -----------
 
 First of all you need to set your __apikey__, you can do this in your first activity by calling 
-<code>
-Beintoo.setApiKey("YOUR-API-KEY");
-</code>
+	<code>
+	Beintoo.setApiKey("YOUR-API-KEY");
+	</code>
 Now you can login your players to Beintoo by calling 
-<code>
-Beintoo.playerLogin(this);
-</code>
+	<code>
+	Beintoo.playerLogin(this);
+	</code>
 in your main activity
 
 You should also put a Beintoo button in your main activity where you will call 
-<code>
-Beintoo.BeintooStart(getContext());
-</code>
+	<code>
+	Beintoo.BeintooStart(getContext());
+	</code>
 this will start the main Beintoo app where your users will see Profile, Leaderboards, Challenges and Wallet
 
 If you want to submit a score to your players you have to call for example
-<code>
-Beintoo.submitScore(getContext(), score, true);
-</code>
+	<code>
+	Beintoo.submitScore(getContext(), score, true);
+	</code>
 Now for assign a Virtual Good to a player for example every 10 points you should do something like
-<code>
-PlayerScore p = Beintoo.getPlayerScore(getContext());
-if(p != null){
-   if(p.getBalance % 10 == 0){ // EVERY 10 POINTS WE SEND A REWARD 
-         Beintoo.GetVgood(ctx);
-   }
-}	
-</code>
+	<code>
+	PlayerScore p = Beintoo.getPlayerScore(getContext());
+	if(p != null){
+ 	  if(p.getBalance % 10 == 0){ // EVERY 10 POINTS WE SEND A REWARD 
+      	   Beintoo.GetVgood(ctx);
+   	}
+	}	
+	</code>
 
