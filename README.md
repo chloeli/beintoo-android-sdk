@@ -80,7 +80,7 @@ Now for assign a Virtual Good to a player for example every 10 points you should
 	if(p != null){
  	  if(p.getBalance % 10 == 0){ // EVERY 10 POINTS WE SEND A REWARD 
       	   Beintoo.GetVgood(ctx);
-   	}
+   	  }
 	}	
 	
 
