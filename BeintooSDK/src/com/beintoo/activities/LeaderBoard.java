@@ -39,6 +39,7 @@ import android.view.View.OnClickListener;
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -60,9 +61,10 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		currentContext = ctx;
 		usersExts = new ArrayList<String>();
 		usersNicks = new ArrayList<String>();
+		try{
+			loadLeadersByContestTable(); 
+		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
 		
-		loadLeadersByContestTable(); 
-			
 		Button close = (Button) findViewById(R.id.close);
 		BeButton b = new BeButton(ctx);
 		close.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));

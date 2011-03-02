@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -50,19 +51,19 @@ public class Challenges extends Dialog implements OnClickListener{
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.challenges);
 		current = this;
-		
-		challenge = new Gson().fromJson(PreferencesHandler.getString("challenge", getContext()), Challenge[].class);
-		if(challenge.length > 0)
-			loadChallenges();
-		else { // NO CHALLENGE REQUEST
-			TextView noChallenge = new TextView(getContext());
-			noChallenge.setText("You don't have any challenge request");
-			noChallenge.setTextColor(Color.GRAY);
-			noChallenge.setPadding(15,0,0,0);
-			TableLayout table = (TableLayout) findViewById(R.id.table);
-			table.addView(noChallenge);
-		}
-		
+		try{
+			challenge = new Gson().fromJson(PreferencesHandler.getString("challenge", getContext()), Challenge[].class);
+			if(challenge.length > 0)
+				loadChallenges();
+			else { // NO CHALLENGE REQUEST
+				TextView noChallenge = new TextView(getContext());
+				noChallenge.setText("You don't have any challenge request");
+				noChallenge.setTextColor(Color.GRAY);
+				noChallenge.setPadding(15,0,0,0);
+				TableLayout table = (TableLayout) findViewById(R.id.table);
+				table.addView(noChallenge);
+			}
+		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
 		
 		Button close = (Button) findViewById(R.id.close);
 		BeButton b = new BeButton(ctx);

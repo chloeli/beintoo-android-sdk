@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.beintoo.R;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooBrowser;
+import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Vgood;
@@ -47,17 +48,20 @@ public class Wallet extends Dialog implements OnClickListener{
 		setContentView(R.layout.wallet);
 		current = this;
 		
-		vgood = new Gson().fromJson(PreferencesHandler.getString("wallet", getContext()), Vgood[].class);
-		if(vgood.length > 0)
-			loadWallet();
-		else { // NO VGOODS SHOW A MESSAGE
-			TextView noGoods = new TextView(getContext());
-			noGoods.setText("You don't have any virtual goods");
-			noGoods.setTextColor(Color.GRAY);
-			noGoods.setPadding(20,0,0,0);						
-			TableLayout table = (TableLayout) findViewById(R.id.table);
-			table.addView(noGoods);
-		}
+		try {
+			vgood = new Gson().fromJson(PreferencesHandler.getString("wallet", getContext()), Vgood[].class);
+			if(vgood.length > 0)
+				loadWallet();
+			else { // NO VGOODS SHOW A MESSAGE
+				TextView noGoods = new TextView(getContext());
+				noGoods.setText("You don't have any virtual goods");
+				noGoods.setTextColor(Color.GRAY);
+				noGoods.setPadding(20,0,0,0);						
+				TableLayout table = (TableLayout) findViewById(R.id.table);
+				table.addView(noGoods);
+			}
+		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
+		
 		Button close = (Button) findViewById(R.id.close);
 		BeButton b = new BeButton(ctx);
 		close.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));	    

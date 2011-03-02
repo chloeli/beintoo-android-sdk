@@ -18,7 +18,6 @@ package com.beintoo.main;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.activities.VGoodGetDialog;
 import com.beintoo.activities.tryBeintoo;
-import com.beintoo.beintoosdk.BeintooConnection;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
@@ -80,39 +79,39 @@ public class Beintoo{
 		// AVOID BAD LOGIN
 		if(isLogged == true && (savedPlayer == null || savedPlayer == "")) logout(ctx);
 			
-		if(BeintooConnection.isOnline(ctx)){ // CHECK THE CONNECTION
-				try{
-					if(isLogged == true && currentPlayer.getUser() != null){
-						final ProgressDialog  dialog = ProgressDialog.show(ctx, "", "Loading Beintoo...",true);
-						Thread t = new Thread(new Runnable(){     					
-		            		public void run(){ 
-		            			try{   	
-									BeintooPlayer player = new BeintooPlayer();
-									// DEBUG
-									DebugUtility.showLog("current saved player: "+PreferencesHandler.getString("currentPlayer", ctx));				
-									// LOGIN TO BEINTOO
-									Player newPlayer = player.playerLogin(currentPlayer.getUser().getId(),null,DeviceId.getUniqueDeviceId(ctx),null, null);
-									// GO HOME
-									if(newPlayer.getUser().getId() != null){				
-										PreferencesHandler.saveString("currentPlayer", gson.toJson(newPlayer), ctx);
-										UIhandler.sendEmptyMessage(GO_HOME);
-									}
-		            			}catch (Exception e ){
-		            			}
-		            			dialog.dismiss();
-		            		}
-						});
-						t.start();
-				
-					}else{
-							tryBeintoo tryBe = new tryBeintoo(ctx);
-							currentDialog = tryBe;
-							tryBe.show();
-							//Intent myIntent = new Intent(currentContext, BeintooActivity.class).putExtra("currentDialog", 1);
-							//currentContext.startActivity(myIntent);
-					}
-				}catch (Exception e ){e.printStackTrace();}
-		}else ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);
+		
+		try{
+			if(isLogged == true && currentPlayer.getUser() != null){
+				final ProgressDialog  dialog = ProgressDialog.show(ctx, "", "Loading Beintoo...",true);
+				Thread t = new Thread(new Runnable(){     					
+            		public void run(){ 
+            			try{   	
+							BeintooPlayer player = new BeintooPlayer();
+							// DEBUG
+							DebugUtility.showLog("current saved player: "+PreferencesHandler.getString("currentPlayer", ctx));				
+							// LOGIN TO BEINTOO
+							Player newPlayer = player.playerLogin(currentPlayer.getUser().getId(),null,DeviceId.getUniqueDeviceId(ctx),null, null);
+							// GO HOME
+							if(newPlayer.getUser().getId() != null){				
+								PreferencesHandler.saveString("currentPlayer", gson.toJson(newPlayer), ctx);
+								UIhandler.sendEmptyMessage(GO_HOME);
+							}
+            			}catch (Exception e ){
+            			}
+            			dialog.dismiss();
+            		}
+				});
+				t.start();
+		
+			}else{
+					tryBeintoo tryBe = new tryBeintoo(ctx);
+					currentDialog = tryBe;
+					tryBe.show();
+					//Intent myIntent = new Intent(currentContext, BeintooActivity.class).putExtra("currentDialog", 1);
+					//currentContext.startActivity(myIntent);
+			}
+		}catch (Exception e ){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
+
 		
 	}
 	
@@ -211,7 +210,8 @@ public class Beintoo{
 	    				msg.what = SUBMITSCORE_POPUP;
 	    				
 			        	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
-			        	if(LocationManagerUtils.isProviderSupported("network", locationManager)){
+			        	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
+			        			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
 							final LocationListener locationListener = new LocationListener() {
 							    public void onLocationChanged(Location location) {		 
 									// SUBMIT SCORE WITH COORDS
@@ -308,7 +308,9 @@ public class Beintoo{
 					final BeintooVgood vgoodHand = new BeintooVgood();
 					
 	            	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
-	            	if(LocationManagerUtils.isProviderSupported("network", locationManager)){
+	            	
+	            	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
+	            			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
 	    				final LocationListener locationListener = new LocationListener() {
 	    				    public void onLocationChanged(Location location) {	
 	    				    	locationManager.removeUpdates(this);

@@ -143,5 +143,25 @@ public class BeintooUser {
 	public Challenge[] challenge (String userExtFrom, String userExtTo, String action){
 		return challenge (userExtFrom, userExtTo, action, null);
 	}
+	
+	public User[] getUserFriends(String userExt, String codeID){
+		String apiUrl = apiPreUrl+"user/friend/"+userExt;
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		
+		Gson gson = new Gson();
+		
+		User [] user = gson.fromJson(json, User[].class);
+		
+		return user;
+		
+	}
 
 }

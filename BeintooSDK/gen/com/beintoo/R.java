@@ -70,14 +70,14 @@ public final class R {
         public static final int beintoobar=0x7f060002;
         public static final int beintoogoodmsg=0x7f06003a;
         public static final int buttonsll=0x7f060016;
-        public static final int challengesbt=0x7f060020;
+        public static final int challengesbt=0x7f060021;
         public static final int close=0x7f060008;
         public static final int closebrowser=0x7f060003;
         public static final int closevgood=0x7f060039;
         public static final int contentgood=0x7f06003b;
         public static final int contentprofile=0x7f06000d;
         public static final int contests=0x7f06002c;
-        public static final int contesttw=0x7f060022;
+        public static final int contesttw=0x7f06001a;
         public static final int convll=0x7f06002e;
         public static final int couponname=0x7f06003f;
         public static final int endate=0x7f060041;
@@ -95,7 +95,7 @@ public final class R {
         public static final int layoutbottom=0x7f060012;
         public static final int layouttop=0x7f060030;
         public static final int leaderbar=0x7f060014;
-        public static final int leaderboardbt=0x7f06001e;
+        public static final int leaderboardbt=0x7f06001f;
         public static final int leaders=0x7f060015;
         public static final int level=0x7f060029;
         public static final int linearLayout1=0x7f060001;
@@ -107,13 +107,13 @@ public final class R {
         public static final int main=0x7f060031;
         public static final int maincontainer=0x7f060000;
         public static final int myScroll=0x7f060007;
-        public static final int myTableLayout=0x7f06001c;
+        public static final int myTableLayout=0x7f06001d;
         public static final int newuser=0x7f060027;
         public static final int nickdate=0x7f06003e;
-        public static final int nickname=0x7f06001b;
+        public static final int nickname=0x7f06001c;
         public static final int nothanksbt=0x7f060035;
         public static final int password=0x7f060024;
-        public static final int profilebt=0x7f06001d;
+        public static final int profilebt=0x7f06001e;
         public static final int profilepict=0x7f060028;
         public static final int progress=0x7f060005;
         public static final int relativeLayout1=0x7f060004;
@@ -129,23 +129,24 @@ public final class R {
         public static final int trymessage=0x7f060033;
         public static final int usersTableLayout=0x7f060037;
         public static final int vgoodpict=0x7f06003d;
-        public static final int walletbt=0x7f06001f;
+        public static final int walletbt=0x7f060020;
         public static final int webview=0x7f060006;
-        public static final int welcome=0x7f06001a;
-        public static final int www=0x7f060021;
+        public static final int welcome=0x7f06001b;
+        public static final int www=0x7f060022;
     }
     public static final class layout {
         public static final int browser=0x7f030000;
         public static final int challenges=0x7f030001;
         public static final int contestselection=0x7f030002;
-        public static final int homeb=0x7f030003;
-        public static final int leaderboard=0x7f030004;
-        public static final int login=0x7f030005;
-        public static final int profileb=0x7f030006;
-        public static final int trybeintoo=0x7f030007;
-        public static final int userselection=0x7f030008;
-        public static final int vgood=0x7f030009;
-        public static final int wallet=0x7f03000a;
+        public static final int friendlist=0x7f030003;
+        public static final int homeb=0x7f030004;
+        public static final int leaderboard=0x7f030005;
+        public static final int login=0x7f030006;
+        public static final int profileb=0x7f030007;
+        public static final int trybeintoo=0x7f030008;
+        public static final int userselection=0x7f030009;
+        public static final int vgood=0x7f03000a;
+        public static final int wallet=0x7f03000b;
     }
     public static final class style {
         public static final int ThemeBeintoo=0x7f050001;

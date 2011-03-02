@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooApp;
+import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.EntryCouplePlayer;
@@ -54,7 +55,9 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 		setContentView(R.layout.contestselection);
 		current = this;
 		currentContext = ctx;
-		loadContestTable(); 
+		try {
+			loadContestTable();
+		}catch(Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}	
 	 
 		
 		Button general = (Button) findViewById(R.id.generaleader);
