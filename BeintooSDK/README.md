@@ -35,8 +35,7 @@ You need to add this __permissions__
 	
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	                        
 
 You need to edit the configuration in the manifest.xml of every activity where you will call the Beintoo.BeintooStart() method by adding
