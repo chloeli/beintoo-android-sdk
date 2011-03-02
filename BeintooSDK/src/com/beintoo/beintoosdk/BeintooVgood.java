@@ -18,6 +18,7 @@ package com.beintoo.beintoosdk;
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 
+import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.Vgood;
 import com.google.gson.Gson;
 
@@ -97,6 +98,28 @@ public class BeintooVgood {
 		
 		return vgood;
 		
+	}
+	
+	public Message sendAsAGift (String vgoodExt, String userExt, String userExt_to, String codeID){
+			
+		String apiUrl = apiPreUrl+"vgood/sendasgift/"+vgoodExt+"/"+userExt+"/"+userExt_to;
+	
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		Gson gson = new Gson();
+		
+		Message msg = gson.fromJson(json, Message.class);
+		
+		return msg;	
 	}
 
 }

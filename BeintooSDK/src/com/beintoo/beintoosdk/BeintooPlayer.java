@@ -16,6 +16,7 @@
 package com.beintoo.beintoosdk;
 
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
+import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.Player;
@@ -44,7 +45,7 @@ public class BeintooPlayer {
 	 * @return return a json object of the logged in player
 	 */
 	public Player playerLogin(String userExt, String guid, String codeID, String deviceUUID, String language, String publicname) {
-		
+		DebugUtility.showLog("DEVICE ID:"+deviceUUID);
 		String apiUrl = apiPreUrl+"player/login?";
 		
 		if(language != null) apiUrl = apiUrl  + "language="+language;
@@ -80,26 +81,6 @@ public class BeintooPlayer {
 		pla = gson.fromJson(json, Player.class);
 		
 		return pla;
-	}
-	
-	public Player playerLogin(String userExt, String codeID, String deviceUUID, String language, String publicname){
-		return playerLogin(userExt, null, null, null, null, null);
-	}
-	
-	public Player playerLogin(String userExt) {
-		return playerLogin(userExt, null, null, null, null, null);
-	}
-	
-	public Player playerLogin(String userExt, String codeID) {
-		return playerLogin(userExt, null, codeID, null, null, null);
-	}
-	
-	public Player playerLogin(String userExt, String codeID, String deviceUUID) {
-		return playerLogin(userExt, null, codeID, deviceUUID, null, null);
-	}
-		
-	public Player playerLogin(String userExt, String codeID, String deviceUUID, String language) {
-		return playerLogin(userExt, null, codeID, deviceUUID, language, null);
 	}
 	
 	/**

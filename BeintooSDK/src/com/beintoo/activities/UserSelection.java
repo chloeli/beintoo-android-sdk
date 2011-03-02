@@ -175,7 +175,7 @@ public class UserSelection extends Dialog implements OnClickListener{
 					
 					String userExt = users[selectedRow].getId();
 					BeintooPlayer player = new BeintooPlayer();
-					Player newPlayer = player.playerLogin(userExt,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
+					Player newPlayer = player.playerLogin(userExt,null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
 					String jsonPlayer = gson.toJson(newPlayer);
 					
 					// SAVE THE CURRENT PLAYER

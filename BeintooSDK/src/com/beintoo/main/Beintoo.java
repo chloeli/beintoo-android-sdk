@@ -53,7 +53,7 @@ public class Beintoo{
 	
 	public static Dialog currentDialog = null;
 	public static Dialog homeDialog = null;
-	
+	public static Vgood vgood = null;
 	/**
 	 * Set the developer apikey
 	 * 
@@ -90,7 +90,7 @@ public class Beintoo{
 							// DEBUG
 							DebugUtility.showLog("current saved player: "+PreferencesHandler.getString("currentPlayer", ctx));				
 							// LOGIN TO BEINTOO
-							Player newPlayer = player.playerLogin(currentPlayer.getUser().getId(),null,DeviceId.getUniqueDeviceId(ctx),null, null);
+							Player newPlayer = player.playerLogin(currentPlayer.getUser().getId(),null,null,DeviceId.getUniqueDeviceId(ctx),null, null);
 							// GO HOME
 							if(newPlayer.getUser().getId() != null){				
 								PreferencesHandler.saveString("currentPlayer", gson.toJson(newPlayer), ctx);
@@ -124,14 +124,51 @@ public class Beintoo{
 	
 	public static void GetVgood(final Context ctx){
 		currentContext = ctx;	
-		new Thread(new Runnable(){     					
-    		public void run(){
-    			try{
-    				UIhandler.sendEmptyMessage(GET_VGOOD);
-    			}catch (Exception e){
-    			}	
-    		}
-		}).start();	
+		final Player currentPlayer = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));
+		final BeintooVgood vgoodHand = new BeintooVgood();
+		
+    	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
+    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
+    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+			final LocationListener locationListener = new LocationListener() {
+			    public void onLocationChanged(Location location) {
+			    	locationManager.removeUpdates(this);
+			    	final Location l = location;
+			    	new Thread(new Runnable(){     					
+			    		public void run(){
+			    			try{			    				    	
+	    						// GET A VGOOD WITH COORDINATES
+	    				    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
+	    								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);    						 
+	    				    	if(vgood.getName() != null){
+	    				    		UIhandler.sendEmptyMessage(GET_VGOOD);
+	    				    	}
+			    			}catch(Exception e){ e.printStackTrace();}
+			    		}
+					}).start();	
+			    }
+				public void onProviderDisabled(String provider) {}
+
+				public void onProviderEnabled(String provider) {}
+
+				public void onStatusChanged(String provider,int status, Bundle extras) {  }
+			};   
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener); //NETWORK_PROVIDER
+    	}else {
+    		new Thread(new Runnable(){     					
+	    		public void run(){
+	    			try{			
+	            		// GET A VGOOD WITHOUT COORDINATES
+				    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, null, 
+								null, null, false);   				    	
+	            		if(vgood.getName() != null){
+	            			UIhandler.sendEmptyMessage(GET_VGOOD);
+				    	}
+	    			}catch(Exception e){e.printStackTrace();}
+	    		}
+			}).start();			
+    	}
+    			
 	}
 	
 	/**
@@ -158,7 +195,7 @@ public class Beintoo{
     					loginPlayer = player.playerLogin(null,loggedUser.getGuid(),null,
         						DeviceId.getUniqueDeviceId(currentContext),null, null);
     				}else{ // PLAYER HAS A REGISTERED USER
-    					loginPlayer = player.playerLogin(loggedUser.getUser().getId(),null,
+    					loginPlayer = player.playerLogin(loggedUser.getUser().getId(),null,null,
         						DeviceId.getUniqueDeviceId(currentContext),null, null);
     				} 
     				PreferencesHandler.saveString("currentPlayer", gson.toJson(loginPlayer), ctx);
@@ -302,49 +339,10 @@ public class Beintoo{
 	            	//Intent myIntent = new Intent(currentContext, BeintooActivity.class).putExtra("currentDialog", 2);
 	            	//currentContext.startActivity(myIntent);
 	            break;
-	            case GET_VGOOD: // GET A VGOOD (GET_VGOOD)	  
-	            	
-            		final Player currentPlayer = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));
-					final BeintooVgood vgoodHand = new BeintooVgood();
-					
-	            	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
-	            	
-	            	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
-	            			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-	    				final LocationListener locationListener = new LocationListener() {
-	    				    public void onLocationChanged(Location location) {	
-	    				    	locationManager.removeUpdates(this);
-	    						// GET A VGOOD WITH COORDINATES
-	    				    	Vgood vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, Double.toString(location.getLatitude()), 
-	    								Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), false);    						
-	    				    	
-	    				    	if(vgood.getName() != null){
-	    				    		VGoodGetDialog getVgood = new VGoodGetDialog(currentContext, vgood);
-	    				    		currentDialog = getVgood;
-	    		    				getVgood.show();
-	    				    	}
-	    				    }
-							public void onProviderDisabled(String provider) {}
-	
-							public void onProviderEnabled(String provider) {}
-	
-							public void onStatusChanged(String provider,int status, Bundle extras) {  }
-	    				};   
-	    				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener); //NETWORK_PROVIDER
-	            	}else {
-	            		// GET A VGOOD WITH COORDINATES
-				    	Vgood vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, null, 
-								null, null, false);   
-				    	
-	            		if(vgood.getName() != null){
-				    		VGoodGetDialog getVgood = new VGoodGetDialog(currentContext, vgood);
-				    		currentDialog = getVgood;
-		    				getVgood.show();
-				    	}
-	            	}
-	            	
-	            	//Location location = (Location) msg.getData().getParcelable("location");
-	            	//System.out.println("Location dall'Handler "+location);	            	
+	            case GET_VGOOD: // GET A VGOOD (GET_VGOOD)
+	            	VGoodGetDialog getVgood = new VGoodGetDialog(currentContext, vgood);
+		    		currentDialog = getVgood;
+    				getVgood.show();	            	
 	            break;
 	            case LOGIN_MESSAGE:	            	
 	            	MessageDisplayer.showMessage(currentContext, msg.getData().getString("Message"));

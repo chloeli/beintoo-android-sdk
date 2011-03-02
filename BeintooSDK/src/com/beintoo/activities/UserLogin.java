@@ -79,9 +79,9 @@ public class UserLogin extends Dialog{
 		    				DebugUtility.showLog("Logged player before new "+currentPlayer);
 		    				
 		    				if(loggedUser == null || loggedUser.getUser() != null) // GET A NEW RANDOM PLAYER
-		    					newPlayer = player.playerLogin(null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
+		    					newPlayer = player.playerLogin(null,null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
 		    				else // USE THE CURRENT SAVE PLAYER 
-		    					newPlayer = player.playerLogin(null,loggedUser.getGuid(),DeviceId.getUniqueDeviceId(getContext()),null, null, null);
+		    					newPlayer = player.playerLogin(null,loggedUser.getGuid(),null,DeviceId.getUniqueDeviceId(getContext()), null, null);
 		    				
 							if(newPlayer.getGuid() != null){
 								String signupUrl = "http://www.beintoo.com/connect.html?" +
@@ -133,7 +133,7 @@ public class UserLogin extends Dialog{
 								ErrorDisplayer.showConnectionErrorOnThread("Wrong username or password", getContext());								
 							}else {// PLAYERLOGIN AND THEN CLOSE THE LOGIN FORM AND GO HOME
 								BeintooPlayer player = new BeintooPlayer();
-								Player newPlayer = player.playerLogin(loggedUser.getId(),null,DeviceId.getUniqueDeviceId(getContext()),null, null);
+								Player newPlayer = player.playerLogin(loggedUser.getId(),null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
 								Gson gson = new Gson();					
 								String jsonPlayer = gson.toJson(newPlayer);
 								 
@@ -156,6 +156,7 @@ public class UserLogin extends Dialog{
         });
 		
 		Button fblogin = (Button) findViewById(R.id.fblogin);
+		fblogin.setBackgroundDrawable(b.setPressedBg(R.drawable.facebook, R.drawable.facebook_h, R.drawable.facebook_h));
 		fblogin.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {								
 				String loginUrl = "http://www.beintoo.com/connect.html?signup=facebook&apikey="
