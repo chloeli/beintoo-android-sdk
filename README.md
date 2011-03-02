@@ -14,11 +14,11 @@ Setup your environment
 
 3. The Beintoo Android SDK works fine in any Android development environment. To build in Eclipse:
 
-* Create a new project for the Beintoo SDK in your Eclipse workspace. 
-* Select __File__ -> __New__ -> __Project__, choose __Android Project__ (inside the Android folder), and then click __Next__.
-* Select "Create project from existing source".
-* Select the __BeintooSDK__ subdirectory from within the git repository. You should see the project properties populated (you might want to change the project name to something like "BeintooSDK").
-* Click Finish to continue.
+	* Create a new project for the Beintoo SDK in your Eclipse workspace. 
+	* Select __File__ -> __New__ -> __Project__, choose __Android Project__ (inside the Android folder), and then click __Next__.
+	* Select "Create project from existing source".
+	* Select the __BeintooSDK__ subdirectory from within the git repository. You should see the project properties populated (you might want to change the project name to something like "BeintooSDK").
+	* Click Finish to continue.
 
 The Beintoo SDK is now configured and ready to go.  
 
