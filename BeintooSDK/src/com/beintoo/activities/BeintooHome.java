@@ -165,18 +165,31 @@ public class BeintooHome extends Dialog {
 		
 	}
 	
+	/**
+	 * Returns the nickname of the current logged in player
+	 * @return
+	 */
 	public String getCurrentPlayerNickname () {
 		Gson gson = new Gson();
 		Player player = gson.fromJson(getCurrentPlayer(), Player.class);
 		return player.getUser().getNickname();		
 	}
 	
-
-
+	/**
+	 *  Returns the current logged in Player in json
+	 */
 	public String getCurrentPlayer () {		
 		return PreferencesHandler.getString("currentPlayer", getContext());		
 	}
 	
+	
+	/**
+	 * This Handler open this listed Dialogs:
+	 * 	Profile
+	 * 	Leaderboard
+	 * 	Challenges
+	 * 	Wallet
+	 */
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {

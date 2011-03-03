@@ -65,9 +65,9 @@ public class Beintoo{
 	
 	/** 
 	 * Starts the Beintoo Main app where the user can login into Beintoo
-	 * and manage their goods, profile, leaderboard ecc. 
+	 * and manage their goods, profile, leaderboard etc. 
 	 * 
-	 * @param ctx current context
+	 * @param ctx current Context
 	 */
 	public static void BeintooStart(final Context ctx){
 		currentContext = ctx;
@@ -116,10 +116,10 @@ public class Beintoo{
 	}
 	
 	/**
-	 * Send a Vgood to the user it runs in background on a thread 
-	 * because it retrieves the user location and do a playerlogin
+	 * Send a Vgood to the user it runs in background on a thread. 
+	 * It retrieves the user location used to find a Vgood in nearby 
 	 * 
-	 * @param ctx current context
+	 * @param ctx current Context
 	 */
 	
 	public static void GetVgood(final Context ctx){
@@ -172,9 +172,9 @@ public class Beintoo{
 	}
 	
 	/**
-	 * Do a player login and save the player data to sharedPreferences 
+	 * Do a player login and save player data 
 	 * 
-	 * @param ctx current context
+	 * @param ctx current Context
 	 */
 	
 	public static void playerLogin(final Context ctx){
@@ -221,10 +221,11 @@ public class Beintoo{
 	/**
 	 * Submit user score 
 	 * 
+	 * @param ctx the current Context
 	 * @param lastScore the score to submit
 	 * @param balance the total user score balance (used in performance apps)
-	 * @param codeID the codeID a string that represents the position in your code.
-	 * @param ctx the current context
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @param showNotification if true it will show a notification to the user when receive a submit score 
 	 */
 	public static void submitScore(Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification){
 		final BeintooPlayer player = new BeintooPlayer();
@@ -336,8 +337,6 @@ public class Beintoo{
 	            	BeintooHome beintooHome = new BeintooHome(currentContext);
 	            	currentDialog = beintooHome;
 					beintooHome.show();
-	            	//Intent myIntent = new Intent(currentContext, BeintooActivity.class).putExtra("currentDialog", 2);
-	            	//currentContext.startActivity(myIntent);
 	            break;
 	            case GET_VGOOD: // GET A VGOOD (GET_VGOOD)
 	            	VGoodGetDialog getVgood = new VGoodGetDialog(currentContext, vgood);

@@ -76,7 +76,7 @@ public class BeintooVgood {
 	 * 
 	 * @param userExt usr_ext unique identifier
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
-	 * @return a json object with all the vgood earned by the user
+	 * @return a Vgood object array
 	 */
 	public Vgood [] showByUser(String userExt, String codeID){
 		String apiUrl = apiPreUrl+"vgood/show/byuser/"+userExt;
@@ -100,6 +100,15 @@ public class BeintooVgood {
 		
 	}
 	
+	/**
+	 * Send a Vgood as a gift from a user to another user
+	 * 
+	 * @param vgoodExt the vgood id 
+	 * @param userExt the user id of the gift sender
+	 * @param userExt_to the user id of the gift sender
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return a Message object with the status of the sendAsAgift operation
+	 */
 	public Message sendAsAGift (String vgoodExt, String userExt, String userExt_to, String codeID){
 			
 		String apiUrl = apiPreUrl+"vgood/sendasgift/"+vgoodExt+"/"+userExt+"/"+userExt_to;

@@ -144,6 +144,14 @@ public class BeintooUser {
 		return challenge (userExtFrom, userExtTo, action, null);
 	}
 	
+	
+	/**
+	 * Get friends of a given user
+	 *  
+	 * @param userExt requested user
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature
+	 * @return an array of Users
+	 */
 	public User[] getUserFriends(String userExt, String codeID){
 		String apiUrl = apiPreUrl+"user/friend/"+userExt;
 		HeaderParams header = new HeaderParams();
