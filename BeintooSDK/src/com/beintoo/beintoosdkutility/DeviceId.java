@@ -20,6 +20,8 @@ import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.UUID;
 
+import com.beintoo.beintoosdk.DeveloperConfiguration;
+
 import android.content.Context;
 import android.telephony.TelephonyManager;
 
@@ -27,15 +29,20 @@ import android.telephony.TelephonyManager;
 public class DeviceId {	
 	public static String getUniqueDeviceId(Context context){		
 	    final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-	    final String tmDevice, tmSerial, androidId;
+	    String tmDevice, tmSerial,androidId = null;
+	    
 	    tmDevice = "" + tm.getDeviceId();
 	    tmSerial = "" + tm.getSimSerialNumber();
-	    androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+	    androidId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
-	    UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
-	    String deviceId = deviceUuid.toString();
-	      
-		return deviceId;
+	    // LET'S CHECK IF WE ARE IN THE ANDROID SIMULATOR TO PREVENT SAME DEVICEID FOR EVERY DEVELOPER
+	    if(androidId == null){
+	    	return toSHA1(DeveloperConfiguration.apiKey);
+	    }else {
+	    	UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());	    
+	    	String deviceId = deviceUuid.toString();
+	    	return deviceId;
+	    }	
 	}
 	
 	public static String getRandomIdentifier(){
