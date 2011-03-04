@@ -15,8 +15,6 @@
  ******************************************************************************/
 package com.beintoo.beintoosdkutility;
 
-import java.util.Map;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 
