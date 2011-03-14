@@ -19,8 +19,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
+
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -40,10 +41,11 @@ public class BeintooConnection {
 	 * @param get get params (NOT USED)
 	 * @return the json object returned by the api
 	 */
-	public String httpRequest(String apiurl,HeaderParams header,GetParams get){
+	public String httpRequest(String apiurl,HeaderParams header,GetParams get, boolean isPost){
 		// DEBUG
 		DebugUtility.showLog(apiurl);
 		URL url;
+		//URLConnection postUrlConnection;
 		try {
 			String getParams = "";
 			
@@ -54,11 +56,10 @@ public class BeintooConnection {
 					else
 						getParams = "&"+get.getKey().get(i)+"="+get.getValue().get(i);
 				}
-			
 			url = new URL(apiurl+getParams);
-			
-			URLConnection postUrlConnection = url.openConnection();
-	
+			HttpURLConnection postUrlConnection = (HttpURLConnection) url.openConnection();
+			if(isPost)
+				postUrlConnection.setRequestMethod("POST");
 			postUrlConnection.setUseCaches(false);
 			for(int i = 0; i<header.getKey().size(); i++){
 				postUrlConnection.setRequestProperty(header.getKey().get(i),header.getValue().get(i));
@@ -79,10 +80,14 @@ public class BeintooConnection {
 			
 			return jsonString;
 			
-		} catch (IOException e) {
+		} catch (IOException e) {			
 			e.printStackTrace();
-			return "";
+			return "{\"messageID\":0,\"message\":\"ERROR\",\"kind\":\"message\"}";
 		}
+	}
+	
+	public String httpRequest(String apiurl,HeaderParams header,GetParams get){
+		return httpRequest(apiurl, header, get, false);
 	}
 	
 	/**

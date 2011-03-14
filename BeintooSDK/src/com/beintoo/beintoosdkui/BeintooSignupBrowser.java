@@ -118,7 +118,7 @@ public class BeintooSignupBrowser extends Dialog {
 			}
 		});
 
-		Button close = (Button) findViewById(R.id.closebrowser);
+		Button close = (Button) findViewById(R.id.close);
 		BeButton b = new BeButton(ctx);
 		close.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));
 		close.setOnClickListener(new Button.OnClickListener(){

@@ -36,6 +36,7 @@ public class ChallengeOverview extends Dialog{
 				
 				LinearLayout frompict = (LinearLayout) findViewById(R.id.frompict);
 				LoaderImageView from = new LoaderImageView(getContext(),reqChallenge.getPlayerFrom().getUser().getUserimg(),70,70);
+				
 				frompict.addView(from);
 				
 				LinearLayout topict = (LinearLayout) findViewById(R.id.topict);

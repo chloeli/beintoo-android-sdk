@@ -15,7 +15,11 @@
  ******************************************************************************/
 package com.beintoo.activities;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -31,6 +35,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+
 import com.beintoo.R;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooBrowser;
@@ -41,8 +46,9 @@ import com.beintoo.wrappers.Vgood;
 import com.google.gson.Gson;
 
 public class Wallet extends Dialog implements OnClickListener{
-	Dialog current;
+	static Dialog current;
 	Vgood [] vgood;
+
 	public Wallet(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.wallet);
@@ -121,10 +127,17 @@ public class Wallet extends Dialog implements OnClickListener{
 		  nameView.setTypeface(null,Typeface.BOLD);
 		  nameView.setMaxWidth(50);
 		  TextView enddate = new TextView(activity);
-		  enddate.setText("End date:\n"+end);
-		  enddate.setTextSize(12);
-		  enddate.setPadding(5, 0, 0, 0);
-		  enddate.setTextColor(Color.parseColor("#787A77"));
+		  try { // try catch for SimpleDateFormat parse
+			  SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss"); 
+			  curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));
+			  Date endDate = curFormater.parse(end);
+			  curFormater.setTimeZone(TimeZone.getDefault());
+			  
+			  enddate.setText("End date:\n"+DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT).format(endDate));
+			  enddate.setTextSize(12);
+			  enddate.setPadding(5, 0, 0, 0);
+			  enddate.setTextColor(Color.parseColor("#787A77"));
+		  } catch (Exception e){}
 		  
 		  row.addView(image);
 		  main.addView(nameView);

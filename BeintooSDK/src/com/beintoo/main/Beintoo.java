@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.beintoo.main;
 
+
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.activities.VGoodGetDialog;
 import com.beintoo.activities.tryBeintoo;
@@ -79,7 +80,6 @@ public class Beintoo{
 		
 		// AVOID BAD LOGIN
 		if(isLogged == true && (savedPlayer == null || savedPlayer == "")) logout(ctx);
-			
 		
 		try{
 			if(isLogged == true && currentPlayer.getUser() != null){
@@ -89,15 +89,17 @@ public class Beintoo{
             			try{   	
 							BeintooPlayer player = new BeintooPlayer();
 							// DEBUG
-							DebugUtility.showLog("current saved player: "+PreferencesHandler.getString("currentPlayer", ctx));				
+							DebugUtility.showLog("current saved player: "+PreferencesHandler.getString("currentPlayer", ctx));											
 							// LOGIN TO BEINTOO
 							Player newPlayer = player.playerLogin(currentPlayer.getUser().getId(),null,null,DeviceId.getUniqueDeviceId(ctx),null, null);
-							// GO HOME
 							if(newPlayer.getUser().getId() != null){				
 								PreferencesHandler.saveString("currentPlayer", gson.toJson(newPlayer), ctx);
+								// GO HOME
 								UIhandler.sendEmptyMessage(GO_HOME);
-							}
+							}							
             			}catch (Exception e ){
+            				dialog.dismiss();
+            				ErrorDisplayer.showConnectionErrorOnThread(ErrorDisplayer.CONN_ERROR, ctx);
             			}
             			dialog.dismiss();
             		}
@@ -108,8 +110,6 @@ public class Beintoo{
 					tryBeintoo tryBe = new tryBeintoo(ctx);
 					currentDialog = tryBe;
 					tryBe.show();
-					//Intent myIntent = new Intent(currentContext, BeintooActivity.class).putExtra("currentDialog", 1);
-					//currentContext.startActivity(myIntent);
 			}
 		}catch (Exception e ){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
 
@@ -171,25 +171,6 @@ public class Beintoo{
     			
 	}
 	
-	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold){
-		try{
-			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
-			String key = currentPlayer.getGuid()+":count";
-			
-			int currentTempScore = PreferencesHandler.getInt(key, ctx);
-			currentTempScore+=score;
-			
-			submitScore(ctx, score, -1, null, true);
-			
-			if(currentTempScore >= treshold) { // THE USER REACHED THE DEVELOPER TRESHOLD SEND VGOOD AND SAVE THE REST
-				PreferencesHandler.saveInt(key, currentTempScore-treshold, ctx);
-				GetVgood(ctx);
-			}else{
-				PreferencesHandler.saveInt(key, currentTempScore, ctx);
-			}
-		
-		}catch(Exception e){e.printStackTrace();}
-	}
 	
 	/**
 	 * Do a player login and save player data 
@@ -217,10 +198,12 @@ public class Beintoo{
     					loginPlayer = player.playerLogin(loggedUser.getUser().getId(),null,null,
         						DeviceId.getUniqueDeviceId(currentContext),null, null);
     				} 
-    				PreferencesHandler.saveString("currentPlayer", gson.toJson(loginPlayer), ctx);
     				
-    				// DEBUG
-    				DebugUtility.showLog("After playerLogin "+gson.toJson(loginPlayer));
+    				if(loginPlayer.getGuid()!= null){
+    					PreferencesHandler.saveString("currentPlayer", gson.toJson(loginPlayer), ctx);
+    					// DEBUG  
+        				DebugUtility.showLog("After playerLogin "+gson.toJson(loginPlayer));        				
+    				} 
     				
     				if(loginPlayer.getUser()!=null){
         				Message msg = new Message();
@@ -236,6 +219,33 @@ public class Beintoo{
 		}).start();	
 	}
 	
+	/**
+	 * Submit a score with a treshold and check if the user reach that treshold. If yes automatically assign a vgood by
+	 * calling getVGood
+	 * 
+	 * @param ctx current Context
+	 * @param score score to submit
+	 * @param treshold the score treshold for a new vgood
+	 */
+	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold){
+		try{
+			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
+			String key = currentPlayer.getGuid()+":count";
+			
+			int currentTempScore = PreferencesHandler.getInt(key, ctx);
+			currentTempScore+=score;
+			
+			submitScore(ctx, score, -1, null, true);
+			
+			if(currentTempScore >= treshold) { // THE USER REACHED THE DEVELOPER TRESHOLD SEND VGOOD AND SAVE THE REST
+				PreferencesHandler.saveInt(key, currentTempScore-treshold, ctx);
+				GetVgood(ctx);
+			}else{
+				PreferencesHandler.saveInt(key, currentTempScore, ctx);
+			}
+		
+		}catch(Exception e){e.printStackTrace();}
+	}
 	
 	/**
 	 * Submit user score 
@@ -246,7 +256,11 @@ public class Beintoo{
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @param showNotification if true it will show a notification to the user when receive a submit score 
 	 */
-	public static void submitScore(Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification){
+	public static void submitScore(final Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification){
+		/* check if there is a previously submitted score that could not be submitted because of
+		 connection error */
+		final int errorScore = PreferencesHandler.getInt("errorScore", ctx);
+		 
 		final BeintooPlayer player = new BeintooPlayer();
 		String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
 		final Player p = JSONconverter.playerJsonToObject(jsonPlayer);
@@ -272,9 +286,16 @@ public class Beintoo{
 							final LocationListener locationListener = new LocationListener() {
 							    public void onLocationChanged(Location location) {		 
 									// SUBMIT SCORE WITH COORDS
-							    	player.submitScore(p.getGuid(), codeID, null, lastScore, balance,Double.toString(location.getLatitude()), 
-											Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), null);
 							    	
+									com.beintoo.wrappers.Message result = player.submitScore(p.getGuid(), codeID, null, lastScore+errorScore, balance,Double.toString(location.getLatitude()), 
+											Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), null);
+									if(result.getMessage().equals("ERROR")){
+										int errorScore = PreferencesHandler.getInt("errorScore", ctx);
+					        			errorScore += lastScore;
+					        			PreferencesHandler.saveInt("errorScore", errorScore, ctx);
+									}else									
+										PreferencesHandler.clearPref("errorScore", ctx);
+									
 					    			// REMOVE NETWORK UPDATE - NO MORE NEEDED
 					    			locationManager.removeUpdates(this);
 					    			if(showNotification)
@@ -288,12 +309,21 @@ public class Beintoo{
 							};   
 							locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 			        	}else {
-			        		player.submitScore(p.getGuid(), codeID, null, lastScore, balance, null, null, null, null);
+			        		com.beintoo.wrappers.Message result = player.submitScore(p.getGuid(), codeID, null, lastScore+errorScore, balance, null, null, null, null);
+			        		if(result.getMessage().equals("ERROR")){			        			
+			        			int errorScore = PreferencesHandler.getInt("errorScore", ctx);
+			        			errorScore += lastScore;
+			        			PreferencesHandler.saveInt("errorScore", errorScore, ctx);
+			        		}else									
+								PreferencesHandler.clearPref("errorScore", ctx);
+							
 			        		if(showNotification)
 			        			UIhandler.sendMessage(msg);
 			        	}
 			
-	    			}catch(Exception e){ e.printStackTrace(); }	    			
+	    			}catch(Exception e){ 
+	    				e.printStackTrace();	    				
+	    			}	    			
 				Looper.loop();
 	    		}
 			}).start();

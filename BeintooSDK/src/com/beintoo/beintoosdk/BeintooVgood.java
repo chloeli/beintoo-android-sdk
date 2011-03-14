@@ -131,4 +131,86 @@ public class BeintooVgood {
 		return msg;	
 	}
 
+	/**
+	 * Post a user vgood on the marketplace
+	 * 
+	 * @param vgoodExt the user id of the vgood
+	 * @param userExt the user id of the user
+	 * @return a message with the operation result
+	 */
+	public Message sellVgood (String vgoodExt, String userExt){
+		String apiUrl = apiPreUrl+"vgood/marketplace/sell/"+vgoodExt+"/"+userExt;
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null,true);
+		Gson gson = new Gson();
+		
+		Message msg = gson.fromJson(json, Message.class);
+		
+		return msg;	
+	}
+	
+	/**
+	 * Return a list of vgoods on sale in the marketplace
+	 * @param latitude the user latitude
+	 * @param longitude the user longitude
+	 * @param rows how many vgood you want to retrieve
+	 * @param featured 
+	 * @return a list of vgoods
+	 */
+	public Vgood[] showMarketPlace (String latitude, String longitude, int rows, boolean featured){
+		String apiUrl = "";
+		if(featured)
+			apiUrl = apiPreUrl+"vgood/marketplace/show/?featured=true";
+		else
+			apiUrl = apiPreUrl+"vgood/marketplace/show";
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		if(latitude != null && longitude != null){
+			header.getKey().add("latitude");
+			header.getValue().add(latitude);
+			header.getKey().add("longitude");
+			header.getValue().add(longitude);	
+		}
+		
+		if(rows > 0){
+			header.getKey().add("rows");
+			header.getValue().add(Integer.toString(rows));
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		Gson gson = new Gson();
+		
+		Vgood[] goods = gson.fromJson(json, Vgood[].class);
+		
+		return goods;	
+	}
+	
+	public Vgood buyVgood(String vgoodExt, String userExt, boolean featured){
+		String apiUrl = "";
+		if(featured)
+			apiUrl = apiPreUrl+"vgood/marketplace/buy/"+vgoodExt+"/"+userExt;
+		else
+			apiUrl = apiPreUrl+"vgood/marketplace/featured/buy/"+vgoodExt+"/"+userExt;
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null,true);
+		Gson gson = new Gson();
+		
+		Vgood vgood = gson.fromJson(json, Vgood.class);
+		
+		return vgood;
+	}
 }

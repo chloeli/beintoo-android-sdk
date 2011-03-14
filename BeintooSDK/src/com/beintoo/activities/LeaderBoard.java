@@ -97,8 +97,8 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 	    		contestName.setText(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().getName());
 	    		codeID = pairs.getKey();
 		    	for(int i = 0; i<arr.size(); i++){
-		    		final LoaderImageView image = new LoaderImageView(getContext(), arr.get(i).getObj().getUser().getUsersmallimg());
-		    		
+		    		//final LoaderImageView image = new LoaderImageView(getContext(), arr.get(i).getObj().getUser().getUsersmallimg());
+		    		final LoaderImageView image = new LoaderImageView(getContext(),arr.get(i).getObj().getUser().getUserimg(),70,70);
 		    		Button bt = new Button(getContext());
 		    		bt.setId(i);
 			  		bt.setOnClickListener(this);
@@ -166,13 +166,14 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		  bt.setOrientation(LinearLayout.VERTICAL);
 		  bt.setGravity(Gravity.RIGHT);
 		  
-		  TextView nickname = new TextView(activity);		  
+		  TextView nickname = new TextView(activity);
 		  nickname.setText(nick);
 		  nickname.setPadding(0, 10, 10, 10);
 		  nickname.setTextColor(Color.parseColor("#83be56"));
-		  nickname.setMaxLines(1);
+		  nickname.setMaxLines(2);
 		  nickname.setTypeface(null,Typeface.BOLD);
-		  nickname.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  nickname.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  
 		  
 		  TextView scoreView = new TextView(activity);		
 		  scoreView.setText("Score: "+score);	

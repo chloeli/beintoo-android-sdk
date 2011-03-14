@@ -1,56 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright 2011 Beintoo
-  
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-  
-    http://www.apache.org/licenses/LICENSE-2.0
-  
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
+<!-- Copyright 2011 Beintoo Licensed under the Apache License, Version 2.0 
+	(the "License"); you may not use this file except in compliance with the 
+	License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-		android:id="@+id/myScroll" android:layout_width="fill_parent"
-		android:scrollbars="vertical" android:layout_height="fill_parent"
-		android:fillViewport="true">
-	
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:background="#d9dde2">
-	<ImageView android:layout_height="wrap_content"
-		android:layout_width="wrap_content" android:src="@drawable/layoutbottom"
-		android:layout_alignParentTop="true" android:id="@+id/layouttop">
-	</ImageView>
-	<RelativeLayout android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:orientation="horizontal"
-		android:background="#d9dde2" android:id="@+id/main"
-		android:layout_marginTop="9dip">
+	android:id="@+id/myScroll" android:layout_width="fill_parent"
+	android:scrollbars="vertical" android:layout_height="fill_parent"
+	android:fillViewport="true">
+	<LinearLayout android:layout_width="fill_parent"
+		android:id="@+id/maincontainer"
+		android:orientation="vertical" android:background="#d6dbde" android:layout_height="wrap_content">
+			<LinearLayout android:layout_width="fill_parent"
+				android:id="@+id/maincontainer"
+				android:orientation="vertical" android:background="#d6dbde" android:layout_height="wrap_content">
+				<ImageView android:layout_height="wrap_content"
+					android:id="@+id/layouttop" android:layout_width="fill_parent" android:background="@drawable/layoutbottom">
+				</ImageView>
+			</LinearLayout>
+
+		<LinearLayout android:layout_width="fill_parent"
+			android:id="@+id/maincontainer"
+			android:orientation="vertical" android:background="#d6dbde" android:layout_height="wrap_content" android:gravity="center">
+			<ImageView android:layout_width="wrap_content" android:id="@+id/logotry"
+				android:layout_centerHorizontal="true" android:layout_height="wrap_content"
+				android:src="@drawable/logobtn" android:paddingBottom="20dip" android:paddingTop="20dip"></ImageView>
+			<ImageView android:layout_width="wrap_content" android:id="@+id/trymessage"
+				android:layout_centerHorizontal="true"
+				android:layout_height="wrap_content" android:src="@drawable/trymessage"></ImageView>
+			<Button android:background="@drawable/trybutton"
+				android:layout_centerHorizontal="true" android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/trybt" android:layout_marginBottom="20dip" android:layout_marginTop="20dip"></Button>
+			<Button android:background="@drawable/nothanksbt"
+				android:layout_centerHorizontal="true" android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/nothanksbt"></Button>
+		</LinearLayout>
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:id="@+id/maincontainer"
+		android:orientation="vertical" android:background="#d6dbde" android:gravity="bottom">
 		<ImageView android:layout_height="wrap_content"
-			android:layout_width="wrap_content" android:id="@+id/logotry"
-			android:src="@drawable/logobtn" android:layout_centerHorizontal="true"
-			android:paddingTop="10dip"></ImageView>
-		<ImageView android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true" android:layout_width="wrap_content"
-			android:id="@+id/trymessage" android:src="@drawable/trymessage"
-			android:layout_marginTop="50dip"></ImageView>
-			
-			<Button android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:id="@+id/trybt" android:background="@drawable/trybutton" android:layout_centerHorizontal="true" android:layout_marginTop="230dip"></Button>
-			<Button android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:id="@+id/nothanksbt" android:background="@drawable/nothanksbt" android:layout_centerHorizontal="true" android:layout_marginTop="320dip"></Button>
-	</RelativeLayout>
-
-
-	<ImageView android:layout_height="wrap_content"
-		android:layout_width="wrap_content" android:id="@+id/layoutbottom"
-		android:src="@drawable/layoutbottom" android:layout_alignParentBottom="true">
-	</ImageView>
-	
-</RelativeLayout>
-
+			android:id="@+id/layoutbottom" android:background="@drawable/layoutbottom" android:layout_width="fill_parent">
+		</ImageView>
+	</LinearLayout>
+	</LinearLayout>
 </ScrollView>

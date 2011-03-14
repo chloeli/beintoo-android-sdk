@@ -15,7 +15,7 @@
  ******************************************************************************/
 package com.beintoo.beintoosdkutility;
 
-import com.beintoo.R;
+import com.beintoo.R; 
 
 import android.content.Context;
 import android.graphics.Color;

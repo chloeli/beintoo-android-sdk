@@ -18,6 +18,7 @@ package com.beintoo.beintoosdkui;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
@@ -77,7 +78,7 @@ public class BeintooBrowser extends Dialog {
 		webview.setInitialScale(1);
 		webview.loadUrl(getUrlOpenUrl());
 		
-		Button close = (Button) findViewById(R.id.closebrowser);
+		Button close = (Button) findViewById(R.id.close);
 		BeButton b = new BeButton(ctx);
 		close.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));	    
 		close.setOnClickListener(new Button.OnClickListener(){
@@ -88,6 +89,16 @@ public class BeintooBrowser extends Dialog {
 		
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	if(webview.canGoBack())
+	    		webview.goBack();
+	        return false; 
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
+	
 	private String getUrlOpenUrl() {
 		String openUrl = PreferencesHandler.getString("openUrl", getContext());
 		if (openUrl != null) {

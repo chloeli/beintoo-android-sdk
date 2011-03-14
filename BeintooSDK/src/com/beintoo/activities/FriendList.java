@@ -79,8 +79,8 @@ public class FriendList extends Dialog implements OnClickListener{
 		final ArrayList<View> rowList = new ArrayList<View>();
 		
     	for(int i = 0; i<friends.length; i++){
-    		final LoaderImageView image = new LoaderImageView(getContext(), friends[i].getUsersmallimg());
-    		
+    		//final LoaderImageView image = new LoaderImageView(getContext(), getUsersmallimg());
+    		final LoaderImageView image = new LoaderImageView(getContext(),friends[i].getUserimg(),70,70);
        		
     		TableRow row = createRow(image, friends[i].getNickname(),
     				friends[i].getName(), getContext());

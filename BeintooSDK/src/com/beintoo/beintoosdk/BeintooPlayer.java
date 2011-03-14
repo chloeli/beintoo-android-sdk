@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.beintoo.beintoosdk;
 
+
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.HeaderParams;
@@ -162,36 +163,41 @@ public class BeintooPlayer {
 	public Message submitScore (String guid, String codeID, String deviceUUID, int lastScore, int balance,
 			String latitude, String longitude, String radius, String language) {
 		
-		String apiUrl = apiPreUrl+"player/submitscore/?lastScore="+lastScore;
-		
-		if(balance != -1) apiUrl = apiUrl + "&balance="+balance;
-		if(language != null) apiUrl = apiUrl + "&language="+language;
-		if(latitude != null) apiUrl = apiUrl + "&latitude="+latitude;
-		if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
-		if(radius != null) apiUrl = apiUrl + "&radius="+radius;
-		
-		HeaderParams header = new HeaderParams();
-		header.getKey().add("apikey");
-		header.getValue().add(DeveloperConfiguration.apiKey);
-		header.getKey().add("guid");
-		header.getValue().add(guid);
-		if(codeID != null){
-			header.getKey().add("codeID");
-			header.getValue().add(codeID);
-		}
-		
-		if(deviceUUID != null){
-			header.getKey().add("deviceUUID");
-			header.getValue().add(deviceUUID);
-		}
-		
-		BeintooConnection conn = new BeintooConnection();
-		String json = conn.httpRequest(apiUrl, header, null);
-		Gson gson = new Gson();
-		Message msg = new Message();
-		msg = gson.fromJson(json, Message.class);
-		
-		return msg;
+			String apiUrl = apiPreUrl+"player/submitscore/?lastScore="+lastScore;
+			
+			if(balance != -1) apiUrl = apiUrl + "&balance="+balance;
+			if(language != null) apiUrl = apiUrl + "&language="+language;
+			if(latitude != null) apiUrl = apiUrl + "&latitude="+latitude;
+			if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
+			if(radius != null) apiUrl = apiUrl + "&radius="+radius;
+			
+			HeaderParams header = new HeaderParams();
+			header.getKey().add("apikey");
+			header.getValue().add(DeveloperConfiguration.apiKey);
+			header.getKey().add("guid");
+			header.getValue().add(guid);
+			if(codeID != null){
+				header.getKey().add("codeID");
+				header.getValue().add(codeID);
+			}
+			
+			if(deviceUUID != null){ 
+				header.getKey().add("deviceUUID");
+				header.getValue().add(deviceUUID);
+			}
+			
+			BeintooConnection conn = new BeintooConnection();
+			try {
+				String json = conn.httpRequest(apiUrl, header, null);
+				Gson gson = new Gson();
+				Message msg = new Message();
+				msg = gson.fromJson(json, Message.class);
+				return msg;
+			}catch (Exception e){
+				Message msg = new Message();
+				msg.setMessage("ERROR");
+				return msg;
+			}
 	}
 	
 	

@@ -71,7 +71,8 @@ public class UserSelection extends Dialog implements OnClickListener{
 		
 		for(int i = 0; i< users.length; i++){
 			if(users[i] != null){
-				final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUsersmallimg());
+				//final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUsersmallimg());
+				final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUserimg(),70,70);
 				TableRow row = createRow(image, users[i].getNickname(), getContext());
 				row.setId(i);
 				rowList.add(row);
@@ -82,6 +83,7 @@ public class UserSelection extends Dialog implements OnClickListener{
 		}
 		
 		table.addView(createSpacer(getContext(),0,10));
+		
 		for (View row : rowList) {
 	      row.setPadding(0, 0, 0, 0);	      
 	      //row.setBackgroundColor(Color.argb(200, 51, 51, 51));
@@ -113,6 +115,14 @@ public class UserSelection extends Dialog implements OnClickListener{
 				userLogin.show();	
 				current.dismiss();
 				//finish();
+			}
+        });
+	    
+	    Button close = (Button) findViewById(R.id.close);
+	    close.setOnClickListener(new Button.OnClickListener(){
+			public void onClick(View v) {
+				current.dismiss();
+
 			}
         });
 	    /*TableRow row = new TableRow(getContext());

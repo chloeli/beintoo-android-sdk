@@ -91,7 +91,7 @@ public class VGoodGetDialog extends Dialog{
 			}
 		}catch (Exception e){e.printStackTrace();}
 		
-		Button closevgood = (Button) findViewById(R.id.closevgood);
+		Button closevgood = (Button) findViewById(R.id.close);
 		BeButton b = new BeButton(ctx);
 		closevgood.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));	    
 		closevgood.setOnClickListener(new Button.OnClickListener(){

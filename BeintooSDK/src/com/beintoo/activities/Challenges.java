@@ -176,11 +176,13 @@ public class Challenges extends Dialog implements OnClickListener{
 	    	String contest;
 	    	
     		if(p.getUser().getId().equals(challenge[i].getPlayerFrom().getUser().getId())){
-    			image = new LoaderImageView(getContext(), challenge[i].getPlayerTo().getUser().getUsersmallimg());
+    			//image = new LoaderImageView(getContext(), challenge[i].getPlayerTo().getUser().getUsersmallimg());
+    			image = new LoaderImageView(getContext(),challenge[i].getPlayerTo().getUser().getUserimg(),70,70);
     			nick = "From you to "+challenge[i].getPlayerTo().getUser().getNickname();
     			contest = challenge[i].getContest().getName();
     		}else{
-    			image = new LoaderImageView(getContext(), challenge[i].getPlayerFrom().getUser().getUsersmallimg());
+    			//image = new LoaderImageView(getContext(), challenge[i].getPlayerFrom().getUser().getUsersmallimg());
+    			image = new LoaderImageView(getContext(),challenge[i].getPlayerFrom().getUser().getUserimg(),70,70);
     			nick = "From "+challenge[i].getPlayerFrom().getUser().getNickname()+" to you";
     			contest = challenge[i].getContest().getName();    			
     		}
@@ -244,18 +246,7 @@ public class Challenges extends Dialog implements OnClickListener{
 		  main.addView(contestView);
 		  
 		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT));
-		  
-		  
-		 /* bt.setText("Respond");
-		  //bt.setPadding(10,10,10,10);		 
-		  bt.setGravity(Gravity.CENTER);
-		  
-		  
-		  //row.addView(image);
-		  //row.addView(nameView);
-		  row.addView(bt);*/
-		  
-		   
+	
 		  return row;
 	}
 	
