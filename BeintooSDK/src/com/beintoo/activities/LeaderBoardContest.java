@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooApp;
+import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -59,11 +60,12 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 			loadContestTable();
 		}catch(Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}	
 	 
-		
-		Button general = (Button) findViewById(R.id.generaleader);
+		BeButton b = new BeButton(ctx);
+		Button general = (Button) findViewById(R.id.generaleader);				
+		general.setBackgroundDrawable(b.setPressedBg(R.drawable.all, R.drawable.all_h, R.drawable.all_h));
 		general.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -83,9 +85,10 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
         });
 		
 		Button friends = (Button) findViewById(R.id.friendsleader);
+		friends.setBackgroundDrawable(b.setPressedBg(R.drawable.friends, R.drawable.friends_h, R.drawable.friends_h));
 		friends.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -125,25 +128,28 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 	    while (it.hasNext()) {
 	    	@SuppressWarnings("unchecked")
 			Map.Entry<String, ArrayList<EntryCouplePlayer>> pairs = (Map.Entry<String, ArrayList<EntryCouplePlayer>>) it.next();
-	    	List<EntryCouplePlayer> arr = pairs.getValue();	    	
-	    	TableRow row = createRow(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().getName(), getContext());
-	    	//TableRow row = createRow(pairs.getKey(),getContext());
-	    	if(count % 2 == 0)
-	    		row.setBackgroundColor(Color.parseColor("#d8eaef"));
-	    	else
-	    		row.setBackgroundColor(Color.parseColor("#ecf3f5"));
+	    	List<EntryCouplePlayer> arr = pairs.getValue();	
 	    	
-	    	TableLayout.LayoutParams tableRowParams=
-    		  new TableLayout.LayoutParams
-    		  (TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
-    		tableRowParams.setMargins(10, 0, 10, 0);
-    		row.setLayoutParams(tableRowParams);
-	    	row.setId(count);
-			rowList.add(row);
-			View spacer = createSpacer(getContext(),0,5);
-			spacer.setId(-100);
-			rowList.add(spacer);
-	    	count++;	    	
+	    	if(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().isPublic() == true){
+		    	TableRow row = createRow(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().getName(), getContext());
+		    	//TableRow row = createRow(pairs.getKey(),getContext());
+		    	if(count % 2 == 0)
+		    		row.setBackgroundColor(Color.parseColor("#d8eaef"));
+		    	else
+		    		row.setBackgroundColor(Color.parseColor("#ecf3f5"));
+		    	
+		    	TableLayout.LayoutParams tableRowParams=
+	    		  new TableLayout.LayoutParams
+	    		  (TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
+	    		tableRowParams.setMargins(10, 0, 10, 0);
+	    		row.setLayoutParams(tableRowParams);
+		    	row.setId(count);
+				rowList.add(row);
+				View spacer = createSpacer(getContext(),0,5);
+				spacer.setId(-100);
+				rowList.add(spacer);
+		    	count++;	
+	    	}
 	    }
 	    
 	    for (View row : rowList) {
@@ -195,7 +201,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 	// CALLED WHEN THE USER SELECT A USER IN THE TABLE
 	public void onClick(View v) {
 		final int selectedRow = v.getId();
-		final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+		final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 		new Thread(new Runnable(){      
     		public void run(){
     			try{     				

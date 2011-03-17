@@ -57,7 +57,7 @@ public class BeintooHome extends Dialog {
 		Beintoo.homeDialog = current;
 		// set the nickname
 		TextView nickname = (TextView) findViewById(R.id.nickname);
-		nickname.setText("Welcome back "+getCurrentPlayerNickname());
+		nickname.setText(getContext().getString(R.string.homeWelcome)+getCurrentPlayerNickname());
 		
 		
 		ImageButton profilebt = (ImageButton) findViewById(R.id.profilebt);
@@ -65,7 +65,7 @@ public class BeintooHome extends Dialog {
 		profilebt.setBackgroundDrawable(b.setPressedBg(R.drawable.profilebt, R.drawable.profilebt_h, R.drawable.profilebt_h));			    
 		profilebt.setOnClickListener(new ImageButton.OnClickListener(){
 			public void onClick(View v) {				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -87,7 +87,7 @@ public class BeintooHome extends Dialog {
 		leaderbt.setBackgroundDrawable(b.setPressedBg(R.drawable.leaderbt, R.drawable.leaderbt_h, R.drawable.leaderbt_h));			    
 		leaderbt.setOnClickListener(new ImageButton.OnClickListener(){
 			public void onClick(View v) {				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -112,7 +112,7 @@ public class BeintooHome extends Dialog {
 		walletbt.setBackgroundDrawable(b.setPressedBg(R.drawable.wallet, R.drawable.wallet_h, R.drawable.wallet_h));			    
 		walletbt.setOnClickListener(new ImageButton.OnClickListener(){
 			public void onClick(View v) {				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{             				
@@ -135,7 +135,7 @@ public class BeintooHome extends Dialog {
 		challengesbt.setBackgroundDrawable(b.setPressedBg(R.drawable.challenges, R.drawable.challenges_h, R.drawable.challenges_h));			    
 		challengesbt.setOnClickListener(new ImageButton.OnClickListener(){
 			public void onClick(View v) {				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{             				

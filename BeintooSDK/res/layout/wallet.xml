@@ -26,15 +26,11 @@
 					android:layout_alignParentRight="true" android:background="@drawable/close" android:layout_centerVertical="true" android:layout_marginRight="8dip"/>
 			</RelativeLayout>
 		</LinearLayout>
-		<LinearLayout android:id="@+id/linearLayout1"
-			android:layout_width="wrap_content" android:layout_alignParentLeft="true"
-			android:layout_height="wrap_content" android:layout_gravity="center"
-			android:layout_marginTop="10dip">
+		<FrameLayout android:layout_height="wrap_content" android:paddingTop="20dip" android:layout_width="wrap_content" android:layout_gravity="center_horizontal">
 			<ImageView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:id="@+id/banner"
-				android:background="@drawable/vwtitle"></ImageView>
-
-		</LinearLayout>
+				android:layout_height="wrap_content" android:scaleType="fitCenter" android:src="@drawable/vwtitle"/>
+			<TextView android:layout_height="wrap_content" android:layout_gravity="center" android:textColor="#FFFFFF" android:textStyle="normal" android:typeface="normal" android:gravity="center" android:layout_width="fill_parent" android:text="@string/boxWallet" android:layout_marginTop="-10dip" android:textSize="14dip"/>
+		</FrameLayout>
 		<LinearLayout android:id="@+id/linearLayout2"
 			android:layout_width="fill_parent" android:padding="0dip"
 			android:layout_height="wrap_content">

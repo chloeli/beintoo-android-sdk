@@ -59,7 +59,7 @@ public class FriendList extends Dialog implements OnClickListener{
 				loadFriendsTable(calledFrom);
 			else { // NO VGOODS SHOW A MESSAGE
 				TextView noGoods = new TextView(getContext());
-				noGoods.setText("You don't have any friends");
+				noGoods.setText(getContext().getString(R.string.friendsNo));
 				noGoods.setTextColor(Color.GRAY);
 				noGoods.setPadding(20,0,0,0);						
 				TableLayout table = (TableLayout) findViewById(R.id.table);
@@ -181,9 +181,9 @@ public class FriendList extends Dialog implements OnClickListener{
 	
 	public void confirmDialog (final int selected) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		builder.setMessage("Are you sure you want to send this coupon as a gift to "+usersNicks.get(selected)+"?")
+		builder.setMessage(getContext().getString(R.string.friendSure)+usersNicks.get(selected)+"?")
 		       .setCancelable(false)
-		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		       .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		        	   current.dismiss();
 		               previous.dismiss();
@@ -204,7 +204,7 @@ public class FriendList extends Dialog implements OnClickListener{
 					   }).start();		
 		           }
 		       })
-		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+		       .setNegativeButton(getContext().getString(R.string.no), new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		                dialog.cancel();
 		           }
@@ -214,7 +214,7 @@ public class FriendList extends Dialog implements OnClickListener{
 	}
 	
 	public void doneDialog (int i) {
-		MessageDisplayer.showMessage(getContext(), "Gift sent to "+usersNicks.get(i));
+		MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.friendSent)+usersNicks.get(i));
 	}
 	
 	Handler UIhandler = new Handler() {

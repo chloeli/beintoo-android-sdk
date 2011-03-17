@@ -62,10 +62,10 @@ public class UserLogin extends Dialog{
 		 */
 		Button newUser = (Button) findViewById(R.id.newuser);
 		BeButton b = new BeButton(ctx);
-		newUser.setBackgroundDrawable(b.setPressedBg(R.drawable.newuser, R.drawable.newuser_h, R.drawable.newuser_h));
+		newUser.setBackgroundDrawable(b.setPressedBg(R.drawable.login, R.drawable.login_h, R.drawable.login_h));
 		newUser.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 				
@@ -110,7 +110,7 @@ public class UserLogin extends Dialog{
 		go.setBackgroundDrawable(b.setPressedBg(R.drawable.login, R.drawable.login_h, R.drawable.login_h));
 		go.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Login...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.login),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{    
@@ -130,7 +130,7 @@ public class UserLogin extends Dialog{
 								imm.hideSoftInputFromWindow(email.getApplicationWindowToken(), 0);
 					            imm.hideSoftInputFromWindow(psw.getApplicationWindowToken(), 0);
 								dialog.dismiss(); // DISMISS LOGIN DIALOG
-								ErrorDisplayer.showConnectionErrorOnThread("Wrong username or password", getContext());								
+								ErrorDisplayer.showConnectionErrorOnThread(getContext().getString(R.string.wronglogin), getContext());								
 							}else {// PLAYERLOGIN AND THEN CLOSE THE LOGIN FORM AND GO HOME
 								BeintooPlayer player = new BeintooPlayer();
 								Player newPlayer = player.playerLogin(loggedUser.getId(),null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);

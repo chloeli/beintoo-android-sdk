@@ -44,11 +44,10 @@ public class tryBeintoo extends Dialog {
 		
 		BeButton b = new BeButton(ctx);
 		Button bt = (Button) findViewById(R.id.trybt);
-		bt.setBackgroundDrawable(b.setPressedBg(R.drawable.facebook, R.drawable.facebook_h, R.drawable.facebook_h));
 		bt.setBackgroundDrawable(b.setPressedBg(R.drawable.trybutton, R.drawable.trybutton_h, R.drawable.trybutton_h));
 	    bt.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading Beintoo...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loadingBeintoo),true);
 				final BeintooUser usr = new BeintooUser(); 
 				
 				Thread t = new Thread(new Runnable(){      

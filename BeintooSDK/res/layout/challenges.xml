@@ -14,28 +14,35 @@
 		android:layout_height="fill_parent" android:id="@+id/maincontainer"
 		android:orientation="vertical" android:background="#d6dbde">
 		<LinearLayout android:id="@+id/linearLayout1"
-			android:layout_alignParentLeft="true"
-			android:layout_height="wrap_content" android:gravity="center" android:layout_width="fill_parent">
-			<RelativeLayout
-				android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" android:background="@drawable/bpix">
+			android:layout_alignParentLeft="true" android:layout_height="wrap_content"
+			android:gravity="center" android:layout_width="fill_parent">
+			<RelativeLayout android:orientation="vertical"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:background="@drawable/bpix">
 				<ImageView android:layout_height="wrap_content"
 					android:layout_centerHorizontal="true" android:id="@+id/beintoobar"
-					android:src="@drawable/beintoobar" android:layout_width="wrap_content"/>
+					android:src="@drawable/beintoobar" android:layout_width="wrap_content" />
 				<Button android:layout_height="wrap_content"
 					android:layout_width="wrap_content" android:id="@+id/close"
-					android:layout_alignParentRight="true" android:background="@drawable/close" android:layout_centerVertical="true" android:layout_marginRight="8dip"/>
+					android:layout_alignParentRight="true" android:background="@drawable/close"
+					android:layout_centerVertical="true" android:layout_marginRight="8dip" />
 			</RelativeLayout>
 		</LinearLayout>
 
-		<LinearLayout android:id="@+id/linearLayout1"
-			android:layout_width="wrap_content" android:layout_alignParentLeft="true"
-			android:layout_height="wrap_content" android:layout_gravity="center"
-			android:layout_marginTop="10dip">
+		<FrameLayout android:layout_height="wrap_content"
+			android:paddingTop="20dip" android:layout_width="wrap_content"
+			android:layout_gravity="center_horizontal">
 			<ImageView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:id="@+id/banner"
-				android:background="@drawable/boxchallenges"></ImageView>
+				android:layout_height="wrap_content" android:src="@drawable/boxchallenges"
+				android:scaleType="fitCenter" />
+			<TextView android:layout_height="wrap_content"
+				android:layout_gravity="center" android:textColor="#FFFFFF"
+				android:textStyle="normal" android:typeface="normal"
+				android:textSize="16dip" android:layout_marginTop="-20dip"
+				android:gravity="center" android:text="@string/boxChallenge"
+				android:layout_width="fill_parent" />
+		</FrameLayout>
 
-		</LinearLayout>
 		<LinearLayout android:id="@+id/linearLayout2"
 			android:layout_width="fill_parent" android:padding="0dip"
 			android:layout_height="wrap_content">
@@ -54,13 +61,14 @@
 				android:layout_marginRight="18dip" android:background="#FFFFFF"
 				android:paddingTop="10dip" android:paddingBottom="10dip">
 				<Button android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:id="@+id/pendingchall" android:background="@drawable/pending_h"></Button>
+					android:layout_height="wrap_content" android:id="@+id/pendingchall"
+					android:background="@drawable/pending_h" android:text="@string/pending" android:textColor="#FFFFFF"></Button>
 				<Button android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/acceptedchall"
-					android:background="@drawable/ongoing"></Button>
+					android:background="@drawable/ongoing" android:text="@string/ongoing" android:textColor="#FFFFFF"></Button>
 				<Button android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/endedchall"
-					android:background="@drawable/ended"></Button>
+					android:background="@drawable/ended" android:text="@string/ended" android:textColor="#FFFFFF"></Button>
 			</LinearLayout>
 			<!-- Challenges CONTENT -->
 

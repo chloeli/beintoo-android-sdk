@@ -30,11 +30,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-/**
- * Free for anyone to use, just say thanks and share :-)
- * @author Blundell
- *
- */
 public class LoaderImageView extends LinearLayout{
 
 	private static final int COMPLETE = 0;

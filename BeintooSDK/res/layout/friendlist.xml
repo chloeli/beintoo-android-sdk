@@ -35,7 +35,7 @@
 					android:layout_marginTop="0dip"></ImageView>
 				<TextView android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/contesttw" android:textColor="#FFFFFF"
-					android:textStyle="bold" android:textSize="20dip" android:text="Select a friend"></TextView>
+					android:textStyle="bold" android:textSize="20dip" android:text="@string/friendSel"></TextView>
 			</LinearLayout>
 			<TableLayout android:scrollbars="vertical"
 				android:background="#FFFFFF" android:layout_width="fill_parent"

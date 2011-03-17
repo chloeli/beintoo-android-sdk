@@ -65,7 +65,7 @@ public class Challenges extends Dialog implements OnClickListener{
 				loadChallenges(PENDING);
 			else { // NO CHALLENGE REQUEST
 				TextView noChallenge = new TextView(getContext());
-				noChallenge.setText("You don't have any pending challenge request");
+				noChallenge.setText(getContext().getString(R.string.challNoPending));
 				noChallenge.setTextColor(Color.GRAY);
 				noChallenge.setPadding(15,0,0,0);
 				TableLayout table = (TableLayout) findViewById(R.id.table);
@@ -82,7 +82,7 @@ public class Challenges extends Dialog implements OnClickListener{
 			public void onClick(View v) {
 				resetButtons();
 				pending.setBackgroundResource(R.drawable.pending_h);
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -108,7 +108,7 @@ public class Challenges extends Dialog implements OnClickListener{
 				resetButtons();
 				accepted.setBackgroundResource(R.drawable.ongoing_h);
 				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -133,7 +133,7 @@ public class Challenges extends Dialog implements OnClickListener{
 				resetButtons();
 				ended.setBackgroundResource(R.drawable.ended_h);
 				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -178,12 +178,13 @@ public class Challenges extends Dialog implements OnClickListener{
     		if(p.getUser().getId().equals(challenge[i].getPlayerFrom().getUser().getId())){
     			//image = new LoaderImageView(getContext(), challenge[i].getPlayerTo().getUser().getUsersmallimg());
     			image = new LoaderImageView(getContext(),challenge[i].getPlayerTo().getUser().getUserimg(),70,70);
-    			nick = "From you to "+challenge[i].getPlayerTo().getUser().getNickname();
+    			nick = getContext().getString(R.string.challFromTo)+challenge[i].getPlayerTo().getUser().getNickname();
     			contest = challenge[i].getContest().getName();
     		}else{
     			//image = new LoaderImageView(getContext(), challenge[i].getPlayerFrom().getUser().getUsersmallimg());
     			image = new LoaderImageView(getContext(),challenge[i].getPlayerFrom().getUser().getUserimg(),70,70);
-    			nick = "From "+challenge[i].getPlayerFrom().getUser().getNickname()+" to you";
+    			nick = getContext().getString(R.string.challFrom)+challenge[i].getPlayerFrom().getUser().getNickname()+
+    			getContext().getString(R.string.challYou);
     			contest = challenge[i].getContest().getName();    			
     		}
     		
@@ -277,7 +278,7 @@ public class Challenges extends Dialog implements OnClickListener{
 	
 	public void respondDialog (final View v){
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		builder.setMessage("Do you want to accept this challenge for "+challenge[v.getId()].getPrice().intValue()+" BeDollars?")
+		builder.setMessage(getContext().getString(R.string.challAccept)+challenge[v.getId()].getPrice().intValue()+" BeDollars?")
 		       .setCancelable(false)
 		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {		 
@@ -285,7 +286,7 @@ public class Challenges extends Dialog implements OnClickListener{
 		        			   challenge[v.getId()].getPlayerFrom().getUser().getId(),"ACCEPT",
 		        			   challenge[v.getId()].getContest().getCodeID());      	   
 		        	   dialog.dismiss();
-		        	   MessageDisplayer.showMessage(getContext(), "Challenge accepted");
+		        	   MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.challAccepted));
 		        	   
 		        	   TableLayout table = (TableLayout) v.getParent();
 		        	   table.removeView(v);
@@ -297,7 +298,7 @@ public class Challenges extends Dialog implements OnClickListener{
 		        			   challenge[v.getId()].getPlayerFrom().getUser().getId(),"REFUSE",
 		        			   challenge[v.getId()].getContest().getCodeID());
 		        	   dialog.dismiss();
-		        	   MessageDisplayer.showMessage(getContext(), "Challenge refused");
+		        	   MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.challRefused));
 
 		        	   TableLayout table = (TableLayout) v.getParent();
 		        	   table.removeView(v);
@@ -335,11 +336,11 @@ public class Challenges extends Dialog implements OnClickListener{
 	public void loadEmptySection (int section){
 		TextView noChallenge = new TextView(getContext());
 		if(section == PENDING)
-			noChallenge.setText("You don't have any pending challenge");
+			noChallenge.setText(getContext().getString(R.string.challNoPendingC));
 		else if(section == ACCEPTED)
-			noChallenge.setText("You don't have any accepted challenge");
+			noChallenge.setText(getContext().getString(R.string.challNoAccepted));
 		else if(section == ENDED)
-			noChallenge.setText("You don't have any ended challenge");
+			noChallenge.setText(getContext().getString(R.string.challNoEnded));
 		
 		noChallenge.setTextColor(Color.GRAY);
 		noChallenge.setPadding(15,0,0,0);

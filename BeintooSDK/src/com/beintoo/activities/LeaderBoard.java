@@ -102,7 +102,7 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		    		Button bt = new Button(getContext());
 		    		bt.setId(i);
 			  		bt.setOnClickListener(this);
-			  		bt.setText("Challenge");
+			  		bt.setText(getContext().getString(R.string.challChallenge));
 			  		
 		    		if(p.getUser().getId().equals(arr.get(i).getObj().getUser().getId()))			    		
 		    			bt.setVisibility(View.INVISIBLE);
@@ -176,7 +176,7 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		  
 		  
 		  TextView scoreView = new TextView(activity);		
-		  scoreView.setText("Score: "+score);	
+		  scoreView.setText(activity.getString(R.string.leadScore)+score);	
 		  scoreView.setPadding(0, 10, 0, 10);
 		  scoreView.setTextColor(Color.parseColor("#787A77"));
 		  scoreView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -224,7 +224,7 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 	// CALLED ON CHALLENGE BUTTON CLICK
 	public void onClick(View v) {
 		Player p = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", v.getContext()), Player.class);
-		MessageDisplayer.showMessage(currentContext, "Challenge sent to "+usersNicks.get(v.getId()));
+		MessageDisplayer.showMessage(currentContext, getContext().getString(R.string.challSent)+usersNicks.get(v.getId()));
 		sendChallenge(p.getUser().getId(),
 				usersExts.get(v.getId()),"INVITE");  
 	}

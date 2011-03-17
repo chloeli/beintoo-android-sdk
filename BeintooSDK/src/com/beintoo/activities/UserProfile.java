@@ -57,7 +57,7 @@ public class UserProfile extends Dialog {
 			
 			profilepict.setImageDrawable(currentPlayer.getUser().getUserimg());
 			nickname.setText(currentPlayer.getUser().getNickname());
-			level.setText("Level: "+fromIntToLevel(currentPlayer.getUser().getLevel()));
+			level.setText(getContext().getString(R.string.profileLevel)+fromIntToLevel(currentPlayer.getUser().getLevel()));
 			dollars.setText("Bedollars: "+currentPlayer.getUser().getBedollars());
 			bescore.setText("Bescore: "+currentPlayer.getUser().getBescore());
 			
@@ -66,25 +66,27 @@ public class UserProfile extends Dialog {
 			
 			if(playerScore != null) { // THE USER HAS SCORES FOR THE APP
 				Iterator<?> it = playerScore.entrySet().iterator();
-			    while (it.hasNext()) {
+			    while (it.hasNext()) {			    	
 			        Map.Entry<String, PlayerScore> pairs = (Map.Entry<String, PlayerScore>) it.next();
-			        PlayerScore pscore = pairs.getValue();
-			        TextView contestName = new TextView(getContext());
-			        TextView contestData = new TextView(getContext());	        
-			        contestName.setText(pscore.getContest().getName());
-			        contestName.setPadding(0,10,0,2);
-			        contestName.setTextColor(Color.BLACK);	  
-			        contestData.setPadding(10,5,0,5);
-			        contestData.setText("Total score: "+pscore.getBalance()+"\nBestscore: "+pscore.getBestscore()+" Lastscore: "+pscore.getLastscore());
-			        contestData.setTextSize(12);
-			        contestData.setBackgroundColor(Color.parseColor("#d4e8ed"));
-			        contestData.setTextColor(Color.parseColor("#545859"));
-			        contests.addView(contestName);	        
-			        contests.addView(contestData);
+			        if(pairs.getValue().getContest().isPublic()){
+				        PlayerScore pscore = pairs.getValue();
+				        TextView contestName = new TextView(getContext());
+				        TextView contestData = new TextView(getContext());	        
+				        contestName.setText(pscore.getContest().getName());
+				        contestName.setPadding(0,10,0,2);
+				        contestName.setTextColor(Color.BLACK);	  
+				        contestData.setPadding(10,5,0,5);
+				        contestData.setText(getContext().getString(R.string.profileTotalScore)+pscore.getBalance()+getContext().getString(R.string.profileBestScore)+pscore.getBestscore()+getContext().getString(R.string.profileLastScore)+pscore.getLastscore());
+				        contestData.setTextSize(12);
+				        contestData.setBackgroundColor(Color.parseColor("#d4e8ed"));
+				        contestData.setTextColor(Color.parseColor("#545859"));
+				        contests.addView(contestName);	        
+				        contests.addView(contestData);
+			        }
 			    }
 			}else { // NO SCORES FOR THE APP
 				TextView noScores = new TextView(getContext());
-				noScores.setText("You don't have any scores for this app");
+				noScores.setText(getContext().getString(R.string.profileNoScores));
 				noScores.setPadding(5,10,0,2);
 				noScores.setTextColor(Color.BLACK);
 				contests.addView(noScores);	

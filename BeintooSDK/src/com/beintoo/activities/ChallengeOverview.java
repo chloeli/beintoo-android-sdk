@@ -3,6 +3,7 @@ package com.beintoo.activities;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import com.beintoo.R;
@@ -55,13 +56,14 @@ public class ChallengeOverview extends Dialog{
 				
 				SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss"); 
 				curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));
+				
 				Date startDate = curFormater.parse(reqChallenge.getStartdate());
 				Date endDate = curFormater.parse(reqChallenge.getEnddate());
 				curFormater.setTimeZone(TimeZone.getDefault());
 				TextView sDate = (TextView) findViewById(R.id.startdate);
-				sDate.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT).format(startDate));
+				sDate.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(startDate));
 				TextView eDate = (TextView) findViewById(R.id.enddate);
-				eDate.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT).format(endDate));
+				eDate.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(endDate));
 				
 				if(typeOfChallenge == ENDED){	
 					TextView winner = (TextView) findViewById(R.id.winner);

@@ -53,8 +53,7 @@
 					android:layout_marginTop="0dip"></ImageView>
 				<TextView android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:textColor="#FFFFFF"
-					android:textStyle="bold" android:textSize="20dip" android:text="Leaderboard"
-					android:id="@+id/leaders"></TextView>
+					android:textStyle="bold" android:textSize="20dip" android:id="@+id/leaders" android:text="@string/leadTitle"></TextView>
 			</LinearLayout>
 			<LinearLayout android:layout_height="wrap_content"
 				android:id="@+id/buttonsll" android:layout_width="fill_parent"
@@ -63,9 +62,9 @@
 				android:paddingTop="10dip" android:paddingBottom="15dip">
 				<Button android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/generaleader"
-					android:background="@drawable/all"></Button>
+					android:background="@drawable/all" android:text="@string/all" android:textColor="#FFFFFF"></Button>
 				<Button android:layout_width="wrap_content" android:id="@+id/friendsleader"
-					android:layout_height="wrap_content" android:background="@drawable/friends"></Button>
+					android:layout_height="wrap_content" android:background="@drawable/friends" android:text="@string/friends" android:textColor="#FFFFFF"></Button>
 			</LinearLayout>
 			<TableLayout android:scrollbars="vertical"
 				android:background="#FFFFFF" android:layout_width="fill_parent"

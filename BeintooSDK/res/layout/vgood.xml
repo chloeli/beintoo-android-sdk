@@ -26,14 +26,11 @@
 					android:layout_alignParentRight="true" android:background="@drawable/close" android:layout_centerVertical="true" android:layout_marginRight="8dip"/>
 			</RelativeLayout>
 		</LinearLayout>
-		<LinearLayout android:id="@+id/linearLayout1"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:gravity="center">
-			<ImageView android:layout_height="wrap_content"
-				android:layout_centerHorizontal="true" android:id="@+id/beintoogoodmsg"
-				android:background="@drawable/boxcoupon" android:layout_gravity="center"
-				android:layout_width="wrap_content" android:layout_marginTop="10dip" />
-		</LinearLayout>
+		<FrameLayout android:layout_height="wrap_content" android:paddingTop="20dip" android:layout_width="wrap_content" android:layout_gravity="center_horizontal">
+			<ImageView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:scaleType="fitCenter" android:src="@drawable/tabletop"/>
+			<TextView android:layout_height="wrap_content" android:layout_gravity="center" android:textColor="#FFFFFF" android:textStyle="normal" android:typeface="normal" android:layout_marginTop="-20dip" android:gravity="center" android:layout_width="fill_parent" android:text="@string/boxCoupon" android:textSize="14dip"/>
+		</FrameLayout>
 		<LinearLayout android:id="@+id/linearLayout2"
 			android:layout_width="fill_parent" android:padding="0dip"
 			android:layout_height="wrap_content">
@@ -69,8 +66,7 @@
 							android:textStyle="bold" />
 						<TextView android:layout_width="wrap_content"
 							android:layout_height="wrap_content" android:textColor="#000000"
-							android:layout_marginTop="10dip" android:text="End date:"
-							android:id="@+id/endated" />
+							android:layout_marginTop="10dip" android:id="@+id/endated" android:text="@string/vgoodEnd"/>
 						<TextView android:layout_width="wrap_content"
 							android:layout_height="wrap_content" android:textColor="#a7a7a7"
 							android:id="@+id/endate" android:text="end"></TextView>
@@ -91,8 +87,8 @@
 					android:paddingLeft="20dip">
 					<TextView android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:id="@+id/shortdesc"
-						android:text="Who also converted" android:layout_marginTop="10dip"
-						android:textColor="#a7a7a7" />
+						android:layout_marginTop="10dip"
+						android:textColor="#a7a7a7" android:text="@string/vgoodWhoAlso"/>
 				</LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
 					android:id="@+id/alsoconverted" android:layout_height="wrap_content"
@@ -116,14 +112,14 @@
 			android:layout_height="wrap_content" android:gravity="center"
 			android:layout_marginBottom="20dip" android:layout_marginTop="5dip">
 			<Button android:layout_height="wrap_content" android:id="@+id/getcoupon"
-				android:layout_width="wrap_content" android:background="@drawable/getcoupon">
+				android:layout_width="wrap_content" android:background="@drawable/buttonlarge" android:text="@string/getcoupon" android:textColor="#FFFFFF" android:textSize="16dip">
 			</Button>
 		</LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"
 			android:orientation="vertical" android:id="@+id/giftll"
 			android:layout_height="wrap_content" android:gravity="center"
 			android:layout_marginBottom="20dip" android:layout_marginTop="0dip">
-			<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:background="@drawable/sendgift" android:id="@+id/sendasgift">
+			<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/sendasgift" android:background="@drawable/buttonlarge" android:text="@string/sendasgift" android:textColor="#FFFFFF" android:textSize="16dip">
 			</Button>
 		</LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"

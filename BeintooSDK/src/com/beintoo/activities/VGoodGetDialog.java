@@ -101,7 +101,7 @@ public class VGoodGetDialog extends Dialog{
 		});
 		
 		Button getVgood = (Button) findViewById(R.id.getcoupon);
-		getVgood.setBackgroundDrawable(b.setPressedBg(R.drawable.getcoupon, R.drawable.getcoupon_h, R.drawable.getcoupon_h));
+		getVgood.setBackgroundDrawable(b.setPressedBg(R.drawable.buttonlarge, R.drawable.buttonlarge_h, R.drawable.buttonlarge_h));
 		getVgood.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				PreferencesHandler.saveString("openUrl", vgood.getGetRealURL(), v.getContext());
@@ -112,10 +112,10 @@ public class VGoodGetDialog extends Dialog{
 		});
 		
 		Button sendasgift = (Button) findViewById(R.id.sendasgift);
-		sendasgift.setBackgroundDrawable(b.setPressedBg(R.drawable.sendgift, R.drawable.sendgift_h, R.drawable.sendgift_h));
+		sendasgift.setBackgroundDrawable(b.setPressedBg(R.drawable.buttonlarge, R.drawable.buttonlarge_h, R.drawable.buttonlarge_h));
 		sendasgift.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Loading friends...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.friendLoading),true);
 				new Thread(new Runnable(){      
 		    		public void run(){
 		    			try{     			

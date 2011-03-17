@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="challStatus">Stato:</string>
+    <string name="challStart">Data inizio:</string>
+    <string name="challEnd">Data fine:</string>
+    <string name="challWinner">Vincitore:</string>
+    <string name="challPrize">Premio:</string>
+    <string name="challNoPending">Non hai nessuna richiesta di sfida in attesa</string>
+    <string name="challFromTo" xml:space="preserve">Da te a\u0020</string>
+    <string name="challFrom" xml:space="preserve">Da\u0020</string>
+    <string name="challYou" xml:space="preserve">\u0020a te</string>
+    <string name="challRefused">Sfida rifiutata</string>
+    <string name="challAccepted">Sfida accetta</string>
+    <string name="challNoPendingC">Non hai nessuna richiesta di sfida in attesa</string>
+    <string name="challNoAccepted">Non hai accettato nessuna challenge</string>
+    <string name="challNoEnded">Non hai nessuna sfida completata</string>
+    <string name="challChallenge">Sfida</string>
+    <string name="challSent" xml:space="preserve">Sfida inviata a\u0020</string>
+    <string name="challAccept">Vuoi accettare questa sfida al costo di\u0020</string>
+    
+    <string name="leadTitle">Leaderboard</string>
+    <string name="leadScore">Punteggio:\u0020</string>
+    
+    <string name="friendSel">Seleziona un amico</string>
+    <string name="friendsNo">Non hai alcun amico</string>
+    
+    <string name="friendSure" xml:space="preserve">Sei sicuro di voler inviare questo coupon come regalo a\u0020</string>
+    <string name="friendSent" xml:space="preserve">Regalo inviato a\u0020</string> 
+    <string name="friendLoading">Caricamento amici...</string>
+    
+    <string name="homeWelcome" xml:space="preserve">Bentornato\u0020</string>
+    
+    <string name="profileScore">Il tuo punteggio</string>
+    <string name="profileLevel" xml:space="preserve">Livello:\u0020</string>
+    <string name="profileTotalScore" xml:space="preserve">Punteggio totale:\u0020</string>
+    <string name="profileBestScore" xml:space="preserve">\nMiglior punteggio:\u0020</string>
+    <string name="profileLastScore" xml:space="preserve">\nUltimo punteggio:\u0020</string>
+    <string name="profileNoScores">Non hai nessun punteggio per questa app</string>
+    
+    <string name="vgoodWhoAlso">Chi altro ha acquistato</string>
+    <string name="vgoodEnd">Data di fine:</string>
+    
+    <string name="walletNoGoods">Non hai nessun bene virtuale</string>
+   
+    
+    <!-- ERROR DISPLAYER AND TOAST MESSAGES -->
+    <string name="connectionError">Errore di connessione.\nPer favore controlla la tua connessione ad Internet.</string>
+    <string name="loadingBeintoo">Caricamento Beintoo...</string>
+    <string name="loading">Caricamento...</string>
+    <string name="login">Login...</string>
+    <string name="wronglogin">Username o password errate</string>
+    <string name="earnedBalance">Il tuo punteggio totale é: %d</string>
+    <string name="earnedScore">Hai guadagnato %d punti\n</string>
+    
+    <!-- BOXES -->
+    <string name="boxWallet">I tuoi premi</string>
+    <string name="boxChallenge">Le tue sfide\nE\' tempo di vincere</string>
+    <string name="boxCoupon">Congratulazioni,\necco il tuo premio</string>
+    <string name="boxUserSel">Abbiamo trovato più di un giocatore Beintoo.\nSeleziona quale vuoi utilizzare\no crea un nuovo account</string>
+    <string name="boxUserLogin">Fai il login su Beintoo o utilizza\nil tuo account Facebook.</string>
+    
+    <!-- BUTTONS -->
+    <string name="trynow">Prova Beintoo Ora</string>
+    <string name="nothanks">No, grazie</string>
+    <string name="anotheraccount">Usa un altro account</string>
+    <string name="all">Tutti</string>
+    <string name="friends">Amici</string>
+    <string name="pending">In attesa</string>
+    <string name="ongoing">In corso</string>
+    <string name="ended">Finite</string>
+    <string name="getcoupon">Ottieni lo sconto</string>
+    <string name="sendasgift">Invia come regalo</string>
+    <string name="loginbt">Login</string>
+    <string name="newuser">Nuovo utente</string>
+    <!-- OTHERS -->
+    <string name="no">No</string>
+    <string name="yes">Si</string>
+</resources>

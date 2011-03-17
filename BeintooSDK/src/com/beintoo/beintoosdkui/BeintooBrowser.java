@@ -27,6 +27,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.GeolocationPermissions.Callback;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -36,7 +37,7 @@ import com.beintoo.R;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 
 
-public class BeintooBrowser extends Dialog {
+public class BeintooBrowser extends Dialog implements android.webkit.GeolocationPermissions.Callback{
 	WebView webview;
 	final Dialog current;
 	
@@ -59,15 +60,22 @@ public class BeintooBrowser extends Dialog {
 		
 		WebSettings ws = webview.getSettings();
 		ws.setJavaScriptEnabled(true);
-		
-		
+		ws.setGeolocationEnabled(true);
+		ws.setJavaScriptCanOpenWindowsAutomatically(true);
+		ws.setPluginsEnabled(true);
 
 		webview.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
 				ProgressBar p = (ProgressBar) findViewById(R.id.progress);				
 				p.setProgress(progress);
 			}
-		});
+			
+			public void onGeolocationPermissionsShowPrompt(String origin, Callback callback) {				
+				super.onGeolocationPermissionsShowPrompt(origin, callback);
+				callback.invoke(origin, true, false);
+			}
+			
+		}); 
 		webview.setWebViewClient(new WebViewClient() {
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
@@ -94,6 +102,8 @@ public class BeintooBrowser extends Dialog {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
 	    	if(webview.canGoBack())
 	    		webview.goBack();
+	    	else
+	    		current.dismiss();
 	        return false; 
 	    }
 	    return super.onKeyDown(keyCode, event);
@@ -137,5 +147,10 @@ public class BeintooBrowser extends Dialog {
         cookieManager.removeAllCookie();        
 	    cookieManager.removeSessionCookie();
 	    cookieSyncMngr.stopSync();	    
+	}
+
+	public void invoke(String origin, boolean allow, boolean remember) {
+		// TODO Auto-generated method stub
+		
 	}
 }

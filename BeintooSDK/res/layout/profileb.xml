@@ -85,11 +85,10 @@
 					android:id="@+id/contests" android:layout_marginLeft="10dip"
 					android:layout_marginRight="10dip" android:layout_marginTop="20dip" android:layout_marginBottom="20dip">
 					<TextView android:id="@+id/textView1"
-						android:layout_height="wrap_content" android:text="Your scores"
-						android:textSize="14px" android:background="#40abd6"
+						android:layout_height="wrap_content" android:textSize="14px" android:background="#40abd6"
 						android:textColor="#FFFFFF" android:textStyle="bold"
 						android:layout_width="fill_parent" android:layout_gravity="center"
-						android:gravity="center" android:padding="10dip"></TextView>
+						android:gravity="center" android:padding="10dip" android:text="@string/profileScore"></TextView>
 				</LinearLayout>
 
 			</LinearLayout>
@@ -107,7 +106,7 @@
 			android:layout_height="wrap_content" android:gravity="center" android:layout_marginBottom="20dip" android:layout_marginTop="0dip">
 
 			<Button android:layout_height="wrap_content" android:id="@+id/logout"
-				android:layout_width="wrap_content" android:background="@drawable/logoutbt">
+				android:layout_width="wrap_content" android:background="@drawable/logoutbt" android:text="Logout" android:textColor="#FFFFFF">
 			</Button>
 
 		</LinearLayout>

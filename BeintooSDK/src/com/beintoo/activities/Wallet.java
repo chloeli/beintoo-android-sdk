@@ -19,12 +19,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -60,7 +64,7 @@ public class Wallet extends Dialog implements OnClickListener{
 				loadWallet();
 			else { // NO VGOODS SHOW A MESSAGE
 				TextView noGoods = new TextView(getContext());
-				noGoods.setText("You don't have any virtual goods");
+				noGoods.setText(getContext().getString(R.string.walletNoGoods));
 				noGoods.setTextColor(Color.GRAY);
 				noGoods.setPadding(20,0,0,0);						
 				TableLayout table = (TableLayout) findViewById(R.id.table);
@@ -128,16 +132,17 @@ public class Wallet extends Dialog implements OnClickListener{
 		  nameView.setMaxWidth(50);
 		  TextView enddate = new TextView(activity);
 		  try { // try catch for SimpleDateFormat parse
-			  SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss"); 
-			  curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));
-			  Date endDate = curFormater.parse(end);
+			  
+			  SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss",Locale.UK); 
+			  curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			  
+			  Date endDate = curFormater.parse(end);			  
 			  curFormater.setTimeZone(TimeZone.getDefault());
 			  
-			  enddate.setText("End date:\n"+DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT).format(endDate));
+			  enddate.setText(activity.getString(R.string.challEnd)+"\n"+DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(endDate));
 			  enddate.setTextSize(12);
 			  enddate.setPadding(5, 0, 0, 0);
 			  enddate.setTextColor(Color.parseColor("#787A77"));
-		  } catch (Exception e){}
+		  } catch (Exception e){e.printStackTrace();}
 		  
 		  row.addView(image);
 		  main.addView(nameView);
@@ -161,11 +166,26 @@ public class Wallet extends Dialog implements OnClickListener{
 	}
 
 	public void onClick(View v) {
-		int selectedRow = v.getId();
-		PreferencesHandler.saveString("openUrl", vgood[selectedRow].getShowURL(), v.getContext());
-		BeintooBrowser bb = new BeintooBrowser(v.getContext());
-		bb.show();
-		
-		
+		final int selectedRow = v.getId();
+		final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{ 
+    				PreferencesHandler.saveString("openUrl", vgood[selectedRow].getShowURL(), current.getContext());		
+    				UIhandler.sendEmptyMessage(0);
+    			}catch (Exception e){
+    			}
+    			dialog.dismiss();
+    		}
+		}).start();	
 	}
+	static Handler UIhandler = new Handler() {
+		  @Override
+		  public void handleMessage(Message msg) {
+			BeintooBrowser bb = new BeintooBrowser(current.getContext());
+			bb.show();			
+	        super.handleMessage(msg);
+		  }
+	};
+	
 }

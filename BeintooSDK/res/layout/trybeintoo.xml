@@ -33,11 +33,11 @@
 			<Button android:background="@drawable/trybutton"
 				android:layout_centerHorizontal="true" android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:id="@+id/trybt" android:layout_marginBottom="20dip" android:layout_marginTop="20dip"></Button>
+				android:id="@+id/trybt" android:layout_marginBottom="20dip" android:layout_marginTop="20dip" android:text="@string/trynow" android:textColor="#FFFFFF" android:textSize="18dip"></Button>
 			<Button android:background="@drawable/nothanksbt"
 				android:layout_centerHorizontal="true" android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:id="@+id/nothanksbt"></Button>
+				android:id="@+id/nothanksbt" android:text="@string/nothanks" android:textColor="#FFFFFF" android:textSize="15dip"></Button>
 		</LinearLayout>
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:id="@+id/maincontainer"

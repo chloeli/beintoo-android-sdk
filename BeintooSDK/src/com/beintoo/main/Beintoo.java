@@ -16,6 +16,7 @@
 package com.beintoo.main;
 
 
+import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.activities.VGoodGetDialog;
 import com.beintoo.activities.tryBeintoo;
@@ -83,7 +84,7 @@ public class Beintoo{
 		
 		try{
 			if(isLogged == true && currentPlayer.getUser() != null){
-				final ProgressDialog  dialog = ProgressDialog.show(ctx, "", "Loading Beintoo...",true);
+				final ProgressDialog  dialog = ProgressDialog.show(ctx, "", ctx.getString(R.string.loadingBeintoo),true);
 				Thread t = new Thread(new Runnable(){     					
             		public void run(){ 
             			try{   	
@@ -208,7 +209,7 @@ public class Beintoo{
     				if(loginPlayer.getUser()!=null){
         				Message msg = new Message();
         				Bundle b = new Bundle();
-    					b.putString("Message", "Welcome back "+loginPlayer.getUser().getNickname());    				
+    					b.putString("Message", ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname());    				
     					msg.setData(b);
     					msg.what = LOGIN_MESSAGE;
     					UIhandler.sendMessage(msg);
@@ -273,9 +274,9 @@ public class Beintoo{
 	    				final Message msg = new Message();
 	    				Bundle b = new Bundle();
 	    				if(balance != -1)
-	    					b.putString("Message", "You earned "+lastScore+" points\nYour balance is: "+balance);
+	    					b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore)+String.format(ctx.getString(R.string.earnedBalance), balance)); 
 	    				else
-	    					b.putString("Message", "You earned "+lastScore+" points");
+	    					b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore));
 	    				
 	    				msg.setData(b);
 	    				msg.what = SUBMITSCORE_POPUP;

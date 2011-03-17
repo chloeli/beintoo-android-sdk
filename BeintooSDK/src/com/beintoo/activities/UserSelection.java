@@ -97,7 +97,7 @@ public class UserSelection extends Dialog implements OnClickListener{
 		// ADD THE NEW PLAYER BUTTON
 	    Button newplayer = (Button) findViewById(R.id.anotheracc);
 	    BeButton b = new BeButton(ctx);
-	    newplayer.setBackgroundDrawable(b.setPressedBg(R.drawable.useanother, R.drawable.useanother_h, R.drawable.useanother_h));		
+	    newplayer.setBackgroundDrawable(b.setPressedBg(R.drawable.buttonlarge, R.drawable.buttonlarge_h, R.drawable.buttonlarge_h));		
 	    /*newplayer.setBackgroundResource(R.drawable.useanother);
 	    newplayer.setLayoutParams(new LinearLayout.LayoutParams(
 		          LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -135,7 +135,7 @@ public class UserSelection extends Dialog implements OnClickListener{
     
 	public static TableRow createRow(View image, String txt, Context activity) {
 		  TableRow row = new TableRow(activity);
-		
+		  row.setGravity(Gravity.CENTER);
 		 /* ImageView icon = (ImageView) image;
 		  icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
 		  icon.setMaxHeight(30);
@@ -177,7 +177,7 @@ public class UserSelection extends Dialog implements OnClickListener{
 	// CALLED WHEN THE USER SELECT A USER IN THE TABLE
 	public void onClick(View v) {
 		final int selectedRow = v.getId();
-		final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Login...",true);
+		final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.login),true);
 		new Thread(new Runnable(){      
     		public void run(){
     			try{   
