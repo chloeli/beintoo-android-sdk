@@ -106,8 +106,10 @@ public class LoaderImageView extends LinearLayout{
 					imageLoadedHandler.sendEmptyMessage(COMPLETE);
 				} catch (MalformedURLException e) {
 					imageLoadedHandler.sendEmptyMessage(FAILED);
+					e.printStackTrace();
 				} catch (IOException e) {
 					imageLoadedHandler.sendEmptyMessage(FAILED);
+					e.printStackTrace();
 				}
 			};
 		}.start();
@@ -136,7 +138,7 @@ public class LoaderImageView extends LinearLayout{
 		try{
 			return Drawable.createFromStream(((java.io.InputStream)new java.net.URL(url).getContent()), "name");
 		}catch(Exception e){
-			
+			e.printStackTrace();
 		}
 		return null;
 	}

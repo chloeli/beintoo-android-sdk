@@ -16,6 +16,8 @@
 package com.beintoo.main;
 
 
+
+
 import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.activities.VGoodGetDialog;
@@ -48,6 +50,7 @@ import android.os.Message;
  
 public class Beintoo{
 	static Context currentContext;
+	
 	private final static int GO_HOME = 1;
 	private final static int GET_VGOOD = 2;
 	private final static int LOGIN_MESSAGE = 3;
@@ -56,6 +59,7 @@ public class Beintoo{
 	public static Dialog currentDialog = null;
 	public static Dialog homeDialog = null;
 	public static Vgood vgood = null;
+	public static String[] usedFeatures = null;
 	
 	/**
 	 * Set the developer apikey
@@ -128,47 +132,55 @@ public class Beintoo{
 		final Player currentPlayer = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));
 		final BeintooVgood vgoodHand = new BeintooVgood();
 		
-    	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
-    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
-    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-			final LocationListener locationListener = new LocationListener() {
-			    public void onLocationChanged(Location location) {
-			    	locationManager.removeUpdates(this);
-			    	final Location l = location;
-			    	new Thread(new Runnable(){     					
-			    		public void run(){
-			    			try{			    				    	
-	    						// GET A VGOOD WITH COORDINATES
-	    				    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
-	    								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);    						 
-	    				    	if(vgood.getName() != null){
-	    				    		UIhandler.sendEmptyMessage(GET_VGOOD);
-	    				    	}
-			    			}catch(Exception e){ e.printStackTrace();}
-			    		}
-					}).start();	
-			    }
-				public void onProviderDisabled(String provider) {}
-
-				public void onProviderEnabled(String provider) {}
-
-				public void onStatusChanged(String provider,int status, Bundle extras) {  }
-			};   
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener); //NETWORK_PROVIDER
-    	}else {
-    		new Thread(new Runnable(){     					
-	    		public void run(){
-	    			try{			
-	            		// GET A VGOOD WITHOUT COORDINATES
-				    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, null, 
-								null, null, false);   				    	
-	            		if(vgood.getName() != null){
-	            			UIhandler.sendEmptyMessage(GET_VGOOD);
-				    	}
-	    			}catch(Exception e){e.printStackTrace();}
-	    		}
-			}).start();			
-    	}
+		try {
+	    	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
+	    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
+	    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+	    		new Thread(new Runnable(){     					
+		    		public void run(){
+		    			try{	
+				    		Looper.prepare();
+							final LocationListener locationListener = new LocationListener() {
+							    public void onLocationChanged(Location location) {
+							    	locationManager.removeUpdates(this);
+							    	final Location l = location;
+							    					    				
+		    						// GET A VGOOD WITH COORDINATES
+		    				    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
+		    								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);    						 
+		    				    	if(vgood.getName() != null){
+		    				    		UIhandler.sendEmptyMessage(GET_VGOOD);
+		    				    	}
+		    				    	Looper.myLooper().quit(); //QUIT THE THREAD
+							    }
+								public void onProviderDisabled(String provider) {}
+				
+								public void onProviderEnabled(String provider) {}
+				
+								public void onStatusChanged(String provider,int status, Bundle extras) {  }
+		    				}; 
+							locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener); //NETWORK_PROVIDER
+							Looper.loop();
+		    			}catch(Exception e){e.printStackTrace();}	
+		    		}		
+	    		}).start();
+	    	}else {
+	    		new Thread(new Runnable(){     					
+		    		public void run(){
+		    			try{			 
+		            		// GET A VGOOD WITHOUT COORDINATES
+					    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, null, 
+									null, null, false);   				    	
+		            		if(vgood.getName() != null){
+		            			UIhandler.sendEmptyMessage(GET_VGOOD);
+					    	}
+		    			}catch(Exception e){e.printStackTrace();}
+		    		}
+				}).start();			
+	    	}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
     			
 	}
 	
@@ -214,6 +226,7 @@ public class Beintoo{
     					msg.what = LOGIN_MESSAGE;
     					UIhandler.sendMessage(msg);
     				}
+    				
     			}catch (Exception e){
     			}	
     		}
@@ -248,59 +261,90 @@ public class Beintoo{
 		}catch(Exception e){e.printStackTrace();}
 	}
 	
+	
 	/**
-	 * Submit user score 
+	 * Submit player score and save the score in case of submit error. Then send it in the next submit score 
+	 * 
+	 * @param ctx current context
+	 * @param lastScore player score to submit
+	 * @param balance player balance
+	 * @param codeID codeID
+	 * @param showNotification show a toast notification to the player with the score
+	 * @param location player Location
+	 */
+	private static void submitScoreHelper (final Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification,final Location location){
+		new Thread(new Runnable(){     					
+    		public void run(){	
+				try {
+	    			final Message msg = new Message();
+					Bundle b = new Bundle();
+					if(balance != -1)
+						b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore)+String.format(ctx.getString(R.string.earnedBalance), balance)); 
+					else
+						b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore));
+					
+					msg.setData(b);
+					msg.what = SUBMITSCORE_POPUP;
+					
+					/* check if there is a previously submitted score that could not be submitted because of
+					 connection error */					
+					final int errorScore = PreferencesHandler.getInt("errorScore", ctx);
+					
+					final BeintooPlayer player = new BeintooPlayer();
+					String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
+					final Player p = JSONconverter.playerJsonToObject(jsonPlayer);
+					com.beintoo.wrappers.Message result;
+					if(location != null){
+						result = player.submitScore(p.getGuid(), codeID, null, lastScore+errorScore, balance,Double.toString(location.getLatitude()), 
+								Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), null);
+					}else{
+						result = player.submitScore(p.getGuid(), codeID, null, lastScore+errorScore, balance, null, null, null, null);
+					}
+					
+					if(result.getMessage().equals("ERROR")){
+						int errorTScore = PreferencesHandler.getInt("errorScore", ctx);
+						errorTScore += lastScore;
+						PreferencesHandler.saveInt("errorScore", errorTScore, ctx);
+					}else									
+						PreferencesHandler.clearPref("errorScore", ctx);
+					
+					if(showNotification)
+						UIhandler.sendMessage(msg);
+				
+				}catch (Exception e){e.printStackTrace();}
+    		}	
+    	}).start();				
+	}
+	
+
+	/**
+	 * Submit user score check the user location and then call submitScoreHelper wich make the api call in a thread
 	 * 
 	 * @param ctx the current Context
 	 * @param lastScore the score to submit
 	 * @param balance the total user score balance (used in performance apps)
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @param showNotification if true it will show a notification to the user when receive a submit score 
-	 */
-	public static void submitScore(final Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification){
-		/* check if there is a previously submitted score that could not be submitted because of
-		 connection error */
-		final int errorScore = PreferencesHandler.getInt("errorScore", ctx);
-		 
-		final BeintooPlayer player = new BeintooPlayer();
+	 */	
+	public static void submitScore(final Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification){		
 		String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-		final Player p = JSONconverter.playerJsonToObject(jsonPlayer);
-		
-		if(p != null){
-			new Thread(new Runnable(){     					
-	    		public void run(){
-	    			Looper.prepare();
-	    			try{
-	    				final Message msg = new Message();
-	    				Bundle b = new Bundle();
-	    				if(balance != -1)
-	    					b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore)+String.format(ctx.getString(R.string.earnedBalance), balance)); 
-	    				else
-	    					b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore));
-	    				
-	    				msg.setData(b);
-	    				msg.what = SUBMITSCORE_POPUP;
-	    				
-			        	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
-			        	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
-			        			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+		final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
+		if(p != null){			    			
+			try{
+	        	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
+	        	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
+	        			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+	        		new Thread(new Runnable(){     					
+	            		public void run(){	
+	        				try {
+		        			Looper.prepare();
 							final LocationListener locationListener = new LocationListener() {
 							    public void onLocationChanged(Location location) {		 
 									// SUBMIT SCORE WITH COORDS
-							    	
-									com.beintoo.wrappers.Message result = player.submitScore(p.getGuid(), codeID, null, lastScore+errorScore, balance,Double.toString(location.getLatitude()), 
-											Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), null);
-									if(result.getMessage().equals("ERROR")){
-										int errorScore = PreferencesHandler.getInt("errorScore", ctx);
-					        			errorScore += lastScore;
-					        			PreferencesHandler.saveInt("errorScore", errorScore, ctx);
-									}else									
-										PreferencesHandler.clearPref("errorScore", ctx);
-									
+							    	submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,location);
 					    			// REMOVE NETWORK UPDATE - NO MORE NEEDED
-					    			locationManager.removeUpdates(this);
-					    			if(showNotification)
-					    				UIhandler.sendMessage(msg);
+					    			locationManager.removeUpdates(this);	
+					    			Looper.myLooper().quit(); //QUIT THE THREAD
 							    }
 								public void onProviderDisabled(String provider) {}
 			
@@ -308,27 +352,17 @@ public class Beintoo{
 			
 								public void onStatusChanged(String provider,int status, Bundle extras) {}
 							};   
-							locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-			        	}else {
-			        		com.beintoo.wrappers.Message result = player.submitScore(p.getGuid(), codeID, null, lastScore+errorScore, balance, null, null, null, null);
-			        		if(result.getMessage().equals("ERROR")){			        			
-			        			int errorScore = PreferencesHandler.getInt("errorScore", ctx);
-			        			errorScore += lastScore;
-			        			PreferencesHandler.saveInt("errorScore", errorScore, ctx);
-			        		}else									
-								PreferencesHandler.clearPref("errorScore", ctx);
-							
-			        		if(showNotification)
-			        			UIhandler.sendMessage(msg);
-			        	}
-			
-	    			}catch(Exception e){ 
-	    				e.printStackTrace();	    				
-	    			}	    			
-				Looper.loop();
-	    		}
-			}).start();
-			
+							locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.myLooper());
+							Looper.loop();
+	        				}catch(Exception e){e.printStackTrace();}
+	            		}	
+	            	}).start();	
+	        	}else { // LOCATION IS DISABLED
+	        		submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,null);
+	        	}	
+			}catch(Exception e){ 
+				e.printStackTrace();	    				
+			}		    			
 		}
 	}
 	
@@ -373,6 +407,14 @@ public class Beintoo{
 	
 	public static PlayerScore getPlayerScore(final Context ctx){
 		return getPlayerScore(ctx,null);
+	}
+	
+	/**
+	 * Se which features to use in your app
+	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
+	 */
+	public static void featureToUse(String[] features){
+		usedFeatures = features;
 	}
 	
 	/*

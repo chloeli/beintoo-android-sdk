@@ -16,6 +16,8 @@
 package com.beintoo.activities;
 
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 public class BeintooHome extends Dialog {
@@ -59,101 +62,111 @@ public class BeintooHome extends Dialog {
 		TextView nickname = (TextView) findViewById(R.id.nickname);
 		nickname.setText(getContext().getString(R.string.homeWelcome)+getCurrentPlayerNickname());
 		
+		// CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
+		setFeatureToUse();
 		
-		ImageButton profilebt = (ImageButton) findViewById(R.id.profilebt);
 		BeButton b = new BeButton(ctx);
-		profilebt.setBackgroundDrawable(b.setPressedBg(R.drawable.profilebt, R.drawable.profilebt_h, R.drawable.profilebt_h));			    
-		profilebt.setOnClickListener(new ImageButton.OnClickListener(){
-			public void onClick(View v) {				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-				new Thread(new Runnable(){      
-            		public void run(){
-            			try{ 
-							BeintooPlayer bPlayer = new BeintooPlayer();
-							Player currentSaved = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));				
-							Player requestedPlayer = bPlayer.getPlayer(currentSaved.getGuid());				
-							PreferencesHandler.saveString("currentPlayer", JSONconverter.playerToJson(requestedPlayer), getContext());
-							
-							UIhandler.sendEmptyMessage(OPEN_PROFILE);
-            			}catch (Exception e){
-            			}
-            			dialog.dismiss();
-            		}
-				}).start();
-			}
-		});
+		
+		Button profilebt = (Button) findViewById(R.id.profilebt);		
+		if(profilebt != null){
+			profilebt.setBackgroundDrawable(b.setPressedBg(R.drawable.profilebt, R.drawable.profilebt_h, R.drawable.profilebt_h));			    
+			profilebt.setOnClickListener(new Button.OnClickListener(){
+				public void onClick(View v) {				
+					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+					new Thread(new Runnable(){      
+	            		public void run(){
+	            			try{ 
+								BeintooPlayer bPlayer = new BeintooPlayer();
+								Player currentSaved = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));				
+								Player requestedPlayer = bPlayer.getPlayer(currentSaved.getGuid());				
+								PreferencesHandler.saveString("currentPlayer", JSONconverter.playerToJson(requestedPlayer), getContext());
+								
+								UIhandler.sendEmptyMessage(OPEN_PROFILE);
+	            			}catch (Exception e){
+	            			}
+	            			dialog.dismiss();
+	            		}
+					}).start();
+				}
+			});
+		}
 		
 		Button leaderbt = (Button) findViewById(R.id.leaderboardbt);
-		leaderbt.setBackgroundDrawable(b.setPressedBg(R.drawable.leaderbt, R.drawable.leaderbt_h, R.drawable.leaderbt_h));			    
-		leaderbt.setOnClickListener(new ImageButton.OnClickListener(){
-			public void onClick(View v) {				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-				new Thread(new Runnable(){      
-            		public void run(){
-            			try{ 
-							BeintooApp app = new BeintooApp();							
-							Map<String, List<EntryCouplePlayer>> leader = app.TopScore(null, 0);
-							Gson gson = new Gson();
-							String jsonLeaderboard = gson.toJson(leader);
-							
-							PreferencesHandler.saveString("leaderboard", jsonLeaderboard, getContext());
-							UIhandler.sendEmptyMessage(OPEN_LEADERBOARD);							
-            			}catch (Exception e){
-            				e.printStackTrace();
-            			}
-            			dialog.dismiss();
-            		}
-				}).start();
-			}
-		});
-		
+		if(leaderbt != null){
+			leaderbt.setBackgroundDrawable(b.setPressedBg(R.drawable.leaderbt, R.drawable.leaderbt_h, R.drawable.leaderbt_h));			    
+			leaderbt.setOnClickListener(new ImageButton.OnClickListener(){
+				public void onClick(View v) {				
+					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+					new Thread(new Runnable(){      
+	            		public void run(){
+	            			try{ 
+								BeintooApp app = new BeintooApp();							
+								Map<String, List<EntryCouplePlayer>> leader = app.TopScore(null, 0);
+								Gson gson = new Gson();
+								String jsonLeaderboard = gson.toJson(leader);
+								
+								PreferencesHandler.saveString("leaderboard", jsonLeaderboard, getContext());
+								UIhandler.sendEmptyMessage(OPEN_LEADERBOARD);							
+	            			}catch (Exception e){
+	            				e.printStackTrace();
+	            			}
+	            			dialog.dismiss();
+	            		}
+					}).start();
+				}
+			});
+		}
 		
 		Button walletbt = (Button) findViewById(R.id.walletbt);
-		walletbt.setBackgroundDrawable(b.setPressedBg(R.drawable.wallet, R.drawable.wallet_h, R.drawable.wallet_h));			    
-		walletbt.setOnClickListener(new ImageButton.OnClickListener(){
-			public void onClick(View v) {				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-				new Thread(new Runnable(){      
-            		public void run(){
-            			try{             				
-            				BeintooVgood newvgood = new BeintooVgood();            				
-            				// GET THE CURRENT LOGGED PLAYER
-            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
-            				Vgood [] vgood = newvgood.showByUser(p.getUser().getId(), null);
-            				PreferencesHandler.saveString("wallet", new Gson().toJson(vgood), getContext());
-            				UIhandler.sendEmptyMessage(OPEN_WALLET);							
-            			}catch (Exception e){
-            				e.printStackTrace();
-            			}
-            			dialog.dismiss();
-            		}
-				}).start();
-			}
-		});
+		if(walletbt != null){
+			walletbt.setBackgroundDrawable(b.setPressedBg(R.drawable.wallet, R.drawable.wallet_h, R.drawable.wallet_h));			    
+			walletbt.setOnClickListener(new ImageButton.OnClickListener(){
+				public void onClick(View v) {				
+					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+					new Thread(new Runnable(){      
+	            		public void run(){
+	            			try{             				
+	            				BeintooVgood newvgood = new BeintooVgood();            				
+	            				// GET THE CURRENT LOGGED PLAYER
+	            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
+	            				Vgood [] vgood = newvgood.showByUser(p.getUser().getId(), null);
+	            				PreferencesHandler.saveString("wallet", new Gson().toJson(vgood), getContext());
+	            				UIhandler.sendEmptyMessage(OPEN_WALLET);							
+	            			}catch (Exception e){
+	            				e.printStackTrace();
+	            			}
+	            			dialog.dismiss();
+	            		}
+					}).start();
+				}
+			});
+		}
 		
 		Button challengesbt = (Button) findViewById(R.id.challengesbt);
-		challengesbt.setBackgroundDrawable(b.setPressedBg(R.drawable.challenges, R.drawable.challenges_h, R.drawable.challenges_h));			    
-		challengesbt.setOnClickListener(new ImageButton.OnClickListener(){
-			public void onClick(View v) {				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-				new Thread(new Runnable(){      
-            		public void run(){
-            			try{             				
-            				BeintooUser newuser = new BeintooUser();            				
-            				// GET THE CURRENT LOGGED PLAYER
-            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
-            				Challenge[] challenge = newuser.challengeShow(p.getUser().getId(), "TO_BE_ACCEPTED");
-            				
-            				PreferencesHandler.saveString("challenge", new Gson().toJson(challenge), getContext());
-            				UIhandler.sendEmptyMessage(OPEN_CHALLENGE);							
-            			}catch (Exception e){
-            				e.printStackTrace();
-            			}
-            			dialog.dismiss();
-            		}
-				}).start();
-			}
-		});
+		if(challengesbt != null){
+			challengesbt.setBackgroundDrawable(b.setPressedBg(R.drawable.challenges, R.drawable.challenges_h, R.drawable.challenges_h));			    
+			challengesbt.setOnClickListener(new ImageButton.OnClickListener(){
+				public void onClick(View v) {				
+					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+					new Thread(new Runnable(){      
+	            		public void run(){
+	            			try{             				
+	            				BeintooUser newuser = new BeintooUser();            				
+	            				// GET THE CURRENT LOGGED PLAYER
+	            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
+	            				Challenge[] challenge = newuser.challengeShow(p.getUser().getId(), "TO_BE_ACCEPTED");
+	            				
+	            				PreferencesHandler.saveString("challenge", new Gson().toJson(challenge), getContext());
+	            				UIhandler.sendEmptyMessage(OPEN_CHALLENGE);							
+	            			}catch (Exception e){
+	            				e.printStackTrace();
+	            			}
+	            			dialog.dismiss();
+	            		}
+					}).start();
+				}
+			});
+		}
 		
 		Button close = (Button) findViewById(R.id.close);
 		close.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));
@@ -163,6 +176,40 @@ public class BeintooHome extends Dialog {
 			}
 		});
 		
+	}
+	
+	public void setFeatureToUse(){
+		String[] features = Beintoo.usedFeatures;
+		
+		if(features != null){
+			
+			HashSet<String> f = new HashSet<String>(Arrays.asList(features));
+			TableRow row1 = (TableRow) findViewById(R.id.firstRow);
+			TableRow row2 = (TableRow) findViewById(R.id.secondRow);
+			System.out.println(":feat:"+ features+" containprofile: "+f.contains("profile")
+					+" contain wallet: "+f.contains("wallet"));
+			/*
+			 * REMOVE FEATURES THAT ARE NOT IN THE features ARRAY SETTED BY THE DEVELOPER
+			 */
+			if(!f.contains("profile")){
+				Button profile = (Button) findViewById(R.id.profilebt);
+				row1.removeView(profile);
+				System.out.println(":feat:dentro "+ features);
+			}
+			if(!f.contains("wallet")){
+				Button wallet = (Button) findViewById(R.id.walletbt);
+				row2.removeView(wallet);
+			}
+			if(!f.contains("leaderboard")){
+				Button leaderboard = (Button) findViewById(R.id.leaderboardbt);
+				row1.removeView(leaderboard);
+			}
+			if(!f.contains("challenges")){
+				Button challenges = (Button) findViewById(R.id.challengesbt);
+				row2.removeView(challenges);
+			}
+				
+		}
 	}
 	
 	/**
