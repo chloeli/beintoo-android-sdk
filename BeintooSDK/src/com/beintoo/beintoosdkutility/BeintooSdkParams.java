@@ -16,7 +16,7 @@
 package com.beintoo.beintoosdkutility;
 
 public class BeintooSdkParams {
-	public static String apiUrl = "http://api.beintoo.com/api/rest/";
+	public static String apiUrl = "https://api.beintoo.com/api/rest/";
 	public static String sandboxUrl = "https://sandbox-elb.beintoo.com/api/rest/";
 	public static boolean useSandbox = false;
 }

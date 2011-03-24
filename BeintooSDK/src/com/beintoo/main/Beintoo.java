@@ -79,14 +79,14 @@ public class Beintoo{
 	public static void BeintooStart(final Context ctx){
 		currentContext = ctx;
 		final Gson gson = new Gson();
-		boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
-		String savedPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-		final Player currentPlayer = gson.fromJson(savedPlayer, Player.class);
-		
-		// AVOID BAD LOGIN
-		if(isLogged == true && (savedPlayer == null || savedPlayer == "")) logout(ctx);
-		
 		try{
+			boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
+			String savedPlayer = PreferencesHandler.getString("currentPlayer", ctx);
+			final Player currentPlayer = gson.fromJson(savedPlayer, Player.class);
+			
+			// AVOID BAD LOGIN
+			if(isLogged == true && (savedPlayer == null || savedPlayer == "")) logout(ctx);
+			
 			if(isLogged == true && currentPlayer.getUser() != null){
 				final ProgressDialog  dialog = ProgressDialog.show(ctx, "", ctx.getString(R.string.loadingBeintoo),true);
 				Thread t = new Thread(new Runnable(){     					

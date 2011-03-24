@@ -34,7 +34,7 @@ public class DeviceId {
 	    tmDevice = "" + tm.getDeviceId();
 	    tmSerial = "" + tm.getSimSerialNumber();
 	    androidId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
+	    
 	    // LET'S CHECK IF WE ARE IN THE ANDROID SIMULATOR TO PREVENT SAME DEVICEID FOR EVERY DEVELOPER
 	    if(androidId == null){
 	    	return toSHA1(DeveloperConfiguration.apiKey);
@@ -43,7 +43,7 @@ public class DeviceId {
 	    	String deviceId = deviceUuid.toString();
 	    	return deviceId;
 	    }	
-	}
+	} 
 	
 	public static String getRandomIdentifier(){
 		return toSHA1(UUID.randomUUID()+":"+System.nanoTime());

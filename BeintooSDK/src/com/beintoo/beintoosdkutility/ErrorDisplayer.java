@@ -15,6 +15,9 @@
  ******************************************************************************/
 package com.beintoo.beintoosdkutility;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,28 +25,38 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
-public class ErrorDisplayer {
+public class ErrorDisplayer{
 	public static final String CONN_ERROR = "Connection error.\nPlease check your Internet connection.";
 	
 	public static void showConnectionError (String Message, final Context ctx){
 		Handler handler = new Handler(){		     
-		     //this method will handle the calls from other threads.       
-		     public void handleMessage(Message msg) {		             
-		          Toast.makeText(ctx, msg.getData().getString("SOMETHING"), Toast.LENGTH_LONG).show();
-		     }
+			public void handleMessage(Message msg) {	
+				Toast.makeText(ctx, msg.getData().getString("SOMETHING"), Toast.LENGTH_LONG).show();  
+			}
 		};
-        //create the message for the handler 
 	   Message status = handler.obtainMessage();
 	   Bundle data = new Bundle();
 	   data.putString("SOMETHING", Message);
 	   status.setData(data);
-	         
-	   handler.sendMessage(status);		
+
+	   handler.sendMessage(status);	
 	}
 	
 	public static void showConnectionErrorOnThread (String Message, final Context ctx){
 		Looper.prepare();
-		showConnectionError (Message,ctx);	         
-	    Looper.loop();		
+		final Looper tLoop = Looper.myLooper();
+		showConnectionError (Message,ctx);	
+		
+		// QUIT THE Looper AFTER THE TOAST IS DISMISSED
+		final Timer t = new Timer();
+		t.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				tLoop.quit();
+				t.cancel();
+			}
+		}, 6000);
+		
+	    Looper.loop();
 	}
 }
