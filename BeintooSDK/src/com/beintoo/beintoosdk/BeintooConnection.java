@@ -19,8 +19,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 
 
 import android.content.Context;
@@ -57,15 +58,18 @@ public class BeintooConnection {
 						getParams = "&"+get.getKey().get(i)+"="+get.getValue().get(i);
 				}
 			url = new URL(apiurl+getParams);
-			HttpURLConnection postUrlConnection = (HttpURLConnection) url.openConnection();
+			System.setProperty("http.keepAlive", "false");
+			HttpsURLConnection postUrlConnection = (HttpsURLConnection) url.openConnection();
 			if(isPost)
 				postUrlConnection.setRequestMethod("POST");
 			postUrlConnection.setUseCaches(false);
 			for(int i = 0; i<header.getKey().size(); i++){
 				postUrlConnection.setRequestProperty(header.getKey().get(i),header.getValue().get(i));
 			}
+			postUrlConnection.setUseCaches(false);
+			postUrlConnection.setDoOutput(true);
+			postUrlConnection.setDoInput(true);
 			
-		
 			InputStream postInputStream = postUrlConnection.getInputStream();
 	
 			BufferedReader postBufferedReader = new BufferedReader(new

@@ -104,6 +104,7 @@ public class Beintoo{
 							}							
             			}catch (Exception e ){
             				dialog.dismiss();
+            				e.printStackTrace();
             				ErrorDisplayer.showConnectionErrorOnThread(ErrorDisplayer.CONN_ERROR, ctx);
             			}
             			dialog.dismiss();
