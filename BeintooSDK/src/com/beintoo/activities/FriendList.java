@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.beintoo.R;
 
 import com.beintoo.beintoosdk.BeintooVgood;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
@@ -23,12 +24,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -43,13 +45,22 @@ public class FriendList extends Dialog implements OnClickListener{
 	ArrayList<String> usersExts;
 	ArrayList<String> usersNicks;	
 	User [] friends;
-	
+	final double ratio;
 	public FriendList(Context context, int calledFrom) {
 		super(context);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.friendlist);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
 		current = this;
 		currentContext = context;
+		
+		// GETTING DENSITY PIXELS RATIO
+		ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 40;
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.LIGHT_GRAY_GRADIENT));
+		
 		usersExts = new ArrayList<String>();
 		usersNicks = new ArrayList<String>();
 		
@@ -80,7 +91,7 @@ public class FriendList extends Dialog implements OnClickListener{
 		
     	for(int i = 0; i<friends.length; i++){
     		//final LoaderImageView image = new LoaderImageView(getContext(), getUsersmallimg());
-    		final LoaderImageView image = new LoaderImageView(getContext(),friends[i].getUserimg(),70,70);
+    		final LoaderImageView image = new LoaderImageView(getContext(),friends[i].getUserimg(),(int)(ratio * 70),(int)(ratio *70));
        		
     		TableRow row = createRow(image, friends[i].getNickname(),
     				friends[i].getName(), getContext());
@@ -92,10 +103,15 @@ public class FriendList extends Dialog implements OnClickListener{
 			if(calledFrom == OPEN_FRIENDS_FROM_VGOOD)
 				row.setOnClickListener(this);
 			
-			View spacer = createSpacer(getContext(),0,2);
+			View spacer = createSpacer(getContext(),1,1);
 			spacer.setId(-100);
 			rowList.add(spacer);
-			if(i%2 == 0) row.setBackgroundColor(Color.parseColor("#d8eaef"));
+			View spacer2 = createSpacer(getContext(),2,1);
+			spacer2.setId(-100);
+			rowList.add(spacer2);
+			
+			row.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+	
 			
 			// ADD THE USER EXT TO THE USERS ARRAY
 			usersExts.add(friends[i].getId());
@@ -115,11 +131,11 @@ public class FriendList extends Dialog implements OnClickListener{
 		return friends;
 	}
 	
-	public static TableRow createRow(View image, String nick,String name, Context activity) {
+	public TableRow createRow(View image, String nick,String name, Context activity) {
 		  TableRow row = new TableRow(activity);
-		  row.setGravity(Gravity.CENTER_VERTICAL);
+		  row.setGravity(Gravity.CENTER);
 		  
-		  image.setPadding(10, 10, 10, 10);
+		  image.setPadding(15, 4, 10, 4);
 		  ((LinearLayout) image).setGravity(Gravity.LEFT);
 		  
 		  LinearLayout foto = new LinearLayout(row.getContext());
@@ -127,7 +143,7 @@ public class FriendList extends Dialog implements OnClickListener{
 		  foto.setOrientation(LinearLayout.VERTICAL);
 		  
 		  foto.addView(image);
-		  row.addView(foto,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT));
+		  row.addView(foto,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT)); //
 		 
 		  
 		 // row.addView(image);
@@ -135,42 +151,37 @@ public class FriendList extends Dialog implements OnClickListener{
 		  LinearLayout main = new LinearLayout(row.getContext());
 		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  main.setOrientation(LinearLayout.VERTICAL);
-		  
-		  		 
-		  LinearLayout bt = new LinearLayout(row.getContext());
-		  bt.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  bt.setOrientation(LinearLayout.VERTICAL);
-		  bt.setGravity(Gravity.RIGHT);
+		  main.setGravity(Gravity.CENTER_VERTICAL);
 		  
 		  TextView nickname = new TextView(activity);		  
 		  nickname.setText(nick);
-		  nickname.setPadding(0, 10, 10, 10);
-		  nickname.setTextColor(Color.parseColor("#83be56"));
+		  nickname.setPadding(5, 0, 0, 0);
+		  nickname.setTextColor(Color.parseColor("#545859"));
 		  nickname.setMaxLines(1);
-		  nickname.setTypeface(null,Typeface.BOLD);
 		  nickname.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  
 		  TextView scoreView = new TextView(activity);		
 		  scoreView.setText(name);	
-		  scoreView.setPadding(0, 10, 0, 10);
+		  scoreView.setPadding(5, 0, 0, 0);
 		  scoreView.setTextColor(Color.parseColor("#787A77"));
 		  scoreView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  	
 		  main.addView(nickname);
 		  main.addView(scoreView);		  
-		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT));
-		  
+		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio * 90))); //
+		 // row.addView(img);
 		  
 		  return row;
 	}
 	
 	private static View createSpacer(Context activity, int color, int height) {
 		  View spacer = new View(activity);
-
 		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
-		  if(color != 0)
-			  spacer.setBackgroundColor(Color.LTGRAY);
-
+		  if(color == 1)
+			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
+		  else if(color == 2)
+			  spacer.setBackgroundColor(Color.WHITE);
+		  
 		  return spacer;
 	}
 	

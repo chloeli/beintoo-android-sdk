@@ -25,13 +25,14 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ import android.widget.TextView;
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooApp;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -50,21 +52,45 @@ import com.google.gson.reflect.TypeToken;
 public class LeaderBoardContest extends Dialog implements OnClickListener{
 	Dialog current;
 	Context currentContext;
-	
+	final double ratio;
 	public LeaderBoardContest(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);
 		setContentView(R.layout.contestselection);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
 		current = this;
 		currentContext = ctx;
+		
+		// SET TITLE
+		TextView t = (TextView)findViewById(R.id.dialogTitle);
+		t.setText(R.string.leaderboard);
+
+		// GETTING DENSITY PIXELS RATIO
+		ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 40;
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
+
+		
 		try {
 			loadContestTable();
 		}catch(Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}	
 	 
-		BeButton b = new BeButton(ctx);
-		Button general = (Button) findViewById(R.id.generaleader);				
-		general.setBackgroundDrawable(b.setPressedBg(R.drawable.all, R.drawable.all_h, R.drawable.all_h));
+		final BeButton b = new BeButton(ctx);
+		Button general = (Button) findViewById(R.id.generaleader);
+		
+		//general.setWidth(ctx.getApplicationContext().getResources().getDisplayMetrics().widthPixels/2);		
+		general.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
 		general.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
+				resetButtons();
+				v.setBackgroundDrawable(b.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
@@ -85,9 +111,19 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
         });
 		
 		Button friends = (Button) findViewById(R.id.friendsleader);
-		friends.setBackgroundDrawable(b.setPressedBg(R.drawable.friends, R.drawable.friends_h, R.drawable.friends_h));
+		//friends.setWidth(ctx.getApplicationContext().getResources().getDisplayMetrics().widthPixels/2);
+		friends.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 		friends.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
+				resetButtons();
+				v.setBackgroundDrawable(b.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
+				
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
@@ -107,20 +143,15 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 				}).start();
 			}
         });
-		
-		Button close = (Button) findViewById(R.id.close);
-		close.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {												
-				current.dismiss();
-			}	
-        });
 	}
-	
+
 	public void loadContestTable(){
 		
 		TableLayout table = (TableLayout) findViewById(R.id.tablecontest);
 		table.setColumnStretchable(1, true);
 		table.removeAllViews();
+		
+		BeButton b = new BeButton(getContext());
 		
 		final ArrayList<View> rowList = new ArrayList<View>();
 		Iterator<?> it = deserializeLeaderboard().entrySet().iterator();
@@ -132,22 +163,33 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 	    	
 	    	if(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().isPublic() == true){
 		    	TableRow row = createRow(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().getName(), getContext());
-		    	//TableRow row = createRow(pairs.getKey(),getContext());
-		    	if(count % 2 == 0)
-		    		row.setBackgroundColor(Color.parseColor("#d8eaef"));
-		    	else
-		    		row.setBackgroundColor(Color.parseColor("#ecf3f5"));
 		    	
+
+		    		
+		    	
+		    	if(count % 2 == 0)
+		    		row.setBackgroundDrawable(b.setPressedBackg(
+				    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+				else
+					row.setBackgroundDrawable(b.setPressedBackg(
+				    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.GRAY_GRADIENT),
+							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+				
 		    	TableLayout.LayoutParams tableRowParams=
 	    		  new TableLayout.LayoutParams
 	    		  (TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
-	    		tableRowParams.setMargins(10, 0, 10, 0);
 	    		row.setLayoutParams(tableRowParams);
 		    	row.setId(count);
 				rowList.add(row);
-				View spacer = createSpacer(getContext(),0,5);
+				View spacer = createSpacer(getContext(),1,1);
 				spacer.setId(-100);
 				rowList.add(spacer);
+				View spacer2 = createSpacer(getContext(),2,1);
+				spacer2.setId(-100);
+				rowList.add(spacer2);
 		    	count++;	
 	    	}
 	    }
@@ -174,12 +216,12 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 	
 	public static TableRow createRow(String txt, Context activity) {
 		  TableRow row = new TableRow(activity);
-		
+		  row.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,47));
 		  TextView text = new TextView(activity);
 		  text.setText(txt);
 		  text.setPadding(10, 10, 10, 10);
 		  text.setTextColor(Color.parseColor("#545859"));
-		  text.setTypeface(null,Typeface.BOLD);
+		  text.setTextSize(14);
 		  
 		  row.addView(text);
 		   
@@ -188,15 +230,21 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 	
 	private static View createSpacer(Context activity, int color, int height) {
 		  View spacer = new View(activity);
-
-		 // spacer.setPadding(50,50,50,50);
 		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
-		  if(color != 0)
-			  spacer.setBackgroundColor(Color.LTGRAY);
+		  if(color == 1)
+			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
+		  else if(color == 2)
+			  spacer.setBackgroundColor(Color.WHITE);
 
 		  return spacer;
 	}
-	
+		
+	public void resetButtons(){
+		Button general = (Button) findViewById(R.id.generaleader);		
+		general.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));	
+		Button friends = (Button) findViewById(R.id.friendsleader);
+		friends.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+	}
 	
 	// CALLED WHEN THE USER SELECT A USER IN THE TABLE
 	public void onClick(View v) {

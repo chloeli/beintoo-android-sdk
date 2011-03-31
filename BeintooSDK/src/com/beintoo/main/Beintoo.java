@@ -47,6 +47,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
  
 public class Beintoo{
 	static Context currentContext;
@@ -78,11 +79,15 @@ public class Beintoo{
 	 */
 	public static void BeintooStart(final Context ctx){
 		currentContext = ctx;
-		final Gson gson = new Gson();
+		
 		try{
+			final Gson gson = new Gson();
 			boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
 			String savedPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-			final Player currentPlayer = gson.fromJson(savedPlayer, Player.class);
+			final Player currentPlayer;
+			if(savedPlayer != null){
+				currentPlayer = gson.fromJson(savedPlayer, Player.class);
+			}else currentPlayer = null;
 			
 			// AVOID BAD LOGIN
 			if(isLogged == true && (savedPlayer == null || savedPlayer == "")) logout(ctx);
@@ -117,9 +122,7 @@ public class Beintoo{
 					currentDialog = tryBe;
 					tryBe.show();
 			}
-		}catch (Exception e ){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
-
-		
+		}catch (Exception e ){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx); logout(ctx);}
 	}
 	
 	/**
@@ -130,10 +133,11 @@ public class Beintoo{
 	 */	
 	public static void GetVgood(final Context ctx){
 		currentContext = ctx;	
-		final Player currentPlayer = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));
-		final BeintooVgood vgoodHand = new BeintooVgood();
 		
 		try {
+			final Player currentPlayer = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));
+			final BeintooVgood vgoodHand = new BeintooVgood();
+			
 	    	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
 	    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
 	    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
@@ -198,7 +202,10 @@ public class Beintoo{
     			try{
     				Gson gson = new Gson();
     				String currentPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-    				Player loggedUser = gson.fromJson(currentPlayer, Player.class);
+    				Player loggedUser = null;
+    				if(currentPlayer != null)
+    					loggedUser = gson.fromJson(currentPlayer, Player.class);
+    				
     				BeintooPlayer player = new BeintooPlayer();
     				Player loginPlayer; 
 
@@ -228,7 +235,10 @@ public class Beintoo{
     					UIhandler.sendMessage(msg);
     				}
     				
+    				savePlayerLocation(currentContext);
+    				
     			}catch (Exception e){
+    				e.printStackTrace(); logout(ctx);
     			}	
     		}
 		}).start();	
@@ -243,6 +253,7 @@ public class Beintoo{
 	 * @param treshold the score treshold for a new vgood
 	 */
 	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold){
+		currentContext = ctx;
 		try{
 			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
 			String key = currentPlayer.getGuid()+":count";
@@ -302,7 +313,7 @@ public class Beintoo{
 						result = player.submitScore(p.getGuid(), codeID, null, lastScore+errorScore, balance, null, null, null, null);
 					}
 					
-					if(result.getMessage().equals("ERROR")){
+					if(!result.getMessage().equals("OK")){
 						int errorTScore = PreferencesHandler.getInt("errorScore", ctx);
 						errorTScore += lastScore;
 						PreferencesHandler.saveInt("errorScore", errorTScore, ctx);
@@ -327,38 +338,21 @@ public class Beintoo{
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @param showNotification if true it will show a notification to the user when receive a submit score 
 	 */	
-	public static void submitScore(final Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification){		
+	public static void submitScore(final Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification){
+		currentContext = ctx;
 		String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
 		final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
 		if(p != null){			    			
 			try{
-	        	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
-	        	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
-	        			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-	        		new Thread(new Runnable(){     					
-	            		public void run(){	
-	        				try {
-		        			Looper.prepare();
-							final LocationListener locationListener = new LocationListener() {
-							    public void onLocationChanged(Location location) {		 
-									// SUBMIT SCORE WITH COORDS
-							    	submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,location);
-					    			// REMOVE NETWORK UPDATE - NO MORE NEEDED
-					    			locationManager.removeUpdates(this);	
-					    			Looper.myLooper().quit(); //QUIT THE THREAD
-							    }
-								public void onProviderDisabled(String provider) {}
-			
-								public void onProviderEnabled(String provider) {}
-			
-								public void onStatusChanged(String provider,int status, Bundle extras) {}
-							};   
-							locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.myLooper());
-							Looper.loop();
-	        				}catch(Exception e){e.printStackTrace();}
-	            		}	
-	            	}).start();	
-	        	}else { // LOCATION IS DISABLED
+				Long currentTime = System.currentTimeMillis();
+				Location pLoc = getSavedPlayerLocation();
+	        	if(pLoc != null){
+	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
+	        			submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,pLoc);
+	        		}else {
+	        			submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,null);
+	        		}
+	        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
 	        		submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,null);
 	        	}	
 			}catch(Exception e){ 
@@ -446,6 +440,71 @@ public class Beintoo{
 	        super.handleMessage(msg);
 		  }
 	};
+	
+	public static void savePlayerLocation(final Context ctx){
+		currentContext = ctx;
+		try {
+			final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
+	    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
+	    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+	    		new Thread(new Runnable(){     					
+	        		public void run(){	
+	    				try {
+	        			Looper.prepare();
+						final LocationListener locationListener = new LocationListener() {
+						    public void onLocationChanged(Location location) {
+						    	// SAVE PLAYER LOCATION
+						    	PreferencesHandler.saveString("playerLatitude",Double.toString(location.getLatitude()), currentContext);
+						    	PreferencesHandler.saveString("playerLongitude", Double.toString(location.getLongitude()), currentContext);
+						    	PreferencesHandler.saveString("playerAccuracy", Float.toString(location.getAccuracy()), currentContext);
+						    	PreferencesHandler.saveString("playerLastTimeLocation", Long.toString(location.getTime()), currentContext);
+								DebugUtility.showLog("PLAYER LOCATION: "+location);
+						    	locationManager.removeUpdates(this);
+						    	// QUIT THE THREAD
+						    	Looper.myLooper().quit();
+						    }
+							public void onProviderDisabled(String provider) {}
+		
+							public void onProviderEnabled(String provider) {}
+		
+							public void onStatusChanged(String provider,int status, Bundle extras) {}
+						};   
+						locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.myLooper());
+						Looper.loop();
+	    				}catch(Exception e){e.printStackTrace();}
+	        		}	
+	        	}).start();		
+    		}
+		}catch(Exception e){ 
+			e.printStackTrace();	    				
+		}		    
+	}
+	
+	private static Location getSavedPlayerLocation(){
+		try {
+			Double latitude = Double.parseDouble(PreferencesHandler.getString("playerLatitude", currentContext));
+			Double longitude = Double.parseDouble(PreferencesHandler.getString("playerLongitude", currentContext));
+			Float accuracy = Float.parseFloat(PreferencesHandler.getString("playerAccuracy", currentContext));
+			Long lastTimeLocation = Long.parseLong(PreferencesHandler.getString("playerLastTimeLocation", currentContext));
+			
+			Location pLoc = new Location("network");
+			pLoc.setLatitude(latitude);
+			pLoc.setLongitude(longitude);
+			pLoc.setAccuracy(accuracy);
+			pLoc.setTime(lastTimeLocation);
+			// CHECK THE LAST TIME POSITION IF > 15 min UPDATE
+			Long currentTime = System.currentTimeMillis();
+			if((currentTime - pLoc.getTime()) > 900000){ // TEST 20000 (20 seconds)
+				savePlayerLocation(currentContext);
+			}
+			
+			return pLoc;
+		
+		}catch (Exception e){
+			return null;
+		}
+		
+	} 
 	
 	public static void logout(Context ctx){
 		PreferencesHandler.clearPref("currentPlayer", ctx);

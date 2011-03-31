@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.beintoo.R;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
@@ -31,8 +32,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class UserProfile extends Dialog {
@@ -41,8 +44,25 @@ public class UserProfile extends Dialog {
 	public UserProfile(final Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.profileb);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		current = this;
+		// SET TITLE
+		TextView t = (TextView)findViewById(R.id.dialogTitle);
+		t.setText(R.string.profile);
 
+		// GETTING DENSITY PIXELS RATIO
+		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 40;
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
+		
+		// SETTING UP PICTURE AND LEVEL CONTENT GRADIENT
+		pixels = ratio * 104;
+		LinearLayout textlayout = (LinearLayout) findViewById(R.id.textlayout);
+		textlayout.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.GRAY_GRADIENT));
+		
+		
 		// SETTING UP TEXTVIEWS AND PROFILE IMAGE
 		LoaderImageView profilepict = (LoaderImageView) findViewById(R.id.profilepict);		
 		TextView nickname = (TextView) findViewById(R.id.nickname);
@@ -70,18 +90,57 @@ public class UserProfile extends Dialog {
 			        Map.Entry<String, PlayerScore> pairs = (Map.Entry<String, PlayerScore>) it.next();
 			        if(pairs.getValue().getContest().isPublic()){
 				        PlayerScore pscore = pairs.getValue();
-				        TextView contestName = new TextView(getContext());
-				        TextView contestData = new TextView(getContext());	        
+				        TextView contestName = new TextView(getContext());				        
+				        
 				        contestName.setText(pscore.getContest().getName());
-				        contestName.setPadding(0,10,0,2);
-				        contestName.setTextColor(Color.BLACK);	  
-				        contestData.setPadding(10,5,0,5);
-				        contestData.setText(getContext().getString(R.string.profileTotalScore)+pscore.getBalance()+getContext().getString(R.string.profileBestScore)+pscore.getBestscore()+getContext().getString(R.string.profileLastScore)+pscore.getLastscore());
-				        contestData.setTextSize(12);
-				        contestData.setBackgroundColor(Color.parseColor("#d4e8ed"));
-				        contestData.setTextColor(Color.parseColor("#545859"));
-				        contests.addView(contestName);	        
-				        contests.addView(contestData);
+				        contestName.setPadding(12,5,0,5);
+				        contestName.setTextColor(Color.BLACK);	 
+				        contestName.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*27),BDrawableGradient.GRAY_GRADIENT));
+				        
+				        LinearLayout grayLine = new LinearLayout(getContext());
+				        grayLine.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,1));
+				        grayLine.setBackgroundColor(Color.parseColor("#8F9193"));
+				        LinearLayout grayLine2 = new LinearLayout(getContext());
+				        grayLine2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,1));
+				        grayLine2.setBackgroundColor(Color.parseColor("#8F9193"));
+				        LinearLayout grayLine3 = new LinearLayout(getContext());
+				        grayLine3.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,1));
+				        grayLine3.setBackgroundColor(Color.parseColor("#8F9193"));
+				        LinearLayout grayLine4 = new LinearLayout(getContext());
+				        grayLine4.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,1));
+				        grayLine4.setBackgroundColor(Color.parseColor("#8F9193"));
+				        				        				        
+				        TextView totalScore = new TextView(getContext());
+				        TextView lastScore = new TextView(getContext());
+				        TextView bestScore = new TextView(getContext());
+				        totalScore.setPadding(15,5,0,5);
+				        totalScore.setText(getContext().getString(R.string.profileTotalScore)+pscore.getBalance());
+				        totalScore.setTextSize(12);
+				        totalScore.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*22),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+				        totalScore.setTextColor(Color.parseColor("#545859"));
+				        
+				        lastScore.setPadding(15,5,0,5);
+				        lastScore.setText(getContext().getString(R.string.profileLastScore)+pscore.getLastscore());
+				        lastScore.setTextSize(12);
+				        lastScore.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*22),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+				        lastScore.setTextColor(Color.parseColor("#545859"));
+				        
+				        bestScore.setPadding(15,5,0,5);
+				        bestScore.setText(getContext().getString(R.string.profileBestScore)+pscore.getBestscore());
+				        bestScore.setTextSize(12);
+				        bestScore.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*22),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+				        bestScore.setTextColor(Color.parseColor("#545859"));
+				        
+				        
+				        contests.addView(contestName);	
+				        contests.addView(grayLine);
+				        contests.addView(totalScore);
+				        contests.addView(grayLine2);
+				        contests.addView(lastScore);
+				        contests.addView(grayLine3);
+				        contests.addView(bestScore);
+				        contests.addView(grayLine4);
+
 			        }
 			    }
 			}else { // NO SCORES FOR THE APP
@@ -95,21 +154,18 @@ public class UserProfile extends Dialog {
 	   
 	    Button logout = (Button) findViewById(R.id.logout);
 	    BeButton b = new BeButton(ctx);
-	    logout.setBackgroundDrawable(b.setPressedBg(R.drawable.logoutbt, R.drawable.logoutbt_h, R.drawable.logoutbt_h));			    	 
+	    logout.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+	    logout.setBackgroundDrawable(
+	    		b.setPressedBackg(
+			    		new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));			    	 
 		logout.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				PreferencesHandler.saveBool("isLogged", false, getContext());
 				PreferencesHandler.saveString("currentPlayer", null, getContext());
 				Beintoo.homeDialog.dismiss();
 				current.dismiss();												
-			}
-		});
-	    
-	    Button close = (Button) findViewById(R.id.close);
-		close.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));	    
-	    close.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {
-				current.dismiss();
 			}
 		});
 		

@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -31,9 +32,11 @@ import android.webkit.GeolocationPermissions.Callback;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.beintoo.R;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 
 
@@ -43,8 +46,17 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 	
 	public BeintooBrowser(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
-		current = this;
+		current = this;		
 		setContentView(R.layout.browser);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
+		// GETTING DENSITY PIXELS RATIO
+		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 47;
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobar);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
+		
 		webview = (WebView) findViewById(R.id.webview);
 		webview.getSettings().setJavaScriptEnabled(true);
 		

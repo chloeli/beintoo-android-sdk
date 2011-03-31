@@ -7,13 +7,16 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import com.beintoo.R;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.wrappers.Challenge;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ChallengeOverview extends Dialog{
@@ -26,6 +29,14 @@ public class ChallengeOverview extends Dialog{
 		reqChallenge = requested;
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.challengeoverview);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
+		// GETTING DENSITY PIXELS RATIO
+		double ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 40;
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.LIGHT_GRAY_GRADIENT));
 		
 		if(reqChallenge != null){
 			try{
@@ -43,16 +54,16 @@ public class ChallengeOverview extends Dialog{
 				LinearLayout topict = (LinearLayout) findViewById(R.id.topict);
 				LoaderImageView to = new LoaderImageView(getContext(),reqChallenge.getPlayerTo().getUser().getUserimg(),70,70);
 				topict.addView(to);
-				
+				 
 				TextView fromNick = (TextView) findViewById(R.id.fromnick);
 				fromNick.setText(reqChallenge.getPlayerFrom().getUser().getNickname());
 				TextView toNick = (TextView) findViewById(R.id.tonick);
 				toNick.setText(reqChallenge.getPlayerTo().getUser().getNickname());
 				 
 				TextView fromScore = (TextView) findViewById(R.id.scorefrom);
-				fromScore.setText(reqChallenge.getPlayerFromScore().toString());				
+				fromScore.setText("Score: "+reqChallenge.getPlayerFromScore().toString());				
 				TextView toScore = (TextView) findViewById(R.id.scoreto);
-				toScore.setText(reqChallenge.getPlayerToScore().toString());
+				toScore.setText("Score: "+reqChallenge.getPlayerToScore().toString());
 				
 				SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss"); 
 				curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -76,7 +87,6 @@ public class ChallengeOverview extends Dialog{
 				}
 			}catch(Exception e){e.printStackTrace();}
 		}else{ // dismiss if error
-			System.out.println("NULL");
 			this.dismiss();
 		}
 	}

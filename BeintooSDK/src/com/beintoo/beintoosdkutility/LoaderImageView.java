@@ -19,7 +19,15 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
@@ -71,14 +79,13 @@ public class LoaderImageView extends LinearLayout{
 		
 		mImage = new ImageView(mContext);
 		mImage.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-
+		
 		if(width != 0 && height != 0){
 			mImage.setAdjustViewBounds(true);
 			mImage.setMaxHeight(height);
 			mImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 			mImage.setMaxHeight(height);
 			mImage.setMaxWidth(width);
-			
 		}
 		
 		mSpinner = new ProgressBar(mContext);
@@ -120,6 +127,8 @@ public class LoaderImageView extends LinearLayout{
 		public boolean handleMessage(Message msg) {
 			switch (msg.what) {
 			case COMPLETE:
+				//Bitmap d = ((BitmapDrawable)mDrawable).getBitmap();
+				//mImage.setImageDrawable(new BitmapDrawable(LoaderImageView.getRoundedCornerBitmap(d,15)));
 				mImage.setImageDrawable(mDrawable);
 				mImage.setVisibility(View.VISIBLE);
 				mSpinner.setVisibility(View.GONE);
@@ -147,5 +156,27 @@ public class LoaderImageView extends LinearLayout{
 		mImage.setMaxWidth(w);
 		mImage.setMaxHeight(h);
 	}
+	
+	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+                .getHeight(), Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = pixels;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
 	
 }

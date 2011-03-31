@@ -31,7 +31,7 @@ public class ErrorDisplayer{
 	public static void showConnectionError (String Message, final Context ctx){
 		Handler handler = new Handler(){		     
 			public void handleMessage(Message msg) {	
-				Toast.makeText(ctx, msg.getData().getString("SOMETHING"), Toast.LENGTH_LONG).show();  
+				Toast.makeText(ctx, msg.getData().getString("SOMETHING"), Toast.LENGTH_SHORT).show();  				
 			}
 		};
 	   Message status = handler.obtainMessage();

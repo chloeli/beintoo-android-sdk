@@ -20,7 +20,7 @@ import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.wrappers.Challenge;
 import com.beintoo.wrappers.User;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonParseException;
 
 public class BeintooUser {
 	String apiPreUrl = null;
@@ -77,7 +77,7 @@ public class BeintooUser {
 		User user = null;
 		try { 
 			user = gson.fromJson(json, User.class);
-		} catch (final JsonSyntaxException e) {  
+		} catch (final JsonParseException e) {  
 			user = null;
 		}
 		 

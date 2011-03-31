@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -28,13 +29,16 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.beintoosdk.BeintooPlayer;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
 import com.google.gson.Gson;
 
@@ -47,7 +51,17 @@ public class BeintooFacebookLogin extends Dialog {
 		super(ctx, R.style.ThemeBeintoo);		
 		current = this;
 		setContentView(R.layout.browser);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		webview = (WebView) findViewById(R.id.webview);
+		
+		// GETTING DENSITY PIXELS RATIO
+		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 47;
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobar);		
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
+		
+		
 		webview.getSettings().setJavaScriptEnabled(true);
 		
 		// CLEAR ALL PREVIOUS COOKIES BEFORE LOGIN
@@ -163,6 +177,7 @@ public class BeintooFacebookLogin extends Dialog {
 				BeintooHome beintooHome = new BeintooHome(getContext());
 				beintooHome.show();							
 				current.dismiss();
+				Beintoo.currentDialog.dismiss();
 			  }
 			  super.handleMessage(msg);
 		  }

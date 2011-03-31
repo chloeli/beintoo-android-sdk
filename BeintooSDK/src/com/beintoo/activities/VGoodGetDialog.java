@@ -21,6 +21,7 @@ import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooBrowser;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -32,10 +33,12 @@ import com.google.gson.Gson;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -49,7 +52,24 @@ public class VGoodGetDialog extends Dialog{
 	public VGoodGetDialog(Context ctx, final Vgood vgood) {
 		super(ctx, R.style.ThemeBeintooOn);	
 		setContentView(R.layout.vgood);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
 		current = this;
+		
+		// GETTING DENSITY PIXELS RATIO
+		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 47;
+		LinearLayout beintooBar = (LinearLayout) findViewById(R.id.beintoobar);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
+		
+		BeButton b = new BeButton(ctx);
+		
+		LinearLayout congrat = (LinearLayout) findViewById(R.id.textlayout);
+		congrat.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*33),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+		
+		LinearLayout secondrow = (LinearLayout) findViewById(R.id.secondtrow);
+		secondrow.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*100),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+				
 		
 		LoaderImageView vgoodpict = (LoaderImageView) findViewById(R.id.vgoodpict);		
 		TextView title = (TextView) findViewById(R.id.couponname);
@@ -77,11 +97,8 @@ public class VGoodGetDialog extends Dialog{
 					ll.setOrientation(LinearLayout.VERTICAL);
 					ll.setGravity(Gravity.CENTER);
 					ll.setPadding(0, 0, 10, 0);
-					final LoaderImageView image = new LoaderImageView(getContext(), u.getUsersmallimg());
+					final LoaderImageView image = new LoaderImageView(getContext(), u.getUserimg(),70,70);
 					ll.addView(image);
-					TextView nick = new TextView(getContext());
-					nick.setText(u.getNickname());
-					ll.addView(nick);
 					
 					alsoconverterLayout.addView(ll);
 					count++;
@@ -91,17 +108,13 @@ public class VGoodGetDialog extends Dialog{
 			}
 		}catch (Exception e){e.printStackTrace();}
 		
-		Button closevgood = (Button) findViewById(R.id.close);
-		BeButton b = new BeButton(ctx);
-		closevgood.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));	    
-		closevgood.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {
-				current.dismiss();
-			}
-		});
-		
 		Button getVgood = (Button) findViewById(R.id.getcoupon);
-		getVgood.setBackgroundDrawable(b.setPressedBg(R.drawable.buttonlarge, R.drawable.buttonlarge_h, R.drawable.buttonlarge_h));
+		getVgood.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+		getVgood.setBackgroundDrawable(
+				b.setPressedBackg(
+			    		new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));
 		getVgood.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				PreferencesHandler.saveString("openUrl", vgood.getGetRealURL(), v.getContext());
@@ -112,7 +125,12 @@ public class VGoodGetDialog extends Dialog{
 		});
 		
 		Button sendasgift = (Button) findViewById(R.id.sendasgift);
-		sendasgift.setBackgroundDrawable(b.setPressedBg(R.drawable.buttonlarge, R.drawable.buttonlarge_h, R.drawable.buttonlarge_h));
+		sendasgift.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+		sendasgift.setBackgroundDrawable(
+				b.setPressedBackg(
+			    		new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));
 		sendasgift.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.friendLoading),true);

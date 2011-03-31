@@ -21,9 +21,11 @@ import java.util.ArrayList;
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
 import com.google.gson.Gson;
@@ -31,12 +33,12 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -51,12 +53,23 @@ public class UserSelection extends Dialog implements OnClickListener{
 	public UserSelection(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.userselection);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		current = this;
 		
+		// GETTING DENSITY PIXELS RATIO
+		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 47;
+		LinearLayout beintooBar = (LinearLayout) findViewById(R.id.beintoobar);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
+		
+		// SETTING UP TEXTBOX GRADIENT
+		pixels = ratio * 90;
+		LinearLayout textlayout = (LinearLayout) findViewById(R.id.textlayout);
+		textlayout.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.GRAY_GRADIENT));
+		
 		TableLayout table = (TableLayout) findViewById(R.id.usersTableLayout);
-		  //LayoutUtils.Layout.WidthFill_HeightFill.applyViewGroupParams(table);
-	
-		  // set which column is expandable/can grow
 		table.setColumnStretchable(1, true);
 	
 		  // apply layout animation
@@ -69,20 +82,31 @@ public class UserSelection extends Dialog implements OnClickListener{
 		Gson gson = new Gson();
 		users = gson.fromJson(currentUsersList, User[].class);
 		
+		double rowHeightpx = ratio * 104;
+		
 		for(int i = 0; i< users.length; i++){
 			if(users[i] != null){
 				//final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUsersmallimg());
 				final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUserimg(),70,70);
 				TableRow row = createRow(image, users[i].getNickname(), getContext());
+				
+				if(i % 2 == 0)
+					row.setBackgroundDrawable(new BDrawableGradient(0,(int)rowHeightpx,BDrawableGradient.LIGHT_GRAY_GRADIENT));
+				else
+					row.setBackgroundDrawable(new BDrawableGradient(0,(int)rowHeightpx,BDrawableGradient.GRAY_GRADIENT));
+				
 				row.setId(i);
 				rowList.add(row);
-				View spacer = createSpacer(getContext(),0,5);
+				View spacer = createSpacer(getContext(),1,1);
 				spacer.setId(-100);
-				rowList.add(spacer);				
+				rowList.add(spacer);
+				View spacer2 = createSpacer(getContext(),2,1);
+				spacer2.setId(-100);
+				rowList.add(spacer2);
 			}
 		}
 		
-		table.addView(createSpacer(getContext(),0,10));
+		//table.addView(createSpacer(getContext(),0,10));
 		
 		for (View row : rowList) {
 	      row.setPadding(0, 0, 0, 0);	      
@@ -92,67 +116,40 @@ public class UserSelection extends Dialog implements OnClickListener{
 	      table.addView(row);
 	    }
 		
-		table.addView(createSpacer(getContext(),0,10));
+		//table.addView(createSpacer(getContext(),0,10));
 		
 		// ADD THE NEW PLAYER BUTTON
 	    Button newplayer = (Button) findViewById(R.id.anotheracc);
 	    BeButton b = new BeButton(ctx);
-	    newplayer.setBackgroundDrawable(b.setPressedBg(R.drawable.buttonlarge, R.drawable.buttonlarge_h, R.drawable.buttonlarge_h));		
-	    /*newplayer.setBackgroundResource(R.drawable.useanother);
-	    newplayer.setLayoutParams(new LinearLayout.LayoutParams(
-		          LinearLayout.LayoutParams.WRAP_CONTENT,
-		          LinearLayout.LayoutParams.WRAP_CONTENT
-		));
-	    newplayer.setGravity(Gravity.CENTER);
-	   // newplayer.setPadding(0, 0, 0, 0);
-
-	    TableRow.LayoutParams params = new TableRow.LayoutParams();  
-	    params.span = 2; 	 */   
-	    //newplayer.setLayoutParams(params);	    
+	    pixels = ratio * 50;
+	    newplayer.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+	    newplayer.setBackgroundDrawable(b.setPressedBackg(
+	    		new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
+				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));		
+	        
 	    newplayer.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				UserLogin userLogin = new UserLogin(getContext());
 				userLogin.show();	
-				current.dismiss();
+				Beintoo.currentDialog = current;
+				//current.dismiss();
 				//finish();
 			}
         });
-	    
-	    Button close = (Button) findViewById(R.id.close);
-	    close.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {
-				current.dismiss();
-
-			}
-        });
-	    /*TableRow row = new TableRow(getContext());
-	    row.addView(newplayer);	 //, params
-	    row.setBackgroundColor(Color.WHITE);
-	    row.setGravity(Gravity.CENTER);
-	    table.addView(row);*/
 		    
 	}
     
 	public static TableRow createRow(View image, String txt, Context activity) {
 		  TableRow row = new TableRow(activity);
 		  row.setGravity(Gravity.CENTER);
-		 /* ImageView icon = (ImageView) image;
-		  icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
-		  icon.setMaxHeight(30);
-		  icon.setMaxWidth(30);
-		 // icon.setImageResource(image);
-		  icon.setPadding(0, 0, 0, 0);
 		  
-		  */
 		  TextView text = new TextView(activity);
 		  text.setText(txt);
 		  text.setPadding(10, 0, 0, 0);
-		  text.setTextColor(Color.parseColor("#83be56"));
-		  text.setBackgroundColor(Color.WHITE);
-		  text.setTypeface(null,Typeface.BOLD);
+		  text.setTextColor(Color.parseColor("#000000"));
 		  
-		  image.setPadding(8, 0, 0, 0);
-		  image.setBackgroundColor(Color.WHITE);
+		  image.setPadding(15, 4, 10, 4);
 		  		  
 		  ((LinearLayout) image).setGravity(Gravity.LEFT);
 		  
@@ -164,12 +161,12 @@ public class UserSelection extends Dialog implements OnClickListener{
 	
 	private static View createSpacer(Context activity, int color, int height) {
 		  View spacer = new View(activity);
-
-		 // spacer.setPadding(50,50,50,50);
 		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
-		  if(color != 0)
-			  spacer.setBackgroundColor(Color.LTGRAY);
-
+		  if(color == 1)
+			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
+		  else if(color == 2)
+			  spacer.setBackgroundColor(Color.WHITE);
+		  
 		  return spacer;
 	}
 	 

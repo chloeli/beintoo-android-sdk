@@ -22,10 +22,12 @@ import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooFacebookLogin;
 import com.beintoo.beintoosdkui.BeintooSignupBrowser;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
 import com.google.gson.Gson;
@@ -33,12 +35,15 @@ import com.google.gson.Gson;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 public class UserLogin extends Dialog{
 
@@ -49,7 +54,21 @@ public class UserLogin extends Dialog{
 	public UserLogin(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.login);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		current = this;
+		
+		// GETTING DENSITY PIXELS RATIO
+		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 47;
+		LinearLayout beintooBar = (LinearLayout) findViewById(R.id.beintoobar);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
+		
+		// SETTING UP TEXTBOX GRADIENT
+		pixels = ratio * 90;
+		LinearLayout textlayout = (LinearLayout) findViewById(R.id.textlayout);
+		textlayout.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.GRAY_GRADIENT));
 		
 		// USED TO DISMISS KEYBOARD
 		final InputMethodManager imm = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -60,9 +79,15 @@ public class UserLogin extends Dialog{
 		 *  PLAYERLOGIN WITH NO GUID THE GUID WILL BE ASSIGNED FROM THE API
 		 *  THEN CONNECT.HTML WITH THE ASSIGNE GUID
 		 */
+		pixels = ratio * 50;
 		Button newUser = (Button) findViewById(R.id.newuser);
 		BeButton b = new BeButton(ctx);
-		newUser.setBackgroundDrawable(b.setPressedBg(R.drawable.login, R.drawable.login_h, R.drawable.login_h));
+		newUser.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+		newUser.setBackgroundDrawable(
+				b.setPressedBackg(
+			    		new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));
 		newUser.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
@@ -87,7 +112,7 @@ public class UserLogin extends Dialog{
 								String signupUrl = "http://www.beintoo.com/connect.html?" +
 								"apikey="+DeveloperConfiguration.apiKey+"&guid="+newPlayer.getGuid()+"" +
 										"&display=touch&" +
-								"redirect_uri=http://beintoostatic.s3.amazonaws.com/sdk/register_ok.html&logged_uri=http://beintoostatic.s3.amazonaws.com/sdk/already_logged.html";
+								"redirect_uri=http://static.beintoo.com/sdk/register_ok.html&logged_uri=http://static.beintoo.com/sdk/already_logged.html";
 								
 								// DEBUG
 								DebugUtility.showLog(signupUrl);
@@ -99,7 +124,7 @@ public class UserLogin extends Dialog{
 								ErrorDisplayer.showConnectionError("Connection error.\nPlease check your Internet connection.", getContext());
 							}
             			}catch(Exception e){
-            			}	
+            			}	            			
             			dialog.dismiss();
             		} 
 				}).start();		
@@ -107,7 +132,11 @@ public class UserLogin extends Dialog{
         });
 		
 		Button go = (Button) findViewById(R.id.go);
-		go.setBackgroundDrawable(b.setPressedBg(R.drawable.login, R.drawable.login_h, R.drawable.login_h));
+		go.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+		go.setBackgroundDrawable(b.setPressedBackg(
+	    		new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
+				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));
 		go.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {				
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.login),true);
@@ -161,7 +190,7 @@ public class UserLogin extends Dialog{
 			public void onClick(View v) {								
 				String loginUrl = "http://www.beintoo.com/connect.html?signup=facebook&apikey="
 						+ DeveloperConfiguration.apiKey
-						+ "&display=touch&redirect_uri=http://static.beintoo.com/sdk/register_ok.html&logged_uri=http://beintoostatic.s3.amazonaws.com/sdk/fblogin.html";				
+						+ "&display=touch&redirect_uri=http://static.beintoo.com/sdk/register_ok.html&logged_uri=http://static.beintoo.com/sdk/fblogin.html";				
 				
 				// DEBUG
 				DebugUtility.showLog(loginUrl);
@@ -173,13 +202,7 @@ public class UserLogin extends Dialog{
 			}	
         });
 		
-		Button closeLogin = (Button) findViewById(R.id.close);
-		closeLogin.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));
-		closeLogin.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {												
-				current.dismiss();
-			}	
-        });
+		
 	}
 	
 	Handler UIhandler = new Handler() {
@@ -187,7 +210,8 @@ public class UserLogin extends Dialog{
 		  public void handleMessage(Message msg) {
 			  if(msg.what == GO_HOME){
 				BeintooHome beintooHome = new BeintooHome(getContext());
-			  	beintooHome.show();				
+			  	beintooHome.show();	
+			  	Beintoo.currentDialog.dismiss();
 			  	current.dismiss();
 			  }else  if(msg.what == SIGNUP_BROWSER){
 				BeintooSignupBrowser signupBrowser = new BeintooSignupBrowser(getContext());

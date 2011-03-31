@@ -23,15 +23,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ import android.widget.TextView;
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
@@ -55,10 +57,24 @@ public class Challenges extends Dialog implements OnClickListener{
 	final int ACCEPTED = 1;
 	final int ENDED = 2;
 	int CURRENT_SECTION = 0;
+	final double ratio;
 	public Challenges(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.challenges);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
+		
 		current = this;
+		// SET TITLE
+		TextView t = (TextView)findViewById(R.id.dialogTitle);
+		t.setText(R.string.challenges);
+
+		// GETTING DENSITY PIXELS RATIO
+		ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 40;
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
+		
 		try{
 			challenge = new Gson().fromJson(PreferencesHandler.getString("challenge", getContext()), Challenge[].class);
 			if(challenge.length > 0)
@@ -74,14 +90,19 @@ public class Challenges extends Dialog implements OnClickListener{
 		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
 		
 		
-		BeButton b = new BeButton(ctx);
+		final BeButton b = new BeButton(ctx);
 		final Button pending = (Button) findViewById(R.id.pendingchall);		
-		pending.setBackgroundDrawable(b.setPressedBg(R.drawable.pending, R.drawable.pending_h, R.drawable.pending_h));
-		pending.setBackgroundResource(R.drawable.pending_h);
+		pending.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));	
 		pending.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				resetButtons();
-				pending.setBackgroundResource(R.drawable.pending_h);
+				pending.setBackgroundDrawable(b.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
@@ -102,11 +123,17 @@ public class Challenges extends Dialog implements OnClickListener{
 		
 		
 		final Button accepted = (Button) findViewById(R.id.acceptedchall);		
-		accepted.setBackgroundDrawable(b.setPressedBg(R.drawable.ongoing, R.drawable.ongoing_h, R.drawable.ongoing_h));
+		accepted.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 		accepted.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				resetButtons();
-				accepted.setBackgroundResource(R.drawable.ongoing_h);
+				accepted.setBackgroundDrawable(b.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 				
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
@@ -127,11 +154,17 @@ public class Challenges extends Dialog implements OnClickListener{
 		});
 		
 		final Button ended = (Button) findViewById(R.id.endedchall);		
-		ended.setBackgroundDrawable(b.setPressedBg(R.drawable.ended, R.drawable.ended_h, R.drawable.ended_h));
+		ended.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 		ended.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				resetButtons();
-				ended.setBackgroundResource(R.drawable.ended_h);
+				ended.setBackgroundDrawable(b.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 				
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
@@ -148,14 +181,6 @@ public class Challenges extends Dialog implements OnClickListener{
             			dialog.dismiss();
             		}
 				}).start();
-			}
-		});
-		
-		Button close = (Button) findViewById(R.id.close);
-		close.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));
-	    close.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {
-				current.dismiss();				
 			}
 		});
 	}
@@ -177,19 +202,19 @@ public class Challenges extends Dialog implements OnClickListener{
 	    	
     		if(p.getUser().getId().equals(challenge[i].getPlayerFrom().getUser().getId())){
     			//image = new LoaderImageView(getContext(), challenge[i].getPlayerTo().getUser().getUsersmallimg());
-    			image = new LoaderImageView(getContext(),challenge[i].getPlayerTo().getUser().getUserimg(),70,70);
+    			image = new LoaderImageView(getContext(),challenge[i].getPlayerTo().getUser().getUserimg(),(int)(ratio * 70),(int)(ratio * 70));
     			nick = getContext().getString(R.string.challFromTo)+challenge[i].getPlayerTo().getUser().getNickname();
     			contest = challenge[i].getContest().getName();
     		}else{
     			//image = new LoaderImageView(getContext(), challenge[i].getPlayerFrom().getUser().getUsersmallimg());
-    			image = new LoaderImageView(getContext(),challenge[i].getPlayerFrom().getUser().getUserimg(),70,70);
+    			image = new LoaderImageView(getContext(),challenge[i].getPlayerFrom().getUser().getUserimg(),(int)(ratio * 70),(int)(ratio * 70));
     			nick = getContext().getString(R.string.challFrom)+challenge[i].getPlayerFrom().getUser().getNickname()+
     			getContext().getString(R.string.challYou);
     			contest = challenge[i].getContest().getName();    			
     		}
     		
     		TableRow row = createRow(image, nick,contest, table.getContext());
-    		
+    		    		
     		if(section == PENDING){
 	    		if(!p.getUser().getId().equals(challenge[i].getPlayerFrom().getUser().getId())){
 	    			row.setOnClickListener(this);
@@ -198,11 +223,26 @@ public class Challenges extends Dialog implements OnClickListener{
     		
 			row.setId(count);
 			rowList.add(row);
-			if(i%2 == 0) row.setBackgroundColor(Color.parseColor("#d8eaef"));
-			View spacer = createSpacer(getContext(),0,2);
+			
+			BeButton b = new BeButton(getContext());
+			if(count % 2 == 0)
+	    		row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			else
+				row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			
+			View spacer = createSpacer(getContext(),1,1);
 			spacer.setId(-100);
 			rowList.add(spacer);
-	    	count++;
+			View spacer2 = createSpacer(getContext(),2,1);
+			spacer2.setId(-100);
+			rowList.add(spacer2);
+			count++;
 	    }
 	
 	    for (View row : rowList) {
@@ -216,13 +256,14 @@ public class Challenges extends Dialog implements OnClickListener{
 		  TableRow row = new TableRow(activity);
 		  row.setGravity(Gravity.CENTER);
 		  
-		  image.setPadding(10, 10, 10, 10);		  
+		  image.setPadding(15, 4, 10, 4);		  
 		  ((LinearLayout) image).setGravity(Gravity.LEFT);
 		  row.addView(image);
 		  
 		  LinearLayout main = new LinearLayout(row.getContext());
 		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  main.setOrientation(LinearLayout.VERTICAL);
+		  main.setGravity(Gravity.CENTER_VERTICAL);
 		  
 		  // NICKNAME TEXTVIEW
 		  TextView nameView = new TextView(activity);		  
@@ -231,33 +272,33 @@ public class Challenges extends Dialog implements OnClickListener{
 		  else
 			  nameView.setText(contest);
 		  
-		  nameView.setPadding(0, 10, 10, 10);
-		  nameView.setTextColor(Color.parseColor("#83be56"));
-		  nameView.setTypeface(null,Typeface.BOLD);
+		  nameView.setPadding(0, 0, 0, 0);
+		  nameView.setTextColor(Color.parseColor("#545859"));
+		  nameView.setTextSize(16);
 		  nameView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  
 		  // CONTEST NAME TEXTVIEW
 		  TextView contestView = new TextView(activity);		
 		  contestView.setText(name);		  
-		  contestView.setPadding(0, 10, 10, 10);
+		  contestView.setPadding(0, 0, 0, 0);
 		  contestView.setTextColor(Color.parseColor("#787A77"));
-		  contestView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT));
+		  contestView.setTextSize(14);
+		  contestView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  	
 		  main.addView(nameView);
-		  main.addView(contestView);
-		  
-		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT));
-	
+		  main.addView(contestView);		  
+		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio * 90)));
+
 		  return row;
 	}
 	
 	private static View createSpacer(Context activity, int color, int height) {
 		  View spacer = new View(activity);
-
-		 // spacer.setPadding(50,50,50,50);
 		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
-		  if(color != 0)
-			  spacer.setBackgroundColor(Color.LTGRAY);
+		  if(color == 1)
+			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
+		  else if(color == 2)
+			  spacer.setBackgroundColor(Color.WHITE);
 
 		  return spacer;
 	}
@@ -303,6 +344,10 @@ public class Challenges extends Dialog implements OnClickListener{
 		        	   TableLayout table = (TableLayout) v.getParent();
 		        	   table.removeView(v);
 		           }
+		       }).setNeutralButton("Cancel",  new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   
+		           }
 		       });
 		AlertDialog alert = builder.create();
 		alert.show();
@@ -343,16 +388,28 @@ public class Challenges extends Dialog implements OnClickListener{
 			noChallenge.setText(getContext().getString(R.string.challNoEnded));
 		
 		noChallenge.setTextColor(Color.GRAY);
-		noChallenge.setPadding(15,0,0,0);
+		noChallenge.setPadding(15,15,0,0);
 		TableLayout table = (TableLayout) findViewById(R.id.table);
 		table.removeAllViews();
 		table.addView(noChallenge);
 	}
 	
 	public void resetButtons(){
-		findViewById(R.id.pendingchall).setBackgroundResource(R.drawable.pending);
-		findViewById(R.id.acceptedchall).setBackgroundResource(R.drawable.ongoing);
-		findViewById(R.id.endedchall).setBackgroundResource(R.drawable.ended);	
+		BeButton b = new BeButton(getContext());
+		findViewById(R.id.pendingchall).setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+		findViewById(R.id.acceptedchall).setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+		findViewById(R.id.endedchall).setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));	
+		
+		
 	}
 	
 	Handler UIhandler = new Handler() {

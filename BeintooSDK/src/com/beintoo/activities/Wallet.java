@@ -26,15 +26,15 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -43,6 +43,7 @@ import android.widget.TextView;
 import com.beintoo.R;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooBrowser;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -52,11 +53,24 @@ import com.google.gson.Gson;
 public class Wallet extends Dialog implements OnClickListener{
 	static Dialog current;
 	Vgood [] vgood;
-
+	final double ratio;
+	
 	public Wallet(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.wallet);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
 		current = this;
+		
+		// SET DIALOG TITLE
+		TextView title = (TextView)findViewById(R.id.dialogTitle);
+		title.setText(R.string.wallet);
+		
+		// GETTING DENSITY PIXELS RATIO
+		ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 40;
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
 		try {
 			vgood = new Gson().fromJson(PreferencesHandler.getString("wallet", getContext()), Vgood[].class);
@@ -71,15 +85,6 @@ public class Wallet extends Dialog implements OnClickListener{
 				table.addView(noGoods);
 			}
 		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
-		
-		Button close = (Button) findViewById(R.id.close);
-		BeButton b = new BeButton(ctx);
-		close.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));	    
-	    close.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {
-				current.dismiss();				
-			}
-		});
 	}
 	
 	public void loadWallet(){
@@ -91,15 +96,29 @@ public class Wallet extends Dialog implements OnClickListener{
 		int count = 0;
 		final ArrayList<View> rowList = new ArrayList<View>();
 	    for (int i = 0; i < vgood.length; i++){
-    		final LoaderImageView image = new LoaderImageView(getContext(), vgood[i].getImageUrl(),90,90);
+    		final LoaderImageView image = new LoaderImageView(getContext(), vgood[i].getImageUrl(),(int)(ratio *90),(int)(ratio *90));
     		
     		TableRow row = createRow(image, vgood[i].getName(),vgood[i].getEnddate(), table.getContext());
 			row.setId(count);
 			rowList.add(row);
-			if(i%2 == 0) row.setBackgroundColor(Color.parseColor("#d4e7eb"));
-			/*View spacer = createSpacer(getContext(),0,10);
+			BeButton b = new BeButton(getContext());
+			if(count % 2 == 0)
+	    		row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			else
+				row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			
+			View spacer = createSpacer(getContext(),1,1);
 			spacer.setId(-100);
-			rowList.add(spacer); */
+			rowList.add(spacer);
+			View spacer2 = createSpacer(getContext(),2,1);
+			spacer2.setId(-100);
+			rowList.add(spacer2);
 	    	count++;
 	    }
 	    
@@ -111,24 +130,24 @@ public class Wallet extends Dialog implements OnClickListener{
 		}
 	}
 	
-	public static TableRow createRow(View image, String name, String end,  Context activity) {
+	public TableRow createRow(View image, String name, String end,  Context activity) {
 		  TableRow row = new TableRow(activity);
 		  row.setGravity(Gravity.CENTER);
 		  
-		  image.setPadding(10, 5, 5, 5);
+		  image.setPadding(10, 0, 5, 0);
 		  ((LinearLayout) image).setGravity(Gravity.LEFT);
 
 		  LinearLayout main = new LinearLayout(row.getContext());
 		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT));
 		  main.setOrientation(LinearLayout.VERTICAL);
-		  
+		  main.setGravity(Gravity.CENTER_VERTICAL);
 		  
 		  TextView nameView = new TextView(activity);
 		  nameView.setText(name);
 		  nameView.setMaxLines(2);
 		  nameView.setPadding(5, 0, 0, 0);
-		  nameView.setTextColor(Color.parseColor("#83be56"));
-		  nameView.setTypeface(null,Typeface.BOLD);
+		  nameView.setTextColor(Color.parseColor("#545859"));
+		  nameView.setTextSize(14);
 		  nameView.setMaxWidth(50);
 		  TextView enddate = new TextView(activity);
 		  try { // try catch for SimpleDateFormat parse
@@ -138,8 +157,9 @@ public class Wallet extends Dialog implements OnClickListener{
 			  Date endDate = curFormater.parse(end);			  
 			  curFormater.setTimeZone(TimeZone.getDefault());
 			  
-			  enddate.setText(activity.getString(R.string.challEnd)+"\n"+DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(endDate));
+			  enddate.setText(activity.getString(R.string.challEnd)+" "+DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(endDate));
 			  enddate.setTextSize(12);
+			  enddate.setMaxLines(2);
 			  enddate.setPadding(5, 0, 0, 0);
 			  enddate.setTextColor(Color.parseColor("#787A77"));
 		  } catch (Exception e){e.printStackTrace();}
@@ -147,20 +167,18 @@ public class Wallet extends Dialog implements OnClickListener{
 		  row.addView(image);
 		  main.addView(nameView);
 		  main.addView(enddate);		  
-		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT));
-		  
+		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio * 90)));
 		  
 		  return row;
 	}
-	
-	@SuppressWarnings("unused")
+		
 	private static View createSpacer(Context activity, int color, int height) {
 		  View spacer = new View(activity);
-
-		 // spacer.setPadding(50,50,50,50);
 		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
-		  if(color != 0)
-			  spacer.setBackgroundColor(Color.LTGRAY);
+		  if(color == 1)
+			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
+		  else if(color == 2)
+			  spacer.setBackgroundColor(Color.WHITE);
 
 		  return spacer;
 	}

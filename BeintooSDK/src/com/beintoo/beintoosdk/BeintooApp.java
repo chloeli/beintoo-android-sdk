@@ -85,7 +85,6 @@ public class BeintooApp {
 		}
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl, header, null);
-		System.out.println("json "+json);
 		Gson gson = new Gson();
 		
         Type mapType = new TypeToken<Map<String, List<EntryCouplePlayer>>>() {

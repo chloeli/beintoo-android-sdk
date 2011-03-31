@@ -12,64 +12,36 @@
 	android:fillViewport="true">
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:id="@+id/maincontainer"
-		android:orientation="vertical" android:background="#d6dbde">
-		<LinearLayout android:id="@+id/linearLayout1"
-			android:layout_alignParentLeft="true" android:layout_height="wrap_content"
-			android:gravity="center" android:layout_width="fill_parent">
-			<RelativeLayout android:orientation="vertical"
-				android:layout_width="fill_parent" android:layout_height="fill_parent"
-				android:background="@drawable/bpix">
-				<ImageView android:layout_height="wrap_content"
-					android:layout_centerHorizontal="true" android:id="@+id/beintoobar"
-					android:src="@drawable/beintoobar" android:layout_width="wrap_content" />
-				<Button android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:id="@+id/close"
-					android:layout_alignParentRight="true" android:background="@drawable/close"
-					android:layout_centerVertical="true" android:layout_marginRight="8dip" />
-			</RelativeLayout>
-		</LinearLayout>
-
-		<FrameLayout android:layout_height="wrap_content"
-			android:paddingTop="20dip" android:layout_width="wrap_content"
-			android:layout_gravity="center_horizontal">
-			<ImageView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:src="@drawable/boxchallenges"
-				android:scaleType="fitCenter" />
-			<TextView android:layout_height="wrap_content"
-				android:layout_gravity="center" android:textColor="#FFFFFF"
-				android:textStyle="normal" android:typeface="normal"
-				android:textSize="16dip" android:layout_marginTop="-20dip"
-				android:gravity="center" android:text="@string/boxChallenge"
-				android:layout_width="fill_parent" />
-		</FrameLayout>
-
-		<LinearLayout android:id="@+id/linearLayout2"
-			android:layout_width="fill_parent" android:padding="0dip"
-			android:layout_height="wrap_content">
-			<ImageView android:id="@+id/imageView1"
-				android:layout_height="wrap_content" android:background="@drawable/layoutbottom"
-				android:layout_marginLeft="18dip" android:layout_marginRight="18dip"
-				android:layout_marginTop="10dip" android:layout_width="fill_parent"></ImageView>
-		</LinearLayout>
+		android:orientation="vertical" android:background="#dddddd">
+		<include layout="@layout/beintoobarsmall" />
 		<LinearLayout android:layout_width="fill_parent"
 			android:orientation="vertical" android:id="@+id/goodcontent"
-			android:layout_height="wrap_content" android:layout_marginLeft="18dip"
-			android:layout_marginRight="18dip" android:background="#FFFFFF">
+			android:layout_height="wrap_content">
 			<LinearLayout android:layout_height="wrap_content"
 				android:id="@+id/buttonsll" android:layout_width="fill_parent"
-				android:gravity="center" android:layout_marginLeft="18dip"
-				android:layout_marginRight="18dip" android:background="#FFFFFF"
-				android:paddingTop="10dip" android:paddingBottom="10dip">
-				<Button android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:id="@+id/pendingchall"
-					android:background="@drawable/pending_h" android:text="@string/pending" android:textColor="#FFFFFF"></Button>
-				<Button android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:id="@+id/acceptedchall"
-					android:background="@drawable/ongoing" android:text="@string/ongoing" android:textColor="#FFFFFF"></Button>
-				<Button android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:id="@+id/endedchall"
-					android:background="@drawable/ended" android:text="@string/ended" android:textColor="#FFFFFF"></Button>
+				android:gravity="center">
+				<Button android:id="@+id/pendingchall" android:text="@string/pending"
+					android:layout_height="35dip"
+					android:layout_width="106dip" android:padding="0dip" android:textColor="#545859"></Button>
+				<LinearLayout android:layout_width="0.75dip"
+					android:layout_height="fill_parent" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout>
+				<Button android:id="@+id/acceptedchall" android:text="@string/ongoing"
+					android:layout_height="35dip"
+					android:layout_width="106dip" android:padding="0dip" android:textColor="#545859"></Button>
+				<LinearLayout android:layout_width="0.75dip"
+					android:layout_height="fill_parent" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout>
+				<Button android:id="@+id/endedchall" android:text="@string/ended"
+					android:layout_height="35dip"
+					android:layout_width="106dip" android:padding="0dip" android:textColor="#545859"></Button>
 			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="0.75dip" android:background="#8F9193"
+				android:id="@+id/grayline"></LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="0.75dip" android:background="#FFFFFF"
+				android:id="@+id/whiteline"></LinearLayout>
 			<!-- Challenges CONTENT -->
 
 			<LinearLayout android:layout_width="fill_parent"
@@ -77,12 +49,9 @@
 				android:layout_height="wrap_content" android:gravity="center">
 				<LinearLayout android:layout_height="wrap_content"
 					android:paddingTop="0dip" android:orientation="horizontal"
-					android:layout_width="fill_parent" android:layout_marginTop="15dip"
-					android:paddingLeft="10dip" android:layout_marginBottom="5dip">
-					<TableLayout android:id="@+id/table"
-						android:layout_width="fill_parent" android:layout_height="fill_parent"
-						android:layout_marginBottom="25dip" android:layout_marginTop="10dip"
-						android:layout_marginRight="10dip">
+					android:layout_width="fill_parent">
+					<TableLayout android:id="@+id/table" android:stretchColumns="1"
+						android:layout_width="fill_parent" android:layout_height="fill_parent">
 
 					</TableLayout>
 				</LinearLayout>
@@ -90,18 +59,12 @@
 			</LinearLayout>
 			<!-- END CHALLENGES CONTENT -->
 		</LinearLayout>
-		<LinearLayout android:layout_height="wrap_content"
-			android:id="@+id/linearLayout3" android:layout_width="fill_parent">
-			<ImageView android:id="@+id/imageView2"
-				android:layout_height="wrap_content" android:background="@drawable/boxombr"
-				android:layout_marginLeft="18dip" android:layout_marginRight="18dip"
-				android:layout_marginTop="0dip" android:layout_width="fill_parent"></ImageView>
-		</LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"
 			android:orientation="vertical" android:layout_height="fill_parent"
 			android:gravity="bottom|center" android:id="@+id/fond">
-			<ImageView android:layout_height="wrap_content" android:id="@+id/layoutbottom"
-				android:layout_width="fill_parent" android:background="@drawable/layoutbottom" />
+			<ImageView android:id="@+id/layoutbottom"
+				android:layout_width="fill_parent" android:background="@drawable/footer"
+				android:layout_height="11dip" />
 
 		</LinearLayout>
 	</LinearLayout>

@@ -19,6 +19,7 @@ import com.beintoo.R;
 
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -29,10 +30,13 @@ import com.google.gson.Gson;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class tryBeintoo extends Dialog {
 	private static final int GO_REG = 1;
@@ -40,11 +44,32 @@ public class tryBeintoo extends Dialog {
 	public tryBeintoo(Context ctx) {
 		super(ctx, R.style.ThemeBeintooOn);
 		setContentView(R.layout.trybeintoo);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		final Dialog current = this;
+		
+		
+		
+		// GETTING DENSITY PIXELS RATIO
+		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);		
+				
+		// SET UP LAYOUTS
+		double pixels = ratio * 47;
+		LinearLayout beintooBar = (LinearLayout) findViewById(R.id.beintoobar);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
+		
+		pixels = ratio * 90;
+		LinearLayout textlayout = (LinearLayout) findViewById(R.id.textlayout);
+		textlayout.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.GRAY_GRADIENT));
+		
+		pixels = ratio * 70;
 		
 		BeButton b = new BeButton(ctx);
 		Button bt = (Button) findViewById(R.id.trybt);
-		bt.setBackgroundDrawable(b.setPressedBg(R.drawable.trybutton, R.drawable.trybutton_h, R.drawable.trybutton_h));
+		bt.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+		bt.setBackgroundDrawable(b.setPressedBackg(new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
+				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));		
 	    bt.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {				
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loadingBeintoo),true);
@@ -82,7 +107,11 @@ public class tryBeintoo extends Dialog {
 	    
 	    
 	    Button nothanksbt = (Button) findViewById(R.id.nothanksbt);
-	    nothanksbt.setBackgroundDrawable(b.setPressedBg(R.drawable.nothanksbt, R.drawable.nothanksbt_h, R.drawable.nothanksbt_h));
+	    pixels = ratio * 50;
+	    nothanksbt.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+	    nothanksbt.setBackgroundDrawable(b.setPressedBackg(new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
+				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));		
 	    nothanksbt.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {  
 				current.dismiss();

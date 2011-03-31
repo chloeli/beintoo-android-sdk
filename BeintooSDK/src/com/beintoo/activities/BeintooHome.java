@@ -27,6 +27,7 @@ import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
@@ -42,8 +43,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -56,21 +58,61 @@ public class BeintooHome extends Dialog {
 	public BeintooHome(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.homeb);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		current = this;
 		Beintoo.homeDialog = current;
-		// set the nickname
-		TextView nickname = (TextView) findViewById(R.id.nickname);
-		nickname.setText(getContext().getString(R.string.homeWelcome)+getCurrentPlayerNickname());
 		
-		// CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
-		setFeatureToUse();
+		// GETTING DENSITY PIXELS RATIO
+		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		// SET UP LAYOUTS
+		double pixels = ratio * 47;
+		LinearLayout beintooBar = (LinearLayout) findViewById(R.id.beintoobar);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
-		BeButton b = new BeButton(ctx);
 		
-		Button profilebt = (Button) findViewById(R.id.profilebt);		
-		if(profilebt != null){
-			profilebt.setBackgroundDrawable(b.setPressedBg(R.drawable.profilebt, R.drawable.profilebt_h, R.drawable.profilebt_h));			    
-			profilebt.setOnClickListener(new Button.OnClickListener(){
+		// SETTING UP ROWS GRADIENT
+		
+		LinearLayout welcome = (LinearLayout) findViewById(R.id.welcome);
+		welcome.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*25),BDrawableGradient.GRAY_GRADIENT));
+		
+		TableRow row1 = (TableRow) findViewById(R.id.firstRow);
+		TableRow row2 = (TableRow) findViewById(R.id.secondRow);
+		TableRow row3 = (TableRow) findViewById(R.id.thirdRow);
+		TableRow row4 = (TableRow) findViewById(R.id.fourthRow);
+		
+		BeButton b = new BeButton(getContext());
+		row1.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+		
+		row2.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+		
+		row3.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+		
+		row4.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+		
+		try {
+			// set the nickname
+			TextView nickname = (TextView) findViewById(R.id.nickname);
+			nickname.setText(getContext().getString(R.string.homeWelcome)+getCurrentPlayerNickname());			
+			// CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
+			setFeatureToUse();
+		}catch (Exception e){e.printStackTrace();}
+		
+		//Button profilebt = (Button) findViewById(R.id.profilebt);		
+		if(row1 != null){			    
+			row1.setOnClickListener(new TableRow.OnClickListener(){
 				public void onClick(View v) {				
 					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 					new Thread(new Runnable(){      
@@ -91,10 +133,8 @@ public class BeintooHome extends Dialog {
 			});
 		}
 		
-		Button leaderbt = (Button) findViewById(R.id.leaderboardbt);
-		if(leaderbt != null){
-			leaderbt.setBackgroundDrawable(b.setPressedBg(R.drawable.leaderbt, R.drawable.leaderbt_h, R.drawable.leaderbt_h));			    
-			leaderbt.setOnClickListener(new ImageButton.OnClickListener(){
+		if(row2 != null){			    
+			row2.setOnClickListener(new TableRow.OnClickListener(){
 				public void onClick(View v) {				
 					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 					new Thread(new Runnable(){      
@@ -117,10 +157,8 @@ public class BeintooHome extends Dialog {
 			});
 		}
 		
-		Button walletbt = (Button) findViewById(R.id.walletbt);
-		if(walletbt != null){
-			walletbt.setBackgroundDrawable(b.setPressedBg(R.drawable.wallet, R.drawable.wallet_h, R.drawable.wallet_h));			    
-			walletbt.setOnClickListener(new ImageButton.OnClickListener(){
+		if(row3 != null){			    
+			row3.setOnClickListener(new TableRow.OnClickListener(){
 				public void onClick(View v) {				
 					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 					new Thread(new Runnable(){      
@@ -142,10 +180,8 @@ public class BeintooHome extends Dialog {
 			});
 		}
 		
-		Button challengesbt = (Button) findViewById(R.id.challengesbt);
-		if(challengesbt != null){
-			challengesbt.setBackgroundDrawable(b.setPressedBg(R.drawable.challenges, R.drawable.challenges_h, R.drawable.challenges_h));			    
-			challengesbt.setOnClickListener(new ImageButton.OnClickListener(){
+		if(row4 != null){			    
+			row4.setOnClickListener(new TableRow.OnClickListener(){
 				public void onClick(View v) {				
 					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 					new Thread(new Runnable(){      
@@ -167,15 +203,6 @@ public class BeintooHome extends Dialog {
 				}
 			});
 		}
-		
-		Button close = (Button) findViewById(R.id.close);
-		close.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));
-	    close.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {
-				current.dismiss();
-			}
-		});
-		
 	}
 	
 	public void setFeatureToUse(){
@@ -184,29 +211,26 @@ public class BeintooHome extends Dialog {
 		if(features != null){
 			
 			HashSet<String> f = new HashSet<String>(Arrays.asList(features));
+			TableLayout tl = (TableLayout)findViewById(R.id.myTableLayout);
 			TableRow row1 = (TableRow) findViewById(R.id.firstRow);
 			TableRow row2 = (TableRow) findViewById(R.id.secondRow);
-			System.out.println(":feat:"+ features+" containprofile: "+f.contains("profile")
-					+" contain wallet: "+f.contains("wallet"));
+			TableRow row3 = (TableRow) findViewById(R.id.thirdRow);
+			TableRow row4 = (TableRow) findViewById(R.id.fourthRow);
+			
 			/*
 			 * REMOVE FEATURES THAT ARE NOT IN THE features ARRAY SETTED BY THE DEVELOPER
 			 */
-			if(!f.contains("profile")){
-				Button profile = (Button) findViewById(R.id.profilebt);
-				row1.removeView(profile);
-				System.out.println(":feat:dentro "+ features);
+			if(!f.contains("profile")){				
+				tl.removeView(row1);
 			}
 			if(!f.contains("wallet")){
-				Button wallet = (Button) findViewById(R.id.walletbt);
-				row2.removeView(wallet);
+				tl.removeView(row2);
 			}
 			if(!f.contains("leaderboard")){
-				Button leaderboard = (Button) findViewById(R.id.leaderboardbt);
-				row1.removeView(leaderboard);
+				tl.removeView(row3);
 			}
 			if(!f.contains("challenges")){
-				Button challenges = (Button) findViewById(R.id.challengesbt);
-				row2.removeView(challenges);
+				tl.removeView(row4);
 			}
 				
 		}
@@ -218,8 +242,13 @@ public class BeintooHome extends Dialog {
 	 */
 	public String getCurrentPlayerNickname () {
 		Gson gson = new Gson();
-		Player player = gson.fromJson(getCurrentPlayer(), Player.class);
-		return player.getUser().getNickname();		
+		try {
+			Player player = gson.fromJson(getCurrentPlayer(), Player.class);
+			return player.getUser().getNickname();		
+		}catch (Exception e){e.printStackTrace();}
+		
+		return "";
+		
 	}
 	
 	/**

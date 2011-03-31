@@ -40,4 +40,18 @@ public class BeButton extends Button{
 	    bg.addState(View.EMPTY_STATE_SET, normal);
 	    return bg;
 	}
+	
+	public StateListDrawable setPressedBackg(Drawable p1,Drawable p2,Drawable p3) {
+	    StateListDrawable bg = new StateListDrawable();
+	    Drawable normal = p1;
+	    Drawable selected = p2;
+	    Drawable pressed = p3;
+
+	    bg.addState(View.PRESSED_ENABLED_STATE_SET, pressed);
+	    bg.addState(View.ENABLED_FOCUSED_STATE_SET, selected);
+	    bg.addState(View.ENABLED_STATE_SET, normal);
+	    bg.addState(View.FOCUSED_STATE_SET, selected);
+	    bg.addState(View.EMPTY_STATE_SET, normal);
+	    return bg;
+	}
 }

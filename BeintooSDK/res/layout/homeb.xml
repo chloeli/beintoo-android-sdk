@@ -12,88 +12,138 @@
 	android:fillViewport="true">
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:id="@+id/maincontainer"
-		android:orientation="vertical" android:background="#d6dbde">
-		<LinearLayout android:id="@+id/linearLayout1"
-			android:layout_alignParentLeft="true" android:layout_height="wrap_content"
-			android:gravity="center" android:layout_width="fill_parent"
-			android:background="@drawable/beintoobar">
-			<RelativeLayout android:orientation="vertical"
-				android:layout_width="fill_parent" android:layout_height="fill_parent"
-				android:background="@drawable/bpix">
-				<ImageView android:layout_height="wrap_content"
-					android:layout_centerHorizontal="true" android:id="@+id/beintoobar"
-					android:src="@drawable/beintoobar" android:layout_width="wrap_content" />
-				<Button android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:id="@+id/close"
-					android:layout_alignParentRight="true" android:background="@drawable/close"
-					android:layout_centerVertical="true" android:layout_marginRight="8dip" />
-			</RelativeLayout>
-		</LinearLayout>
+		android:orientation="vertical" android:background="#dddddd">
+		<include layout="@layout/beintoobar" />
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline"></LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"
 			android:id="@+id/welcome" android:orientation="vertical"
-			android:background="#d6dbde" android:layout_height="wrap_content">
-			<TextView android:textStyle="bold" android:id="@+id/nickname"
-				android:background="#afd4e3" android:layout_width="fill_parent"
-				android:textColor="#FFFFFF" android:paddingLeft="10dip"
-				android:gravity="center_vertical" android:layout_height="40dip"
-				android:text="@string/homeWelcome"></TextView>
-		</LinearLayout>
-		<LinearLayout android:id="@+id/linearLayout2"
-			android:layout_width="fill_parent" android:layout_height="wrap_content">
-			<ImageView android:id="@+id/imageView1"
-				android:layout_height="wrap_content" android:background="@drawable/layoutbottom"
-				android:layout_marginLeft="18dip" android:layout_marginRight="18dip"
-				android:layout_marginTop="10dip" android:layout_width="fill_parent"></ImageView>
+			android:layout_height="wrap_content">
+			<TextView android:id="@+id/nickname" android:layout_width="fill_parent"
+				android:paddingLeft="10dip" android:gravity="center_vertical"
+				android:text="@string/homeWelcome" android:layout_height="33dip"
+				android:textColor="#000000" android:textSize="14dip"></TextView>
 		</LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="1dip" android:background="#8F9193" android:id="@+id/grayline"></LinearLayout>
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline"></LinearLayout>
+		<LinearLayout android:layout_width="fill_parent"
 			android:id="@+id/maincontainer" android:orientation="vertical"
-			android:background="#d6dbde" android:gravity="center"
-			android:layout_height="wrap_content">
+			android:gravity="center" android:layout_height="wrap_content"
+			android:background="#dddddd">
 			<TableLayout android:id="@+id/myTableLayout"
 				android:layout_height="wrap_content" android:scrollbars="vertical"
-				android:background="#FFFFFF" android:layout_width="fill_parent"
-				android:layout_marginLeft="18dip" android:layout_marginRight="18dip">
-				<TableRow android:background="#f4f5f6" android:gravity="center" android:id="@+id/firstRow">
-					<Button android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/profilebt"
-						android:layout_alignParentTop="true" android:background="@drawable/profilebt"
-						android:layout_margin="10dip">
-					</Button>
-					<Button android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/leaderboardbt"
-						android:background="@drawable/leaderbt" android:layout_margin="10dip">
-					</Button>
+				android:layout_width="fill_parent">
+				<TableRow android:id="@+id/firstRow">
+					<ImageView android:layout_width="wrap_content"
+						android:id="@+id/imageView1" android:layout_height="wrap_content"
+						android:src="@drawable/profbt" android:layout_marginRight="15dip"
+						android:layout_margin="10dip"></ImageView>
+					<LinearLayout android:id="@+id/linearLayout1"
+						android:layout_width="wrap_content" android:layout_height="fill_parent"
+						android:gravity="center_vertical" android:orientation="vertical">
+						<TextView android:layout_width="wrap_content"
+							android:textSize="17dip" android:id="@+id/textView1"
+							android:text="@string/profile" android:layout_height="wrap_content"
+							android:textColor="#000000"></TextView>
+						<TextView android:id="@+id/textView5"
+							android:layout_width="wrap_content" android:layout_height="wrap_content"
+							android:textSize="14dip" android:text="@string/profiledesc"
+							android:textColor="#878485"></TextView>
+					</LinearLayout>
 				</TableRow>
-				<TableRow android:background="#f4f5f6" android:gravity="center" android:id="@+id/secondRow">
-					<Button android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/walletbt"
-						android:background="@drawable/wallet" android:layout_margin="10dip">
-					</Button>
-					<Button android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_alignParentRight="true" android:background="@drawable/challenges"
-						android:layout_margin="10dip" android:id="@+id/challengesbt">
-					</Button>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#FFFFFF"
+					android:id="@+id/whiteline"></LinearLayout>
+
+				<TableRow android:id="@+id/secondRow">
+					<ImageView android:layout_width="wrap_content"
+						android:id="@+id/imageView2" android:layout_height="wrap_content"
+						android:src="@drawable/leaderboardbt" android:layout_margin="10dip"></ImageView>
+					<LinearLayout android:id="@+id/linearLayout4"
+						android:layout_width="wrap_content" android:layout_height="fill_parent"
+						android:gravity="center_vertical" android:orientation="vertical">
+						<TextView android:layout_width="wrap_content"
+							android:textSize="17dip" android:id="@+id/textView2"
+							android:text="@string/leaderboard" android:layout_height="wrap_content"
+							android:textColor="#000000"></TextView>
+						<TextView android:id="@+id/textView6"
+							android:layout_width="wrap_content" android:layout_height="wrap_content"
+							android:text="@string/leaderboarddesc" android:textColor="#878485"></TextView>
+					</LinearLayout>
 				</TableRow>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#FFFFFF"
+					android:id="@+id/whiteline"></LinearLayout>
+
+				<TableRow android:id="@+id/thirdRow">
+					<ImageView android:layout_width="wrap_content"
+						android:id="@+id/imageView3" android:layout_height="wrap_content"
+						android:src="@drawable/walletbt" android:layout_margin="10dip"></ImageView>
+					<LinearLayout android:id="@+id/linearLayout5"
+						android:layout_width="wrap_content" android:layout_height="fill_parent"
+						android:gravity="center_vertical" android:orientation="vertical">
+						<TextView android:layout_width="wrap_content"
+							android:textSize="17dip" android:id="@+id/textView3"
+							android:text="@string/wallet" android:layout_height="wrap_content"
+							android:textColor="#000000"></TextView>
+						<TextView android:id="@+id/textView7"
+							android:layout_width="wrap_content" android:layout_height="wrap_content"
+							android:text="@string/walletdesc" android:textColor="#878485"></TextView>
+					</LinearLayout>
+				</TableRow>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#FFFFFF"
+					android:id="@+id/whiteline"></LinearLayout>
+
+				<TableRow android:id="@+id/fourthRow">
+					<ImageView android:layout_width="wrap_content"
+						android:id="@+id/imageView4" android:layout_height="wrap_content"
+						android:src="@drawable/challengebt" android:layout_margin="10dip"></ImageView>
+					<LinearLayout android:id="@+id/linearLayout6"
+						android:layout_width="wrap_content" android:layout_height="fill_parent"
+						android:gravity="center_vertical" android:orientation="vertical">
+						<TextView android:layout_width="wrap_content"
+							android:textSize="17dip" android:id="@+id/textView4"
+							android:layout_height="wrap_content" android:textColor="#000000"
+							android:text="@string/challenges"></TextView>
+						<TextView android:id="@+id/textView8"
+							android:layout_width="wrap_content" android:layout_height="wrap_content"
+							android:text="@string/challengesdesc" android:textColor="#878485"></TextView>
+					</LinearLayout>
+				</TableRow>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#FFFFFF"
+					android:id="@+id/whiteline"></LinearLayout>
+
 			</TableLayout>
 		</LinearLayout>
 		<LinearLayout android:layout_height="wrap_content"
 			android:id="@+id/linearLayout3" android:layout_width="fill_parent">
-			<ImageView android:id="@+id/imageView2"
-				android:layout_height="wrap_content" android:background="@drawable/boxombr"
-				android:layout_marginLeft="18dip" android:layout_marginRight="18dip"
-				android:layout_marginTop="0dip" android:layout_width="fill_parent"
-				android:layout_marginBottom="20dip"></ImageView>
 		</LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"
 			android:id="@+id/www" android:orientation="vertical" android:gravity="bottom|center"
 			android:layout_height="fill_parent">
 			<TextView android:text="www.beintoo.com" android:id="@+id/nickname"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:textColor="#56b3d8" android:gravity="center"
-				android:paddingBottom="20dip"></TextView>
-			<ImageView android:layout_height="wrap_content" android:id="@+id/layoutbottom"
-				android:background="@drawable/layoutbottom" android:layout_width="fill_parent">
+				android:gravity="center" android:paddingBottom="15dip"
+				android:textColor="#58595B"></TextView>
+			<ImageView android:id="@+id/layoutbottom"
+				android:layout_width="fill_parent" android:background="@drawable/footer"
+				android:layout_height="11dip">
 			</ImageView>
 		</LinearLayout>
 	</LinearLayout>

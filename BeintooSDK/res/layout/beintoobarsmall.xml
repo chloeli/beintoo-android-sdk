@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="fill_parent"
+	android:id="@+id/linearLayout1" xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_height="wrap_content">
+	<LinearLayout android:id="@+id/linearLayout2"
+		android:background="#5C6368" android:layout_height="1dip"
+		android:layout_width="fill_parent"></LinearLayout>
+	<RelativeLayout android:layout_width="fill_parent"
+		android:id="@+id/beintoobarsmall" android:orientation="horizontal"
+		android:layout_height="40dip" android:gravity="center_vertical">
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/dialogTitle"
+			android:layout_alignParentLeft="true" android:layout_marginLeft="10dip" android:textSize="18dip" android:textColor="#f6f6f6"></TextView>
+		<ImageView android:layout_width="wrap_content" android:id="@+id/imageView1"
+			android:layout_height="wrap_content" android:src="@drawable/cigno"
+			android:layout_alignParentRight="true" android:layout_marginRight="10dip"></ImageView>
+	</RelativeLayout>
+	<LinearLayout android:layout_width="fill_parent"
+		android:id="@+id/linearLayout1" android:layout_height="1dip"
+		android:background="#2D3642"></LinearLayout>
+</LinearLayout>
