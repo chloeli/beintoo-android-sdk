@@ -55,6 +55,18 @@ public class PreferencesHandler {
 		return settings.getInt(key,0);
 	}
 	
+	public static void saveLong (String key, long value, Context ctx){
+		SharedPreferences settings = ctx.getSharedPreferences(key, 0);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putLong(key,value);
+	    editor.commit();
+	}
+	
+	public static long getLong (String key, Context ctx){
+		SharedPreferences settings = ctx.getSharedPreferences(key, 0);
+		return settings.getLong(key,0);
+	}
+	
 	public static void clearPref (String key, Context ctx){
 		SharedPreferences settings = ctx.getSharedPreferences(key, 0);
 		SharedPreferences.Editor editor = settings.edit();

@@ -15,9 +15,6 @@
  ******************************************************************************/
 package com.beintoo.beintoosdkutility;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import com.beintoo.R; 
 import android.app.Dialog;
 import android.content.Context;
@@ -29,46 +26,32 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.view.Gravity;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MessageDisplayer {
 	static Dialog toast = null;
 	public static void showMessage (Context ctx, String message){
-		//Toast toast = new Toast(ctx);
-		toast= new Dialog(ctx,R.style.ThemeBeintooMessage);
+		Toast toast = new Toast(ctx);
+		/*toast= new Dialog(ctx,R.style.ThemeBeintooMessage);
 		Window window = toast.getWindow();
 		window.setBackgroundDrawableResource(android.R.color.transparent);
 		window.requestFeature(Window.FEATURE_NO_TITLE);
-		
-		toast.setCanceledOnTouchOutside(true);
+		*/
+		/*toast.setCanceledOnTouchOutside(true);
 		toast.setCancelable(true);
-		
-		RoundRectShape rect = new RoundRectShape( new float[] {15,15, 15,15, 15,15, 15,15}, null, null); 
-		ShapeDrawable bg = new ShapeDrawable(rect);		
-		
+		*/
 		LinearLayout ll = new LinearLayout(ctx);
 		ll.setLayoutParams(new LinearLayout.LayoutParams(
 		          LinearLayout.LayoutParams.WRAP_CONTENT,
 		          LinearLayout.LayoutParams.WRAP_CONTENT
 		      ));
 		ll.setPadding(10, 10, 10, 10);
-		ll.setGravity(Gravity.CENTER_VERTICAL);
+		ll.setGravity(Gravity.CENTER_VERTICAL);		
+		ll.setBackgroundDrawable(messageBackground());
 		
-		Paint p = new Paint();
-		int [] colors = {0xffC6CACE, 0xff9EA6AF};
-		float [] positions = {0.0f,0.5f};
-	    p.setShader(new LinearGradient(0, 0, 0, 80, colors, positions,  Shader.TileMode.MIRROR));	    
-	    
-	    bg.getPaint().set(p);
-	    bg.getPaint().setAlpha(230);
-	    
-	     
-		ll.setBackgroundDrawable(bg);
 		ImageView logo = new ImageView(ctx);		
 		logo.setImageResource(R.drawable.beintoobtn);
 		
@@ -77,18 +60,38 @@ public class MessageDisplayer {
 		messageView.setText(message);
 		messageView.setTextColor(Color.WHITE);
 		messageView.setTypeface(Typeface.DEFAULT_BOLD, 0);
+		messageView.setGravity(Gravity.CENTER_VERTICAL);
 		 
 		ll.addView(logo);
 		ll.addView(messageView);
-		
-		toast.setContentView(ll, new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
+
+		toast.setGravity(Gravity.CENTER, 0, 20);
+		toast.setView(ll);
+		toast.setDuration(Toast.LENGTH_SHORT);
 		toast.show();
-		TimerTask t = new TimerTask() {
+		
+		//toast.setContentView(ll, new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
+		
+		/*TimerTask t = new TimerTask() {
 			   public void run() {
-				   toast.cancel();
+				  toast.dismiss();
 			   }
 		};
 		Timer timer = new Timer();
-		timer.schedule( t, 1500);   
+		timer.schedule( t, 1500);*/   
+	}
+	
+	private static ShapeDrawable messageBackground(){
+		RoundRectShape rect = new RoundRectShape( new float[] {15,15, 15,15, 15,15, 15,15}, null, null); 
+		ShapeDrawable bg = new ShapeDrawable(rect);		
+		
+		Paint p = new Paint();
+		int [] colors = {0xffC6CACE, 0xff9EA6AF};
+		float [] positions = {0.0f,0.5f};
+	    p.setShader(new LinearGradient(0, 0, 0, 50, colors, positions,  Shader.TileMode.MIRROR));	    	    
+	    bg.getPaint().set(p);
+	    bg.getPaint().setAlpha(230); 
+	    
+	    return bg;
 	}
 }

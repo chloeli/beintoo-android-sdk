@@ -29,7 +29,7 @@ Integrate with an existing application
 
 To use Beintoo in your applications you you will need to add a reference to the BeintooSDK project. To do this open the properties window for your app (__File__ -> __Properties__), select the Android item from the list, then press the __Add...__ button in the Library area and select the Beintoo SDK project created above.
 
-Once the Beintoo SDK is referenced you need to modify the app __manifest.xml__ 
+Once the Beintoo SDK is referenced you need to modify the app __AndroidManifest.xml__ 
 You need to add this __permissions__
 
 	

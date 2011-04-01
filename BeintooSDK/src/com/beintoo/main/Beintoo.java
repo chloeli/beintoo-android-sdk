@@ -22,6 +22,7 @@ import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.activities.VGoodGetDialog;
 import com.beintoo.activities.tryBeintoo;
+import com.beintoo.activities.tryDialog;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
@@ -56,6 +57,7 @@ public class Beintoo{
 	private final static int GET_VGOOD = 2;
 	private final static int LOGIN_MESSAGE = 3;
 	private final static int SUBMITSCORE_POPUP = 4;
+	private final static int TRY_DIALOG_POPUP = 5;
 	
 	public static Dialog currentDialog = null;
 	public static Dialog homeDialog = null;
@@ -123,6 +125,24 @@ public class Beintoo{
 					tryBe.show();
 			}
 		}catch (Exception e ){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx); logout(ctx);}
+	}
+	
+	public static void tryBeintooDialog (Context ctx, int daysInterval){
+		currentContext = ctx;
+		PreferencesHandler.clearPref("lastTryDialog",ctx);
+		
+		long lastDay = PreferencesHandler.getLong("lastTryDialog", ctx);
+		long now = System.currentTimeMillis();
+		long daysIntervalMillis = 86400000 * daysInterval;		
+		long nextPopup = lastDay + daysIntervalMillis;
+		boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
+		
+		System.out.println("LAST DAY: "+lastDay+" daysIntervalMillis: "+daysIntervalMillis);
+		if((lastDay == 0 || now >= nextPopup) && !isLogged){
+			UIhandler.sendEmptyMessage(TRY_DIALOG_POPUP);
+		}
+		
+		
 	}
 	
 	/**
@@ -435,6 +455,10 @@ public class Beintoo{
 	            break;
 	            case SUBMITSCORE_POPUP:
 	            	MessageDisplayer.showMessage(currentContext, msg.getData().getString("Message"));
+	            break;
+	            case TRY_DIALOG_POPUP:
+	            	tryDialog t = new tryDialog(currentContext);
+	            	t.show();
 	            break;
 		    }
 	        super.handleMessage(msg);
