@@ -127,6 +127,11 @@ public class Beintoo{
 		}catch (Exception e ){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx); logout(ctx);}
 	}
 	
+	/**
+	 * NOT FINISHED
+	 * @param ctx
+	 * @param daysInterval
+	 */
 	public static void tryBeintooDialog (Context ctx, int daysInterval){
 		currentContext = ctx;
 		PreferencesHandler.clearPref("lastTryDialog",ctx);
