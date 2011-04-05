@@ -15,9 +15,6 @@
  ******************************************************************************/
 package com.beintoo.main;
 
-
-
-
 import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.activities.VGoodGetDialog;
@@ -62,7 +59,12 @@ public class Beintoo{
 	public static Dialog currentDialog = null;
 	public static Dialog homeDialog = null;
 	public static Vgood vgood = null;
-	public static String[] usedFeatures = null;
+	
+	public static String[] usedFeatures = null; 
+	public static String FEATURE_PROFILE = "profile";
+	public static String FEATURE_LEADERBOARD = "leaderboard";
+	public static String FEATURE_WALLET = "wallet";
+	public static String FEATURE_CHALLENGES = "challenges";
 	
 	/**
 	 * Set the developer apikey
@@ -112,7 +114,7 @@ public class Beintoo{
             			}catch (Exception e ){
             				dialog.dismiss();
             				e.printStackTrace();
-            				ErrorDisplayer.showConnectionErrorOnThread(ErrorDisplayer.CONN_ERROR, ctx);
+            				ErrorDisplayer.showConnectionErrorOnThread(ErrorDisplayer.CONN_ERROR, ctx,e);
             			}
             			dialog.dismiss();
             		}
@@ -124,33 +126,31 @@ public class Beintoo{
 					currentDialog = tryBe;
 					tryBe.show();
 			}
-		}catch (Exception e ){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx); logout(ctx);}
+		}catch (Exception e ){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx,e); logout(ctx);}
 	}
 	
 	/**
-	 * NOT FINISHED
-	 * @param ctx
-	 * @param daysInterval
+	 * Show a dialog with the try Beintoo message. The dialog is show with an interval of days passed in daysInterval
+	 * 
+	 * @param ctx current Context
+	 * @param daysInterval interval of days you want to show the dialog
 	 */
 	public static void tryBeintooDialog (Context ctx, int daysInterval){
 		currentContext = ctx;
-		PreferencesHandler.clearPref("lastTryDialog",ctx);
-		
+		  
 		long lastDay = PreferencesHandler.getLong("lastTryDialog", ctx);
 		long now = System.currentTimeMillis();
-		long daysIntervalMillis = 86400000 * daysInterval;		
+		long daysIntervalMillis = 86400000 * daysInterval; //60000   
 		long nextPopup = lastDay + daysIntervalMillis;
 		boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
 		
-		System.out.println("LAST DAY: "+lastDay+" daysIntervalMillis: "+daysIntervalMillis);
 		if((lastDay == 0 || now >= nextPopup) && !isLogged){
 			UIhandler.sendEmptyMessage(TRY_DIALOG_POPUP);
+			PreferencesHandler.saveLong("lastTryDialog", now, ctx);
 		}
-		
-		
-	}
+	} 
 	
-	/**
+	/** 
 	 * Send a Vgood to the user it runs in background on a thread. 
 	 * It retrieves the user location used to find a Vgood in nearby 
 	 * 

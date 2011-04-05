@@ -16,7 +16,9 @@
 package com.beintoo.beintoosdkui;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -71,35 +73,16 @@ public class BeintooFacebookLogin extends Dialog {
 		ws.setJavaScriptEnabled(true);
 
 		Button aloggedbt = new Button(getContext());
-		webview.addJavascriptInterface(aloggedbt, "aloggedbt");
-
-		aloggedbt.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				Thread t = new Thread(new Runnable() {
-					public void run() {
-						try {
-							Gson gson = new Gson();
-							BeintooPlayer player = new BeintooPlayer();
-							
-							// PARSE THE LOGGED_URI TO GET THE USEREXT
-							android.net.Uri uri = android.net.Uri.parse(webview.getUrl());
-							Player newPlayer = player.playerLogin(uri.getQueryParameter("userext"),null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
-							
-							// SET THAT THE PLAYER IS LOGGED IN BEINTOO
-							PreferencesHandler.saveBool("isLogged", true, getContext());
-							// SAVE THE CURRENT PLAYER
-							String jsonUser = gson.toJson(newPlayer);
-							PreferencesHandler.saveString("currentPlayer", jsonUser, getContext());
-							
-							// FINALLY GO HOME
-							UIhandler.sendEmptyMessage(GO_HOME);
-						} catch (Exception e) {
-						}
-					}
-				});
-				t.start();
-			}
-		});
+		
+		if (!isGinger()) {
+			webview.addJavascriptInterface(aloggedbt, "aloggedbt");
+			aloggedbt.setOnClickListener(new Button.OnClickListener() {
+				public void onClick(View v) {
+					startBeintooHome();
+				}
+			});
+		}
+		//webview.addJavascriptInterface(aloggedbt, "aloggedbt");
 
 		Button close = (Button) findViewById(R.id.close);
 		BeButton b = new BeButton(ctx);
@@ -115,6 +98,15 @@ public class BeintooFacebookLogin extends Dialog {
 				ProgressBar p = (ProgressBar) findViewById(R.id.progress);				
 				p.setProgress(progress);
 			}
+			
+			@SuppressWarnings("unused")
+			public void onConsoleMessage (String message, int lineNumber, String sourceID){
+				if(isGinger()){ // IF IS GINGER INTERCEPT THE JS ERROR AND START BEINTOO
+					if(message.contains("aloggedbt"))
+						startBeintooHome();
+				}
+			}
+			
 		});
 		webview.setWebViewClient(new WebViewClient() {
 			public void onReceivedError(WebView view, int errorCode,
@@ -153,7 +145,48 @@ public class BeintooFacebookLogin extends Dialog {
 			}
 		}
 	}*/
-
+	
+	private void startBeintooHome(){
+		final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Login...",true);
+		Thread t = new Thread(new Runnable() {
+			public void run() {
+				try {
+					Gson gson = new Gson();
+					BeintooPlayer player = new BeintooPlayer();
+					
+					// PARSE THE LOGGED_URI TO GET THE USEREXT
+					android.net.Uri uri = android.net.Uri.parse(webview.getUrl());
+					Player newPlayer = player.playerLogin(uri.getQueryParameter("userext"),null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
+					
+					// SET THAT THE PLAYER IS LOGGED IN BEINTOO
+					PreferencesHandler.saveBool("isLogged", true, getContext());
+					// SAVE THE CURRENT PLAYER
+					String jsonUser = gson.toJson(newPlayer);
+					PreferencesHandler.saveString("currentPlayer", jsonUser, getContext());
+					
+					// FINALLY GO HOME
+					UIhandler.sendEmptyMessage(GO_HOME);
+				} catch (Exception e) {
+					dialog.dismiss();
+				}
+				dialog.dismiss();
+			}
+		});
+		t.start();
+	}
+	
+	private boolean isGinger (){
+		/*
+		 * Check if is the buggish 2.3 
+		 */
+		try {
+			if ((Build.VERSION.RELEASE).contains("2.3")) {
+				return true;
+			}
+		} catch (Exception e) {}
+		
+		return false;
+	}
 	
 	private void clearAllCookies (){
 		//clearCache();

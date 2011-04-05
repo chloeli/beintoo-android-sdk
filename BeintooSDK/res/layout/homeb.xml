@@ -55,10 +55,10 @@
 				</TableRow>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#8F9193"
-					android:id="@+id/grayline"></LinearLayout>
+					android:id="@+id/firstGrayline"></LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#FFFFFF"
-					android:id="@+id/whiteline"></LinearLayout>
+					android:id="@+id/firstWhiteline"></LinearLayout>
 
 				<TableRow android:id="@+id/secondRow">
 					<ImageView android:layout_width="wrap_content"
@@ -78,10 +78,10 @@
 				</TableRow>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#8F9193"
-					android:id="@+id/grayline"></LinearLayout>
+					android:id="@+id/secondGrayline"></LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#FFFFFF"
-					android:id="@+id/whiteline"></LinearLayout>
+					android:id="@+id/secondWhiteline"></LinearLayout>
 
 				<TableRow android:id="@+id/thirdRow">
 					<ImageView android:layout_width="wrap_content"
@@ -101,10 +101,10 @@
 				</TableRow>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#8F9193"
-					android:id="@+id/grayline"></LinearLayout>
+					android:id="@+id/thirdGrayline"></LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#FFFFFF"
-					android:id="@+id/whiteline"></LinearLayout>
+					android:id="@+id/thirdWhiteline"></LinearLayout>
 
 				<TableRow android:id="@+id/fourthRow">
 					<ImageView android:layout_width="wrap_content"
@@ -124,10 +124,10 @@
 				</TableRow>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#8F9193"
-					android:id="@+id/grayline"></LinearLayout>
+					android:id="@+id/fourthGrayline"></LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#FFFFFF"
-					android:id="@+id/whiteline"></LinearLayout>
+					android:id="@+id/fourthWhiteline"></LinearLayout>
 
 			</TableLayout>
 		</LinearLayout>

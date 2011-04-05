@@ -14,8 +14,23 @@
 		android:layout_height="fill_parent" android:id="@+id/maincontainer"
 		android:orientation="vertical" android:background="#dddddd">
 		<include layout="@layout/beintoobarsmall" />
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="1dip" android:id="@+id/whiteline"></LinearLayout>
+		<LinearLayout android:layout_height="wrap_content"
+				android:id="@+id/buttonsll" android:layout_width="fill_parent"
+				android:gravity="center">
+				<Button android:id="@+id/toConvertGoods" android:textColor="#545859" android:layout_height="35dip"
+					android:layout_width="160dip" android:text="@string/walletNotConverted" android:padding="0dip"></Button>
+				<LinearLayout android:layout_width="0.75dip"
+					android:layout_height="fill_parent" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout>
+				<Button android:id="@+id/convertedGoods" android:textColor="#545859" android:layout_height="35dip"
+					android:layout_width="160dip" android:text="@string/walletConverted" android:padding="0dip"></Button>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="0.75dip" android:background="#8F9193"
+				android:id="@+id/grayline"></LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="0.75dip" android:background="#FFFFFF"
+				android:id="@+id/whiteline"></LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"
 			android:orientation="vertical" android:id="@+id/goodcontent"
 			android:layout_height="wrap_content">

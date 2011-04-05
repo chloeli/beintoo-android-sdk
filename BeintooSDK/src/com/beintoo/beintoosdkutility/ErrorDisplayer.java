@@ -15,8 +15,13 @@
  ******************************************************************************/
 package com.beintoo.beintoosdkutility;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.beintoo.beintoosdk.BeintooApp;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -28,7 +33,8 @@ import android.widget.Toast;
 public class ErrorDisplayer{
 	public static final String CONN_ERROR = "Connection error.\nPlease check your Internet connection.";
 	
-	public static void showConnectionError (String Message, final Context ctx){
+	public static void showConnectionError (String Message, final Context ctx, Exception e){
+
 		Handler handler = new Handler(){		     
 			public void handleMessage(Message msg) {	
 				Toast.makeText(ctx, msg.getData().getString("SOMETHING"), Toast.LENGTH_SHORT).show();  				
@@ -40,12 +46,19 @@ public class ErrorDisplayer{
 	   status.setData(data);
 
 	   handler.sendMessage(status);	
+	   
+	   // REPORT THE ERROR (REMOVE CONNECTION ERRORS
+	   if(e!=null && !(e instanceof java.net.SocketTimeoutException) && !(e instanceof java.net.ConnectException))
+		   try {
+			   errorReport(StackStraceTostring(e));		   
+		   }catch(Exception ex){}
 	}
 	
-	public static void showConnectionErrorOnThread (String Message, final Context ctx){
+	public static void showConnectionErrorOnThread (String Message, final Context ctx, Exception e){
+		
 		Looper.prepare();
 		final Looper tLoop = Looper.myLooper();
-		showConnectionError (Message,ctx);	
+		showConnectionError (Message,ctx,e);	
 		
 		// QUIT THE Looper AFTER THE TOAST IS DISMISSED
 		final Timer t = new Timer();
@@ -58,5 +71,28 @@ public class ErrorDisplayer{
 		}, 6000);
 		
 	    Looper.loop();
+	}
+	
+	private static String StackStraceTostring(Exception e){
+		try {
+			final Writer result = new StringWriter();
+	        final PrintWriter printWriter = new PrintWriter(result);
+	        e.printStackTrace(printWriter);
+	        
+	        return result.toString();	        
+		}catch(Exception ex){}
+		
+		return "";
+	}
+	
+	private static void errorReport (final String stackTrace){
+		new Thread(new Runnable(){     					
+    		public void run(){ 
+    			try{  
+    				BeintooApp ba = new BeintooApp();
+    		    	ba.ErrorReporting(null, null, stackTrace);	
+    			}catch(Exception e){e.printStackTrace();}
+    		}
+		}).start();			
 	}
 }

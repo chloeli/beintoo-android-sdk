@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -41,19 +42,27 @@ import android.widget.TextView;
 
 
 import com.beintoo.R;
+import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
+import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.Vgood;
 import com.google.gson.Gson;
 
 public class Wallet extends Dialog implements OnClickListener{
 	static Dialog current;
+	
 	Vgood [] vgood;
+	
 	final double ratio;
+	
+	private final int OPEN_BROWSER = 1;
+	private final int LOAD_TABLE = 2;
 	
 	public Wallet(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
@@ -72,27 +81,99 @@ public class Wallet extends Dialog implements OnClickListener{
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
+		
+		// SETTING UP BUTTONS
+		final BeButton b = new BeButton(ctx);
+		Button toConvert = (Button) findViewById(R.id.toConvertGoods);		
+		toConvert.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
+		toConvert.setOnClickListener(new Button.OnClickListener(){
+			public void onClick(View v) {
+				resetButtons();
+				v.setBackgroundDrawable(b.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+				new Thread(new Runnable(){      
+            		public void run(){
+            			try{ 
+            				BeintooVgood newvgood = new BeintooVgood();            				
+            				// GET THE CURRENT LOGGED PLAYER
+            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
+            				vgood = newvgood.showByUser(p.getUser().getId(), null, false);
+            				UIhandler.sendEmptyMessage(LOAD_TABLE);
+            			}catch (Exception e){
+            				e.printStackTrace();
+            			}
+            			dialog.dismiss();
+            		}
+				}).start();
+			}
+        });
+		
+		Button converted = (Button) findViewById(R.id.convertedGoods);
+		converted.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+		converted.setOnClickListener(new Button.OnClickListener(){
+			public void onClick(View v) {
+				resetButtons();
+				v.setBackgroundDrawable(b.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
+				
+				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+				new Thread(new Runnable(){      
+            		public void run(){
+            			try{ 
+            				BeintooVgood newvgood = new BeintooVgood();            				
+            				// GET THE CURRENT LOGGED PLAYER
+            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
+            				vgood = newvgood.showByUser(p.getUser().getId(), null, true);
+            				UIhandler.sendEmptyMessage(LOAD_TABLE);
+            			}catch (Exception e){
+            				e.printStackTrace();
+            			}
+            			dialog.dismiss();
+            		}
+				}).start();
+			}
+        });
+		
+		
+		// LOAD THE TABLE
+		loadWallet(false);
+		
+	}
+	
+	public void loadWallet(boolean internal){
 		try {
-			vgood = new Gson().fromJson(PreferencesHandler.getString("wallet", getContext()), Vgood[].class);
+			if(!internal) // IF internal == false is loaded from the Home else is loaded from the buttons on the wallet
+				vgood = new Gson().fromJson(PreferencesHandler.getString("wallet", getContext()), Vgood[].class);
 			if(vgood.length > 0)
-				loadWallet();
+				prepareWallet();
 			else { // NO VGOODS SHOW A MESSAGE
 				TextView noGoods = new TextView(getContext());
 				noGoods.setText(getContext().getString(R.string.walletNoGoods));
 				noGoods.setTextColor(Color.GRAY);
-				noGoods.setPadding(20,0,0,0);						
+				noGoods.setPadding(20,15,0,0);						
 				TableLayout table = (TableLayout) findViewById(R.id.table);
+				table.removeAllViews();
 				table.addView(noGoods);
 			}
-		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
+		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(),e);}
 	}
 	
-	public void loadWallet(){
+	public void prepareWallet(){
 		TableLayout table = (TableLayout) findViewById(R.id.table);
-		//table.setColumnStretchable(1, true);
-		//table.removeAllViews();
+
+		table.removeAllViews();
 		
-			
 		int count = 0;
 		final ArrayList<View> rowList = new ArrayList<View>();
 	    for (int i = 0; i < vgood.length; i++){
@@ -134,7 +215,7 @@ public class Wallet extends Dialog implements OnClickListener{
 		  TableRow row = new TableRow(activity);
 		  row.setGravity(Gravity.CENTER);
 		  
-		  image.setPadding(10, 0, 5, 0);
+		  image.setPadding((int)(ratio*10), 0, 5, 0);
 		  ((LinearLayout) image).setGravity(Gravity.LEFT);
 
 		  LinearLayout main = new LinearLayout(row.getContext());
@@ -172,9 +253,9 @@ public class Wallet extends Dialog implements OnClickListener{
 		  return row;
 	}
 		
-	private static View createSpacer(Context activity, int color, int height) {
+	private View createSpacer(Context activity, int color, int height) {
 		  View spacer = new View(activity);
-		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
+		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,(int)(ratio*height)));
 		  if(color == 1)
 			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
 		  else if(color == 2)
@@ -190,19 +271,34 @@ public class Wallet extends Dialog implements OnClickListener{
     		public void run(){
     			try{ 
     				PreferencesHandler.saveString("openUrl", vgood[selectedRow].getShowURL(), current.getContext());		
-    				UIhandler.sendEmptyMessage(0);
+    				UIhandler.sendEmptyMessage(OPEN_BROWSER);
     			}catch (Exception e){
     			}
     			dialog.dismiss();
     		}
 		}).start();	
 	}
-	static Handler UIhandler = new Handler() {
+	
+	public void resetButtons(){
+		Button converted = (Button) findViewById(R.id.convertedGoods);		
+		converted.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));	
+		Button toConvert = (Button) findViewById(R.id.toConvertGoods);
+		toConvert.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+	}
+	
+	private Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {
-			BeintooBrowser bb = new BeintooBrowser(current.getContext());
-			bb.show();			
-	        super.handleMessage(msg);
+			  switch(msg.what){
+			  	case OPEN_BROWSER:
+			  		BeintooBrowser bb = new BeintooBrowser(current.getContext());
+					bb.show();						        
+			  	break;
+			  	case LOAD_TABLE:
+			  		loadWallet(true);
+				break;			  	
+			  }
+			super.handleMessage(msg);
 		  }
 	};
 	

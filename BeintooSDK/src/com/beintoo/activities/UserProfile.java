@@ -19,8 +19,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.beintoo.R;
+import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
@@ -169,6 +171,27 @@ public class UserProfile extends Dialog {
 			}
 		});
 		
+		Button detach = (Button) findViewById(R.id.detach);
+		detach.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+		detach.setBackgroundDrawable(
+	    		b.setPressedBackg(
+			    		new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));			    	 
+		detach.setOnClickListener(new Button.OnClickListener(){
+			public void onClick(View v) {
+				BeintooUser usr = new BeintooUser();
+				Player currentPlayer;
+				try {
+					currentPlayer = getCurrentPlayer();					
+					usr.detachUserFromDevice(DeviceId.getUniqueDeviceId(ctx), currentPlayer.getUser().getId());
+					PreferencesHandler.saveBool("isLogged", false, getContext());
+					PreferencesHandler.saveString("currentPlayer", null, getContext());
+					Beintoo.homeDialog.dismiss();
+					current.dismiss();
+				}catch (Exception e){e.printStackTrace();}	
+			}
+		});
 	}
 	
 	

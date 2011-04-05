@@ -18,6 +18,7 @@
     <string name="challSent" xml:space="preserve">Sfida inviata a\u0020</string>
     <string name="challAccept">Vuoi accettare questa sfida al costo di\u0020</string>
     <string name="challSend">Vuoi inviare una sfida per 10 BeDollars?</string>
+    <string name="challTip">clicca su un utente per inviargli una sfida</string>
     
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Punteggio:\u0020</string>
@@ -37,11 +38,15 @@
     <string name="profileBestScore" xml:space="preserve">Miglior punteggio:\u0020</string>
     <string name="profileLastScore" xml:space="preserve">Ultimo punteggio:\u0020</string>
     <string name="profileNoScores">Non hai nessun punteggio per questa app</string>
+    <string name="profileDetach">Disconnetti dal dispositivo</string>
     
     <string name="vgoodWhoAlso">Chi altro ha acquistato</string>
     <string name="vgoodEnd">Data di fine:</string>
     
     <string name="walletNoGoods">Non hai nessun bene virtuale</string>
+    <string name="walletConverted">Beni convertiti</string>
+    <string name="walletNotConverted">Beni non convertiti</string>
+   
    
    	<string name="tryBe">Beintoo trasforma la tua passione per le apps in premi reali.\nE\' gratis ed estremamente facile!</string>
     <string name="pressBt">Premi il pulsante qui sotto e prova Beintoo</string>

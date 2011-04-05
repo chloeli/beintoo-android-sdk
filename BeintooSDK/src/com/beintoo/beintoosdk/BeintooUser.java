@@ -18,6 +18,7 @@ package com.beintoo.beintoosdk;
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.wrappers.Challenge;
+import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -168,8 +169,23 @@ public class BeintooUser {
 		
 		User [] user = gson.fromJson(json, User[].class);
 		
-		return user;
+		return user;		
+	}
+	
+	public Message detachUserFromDevice (String deviceID,String userID){
+		String apiUrl = apiPreUrl+"user/removeUDID/"+deviceID+"/"+userID;
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
 		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		
+		Gson gson = new Gson();
+		
+		Message msg = gson.fromJson(json, Message.class);
+		
+		return msg;		
 	}
 
 }

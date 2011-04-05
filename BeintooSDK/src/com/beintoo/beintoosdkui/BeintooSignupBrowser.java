@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -72,38 +73,15 @@ public class BeintooSignupBrowser extends Dialog {
 		ws.setJavaScriptEnabled(true);
 
 		Button ok = new Button(getContext());
-		webview.addJavascriptInterface(ok, "ok");
-
-		ok.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Login...",true);
-				/* Do a playerLogin to setup the DeviceUUID and the GUID */
-				Thread t = new Thread(new Runnable() {
-					public void run() {
-						try {
-							BeintooPlayer player = new BeintooPlayer();
-							Gson gson = new Gson();
-							Player newPlayer = new Player();
-							newPlayer = player.getPlayer(PreferencesHandler.getString("guid",getContext()));
-
-							// SET THAT THE PLAYER IS LOGGED IN BEINTOO
-							PreferencesHandler.saveBool("isLogged", true, getContext());
-							// SAVE THE CURRENT PLAYER
-							String jsonUser = gson.toJson(newPlayer);
-							PreferencesHandler.saveString("currentPlayer", jsonUser,getContext());
-							// FINALLY GO HOME
-							UIhandler.sendEmptyMessage(GO_HOME);
-							
-						} catch (Exception e) {
-						}
-						dialog.dismiss();
-					}
-				});
-				t.start();
-
-				current.dismiss();
-			}
-		});
+		
+		if (!isGinger()) {
+			webview.addJavascriptInterface(ok, "ok");
+			ok.setOnClickListener(new Button.OnClickListener() {
+				public void onClick(View v) {
+					goBeintooHome(); 
+				}
+			});
+		}	
 		
 		
 		Button closebt = new Button(getContext());		
@@ -121,6 +99,14 @@ public class BeintooSignupBrowser extends Dialog {
 			public void onProgressChanged(WebView view, int progress) {
 				ProgressBar p = (ProgressBar) findViewById(R.id.progress);				
 				p.setProgress(progress);
+			}
+			
+			@SuppressWarnings("unused")
+			public void onConsoleMessage (String message, int lineNumber, String sourceID){
+				if(isGinger()){ // IF IS GINGER INTERCEPT THE JS ERROR AND START BEINTOO
+					if(message.contains("ok"))
+						goBeintooHome();
+				}
 			}
 		});
 		webview.setWebViewClient(new WebViewClient() {
@@ -170,6 +156,47 @@ public class BeintooSignupBrowser extends Dialog {
 			}
 		}
 	}*/
+	
+	private void goBeintooHome () {
+		final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Login...",true);
+		/* Do a playerLogin to setup the DeviceUUID and the GUID */
+		Thread t = new Thread(new Runnable() {
+			public void run() {
+				try {
+					BeintooPlayer player = new BeintooPlayer();
+					Gson gson = new Gson();
+					Player newPlayer = new Player();
+					newPlayer = player.getPlayer(PreferencesHandler.getString("guid",getContext()));
+
+					// SET THAT THE PLAYER IS LOGGED IN BEINTOO
+					PreferencesHandler.saveBool("isLogged", true, getContext());
+					// SAVE THE CURRENT PLAYER
+					String jsonUser = gson.toJson(newPlayer);
+					PreferencesHandler.saveString("currentPlayer", jsonUser,getContext());
+					// FINALLY GO HOME
+					UIhandler.sendEmptyMessage(GO_HOME);
+					
+				} catch (Exception e) {
+				}
+				dialog.dismiss();
+			}
+		});
+		t.start();
+		current.dismiss();
+	}
+	
+	private boolean isGinger (){
+		/*
+		 * Check if is the buggish 2.3 
+		 */
+		try {
+			if ((Build.VERSION.RELEASE).contains("2.3")) {
+				return true;
+			}
+		} catch (Exception e) {}
+		
+		return false;
+	}
 	
 	private void clearAllCookies (){
 		//clearCache();

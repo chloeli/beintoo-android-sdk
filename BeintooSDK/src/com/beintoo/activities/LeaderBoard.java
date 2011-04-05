@@ -73,11 +73,14 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
+		LinearLayout tip = (LinearLayout) findViewById(R.id.tip);
+		tip.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*27),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+		
 		usersExts = new ArrayList<String>();
 		usersNicks = new ArrayList<String>();
 		try{
 			loadLeadersByContestTable(); 
-		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
+		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx,e);}
 		
 	}
 	
@@ -108,7 +111,7 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		    		final LoaderImageView image = new LoaderImageView(getContext(),arr.get(i).getObj().getUser().getUserimg(),(int)(ratio*70),(int)(ratio*70));
 		    			
 		    		TableRow row = createRow(image, arr.get(i).getObj().getUser().getNickname(),
-		    				arr.get(i).getVal().toString(), getContext());
+		    				arr.get(i).getVal().toString(), getContext(), i);
 					row.setId(i);
 					rowList.add(row);
 					
@@ -124,7 +127,7 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 					rowList.add(spacer2);
 					
 					BeButton b = new BeButton(getContext());
-					if(count % 2 == 0)
+					if(i % 2 == 0)
 			    		row.setBackgroundDrawable(b.setPressedBackg(
 					    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 								new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
@@ -156,23 +159,26 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		return Leaderboard;
 	}
 	
-	public TableRow createRow(View image, String nick,String score, Context activity) {
+	public TableRow createRow(View image, String nick,String score, Context activity, int pposition) {
 		  TableRow row = new TableRow(activity);
 		  row.setGravity(Gravity.CENTER);
-		  
-		  image.setPadding(15, 0, 10, 0);
+		  		  
+		 
+		  // PICTURE
+		  image.setPadding((int)(ratio*10), 0, 10, 0);
 		  ((LinearLayout) image).setGravity(Gravity.LEFT);
-		   
+		  
 		  LinearLayout foto = new LinearLayout(row.getContext());
 		  foto.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  foto.setOrientation(LinearLayout.HORIZONTAL);
 		  foto.setGravity(Gravity.CENTER);
 		  foto.addView(image);
 		  
+		  
 		  row.addView(foto,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio*90))); //TableRow.LayoutParams.WRAP_CONTENT
 		 
 		  LinearLayout main = new LinearLayout(row.getContext());
-		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  main.setOrientation(LinearLayout.VERTICAL);
 		  
 		  TextView nickname = new TextView(activity);
@@ -181,7 +187,7 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		  nickname.setTextColor(Color.parseColor("#545859"));
 		  nickname.setMaxLines(2);
 		  nickname.setTextSize(16);
-		  nickname.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  nickname.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  		    
 		  TextView scoreView = new TextView(activity);		
 		  scoreView.setText(activity.getString(R.string.leadScore)+score);	
@@ -189,17 +195,38 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		  scoreView.setTextColor(Color.parseColor("#787A77"));
 		  scoreView.setTextSize(14);
 		  scoreView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  	
+		  
+		  
 		  main.addView(nickname);
-		  main.addView(scoreView);		  
+		  main.addView(scoreView);
+		  
+		  
 		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT));
+		  
+		  // USER POSITION
+		  LinearLayout position = new LinearLayout(row.getContext());
+		  position.setGravity(Gravity.CENTER);
+		  position.setBackgroundColor(Color.argb(150, 255, 255, 255));
+		  
+		  TextView positionNumber = new TextView(activity);
+		  positionNumber.setText(String.format("%02d", pposition+1));
+		  positionNumber.setPadding(0, 0, 0, 0);
+		  positionNumber.setTextColor(Color.LTGRAY);
+		  positionNumber.setTextSize(16);
+		  
+		  position.addView(positionNumber);
+		  TableRow.LayoutParams params = new TableRow.LayoutParams((int)(ratio*35),
+				  (int)(ratio*35));
+		  params.setMargins(0, 0, 18, 0);
+		  row.addView(position,params);
+		  
 		  
 		  return row;
 	}
 	
-	private static View createSpacer(Context activity, int color, int height) {
+	private View createSpacer(Context activity, int color, int height) {
 		  View spacer = new View(activity);
-		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
+		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,(int)(ratio*height)));
 		  if(color == 1)
 			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
 		  else if(color == 2)

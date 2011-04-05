@@ -78,8 +78,12 @@ public class BeintooVgood {
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @return a Vgood object array
 	 */
-	public Vgood [] showByUser(String userExt, String codeID){
-		String apiUrl = apiPreUrl+"vgood/show/byuser/"+userExt;
+	public Vgood [] showByUser(String userExt, String codeID, boolean onlyConverted){
+		String apiUrl = null;
+		if(!onlyConverted)
+			apiUrl = apiPreUrl+"vgood/show/byuser/"+userExt;
+		else
+			apiUrl = apiPreUrl+"vgood/show/byuser/"+userExt+"/?onlyConverted=true";
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
@@ -96,8 +100,7 @@ public class BeintooVgood {
 		
 		Vgood[] vgood = gson.fromJson(json, Vgood[].class);
 		
-		return vgood;
-		
+		return vgood;		
 	}
 	
 	/**

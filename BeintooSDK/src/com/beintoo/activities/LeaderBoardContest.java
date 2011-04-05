@@ -27,11 +27,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -74,7 +76,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 		
 		try {
 			loadContestTable();
-		}catch(Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}	
+		}catch(Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx,e);}	
 	 
 		final BeButton b = new BeButton(ctx);
 		Button general = (Button) findViewById(R.id.generaleader);
@@ -164,9 +166,6 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 	    	if(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().isPublic() == true){
 		    	TableRow row = createRow(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().getName(), getContext());
 		    	
-
-		    		
-		    	
 		    	if(count % 2 == 0)
 		    		row.setBackgroundDrawable(b.setPressedBackg(
 				    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
@@ -202,9 +201,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 		      table.addView(row);
 		}
 	}
-	
-	
-	
+	 
 	public Map<String, List<EntryCouplePlayer>> deserializeLeaderboard (){
 		Type mapType = new TypeToken<Map<String, ArrayList<EntryCouplePlayer>>>() {}.getType();
 		String jsonLeaderboard = PreferencesHandler.getString("leaderboard",currentContext);
@@ -214,16 +211,37 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 	}
 	
 	
-	public static TableRow createRow(String txt, Context activity) {
+	public TableRow createRow(String txt, Context activity) {
 		  TableRow row = new TableRow(activity);
-		  row.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,47));
+		  row.setGravity(Gravity.CENTER_VERTICAL);
+		  
 		  TextView text = new TextView(activity);
 		  text.setText(txt);
-		  text.setPadding(10, 10, 10, 10);
+		  text.setPadding((int)(ratio*10), 0, 0, 0);
 		  text.setTextColor(Color.parseColor("#545859"));
 		  text.setTextSize(14);
+		  text.setGravity(Gravity.CENTER_VERTICAL);
+		  text.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+				  RelativeLayout.LayoutParams.FILL_PARENT));
 		  
-		  row.addView(text);
+		  RelativeLayout main = new RelativeLayout(row.getContext());
+		  main.setGravity(Gravity.CENTER_VERTICAL);
+		  RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+				  RelativeLayout.LayoutParams.FILL_PARENT);
+		  params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		  main.setLayoutParams(params);
+		  
+		  ImageView arrow = new ImageView(activity);
+		  arrow.setImageResource(R.drawable.barrow);
+		  arrow.setLayoutParams(params);
+		  arrow.setPadding(0,0,(int)(ratio * 5),0);
+		  
+		  main.addView(arrow, params);
+		  main.addView(text);
+		  
+		  
+		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio * 35)));
+		  
 		   
 		  return row;
 	}

@@ -83,14 +83,16 @@ public class Challenges extends Dialog implements OnClickListener{
 				TextView noChallenge = new TextView(getContext());
 				noChallenge.setText(getContext().getString(R.string.challNoPending));
 				noChallenge.setTextColor(Color.GRAY);
-				noChallenge.setPadding(15,0,0,0);
+				noChallenge.setPadding(15,15,0,0);
 				TableLayout table = (TableLayout) findViewById(R.id.table);
 				table.addView(noChallenge);
 			}
-		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx);}
+		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx,e);}
 		
 		
 		final BeButton b = new BeButton(ctx);
+		
+		// PENDING CHALLENGES BUTTON
 		final Button pending = (Button) findViewById(R.id.pendingchall);		
 		pending.setBackgroundDrawable(b.setPressedBackg(
 				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
@@ -121,7 +123,7 @@ public class Challenges extends Dialog implements OnClickListener{
 			}
 		});
 		
-		
+		// ACCEPTED CHALLENGES BUTTON
 		final Button accepted = (Button) findViewById(R.id.acceptedchall);		
 		accepted.setBackgroundDrawable(b.setPressedBackg(
 				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
@@ -140,7 +142,7 @@ public class Challenges extends Dialog implements OnClickListener{
             		public void run(){
             			try{ 
 							BeintooUser newuser = new BeintooUser();            				
-							// GET THE CURRENT LOGGED PLAYER
+							// GET THE CURRENT LOGGED IN PLAYER
 							Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
 							challenge = newuser.challengeShow(p.getUser().getId(), "STARTED");				
 							UIhandler.sendEmptyMessage(ACCEPTED);
@@ -153,6 +155,8 @@ public class Challenges extends Dialog implements OnClickListener{
 			}
 		});
 		
+		
+		// ENDED CHALLENGES BUTTON
 		final Button ended = (Button) findViewById(R.id.endedchall);		
 		ended.setBackgroundDrawable(b.setPressedBackg(
 				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
@@ -171,7 +175,7 @@ public class Challenges extends Dialog implements OnClickListener{
             		public void run(){
             			try{ 
 							BeintooUser newuser = new BeintooUser();            				
-							// GET THE CURRENT LOGGED PLAYER
+							// GET THE CURRENT LOGGED IN PLAYER
 							Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
 							challenge = newuser.challengeShow(p.getUser().getId(), "ENDED");				
 							UIhandler.sendEmptyMessage(ENDED);
@@ -225,7 +229,7 @@ public class Challenges extends Dialog implements OnClickListener{
 			rowList.add(row);
 			
 			BeButton b = new BeButton(getContext());
-			if(count % 2 == 0)
+			if(i % 2 == 0)
 	    		row.setBackgroundDrawable(b.setPressedBackg(
 			    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),

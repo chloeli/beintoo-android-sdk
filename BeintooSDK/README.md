@@ -8,7 +8,7 @@ Setup your environment
 
 1. Pull the repository from GitHub:
 
-    git clone git://github.com/Beintoo/beintoo-android-sdk.git
+    git clone git://github.com/beintoo/beintoo-android-sdk.git
 
 2. If you have not already done so, signup for an apikey follow the (http://www.beintoo.com/business/signup.html) and then follow setup istructions (http://www.beintoo.com/business/sdk_android.html) [Android SDK Getting Started Guide]. You will need the device emulator and debugging tools.
 
@@ -29,7 +29,7 @@ Integrate with an existing application
 
 To use Beintoo in your applications you you will need to add a reference to the BeintooSDK project. To do this open the properties window for your app (__File__ -> __Properties__), select the Android item from the list, then press the __Add...__ button in the Library area and select the Beintoo SDK project created above.
 
-Once the Beintoo SDK is referenced you need to modify the app __AndroidManifest.xml__ 
+Once the Beintoo SDK is referenced you need to modify the app __manifest.xml__ 
 You need to add this __permissions__
 
 	

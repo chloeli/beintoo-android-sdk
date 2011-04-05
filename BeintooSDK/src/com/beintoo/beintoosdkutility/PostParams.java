@@ -17,7 +17,7 @@ package com.beintoo.beintoosdkutility;
 
 import java.util.ArrayList;
 
-public class GetParams {
+public class PostParams {
 	ArrayList<String> key = new ArrayList<String>();
 	ArrayList<String> value = new ArrayList<String>();
 	

@@ -110,7 +110,7 @@ public class BeintooHome extends Dialog {
 			setFeatureToUse();
 		}catch (Exception e){e.printStackTrace();}
 		
-		//Button profilebt = (Button) findViewById(R.id.profilebt);		
+		// PROFILE	
 		if(row1 != null){			    
 			row1.setOnClickListener(new TableRow.OnClickListener(){
 				public void onClick(View v) {				
@@ -133,6 +133,7 @@ public class BeintooHome extends Dialog {
 			});
 		}
 		
+		// LEADERBOARD
 		if(row2 != null){			    
 			row2.setOnClickListener(new TableRow.OnClickListener(){
 				public void onClick(View v) {				
@@ -157,6 +158,7 @@ public class BeintooHome extends Dialog {
 			});
 		}
 		
+		// WALLET
 		if(row3 != null){			    
 			row3.setOnClickListener(new TableRow.OnClickListener(){
 				public void onClick(View v) {				
@@ -167,7 +169,7 @@ public class BeintooHome extends Dialog {
 	            				BeintooVgood newvgood = new BeintooVgood();            				
 	            				// GET THE CURRENT LOGGED PLAYER
 	            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
-	            				Vgood [] vgood = newvgood.showByUser(p.getUser().getId(), null);
+	            				Vgood [] vgood = newvgood.showByUser(p.getUser().getId(), null, false);
 	            				PreferencesHandler.saveString("wallet", new Gson().toJson(vgood), getContext());
 	            				UIhandler.sendEmptyMessage(OPEN_WALLET);							
 	            			}catch (Exception e){
@@ -180,6 +182,7 @@ public class BeintooHome extends Dialog {
 			});
 		}
 		
+		// CHALLENGES
 		if(row4 != null){			    
 			row4.setOnClickListener(new TableRow.OnClickListener(){
 				public void onClick(View v) {				
@@ -212,25 +215,29 @@ public class BeintooHome extends Dialog {
 			
 			HashSet<String> f = new HashSet<String>(Arrays.asList(features));
 			TableLayout tl = (TableLayout)findViewById(R.id.myTableLayout);
-			TableRow row1 = (TableRow) findViewById(R.id.firstRow);
-			TableRow row2 = (TableRow) findViewById(R.id.secondRow);
-			TableRow row3 = (TableRow) findViewById(R.id.thirdRow);
-			TableRow row4 = (TableRow) findViewById(R.id.fourthRow);
 			
 			/*
 			 * REMOVE FEATURES THAT ARE NOT IN THE features ARRAY SETTED BY THE DEVELOPER
 			 */
-			if(!f.contains("profile")){				
-				tl.removeView(row1);
+			if(!f.contains("profile")){
+				tl.removeView((LinearLayout)findViewById(R.id.firstWhiteline));
+				tl.removeView((LinearLayout)findViewById(R.id.firstGrayline));
+				tl.removeView((TableRow) findViewById(R.id.firstRow));
 			}
 			if(!f.contains("wallet")){
-				tl.removeView(row2);
+				tl.removeView((LinearLayout)findViewById(R.id.secondWhiteline));
+				tl.removeView((LinearLayout)findViewById(R.id.secondGrayline));
+				tl.removeView((TableRow) findViewById(R.id.secondRow));
 			}
 			if(!f.contains("leaderboard")){
-				tl.removeView(row3);
+				tl.removeView((LinearLayout)findViewById(R.id.thirdWhiteline));
+				tl.removeView((LinearLayout)findViewById(R.id.thirdGrayline));
+				tl.removeView((TableRow) findViewById(R.id.thirdRow));
 			}
 			if(!f.contains("challenges")){
-				tl.removeView(row4);
+				tl.removeView((LinearLayout)findViewById(R.id.fourthWhiteline));
+				tl.removeView((LinearLayout)findViewById(R.id.fourthGrayline));
+				tl.removeView((TableRow) findViewById(R.id.fourthRow));
 			}
 				
 		}

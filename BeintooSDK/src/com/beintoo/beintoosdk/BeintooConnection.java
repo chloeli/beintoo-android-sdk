@@ -16,10 +16,12 @@
 package com.beintoo.beintoosdk;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -29,7 +31,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.beintoo.beintoosdkutility.DebugUtility;
-import com.beintoo.beintoosdkutility.GetParams;
+import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 
 public class BeintooConnection {
@@ -42,33 +44,48 @@ public class BeintooConnection {
 	 * @param get get params (NOT USED)
 	 * @return the json object returned by the api
 	 */
-	public String httpRequest(String apiurl,HeaderParams header,GetParams get, boolean isPost){
-		// DEBUG
+	public String httpRequest(String apiurl,HeaderParams header,PostParams post, boolean isPost){
+
+		// DEBUG		
 		DebugUtility.showLog(apiurl);
+		
 		URL url;
-		//URLConnection postUrlConnection;
+		
 		try {
-			String getParams = "";
+			String postParams = "";
 			
-			if(get != null)
-				for(int i = 0; i<get.getKey().size(); i++){
+			if(post != null)
+				for(int i = 0; i<post.getKey().size(); i++){
 					if(i==0)
-						getParams = "?"+get.getKey().get(i)+"="+get.getValue().get(i);
+						postParams = postParams + post.getKey().get(i)+"="+URLEncoder.encode(post.getValue().get(i), "UTF-8");
 					else
-						getParams = "&"+get.getKey().get(i)+"="+get.getValue().get(i);
+						postParams = postParams + "&"+post.getKey().get(i)+"="+URLEncoder.encode(post.getValue().get(i), "UTF-8");
 				}
-			url = new URL(apiurl+getParams);
+			
+			url = new URL(apiurl);
+			
 			System.setProperty("http.keepAlive", "false");
+			
 			HttpsURLConnection postUrlConnection = (HttpsURLConnection) url.openConnection();
-			if(isPost)
-				postUrlConnection.setRequestMethod("POST");
-			postUrlConnection.setUseCaches(false);
-			for(int i = 0; i<header.getKey().size(); i++){
-				postUrlConnection.setRequestProperty(header.getKey().get(i),header.getValue().get(i));
-			}
+			
 			postUrlConnection.setUseCaches(false);
 			postUrlConnection.setDoOutput(true);
 			postUrlConnection.setDoInput(true);
+
+			for(int i = 0; i<header.getKey().size(); i++){
+				postUrlConnection.setRequestProperty(header.getKey().get(i),header.getValue().get(i));
+			}
+			
+			if(isPost){
+				postUrlConnection.setRequestMethod("POST");
+				postUrlConnection.setRequestProperty("Content-Length", "" + 
+			               Integer.toString(postParams.getBytes().length));
+				DataOutputStream wr = new DataOutputStream (
+						postUrlConnection.getOutputStream ());
+			      wr.writeBytes (postParams);
+			      wr.flush ();
+			      wr.close ();				
+			}
 			
 			InputStream postInputStream = postUrlConnection.getInputStream();
 	
@@ -90,7 +107,7 @@ public class BeintooConnection {
 		}
 	}
 	
-	public String httpRequest(String apiurl,HeaderParams header,GetParams get){
+	public String httpRequest(String apiurl,HeaderParams header,PostParams get){
 		return httpRequest(apiurl, header, get, false);
 	}
 	

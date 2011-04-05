@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
+import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.wrappers.EntryCouplePlayer;
 import com.google.gson.Gson;
@@ -166,6 +167,45 @@ public class BeintooApp {
 	 */
 	public void TopScoreByUserExt(String userExt){
 		TopScoreByUserExt(null,0,userExt);
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param codeID
+	 * @param level
+	 * @param text
+	 */
+	public void ErrorReporting (String codeID, String level, String text){
+		String apiUrl = apiPreUrl+"app/logging/";
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		
+		
+		PostParams post = new PostParams();
+		
+		post.getKey().add("sdk");
+		post.getValue().add("android");
+		
+		if(codeID != null){
+			post.getKey().add("codeID");
+			post.getValue().add(codeID);
+		}
+		
+		if(level != null){
+			post.getKey().add("level");
+			post.getValue().add(level);
+		}
+		
+		if(text != null){
+			post.getKey().add("text");
+			post.getValue().add(text);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		conn.httpRequest(apiUrl, header, post,true);
 	}
 	
 	

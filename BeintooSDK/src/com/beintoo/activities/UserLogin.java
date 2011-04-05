@@ -79,6 +79,7 @@ public class UserLogin extends Dialog{
 		 *  PLAYERLOGIN WITH NO GUID THE GUID WILL BE ASSIGNED FROM THE API
 		 *  THEN CONNECT.HTML WITH THE ASSIGNE GUID
 		 */
+		
 		pixels = ratio * 50;
 		Button newUser = (Button) findViewById(R.id.newuser);
 		BeButton b = new BeButton(ctx);
@@ -98,14 +99,18 @@ public class UserLogin extends Dialog{
 							BeintooPlayer player = new BeintooPlayer();							 
 							// WE NEED A LOGIN FIRST WITH THE NEW GUID BEFORE CONNECT.HTML
 							String currentPlayer = PreferencesHandler.getString("currentPlayer", getContext());
-		    				Player loggedUser = gson.fromJson(currentPlayer, Player.class);
+		    				Player loggedUser = null;
+		    				
+		    				if(currentPlayer != null)
+		    					loggedUser = gson.fromJson(currentPlayer, Player.class);
+		    				
 		    				Player newPlayer;
 		    				
 		    				DebugUtility.showLog("Logged player before new "+currentPlayer);
 		    				
 		    				if(loggedUser == null || loggedUser.getUser() != null) // GET A NEW RANDOM PLAYER
 		    					newPlayer = player.playerLogin(null,null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
-		    				else // USE THE CURRENT SAVE PLAYER 
+		    				else // USE THE CURRENT SAVED PLAYER 
 		    					newPlayer = player.playerLogin(null,loggedUser.getGuid(),null,DeviceId.getUniqueDeviceId(getContext()), null, null);
 		    				
 							if(newPlayer.getGuid() != null){
@@ -121,7 +126,7 @@ public class UserLogin extends Dialog{
 								PreferencesHandler.saveString("guid", newPlayer.getGuid(), getContext());
 								UIhandler.sendEmptyMessage(SIGNUP_BROWSER);
 							}else{ // SHOW NETWORK ERROR
-								ErrorDisplayer.showConnectionError("Connection error.\nPlease check your Internet connection.", getContext());
+								ErrorDisplayer.showConnectionError("Connection error.\nPlease check your Internet connection.", getContext(),null);
 							}
             			}catch(Exception e){
             			}	            			
@@ -159,7 +164,7 @@ public class UserLogin extends Dialog{
 								imm.hideSoftInputFromWindow(email.getApplicationWindowToken(), 0);
 					            imm.hideSoftInputFromWindow(psw.getApplicationWindowToken(), 0);
 								dialog.dismiss(); // DISMISS LOGIN DIALOG
-								ErrorDisplayer.showConnectionErrorOnThread(getContext().getString(R.string.wronglogin), getContext());								
+								ErrorDisplayer.showConnectionErrorOnThread(getContext().getString(R.string.wronglogin), getContext(),null);								
 							}else {// PLAYERLOGIN AND THEN CLOSE THE LOGIN FORM AND GO HOME
 								BeintooPlayer player = new BeintooPlayer();
 								Player newPlayer = player.playerLogin(loggedUser.getId(),null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);

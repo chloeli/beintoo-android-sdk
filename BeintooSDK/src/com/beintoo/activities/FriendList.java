@@ -77,7 +77,7 @@ public class FriendList extends Dialog implements OnClickListener{
 				table.addView(noGoods);
 			}
 			
-		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , context);}
+		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , context,e);}
 		
 		
 	}

@@ -98,7 +98,7 @@ public class tryBeintoo extends Dialog {
             			dialog.dismiss();
             			current.dismiss();
             			// CHECK IF THE USER WAS CONNECTED (arr != null)
-            			if(!checkConnection(arr)) ErrorDisplayer.showConnectionErrorOnThread("Connection error.\nPlease check your Internet connection.", getContext());
+            			if(!checkConnection(arr)) ErrorDisplayer.showConnectionErrorOnThread("Connection error.\nPlease check your Internet connection.", getContext(),null);
             		}
         		});
         		t.start();
