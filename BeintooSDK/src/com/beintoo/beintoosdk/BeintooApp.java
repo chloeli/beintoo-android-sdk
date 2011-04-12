@@ -37,7 +37,7 @@ public class BeintooApp {
 	}
 	
 	/**
-	 * @return Returns a map the most delivered vgood with you application and the number those 
+	 * @return Returns a map of the most delivered vgood with you application and the number those 
 	 * have been erogated. This call can be very useful because you have visibility on the 
 	 * vgoods which are generating more revenues for you. You could decide for example to 
 	 * provide a functional advantage to users who converted one of these goods, 

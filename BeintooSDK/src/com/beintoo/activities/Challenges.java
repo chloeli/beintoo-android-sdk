@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -32,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -76,17 +76,8 @@ public class Challenges extends Dialog implements OnClickListener{
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
 		try{
-			challenge = new Gson().fromJson(PreferencesHandler.getString("challenge", getContext()), Challenge[].class);
-			if(challenge.length > 0)
-				loadChallenges(PENDING);
-			else { // NO CHALLENGE REQUEST
-				TextView noChallenge = new TextView(getContext());
-				noChallenge.setText(getContext().getString(R.string.challNoPending));
-				noChallenge.setTextColor(Color.GRAY);
-				noChallenge.setPadding(15,15,0,0);
-				TableLayout table = (TableLayout) findViewById(R.id.table);
-				table.addView(noChallenge);
-			}
+			showLoading();
+			startLoading();
 		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx,e);}
 		
 		
@@ -105,7 +96,7 @@ public class Challenges extends Dialog implements OnClickListener{
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+				showLoading();
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -117,7 +108,6 @@ public class Challenges extends Dialog implements OnClickListener{
 						}catch (Exception e){
 							e.printStackTrace();
 						}
-						dialog.dismiss();
 					}
 				}).start();
 			}
@@ -136,8 +126,7 @@ public class Challenges extends Dialog implements OnClickListener{
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+				showLoading();
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -149,7 +138,6 @@ public class Challenges extends Dialog implements OnClickListener{
             			}catch (Exception e){
             				e.printStackTrace();
             			}
-            			dialog.dismiss();
             		}
 				}).start();	
 			}
@@ -170,7 +158,8 @@ public class Challenges extends Dialog implements OnClickListener{
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+				//final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+				showLoading();
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -182,14 +171,30 @@ public class Challenges extends Dialog implements OnClickListener{
             			}catch (Exception e){
             				e.printStackTrace();
             			}
-            			dialog.dismiss();
+            			//dialog.dismiss();
             		}
 				}).start();
 			}
 		});
 	}
 	
-	public void loadChallenges(int section){
+	public void startLoading (){
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{ 
+					BeintooUser newuser = new BeintooUser();            				
+					// GET THE CURRENT LOGGED PLAYER
+					Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
+					challenge = newuser.challengeShow(p.getUser().getId(), "TO_BE_ACCEPTED");
+					UIhandler.sendEmptyMessage(PENDING);
+    			}catch (Exception e){
+    				e.printStackTrace();
+    			}
+    		}
+		}).start();
+	}
+	
+	private void loadChallenges(int section){
 		CURRENT_SECTION = section;
 		TableLayout table = (TableLayout) findViewById(R.id.table);
 		table.setColumnStretchable(1, true);
@@ -256,7 +261,7 @@ public class Challenges extends Dialog implements OnClickListener{
 	}
 	
 	
-	public TableRow createRow(View image, String name, String contest, Context activity) {
+	private TableRow createRow(View image, String name, String contest, Context activity) {
 		  TableRow row = new TableRow(activity);
 		  row.setGravity(Gravity.CENTER);
 		  
@@ -321,17 +326,17 @@ public class Challenges extends Dialog implements OnClickListener{
 		}	
 	}
 	
-	public void respondDialog (final View v){
+	private void respondDialog (final View v){
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setMessage(getContext().getString(R.string.challAccept)+challenge[v.getId()].getPrice().intValue()+" BeDollars?")
 		       .setCancelable(false)
-		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		       .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {		 
 		        	   respondChallenge(challenge[v.getId()].getPlayerTo().getUser().getId(),
 		        			   challenge[v.getId()].getPlayerFrom().getUser().getId(),"ACCEPT",
 		        			   challenge[v.getId()].getContest().getCodeID());      	   
 		        	   dialog.dismiss();
-		        	   MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.challAccepted));
+		        	   MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.challAccepted),Gravity.BOTTOM);
 		        	   
 		        	   TableLayout table = (TableLayout) v.getParent();
 		        	   table.removeView(v);
@@ -343,7 +348,7 @@ public class Challenges extends Dialog implements OnClickListener{
 		        			   challenge[v.getId()].getPlayerFrom().getUser().getId(),"REFUSE",
 		        			   challenge[v.getId()].getContest().getCodeID());
 		        	   dialog.dismiss();
-		        	   MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.challRefused));
+		        	   MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.challRefused),Gravity.BOTTOM);
 
 		        	   TableLayout table = (TableLayout) v.getParent();
 		        	   table.removeView(v);
@@ -357,7 +362,7 @@ public class Challenges extends Dialog implements OnClickListener{
 		alert.show();
 	}
 	
-	public void respondChallenge (final String userExtFrom, final String userExtTo, final String action, final String codeID){
+	private void respondChallenge (final String userExtFrom, final String userExtTo, final String action, final String codeID){
 		new Thread(new Runnable(){      
     		public void run(){
     			try{             				
@@ -371,7 +376,8 @@ public class Challenges extends Dialog implements OnClickListener{
 		}).start();
 	}
 	
-	public String getStatus (String status){
+	@SuppressWarnings("unused")
+	private String getStatus (String status){
 		if(status.equals("TO_BE_ACCEPTED"))
 			return "Pending";
 		else if(status.equals("STARTED"))
@@ -382,7 +388,7 @@ public class Challenges extends Dialog implements OnClickListener{
 			return "";
 	}
 	
-	public void loadEmptySection (int section){
+	private void loadEmptySection (int section){
 		TextView noChallenge = new TextView(getContext());
 		if(section == PENDING)
 			noChallenge.setText(getContext().getString(R.string.challNoPendingC));
@@ -398,7 +404,7 @@ public class Challenges extends Dialog implements OnClickListener{
 		table.addView(noChallenge);
 	}
 	
-	public void resetButtons(){
+	private void resetButtons(){
 		BeButton b = new BeButton(getContext());
 		findViewById(R.id.pendingchall).setBackgroundDrawable(b.setPressedBackg(
 				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
@@ -414,6 +420,20 @@ public class Challenges extends Dialog implements OnClickListener{
 				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));	
 		
 		
+	}
+	
+	private void showLoading (){
+		ProgressBar pb = new ProgressBar(getContext());
+		pb.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));
+		TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,TableLayout.LayoutParams.WRAP_CONTENT);
+		params.setMargins(0, (int)(100*ratio), 0, 0);		
+		TableRow row = new TableRow(getContext());
+		row.setLayoutParams(params);
+		row.setGravity(Gravity.CENTER);
+		row.addView(pb);
+		TableLayout table = (TableLayout) findViewById(R.id.table);
+		table.removeAllViews();
+		table.addView(row);
 	}
 	
 	Handler UIhandler = new Handler() {

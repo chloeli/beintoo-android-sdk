@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
@@ -34,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -55,6 +55,8 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 	Dialog current;
 	Context currentContext;
 	final double ratio;
+	Map<String, List<EntryCouplePlayer>> leader;
+	
 	public LeaderBoardContest(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);
 		setContentView(R.layout.contestselection);
@@ -74,8 +76,9 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 
 		
-		try {
-			loadContestTable();
+		try {			
+			showLoading();
+			startLoading();
 		}catch(Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx,e);}	
 	 
 		final BeButton b = new BeButton(ctx);
@@ -93,20 +96,16 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+				showLoading();
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
 							BeintooApp app = new BeintooApp();							
-							Map<String, List<EntryCouplePlayer>> leader = app.TopScore(null, 0);
-							Gson gson = new Gson();
-							String jsonLeaderboard = gson.toJson(leader);							
-							PreferencesHandler.saveString("leaderboard", jsonLeaderboard, getContext());	
+							leader = app.TopScore(null, 0);
 							UIhandler.sendEmptyMessage(0);
             			}catch (Exception e){
             				e.printStackTrace();
             			}
-            			dialog.dismiss();
             		}
 				}).start();
 			}
@@ -126,27 +125,37 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
 				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+				showLoading();
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
 							BeintooApp app = new BeintooApp();				
 							Player player = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
-							Map<String, List<EntryCouplePlayer>> leader = app.TopScoreByUserExt(null, 0, player.getUser().getId());
-							Gson gson = new Gson();
-							String jsonLeaderboard = gson.toJson(leader);							
-							PreferencesHandler.saveString("leaderboard", jsonLeaderboard, getContext());
+							leader = app.TopScoreByUserExt(null, 0, player.getUser().getId());							
 							UIhandler.sendEmptyMessage(0); 
             			}catch (Exception e){
             				e.printStackTrace();
             			}
-            			dialog.dismiss();
             		}
 				}).start();
 			}
         });
 	}
-
+	
+	public void startLoading (){
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{ 
+    				BeintooApp app = new BeintooApp();							
+    				leader = app.TopScore(null, 0);					
+					UIhandler.sendEmptyMessage(0);
+    			}catch (Exception e){
+    				e.printStackTrace();
+    			}
+    		}
+		}).start();
+	}
+	
 	public void loadContestTable(){
 		
 		TableLayout table = (TableLayout) findViewById(R.id.tablecontest);
@@ -267,18 +276,33 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 	// CALLED WHEN THE USER SELECT A USER IN THE TABLE
 	public void onClick(View v) {
 		final int selectedRow = v.getId();
-		final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-		new Thread(new Runnable(){      
+		//final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+		/*new Thread(new Runnable(){      
     		public void run(){
-    			try{     				
+    			try{ */     				
     				PreferencesHandler.saveString("selectedContest", ""+selectedRow, currentContext);
     				UIhandler.sendEmptyMessage(1);
-    			}catch (Exception e){
+    			/*}catch (Exception e){
     				e.printStackTrace();
     			}
-    			dialog.dismiss();
+    			//dialog.dismiss();
     		}
-		}).start();		
+		}).start(); */		
+	}
+	
+	private void showLoading (){
+		ProgressBar pb = new ProgressBar(getContext());
+		pb.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));
+		TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,TableLayout.LayoutParams.WRAP_CONTENT);
+		params.setMargins(0, (int)(100*ratio), 0, 0);		
+		TableRow row = new TableRow(getContext());
+		row.setLayoutParams(params);
+		row.setGravity(Gravity.CENTER);
+		row.addView(pb);
+		TableLayout table = (TableLayout) findViewById(R.id.tablecontest);
+		table.setColumnStretchable(0, false);
+		table.removeAllViews();
+		table.addView(row);
 	}
 	
 	Handler UIhandler = new Handler() {

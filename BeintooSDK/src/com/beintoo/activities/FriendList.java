@@ -225,7 +225,7 @@ public class FriendList extends Dialog implements OnClickListener{
 	}
 	
 	public void doneDialog (int i) {
-		MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.friendSent)+usersNicks.get(i));
+		MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.friendSent)+usersNicks.get(i),Gravity.BOTTOM);
 	}
 	
 	Handler UIhandler = new Handler() {

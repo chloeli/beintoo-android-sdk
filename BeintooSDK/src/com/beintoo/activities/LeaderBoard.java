@@ -27,11 +27,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -41,6 +45,7 @@ import android.view.View.OnClickListener;
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.LoaderImageView;
@@ -58,6 +63,8 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 	ArrayList<String> usersNicks;
 	String codeID; // THE CODE ID OF THE SELECTED CONTEST
 	final double ratio;
+	final int SHOW_MESSAGE = 1;
+	final int LOAD_CONTEST = 2;
 	public LeaderBoard(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);
 		setContentView(R.layout.leaderboard);
@@ -79,15 +86,26 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		usersExts = new ArrayList<String>();
 		usersNicks = new ArrayList<String>();
 		try{
-			loadLeadersByContestTable(); 
+			showLoading();
+			startLoading();
 		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx,e);}
 		
 	}
 	
+	public void startLoading (){
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{   
+    				Thread.sleep(100); // GIVE THE TIME TO SHOW THE DIALOG
+    				UIhandler.sendEmptyMessage(LOAD_CONTEST); 
+    			}catch(Exception e){e.printStackTrace();}
+    		}
+		}).start();	
+	}
+	
 	public void loadLeadersByContestTable(){
 		TableLayout table = (TableLayout) findViewById(R.id.table);
-		//table.setColumnStretchable(1, true);
-		table.removeAllViews();		
+		//table.setColumnStretchable(1, true);				
 		
 		Player p = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", getContext()), Player.class);
 		
@@ -98,7 +116,8 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 
 		int count = 0;
 		final ArrayList<View> rowList = new ArrayList<View>();
-	    while (it.hasNext()) {
+		
+	    while (it.hasNext()) {	    	
 	    	@SuppressWarnings("unchecked")
 			Map.Entry<String, ArrayList<EntryCouplePlayer>> pairs = (Map.Entry<String, ArrayList<EntryCouplePlayer>>) it.next();
 	    	
@@ -117,7 +136,6 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 					
 					if(!p.getUser().getId().equals(arr.get(i).getObj().getUser().getId()))			    		
 		    			row.setOnClickListener(this);
-					
 					
 					View spacer = createSpacer(getContext(),1,1);
 					spacer.setId(-100);
@@ -146,6 +164,7 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 	    	count++;
 	    }
 	    
+	    table.removeAllViews();
 	    for (View row : rowList) {	      
 		      table.addView(row);
 		}
@@ -163,7 +182,6 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		  TableRow row = new TableRow(activity);
 		  row.setGravity(Gravity.CENTER);
 		  		  
-		 
 		  // PICTURE
 		  image.setPadding((int)(ratio*10), 0, 10, 0);
 		  ((LinearLayout) image).setGravity(Gravity.LEFT);
@@ -173,7 +191,6 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		  foto.setOrientation(LinearLayout.HORIZONTAL);
 		  foto.setGravity(Gravity.CENTER);
 		  foto.addView(image);
-		  
 		  
 		  row.addView(foto,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio*90))); //TableRow.LayoutParams.WRAP_CONTENT
 		 
@@ -194,12 +211,10 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		  scoreView.setPadding(0, 0, 0, 0);
 		  scoreView.setTextColor(Color.parseColor("#787A77"));
 		  scoreView.setTextSize(14);
-		  scoreView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  
+		  scoreView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));		  
 		  
 		  main.addView(nickname);
 		  main.addView(scoreView);
-		  
 		  
 		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT));
 		  
@@ -226,7 +241,7 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 	
 	private View createSpacer(Context activity, int color, int height) {
 		  View spacer = new View(activity);
-		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,(int)(ratio*height)));
+		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
 		  if(color == 1)
 			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
 		  else if(color == 2)
@@ -235,33 +250,45 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		  return spacer;
 	}	
 	
-	public void sendChallenge  (final String userExtFrom, final String userExtTo, final String action){		
+	public void sendChallenge  (final String userExtFrom, final String userExtTo, final String action, final int id){		
 		new Thread(new Runnable(){      
     		public void run(){
     			try{             				
     				BeintooUser user = new BeintooUser();
-    				user.challenge(userExtFrom, userExtTo, action, codeID);    				
+    				user.challenge(userExtFrom, userExtTo, action, codeID);
+    				// SHOW THE NOTIFICATION
+    				Bundle b = new Bundle();
+    				b.putString("msg",getContext().getString(R.string.challSent)+usersNicks.get(id));
+    				Message msg = new Message();
+    				msg.what = SHOW_MESSAGE;
+    				msg.setData(b);
+    				UIhandler.sendMessage(msg); 
+    			}catch (ApiCallException e){
+    				// SHOW THE NOTIFICATION
+    				Bundle b = new Bundle();
+    				b.putString("msg",e.getMessage());
+    				Message msg = new Message();
+    				msg.what = SHOW_MESSAGE;
+    				msg.setData(b);
+    				UIhandler.sendMessage(msg); 
     			}catch (Exception e){
     				e.printStackTrace();
     			}
     			
     		}
-		}).start();
-		
+		}).start();		
 	}
 	
-	// CALLED ON CHALLENGE BUTTON CLICK
+	// CALLED WHEN A ROW IS CLICKED
 	public void onClick(final View v) {
-		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setMessage(getContext().getString(R.string.challSend))
 		       .setCancelable(false)
-		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		       .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {		 
-		        	   Player p = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", v.getContext()), Player.class);
-		       			MessageDisplayer.showMessage(currentContext, getContext().getString(R.string.challSent)+usersNicks.get(v.getId()));
+		        	   Player p = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", v.getContext()), Player.class);		       			
 		       			sendChallenge(p.getUser().getId(),
-		       				usersExts.get(v.getId()),"INVITE");  
+		       				usersExts.get(v.getId()),"INVITE", v.getId());  
 		           }
 		       })
 		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -271,7 +298,34 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		       });
 		AlertDialog alert = builder.create();
 		alert.show();
-		
-		
 	}
+	
+	private void showLoading (){
+		ProgressBar pb = new ProgressBar(getContext());
+		pb.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));
+		TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,TableLayout.LayoutParams.WRAP_CONTENT);
+		params.setMargins(0, (int)(100*ratio), 0, 0);		
+		TableRow row = new TableRow(getContext());
+		row.setLayoutParams(params);
+		row.setGravity(Gravity.CENTER);
+		row.addView(pb);
+		TableLayout table = (TableLayout) findViewById(R.id.table);
+		table.removeAllViews();
+		table.addView(row);		
+	}
+	
+	Handler UIhandler = new Handler() {
+		  @Override
+		  public void handleMessage(Message msg) {
+			  switch (msg.what) {				  
+	            case SHOW_MESSAGE: // GO HOME ON START BEINTOO (GO_HOME)
+	            	MessageDisplayer.showMessage(currentContext, msg.getData().getString("msg"), Gravity.BOTTOM);
+	            break;
+	            case LOAD_CONTEST:
+	            	loadLeadersByContestTable();
+	            break;
+		    }
+	        super.handleMessage(msg);
+		  }
+	};
 }

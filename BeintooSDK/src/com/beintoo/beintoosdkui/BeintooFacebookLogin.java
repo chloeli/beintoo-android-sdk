@@ -39,6 +39,7 @@ import com.beintoo.activities.BeintooHome;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DeviceId;
+import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
@@ -168,6 +169,7 @@ public class BeintooFacebookLogin extends Dialog {
 					UIhandler.sendEmptyMessage(GO_HOME);
 				} catch (Exception e) {
 					dialog.dismiss();
+					ErrorDisplayer.externalReport(e);
 				}
 				dialog.dismiss();
 			}

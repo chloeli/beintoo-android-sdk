@@ -11,13 +11,13 @@
     <string name="challYou">\u0020to you</string>
     <string name="challRefused">Challenge refused</string>
     <string name="challAccepted">Challenge accepted</string>
-    <string name="challNoPendingC">You don\'t have any pending challenge</string>
-    <string name="challNoAccepted">You don\'t have any accepted challenge</string>
-    <string name="challNoEnded">You don\'t have any ended challenge</string>
+    <string name="challNoPendingC">You have no pending challenges</string>
+    <string name="challNoAccepted">You have no accepted challenges</string>
+    <string name="challNoEnded">You have no ended challenges</string>
     <string name="challChallenge">Challenge</string>
     <string name="challSent">Challenge sent to\u0020</string>
     <string name="challAccept">Do you want to accept this challenge for\u0020</string>
-    <string name="challSend">Do you want to send a challenge for 10 BeDollars?</string>
+    <string name="challSend">Would you like to send a challenge? Bet 10 BeDollars, to win 25.</string>
     <string name="challTip">click on a single user to send a challenge</string>
     
     <string name="leadTitle">Leaderboard</string>
@@ -31,19 +31,19 @@
     <string name="profileScore">Your scores</string>
     <string name="profileLevel">Level:\u0020</string>
     <string name="profileTotalScore">Total score:\u0020</string>
-    <string name="profileBestScore">Bestscore:\u0020</string>
-    <string name="profileLastScore">Lastscore:\u0020</string>
+    <string name="profileBestScore">Best score:\u0020</string>
+    <string name="profileLastScore">Last score:\u0020</string>
     <string name="profileNoScores">You don\'t have any scores for this app</string>
-    <string name="profileDetach">Disconnect from device</string>
+    <string name="profileDetach">Remove account from device</string>
     
     <string name="vgoodWhoAlso">Who also purchased</string>
     <string name="vgoodEnd">End date:</string>
     
     <string name="walletNoGoods">You don\'t have any virtual goods</string>
-    <string name="walletConverted">Converted goods</string>
-    <string name="walletNotConverted">Not converted goods</string>
+    <string name="walletConverted">Redeemed goods</string>
+    <string name="walletNotConverted">To be redeemed</string>
    
- 	<string name="tryBe">Beintoo transforms your Passion for apps in real rewards.\nIt\'s free and extremely easy!</string>  
+ 	<string name="tryBe">Beintoo turn your Passion for apps into real rewards.\nIt\'s free and extremely easy!</string>  
     <string name="pressBt">Press the button below to try Beintoo</string>
     
     <!-- ERROR DISPLAYER AND TOAST MESSAGES -->
@@ -53,13 +53,13 @@
     <string name="login">Login...</string>
     <string name="wronglogin">Wrong username or password</string>
     <string name="earnedBalance">Your balance is: %d</string>
-    <string name="earnedScore">You earned %d points\n</string>
+    <string name="earnedScore">You earned %d points.\u0020</string>
     
     <!-- BOXES -->
     <string name="boxWallet">Here\'s your wallet of great rewards</string>
     <string name="boxChallenge">Here are your challenges\nIt\'s time to win</string>
-    <string name="boxCoupon">Congratulations, here\'s your reward</string>
-    <string name="boxUserSel">We have found multiple Beintoo players.\nSelect wich one to use or create\na new Beintoo account</string>
+    <string name="boxCoupon">Congratulations! You deserve a reward</string>
+    <string name="boxUserSel">Which profile do you want to use?\nSelect one or use another account</string>
     <string name="boxUserLogin">Login on Beintoo\nor use your Facebook account</string>
     <!-- BUTTONS -->
     <string name="trynow">Try Beintoo Now</string>
@@ -81,9 +81,9 @@
     
     <!-- HOME -->
     <string name="profile">Profile</string>
-    <string name="profiledesc">see the global scoring</string>
+    <string name="profiledesc">view your global scoring</string>
     <string name="leaderboard">Leaderboard</string>
-    <string name="leaderboarddesc">see your stats</string>
+    <string name="leaderboarddesc">view your stats</string>
     <string name="wallet">Wallet</string>
     <string name="walletdesc">manage your virtual goods</string>
     <string name="challenges">Challenges</string>

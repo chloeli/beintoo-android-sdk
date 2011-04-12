@@ -23,6 +23,7 @@ import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DeviceId;
+import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
@@ -65,58 +66,49 @@ public class UserSelection extends Dialog implements OnClickListener{
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
 		// SETTING UP TEXTBOX GRADIENT
-		pixels = ratio * 90;
+		pixels = ratio * 60;
 		LinearLayout textlayout = (LinearLayout) findViewById(R.id.textlayout);
 		textlayout.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.GRAY_GRADIENT));
 		
 		TableLayout table = (TableLayout) findViewById(R.id.usersTableLayout);
 		table.setColumnStretchable(1, true);
 	
-		  // apply layout animation
-		 // AnimUtils.setLayoutAnim_slideupfrombottom(table, this);
-	
-		final ArrayList<View> rowList = new ArrayList<View>();
-		//rowList.add();
-		
-		String currentUsersList = PreferencesHandler.getString("deviceUsersList", getContext());
-		Gson gson = new Gson();
-		users = gson.fromJson(currentUsersList, User[].class);
-		
-		double rowHeightpx = ratio * 104;
-		
-		for(int i = 0; i< users.length; i++){
-			if(users[i] != null){
-				//final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUsersmallimg());
-				final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUserimg(),70,70);
-				TableRow row = createRow(image, users[i].getNickname(), getContext());
-				
-				if(i % 2 == 0)
-					row.setBackgroundDrawable(new BDrawableGradient(0,(int)rowHeightpx,BDrawableGradient.LIGHT_GRAY_GRADIENT));
-				else
-					row.setBackgroundDrawable(new BDrawableGradient(0,(int)rowHeightpx,BDrawableGradient.GRAY_GRADIENT));
-				
-				row.setId(i);
-				rowList.add(row);
-				View spacer = createSpacer(getContext(),1,1);
-				spacer.setId(-100);
-				rowList.add(spacer);
-				View spacer2 = createSpacer(getContext(),2,1);
-				spacer2.setId(-100);
-				rowList.add(spacer2);
+		try {
+			final ArrayList<View> rowList = new ArrayList<View>();
+			String currentUsersList = PreferencesHandler.getString("deviceUsersList", getContext());
+			Gson gson = new Gson();
+			users = gson.fromJson(currentUsersList, User[].class);
+			
+			double rowHeightpx = ratio * 104;
+			
+			for(int i = 0; i< users.length; i++){
+				if(users[i] != null){
+					final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUserimg(),70,70);
+					TableRow row = createRow(image, users[i].getNickname(), getContext());
+					
+					if(i % 2 == 0)
+						row.setBackgroundDrawable(new BDrawableGradient(0,(int)rowHeightpx,BDrawableGradient.LIGHT_GRAY_GRADIENT));
+					else
+						row.setBackgroundDrawable(new BDrawableGradient(0,(int)rowHeightpx,BDrawableGradient.GRAY_GRADIENT));
+					
+					row.setId(i);
+					rowList.add(row);
+					View spacer = createSpacer(getContext(),1,1);
+					spacer.setId(-100);
+					rowList.add(spacer);
+					View spacer2 = createSpacer(getContext(),2,1);
+					spacer2.setId(-100);
+					rowList.add(spacer2);
+				}
 			}
-		}
-		
-		//table.addView(createSpacer(getContext(),0,10));
-		
-		for (View row : rowList) {
-	      row.setPadding(0, 0, 0, 0);	      
-	      //row.setBackgroundColor(Color.argb(200, 51, 51, 51));
-	      if(row.getId() != -100) // IF IS NOT A SPACER IT'S CLICKABLE
-	    	  row.setOnClickListener(this);
-	      table.addView(row);
-	    }
-		
-		//table.addView(createSpacer(getContext(),0,10));
+			
+			for (View row : rowList) {
+		      row.setPadding(0, 0, 0, 0);	      
+		      if(row.getId() != -100) // IF IS NOT A SPACER IT'S CLICKABLE
+		    	  row.setOnClickListener(this);
+		      table.addView(row);
+		    }
+		}catch (Exception e) {ErrorDisplayer.externalReport(e);}
 		
 		// ADD THE NEW PLAYER BUTTON
 	    Button newplayer = (Button) findViewById(R.id.anotheracc);
@@ -133,8 +125,6 @@ public class UserSelection extends Dialog implements OnClickListener{
 				UserLogin userLogin = new UserLogin(getContext());
 				userLogin.show();	
 				Beintoo.currentDialog = current;
-				//current.dismiss();
-				//finish();
 			}
         });
 		    
@@ -192,8 +182,9 @@ public class UserSelection extends Dialog implements OnClickListener{
 					
 					UIhandler.sendEmptyMessage(1);
 					
-    			}catch(Exception e){}	
+    			}catch(Exception e){ErrorDisplayer.externalReport(e);}	
         			dialog.dismiss();
+        			
         		}
 			}).start();		
 	}

@@ -42,7 +42,7 @@ public class ErrorDisplayer{
 		};
 	   Message status = handler.obtainMessage();
 	   Bundle data = new Bundle();
-	   data.putString("SOMETHING", Message);
+	   data.putString("SOMETHING",Message);
 	   status.setData(data);
 
 	   handler.sendMessage(status);	
@@ -80,7 +80,7 @@ public class ErrorDisplayer{
 	        e.printStackTrace(printWriter);
 	        
 	        return result.toString();	        
-		}catch(Exception ex){}
+		}catch(Exception ex){ex.printStackTrace();}
 		
 		return "";
 	}
@@ -90,9 +90,15 @@ public class ErrorDisplayer{
     		public void run(){ 
     			try{  
     				BeintooApp ba = new BeintooApp();
-    		    	ba.ErrorReporting(null, null, stackTrace);	
+    		    	ba.ErrorReporting(null, null,  BeintooSdkParams.version + "\n\n" + stackTrace);	
     			}catch(Exception e){e.printStackTrace();}
     		}
 		}).start();			
 	}
+	
+	public static void externalReport (Exception e){
+		try {
+			errorReport(StackStraceTostring(e));
+		}catch (Exception e1){e1.printStackTrace();}
+	} 
 }

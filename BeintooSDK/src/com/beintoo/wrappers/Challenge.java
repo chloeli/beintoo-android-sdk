@@ -28,7 +28,7 @@ public class Challenge {
     Double prize;
     Double price;
     
-	public Challenge (){}
+	//public Challenge (){}
 	
 	public Contest getContest() {
 		return contest;

@@ -23,6 +23,7 @@ import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.google.gson.Gson;
 
@@ -177,6 +178,7 @@ public class BeintooSignupBrowser extends Dialog {
 					UIhandler.sendEmptyMessage(GO_HOME);
 					
 				} catch (Exception e) {
+					ErrorDisplayer.externalReport(e);
 				}
 				dialog.dismiss();
 			}

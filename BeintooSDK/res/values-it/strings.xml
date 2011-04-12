@@ -17,7 +17,7 @@
     <string name="challChallenge">Sfida</string>
     <string name="challSent" xml:space="preserve">Sfida inviata a\u0020</string>
     <string name="challAccept">Vuoi accettare questa sfida al costo di\u0020</string>
-    <string name="challSend">Vuoi inviare una sfida per 10 BeDollars?</string>
+    <string name="challSend">Vuoi inviare una sfida?\nPunta 10 BeDollars, ne potrai vincere 25.</string>
     <string name="challTip">clicca su un utente per inviargli una sfida</string>
     
     <string name="leadTitle">Leaderboard</string>
@@ -38,14 +38,14 @@
     <string name="profileBestScore" xml:space="preserve">Miglior punteggio:\u0020</string>
     <string name="profileLastScore" xml:space="preserve">Ultimo punteggio:\u0020</string>
     <string name="profileNoScores">Non hai nessun punteggio per questa app</string>
-    <string name="profileDetach">Disconnetti dal dispositivo</string>
+    <string name="profileDetach">Rimuovi account dal dispositivo</string>
     
-    <string name="vgoodWhoAlso">Chi altro ha acquistato</string>
+    <string name="vgoodWhoAlso">Chi ha già acquistato</string>
     <string name="vgoodEnd">Data di fine:</string>
     
     <string name="walletNoGoods">Non hai nessun bene virtuale</string>
-    <string name="walletConverted">Beni convertiti</string>
-    <string name="walletNotConverted">Beni non convertiti</string>
+    <string name="walletConverted">Comprati</string>
+    <string name="walletNotConverted">Da riscuotere</string>
    
    
    	<string name="tryBe">Beintoo trasforma la tua passione per le apps in premi reali.\nE\' gratis ed estremamente facile!</string>
@@ -58,14 +58,14 @@
     <string name="login">Login...</string>
     <string name="wronglogin">Username o password errate</string>
     <string name="earnedBalance">Il tuo punteggio totale é: %d</string>
-    <string name="earnedScore">Hai guadagnato %d punti\n</string>
+    <string name="earnedScore">Hai guadagnato %d punti.\u0020</string>
     
     <!-- BOXES -->
     <string name="boxWallet">I tuoi premi</string>
     <string name="boxChallenge">Le tue sfide\nE\' tempo di vincere</string>
-    <string name="boxCoupon">Congratulazioni, ecco il tuo premio</string>
-    <string name="boxUserSel">Abbiamo trovato più di un giocatore.\nSeleziona quale vuoi utilizzare\no crea un nuovo account</string>
-    <string name="boxUserLogin">Fai il login su Beintoo o utilizza\nil tuo account Facebook.</string>
+    <string name="boxCoupon">Complimenti! Ti sei meritato un premio</string>
+    <string name="boxUserSel">Quale profilo vuoi utilizzare?\nSeleziona o usa un altro account</string>
+    <string name="boxUserLogin">Fai il login su Beintoo o registrati.\nSe sei già registrato tramite Facebook\nusa il tuo account.</string>
     
     <!-- BUTTONS -->
     <string name="trynow">Prova Beintoo Ora</string>
@@ -76,10 +76,10 @@
     <string name="pending">In attesa</string>
     <string name="ongoing">In corso</string>
     <string name="ended">Finite</string>
-    <string name="getcoupon">Ottieni lo sconto</string>
+    <string name="getcoupon">Ottieni il premio</string>
     <string name="sendasgift">Invia come regalo</string>
-    <string name="loginbt">Login</string>
-    <string name="newuser">Nuovo utente</string>
+    <string name="loginbt">Accedi</string>
+    <string name="newuser">Registrati</string>
     <!-- OTHERS -->
     <string name="no">No</string>
     <string name="yes">Si</string>

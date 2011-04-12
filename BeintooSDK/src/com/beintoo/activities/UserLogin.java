@@ -66,7 +66,7 @@ public class UserLogin extends Dialog{
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
 		// SETTING UP TEXTBOX GRADIENT
-		pixels = ratio * 90;
+		pixels = (ratio * 95);
 		LinearLayout textlayout = (LinearLayout) findViewById(R.id.textlayout);
 		textlayout.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.GRAY_GRADIENT));
 		
@@ -129,6 +129,7 @@ public class UserLogin extends Dialog{
 								ErrorDisplayer.showConnectionError("Connection error.\nPlease check your Internet connection.", getContext(),null);
 							}
             			}catch(Exception e){
+            				ErrorDisplayer.externalReport(e);
             			}	            			
             			dialog.dismiss();
             		} 

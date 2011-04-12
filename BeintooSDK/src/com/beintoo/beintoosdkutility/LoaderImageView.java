@@ -18,11 +18,13 @@ package com.beintoo.beintoosdkutility;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import com.beintoo.R;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
-import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
@@ -60,12 +62,12 @@ public class LoaderImageView extends LinearLayout{
 	
 	public LoaderImageView(final Context context, final String imageUrl) {
 		super(context);
-		instantiate(context, imageUrl);		
+		instantiate(context, imageUrl);	
 	}
 	
 	public LoaderImageView(final Context context, final String imageUrl, int width, int height) {
 		super(context);
-		instantiate(context, imageUrl, width, height);		
+		instantiate(context, imageUrl, width, height);
 	}
 
 	
@@ -92,7 +94,8 @@ public class LoaderImageView extends LinearLayout{
 		mSpinner.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			
 		mSpinner.setIndeterminate(true);
-		mSpinner.setBackgroundColor(Color.LTGRAY);
+		mSpinner.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));
+		
 		
 		addView(mSpinner);
 		addView(mImage);
@@ -178,5 +181,22 @@ public class LoaderImageView extends LinearLayout{
 
         return output;
     }
+	
+	@SuppressWarnings("unused")
+	private static Bitmap resize (Bitmap b){
+		int width = b.getWidth();
+        int height = b.getHeight();
+     
+        int newWidth = 150;
+        int newHeight = 150;   
+        float scaleWidth = (float) newWidth / width;
+        float scaleHeight = (float) newHeight / height;
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(b, 0, 0,width, height, matrix, true);
+        return resizedBitmap;
+	}
 	
 }

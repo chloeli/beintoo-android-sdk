@@ -29,13 +29,19 @@ import javax.net.ssl.HttpsURLConnection;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import com.beintoo.wrappers.Message;
 
+import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
+import com.google.gson.Gson;
 
 public class BeintooConnection {
 	
+	
+	HttpsURLConnection postUrlConnection = null;
+	String jsonString = "";
 	/**
 	 * This is the main HTTREQUEST method
 	 * 
@@ -66,7 +72,7 @@ public class BeintooConnection {
 			
 			System.setProperty("http.keepAlive", "false");
 			
-			HttpsURLConnection postUrlConnection = (HttpsURLConnection) url.openConnection();
+			postUrlConnection = (HttpsURLConnection) url.openConnection();
 			
 			postUrlConnection.setUseCaches(false);
 			postUrlConnection.setDoOutput(true);
@@ -86,29 +92,53 @@ public class BeintooConnection {
 			      wr.flush ();
 			      wr.close ();				
 			}
-			
+
 			InputStream postInputStream = postUrlConnection.getInputStream();
 	
-			BufferedReader postBufferedReader = new BufferedReader(new
-			InputStreamReader(postInputStream),10*1024);
-			String postline = null;
-			String jsonString = "";
-			
-			while((postline = postBufferedReader.readLine()) != null) {
-				DebugUtility.showLog(postline);
-				jsonString = jsonString + postline;
-			}
+			jsonString = readStream(postInputStream);
 			
 			return jsonString;
 			
 		} catch (IOException e) {			
 			e.printStackTrace();
+			// IF THE SERVER RETURN ERROR THROW EXCEPTION
+			try {
+				if(postUrlConnection.getResponseCode() == 400){
+					InputStream postInputStream = postUrlConnection.getErrorStream();
+					jsonString = readStream(postInputStream);
+					Message msg = new Gson().fromJson(jsonString, Message.class);
+					System.out.println("SUPER TIRO EXCEPTIONM CAZZO");
+					throw new ApiCallException(msg.getMessage());
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			return "{\"messageID\":0,\"message\":\"ERROR\",\"kind\":\"message\"}";
 		}
 	}
 	
 	public String httpRequest(String apiurl,HeaderParams header,PostParams get){
 		return httpRequest(apiurl, header, get, false);
+	}
+	
+	private String readStream (InputStream postInputStream){
+		String jsonString = ""; 
+			BufferedReader postBufferedReader = new BufferedReader(new
+				InputStreamReader(postInputStream),10*1024);
+		String postline = null;
+		
+		try {
+			while((postline = postBufferedReader.readLine()) != null) {
+				DebugUtility.showLog(postline);
+				jsonString = jsonString + postline;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return jsonString;
 	}
 	
 	/**

@@ -121,8 +121,9 @@ public class BeintooUser {
 	 * @param action action (path parameter) one of INVITE, ACCEPT, REFUSE
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @return a json object of request challenges
+	 * @throws Exception 
 	 */
-	public Challenge[] challenge (String userExtFrom, String userExtTo, String action, String codeID){
+	public Challenge challenge (String userExtFrom, String userExtTo, String action, String codeID){
 		String apiUrl = apiPreUrl+"user/challenge/"+userExtFrom+"/"+action+"/"+userExtTo;
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
@@ -136,12 +137,18 @@ public class BeintooUser {
 		
 		Gson gson = new Gson();
 		
-		Challenge [] challenge = gson.fromJson(json, Challenge[].class);
+		Challenge challenge = gson.fromJson(json, Challenge.class);
+		
+		/*if (challenge.getStatus() == null){
+			Message msg = gson.fromJson(json, Message.class);
+			if(msg.getMessageID() == -15)
+				throw new Exception("-15");
+		}*/
 		
 		return challenge;	
 	}
 	
-	public Challenge[] challenge (String userExtFrom, String userExtTo, String action){
+	public Challenge challenge (String userExtFrom, String userExtTo, String action){
 		return challenge (userExtFrom, userExtTo, action, null);
 	}
 	

@@ -18,33 +18,24 @@ package com.beintoo.activities;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 
 import com.beintoo.R;
-import com.beintoo.beintoosdk.BeintooApp;
-import com.beintoo.beintoosdk.BeintooPlayer;
-import com.beintoo.beintoosdk.BeintooUser;
-import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
-import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
-import com.beintoo.wrappers.Challenge;
-import com.beintoo.wrappers.EntryCouplePlayer;
 import com.beintoo.wrappers.Player;
-import com.beintoo.wrappers.Vgood;
+import com.beintoo.wrappers.User;
 import com.google.gson.Gson;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -73,8 +64,8 @@ public class BeintooHome extends Dialog {
 		
 		// SETTING UP ROWS GRADIENT
 		
-		LinearLayout welcome = (LinearLayout) findViewById(R.id.welcome);
-		welcome.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*25),BDrawableGradient.GRAY_GRADIENT));
+		RelativeLayout welcome = (RelativeLayout) findViewById(R.id.welcome);
+		welcome.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*30),BDrawableGradient.GRAY_GRADIENT));
 		
 		TableRow row1 = (TableRow) findViewById(R.id.firstRow);
 		TableRow row2 = (TableRow) findViewById(R.id.secondRow);
@@ -105,7 +96,9 @@ public class BeintooHome extends Dialog {
 		try {
 			// set the nickname
 			TextView nickname = (TextView) findViewById(R.id.nickname);
-			nickname.setText(getContext().getString(R.string.homeWelcome)+getCurrentPlayerNickname());			
+			nickname.setText(getCurrentUser().getNickname());
+			TextView bedollars = (TextView) findViewById(R.id.bedollars);
+			bedollars.setText(getCurrentUser().getBedollars().intValue() + " BeDollars");
 			// CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
 			setFeatureToUse();
 		}catch (Exception e){e.printStackTrace();}
@@ -113,22 +106,8 @@ public class BeintooHome extends Dialog {
 		// PROFILE	
 		if(row1 != null){			    
 			row1.setOnClickListener(new TableRow.OnClickListener(){
-				public void onClick(View v) {				
-					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-					new Thread(new Runnable(){      
-	            		public void run(){
-	            			try{ 
-								BeintooPlayer bPlayer = new BeintooPlayer();
-								Player currentSaved = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));				
-								Player requestedPlayer = bPlayer.getPlayer(currentSaved.getGuid());				
-								PreferencesHandler.saveString("currentPlayer", JSONconverter.playerToJson(requestedPlayer), getContext());
-								
-								UIhandler.sendEmptyMessage(OPEN_PROFILE);
-	            			}catch (Exception e){
-	            			}
-	            			dialog.dismiss();
-	            		}
-					}).start();
+				public void onClick(View v) {		
+					UIhandler.sendEmptyMessage(OPEN_PROFILE);
 				}
 			});
 		}
@@ -136,24 +115,8 @@ public class BeintooHome extends Dialog {
 		// LEADERBOARD
 		if(row2 != null){			    
 			row2.setOnClickListener(new TableRow.OnClickListener(){
-				public void onClick(View v) {				
-					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-					new Thread(new Runnable(){      
-	            		public void run(){
-	            			try{ 
-								BeintooApp app = new BeintooApp();							
-								Map<String, List<EntryCouplePlayer>> leader = app.TopScore(null, 0);
-								Gson gson = new Gson();
-								String jsonLeaderboard = gson.toJson(leader);
-								
-								PreferencesHandler.saveString("leaderboard", jsonLeaderboard, getContext());
-								UIhandler.sendEmptyMessage(OPEN_LEADERBOARD);							
-	            			}catch (Exception e){
-	            				e.printStackTrace();
-	            			}
-	            			dialog.dismiss();
-	            		}
-					}).start();
+				public void onClick(View v) {		
+					UIhandler.sendEmptyMessage(OPEN_LEADERBOARD);
 				}
 			});
 		}
@@ -161,23 +124,8 @@ public class BeintooHome extends Dialog {
 		// WALLET
 		if(row3 != null){			    
 			row3.setOnClickListener(new TableRow.OnClickListener(){
-				public void onClick(View v) {				
-					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-					new Thread(new Runnable(){      
-	            		public void run(){
-	            			try{             				
-	            				BeintooVgood newvgood = new BeintooVgood();            				
-	            				// GET THE CURRENT LOGGED PLAYER
-	            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
-	            				Vgood [] vgood = newvgood.showByUser(p.getUser().getId(), null, false);
-	            				PreferencesHandler.saveString("wallet", new Gson().toJson(vgood), getContext());
-	            				UIhandler.sendEmptyMessage(OPEN_WALLET);							
-	            			}catch (Exception e){
-	            				e.printStackTrace();
-	            			}
-	            			dialog.dismiss();
-	            		}
-					}).start();
+				public void onClick(View v) {	
+					UIhandler.sendEmptyMessage(OPEN_WALLET);
 				}
 			});
 		}
@@ -185,24 +133,8 @@ public class BeintooHome extends Dialog {
 		// CHALLENGES
 		if(row4 != null){			    
 			row4.setOnClickListener(new TableRow.OnClickListener(){
-				public void onClick(View v) {				
-					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-					new Thread(new Runnable(){      
-	            		public void run(){
-	            			try{             				
-	            				BeintooUser newuser = new BeintooUser();            				
-	            				// GET THE CURRENT LOGGED PLAYER
-	            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
-	            				Challenge[] challenge = newuser.challengeShow(p.getUser().getId(), "TO_BE_ACCEPTED");
-	            				
-	            				PreferencesHandler.saveString("challenge", new Gson().toJson(challenge), getContext());
-	            				UIhandler.sendEmptyMessage(OPEN_CHALLENGE);							
-	            			}catch (Exception e){
-	            				e.printStackTrace();
-	            			}
-	            			dialog.dismiss();
-	            		}
-					}).start();
+				public void onClick(View v) {								
+	            	UIhandler.sendEmptyMessage(OPEN_CHALLENGE);								            	
 				}
 			});
 		}
@@ -211,11 +143,9 @@ public class BeintooHome extends Dialog {
 	public void setFeatureToUse(){
 		String[] features = Beintoo.usedFeatures;
 		
-		if(features != null){
-			
+		if(features != null){			
 			HashSet<String> f = new HashSet<String>(Arrays.asList(features));
-			TableLayout tl = (TableLayout)findViewById(R.id.myTableLayout);
-			
+			TableLayout tl = (TableLayout)findViewById(R.id.myTableLayout);			
 			/*
 			 * REMOVE FEATURES THAT ARE NOT IN THE features ARRAY SETTED BY THE DEVELOPER
 			 */
@@ -238,8 +168,7 @@ public class BeintooHome extends Dialog {
 				tl.removeView((LinearLayout)findViewById(R.id.fourthWhiteline));
 				tl.removeView((LinearLayout)findViewById(R.id.fourthGrayline));
 				tl.removeView((TableRow) findViewById(R.id.fourthRow));
-			}
-				
+			}				
 		}
 	}
 	
@@ -247,15 +176,14 @@ public class BeintooHome extends Dialog {
 	 * Returns the nickname of the current logged in player
 	 * @return
 	 */
-	public String getCurrentPlayerNickname () {
+	public User getCurrentUser () {
 		Gson gson = new Gson();
 		try {
 			Player player = gson.fromJson(getCurrentPlayer(), Player.class);
-			return player.getUser().getNickname();		
+			return player.getUser();		
 		}catch (Exception e){e.printStackTrace();}
 		
-		return "";
-		
+		return new User();		
 	}
 	
 	/**

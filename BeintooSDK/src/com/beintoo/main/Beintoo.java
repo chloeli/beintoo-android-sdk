@@ -45,6 +45,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.Gravity;
 
  
 public class Beintoo{
@@ -163,7 +164,9 @@ public class Beintoo{
 			final Player currentPlayer = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));
 			final BeintooVgood vgoodHand = new BeintooVgood();
 			
-	    	final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
+			if(currentPlayer.getGuid() == null) return;
+	    	
+			final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
 	    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
 	    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
 	    		new Thread(new Runnable(){     					
@@ -191,7 +194,7 @@ public class Beintoo{
 		    				}; 
 							locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener); //NETWORK_PROVIDER
 							Looper.loop();
-		    			}catch(Exception e){e.printStackTrace();}	
+		    			}catch(Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}	
 		    		}		
 	    		}).start();
 	    	}else {
@@ -204,12 +207,12 @@ public class Beintoo{
 		            		if(vgood.getName() != null){
 		            			UIhandler.sendEmptyMessage(GET_VGOOD);
 					    	}
-		    			}catch(Exception e){e.printStackTrace();}
+		    			}catch(Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}
 		    		}
 				}).start();			
 	    	}
 		}catch (Exception e){
-			e.printStackTrace();
+			e.printStackTrace(); ErrorDisplayer.externalReport(e);
 		}
     			
 	}
@@ -254,7 +257,8 @@ public class Beintoo{
     				if(loginPlayer.getUser()!=null){
         				Message msg = new Message();
         				Bundle b = new Bundle();
-    					b.putString("Message", ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname());    				
+    					b.putString("Message", ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname());
+    					b.putInt("Gravity", Gravity.BOTTOM);
     					msg.setData(b);
     					msg.what = LOGIN_MESSAGE;
     					UIhandler.sendMessage(msg);
@@ -263,7 +267,7 @@ public class Beintoo{
     				savePlayerLocation(currentContext);
     				
     			}catch (Exception e){
-    				e.printStackTrace(); logout(ctx);
+    				e.printStackTrace(); logout(ctx); ErrorDisplayer.externalReport(e);
     			}	
     		}
 		}).start();	
@@ -286,7 +290,7 @@ public class Beintoo{
 			int currentTempScore = PreferencesHandler.getInt(key, ctx);
 			currentTempScore+=score;
 			
-			submitScore(ctx, score, -1, null, true);
+			submitScore(ctx, score, -1, null, true, Gravity.BOTTOM);
 			
 			if(currentTempScore >= treshold) { // THE USER REACHED THE DEVELOPER TRESHOLD SEND VGOOD AND SAVE THE REST
 				PreferencesHandler.saveInt(key, currentTempScore-treshold, ctx);
@@ -295,7 +299,7 @@ public class Beintoo{
 				PreferencesHandler.saveInt(key, currentTempScore, ctx);
 			}
 		
-		}catch(Exception e){e.printStackTrace();}
+		}catch(Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}
 	}
 	
 	
@@ -309,7 +313,8 @@ public class Beintoo{
 	 * @param showNotification show a toast notification to the player with the score
 	 * @param location player Location
 	 */
-	private static void submitScoreHelper (final Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification,final Location location){
+	private static void submitScoreHelper (final Context ctx, final int lastScore, final int balance, final String codeID, 
+			final boolean showNotification,final Location location, final int gravity){
 		new Thread(new Runnable(){     					
     		public void run(){	
 				try {
@@ -320,8 +325,11 @@ public class Beintoo{
 					else
 						b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore));
 					
+					b.putInt("Gravity", gravity);
+					
 					msg.setData(b);
 					msg.what = SUBMITSCORE_POPUP;
+					
 					
 					/* check if there is a previously submitted score that could not be submitted because of
 					 connection error */					
@@ -348,7 +356,7 @@ public class Beintoo{
 					if(showNotification)
 						UIhandler.sendMessage(msg);
 				
-				}catch (Exception e){e.printStackTrace();}
+				}catch (Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}
     		}	
     	}).start();				
 	}
@@ -363,7 +371,7 @@ public class Beintoo{
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @param showNotification if true it will show a notification to the user when receive a submit score 
 	 */	
-	public static void submitScore(final Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification){
+	public static void submitScore(final Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification, int gravity){
 		currentContext = ctx;
 		String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
 		final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
@@ -373,29 +381,33 @@ public class Beintoo{
 				Location pLoc = getSavedPlayerLocation();
 	        	if(pLoc != null){
 	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
-	        			submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,pLoc);
+	        			submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,pLoc, gravity);
 	        		}else {
-	        			submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,null);
+	        			submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,null, gravity);
 	        		}
 	        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
-	        		submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,null);
+	        		submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,null, gravity);
 	        	}	
 			}catch(Exception e){ 
-				e.printStackTrace();	    				
+				e.printStackTrace(); ErrorDisplayer.externalReport(e);	    				
 			}		    			
 		}
 	}
 	
+	public static void submitScore(Context ctx, int lastScore, boolean showNotification, int gravity){
+		submitScore(ctx, lastScore, -1, null, showNotification, gravity);
+	}
+	
 	public static void submitScore(Context ctx, int lastScore, boolean showNotification){
-		submitScore(ctx, lastScore, -1, null, showNotification);
+		submitScore(ctx, lastScore, -1, null, showNotification, Gravity.BOTTOM);
 	}
 	
 	public static void submitScore(Context ctx, int lastScore, int balance, boolean showNotification){
-		submitScore(ctx, lastScore, balance, null, showNotification);
+		submitScore(ctx, lastScore, balance, null, showNotification, Gravity.BOTTOM);
 	}
 	
 	public static void submitScore(Context ctx, int lastScore, String codeID, boolean showNotification){
-		submitScore(ctx, lastScore, -1, codeID, showNotification);
+		submitScore(ctx, lastScore, -1, codeID, showNotification, Gravity.BOTTOM);
 	}
 	
 	
@@ -418,8 +430,7 @@ public class Beintoo{
 			
 			return p;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); ErrorDisplayer.externalReport(e);
 		}
 		
 		return null;
@@ -456,10 +467,10 @@ public class Beintoo{
     				getVgood.show();	            	
 	            break;
 	            case LOGIN_MESSAGE:	            	
-	            	MessageDisplayer.showMessage(currentContext, msg.getData().getString("Message"));
+	            	MessageDisplayer.showMessage(currentContext, msg.getData().getString("Message"), msg.getData().getInt("Gravity"));
 	            break;
 	            case SUBMITSCORE_POPUP:
-	            	MessageDisplayer.showMessage(currentContext, msg.getData().getString("Message"));
+	            	MessageDisplayer.showMessage(currentContext, msg.getData().getString("Message"), msg.getData().getInt("Gravity"));
 	            break;
 	            case TRY_DIALOG_POPUP:
 	            	tryDialog t = new tryDialog(currentContext);
@@ -500,12 +511,12 @@ public class Beintoo{
 						};   
 						locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.myLooper());
 						Looper.loop();
-	    				}catch(Exception e){e.printStackTrace();}
+	    				}catch(Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}
 	        		}	
 	        	}).start();		
     		}
 		}catch(Exception e){ 
-			e.printStackTrace();	    				
+			e.printStackTrace(); ErrorDisplayer.externalReport(e);	     				
 		}		    
 	}
 	

@@ -22,6 +22,7 @@ import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -106,7 +107,7 @@ public class VGoodGetDialog extends Dialog{
 				}
 				
 			}
-		}catch (Exception e){e.printStackTrace();}
+		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}
 		
 		Button getVgood = (Button) findViewById(R.id.getcoupon);
 		getVgood.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);

@@ -16,6 +16,7 @@
 		<include layout="@layout/beintoobarsmall" />
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline"></LinearLayout>
+		<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/loading" android:gravity="center"></LinearLayout>
 
 		<LinearLayout android:layout_width="fill_parent"
 			android:orientation="vertical" android:id="@+id/goodcontent"
@@ -79,7 +80,7 @@
 			android:layout_height="wrap_content" android:gravity="center"
 			android:layout_marginTop="0dip" android:layout_marginBottom="15dip">
 			<Button android:id="@+id/detach" android:textColor="#FFFFFF" android:layout_width="294dip"
-				android:layout_height="50dip" android:textSize="18dip" android:text="@string/profileDetach">
+				android:text="@string/profileDetach" android:padding="0dip" android:layout_height="30dip" android:textSize="16dip">
 			</Button>
 		</LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"

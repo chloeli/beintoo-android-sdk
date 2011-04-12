@@ -61,9 +61,9 @@ public class ChallengeOverview extends Dialog{
 				toNick.setText(reqChallenge.getPlayerTo().getUser().getNickname());
 				 
 				TextView fromScore = (TextView) findViewById(R.id.scorefrom);
-				fromScore.setText("Score: "+reqChallenge.getPlayerFromScore().toString());				
+				fromScore.setText(getContext().getString(R.string.leadScore)+reqChallenge.getPlayerFromScore().toString());				
 				TextView toScore = (TextView) findViewById(R.id.scoreto);
-				toScore.setText("Score: "+reqChallenge.getPlayerToScore().toString());
+				toScore.setText(getContext().getString(R.string.leadScore)+reqChallenge.getPlayerToScore().toString());
 				
 				SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss"); 
 				curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));

@@ -35,6 +35,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -52,7 +53,6 @@ import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.Vgood;
-import com.google.gson.Gson;
 
 public class Wallet extends Dialog implements OnClickListener{
 	static Dialog current;
@@ -96,7 +96,7 @@ public class Wallet extends Dialog implements OnClickListener{
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+				showLoading();
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -108,7 +108,6 @@ public class Wallet extends Dialog implements OnClickListener{
             			}catch (Exception e){
             				e.printStackTrace();
             			}
-            			dialog.dismiss();
             		}
 				}).start();
 			}
@@ -127,7 +126,7 @@ public class Wallet extends Dialog implements OnClickListener{
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
 				
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+				showLoading();
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
@@ -139,22 +138,33 @@ public class Wallet extends Dialog implements OnClickListener{
             			}catch (Exception e){
             				e.printStackTrace();
             			}
-            			dialog.dismiss();
             		}
 				}).start();
 			}
         });
 		
 		
-		// LOAD THE TABLE
-		loadWallet(false);
+		showLoading();
+		
+		startLoading();
 		
 	}
 	
-	public void loadWallet(boolean internal){
-		try {
-			if(!internal) // IF internal == false is loaded from the Home else is loaded from the buttons on the wallet
-				vgood = new Gson().fromJson(PreferencesHandler.getString("wallet", getContext()), Vgood[].class);
+	private void startLoading (){
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{ 
+    				BeintooVgood bv = new BeintooVgood();
+    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
+    				vgood = bv.showByUser(p.getUser().getId(), null, false);
+    				UIhandler.sendEmptyMessage(LOAD_TABLE);
+    			}catch (Exception e){ErrorDisplayer.externalReport(e);}
+    		}
+		}).start();	
+	}
+	
+	public void loadWallet(){
+		try {			
 			if(vgood.length > 0)
 				prepareWallet();
 			else { // NO VGOODS SHOW A MESSAGE
@@ -177,7 +187,8 @@ public class Wallet extends Dialog implements OnClickListener{
 		int count = 0;
 		final ArrayList<View> rowList = new ArrayList<View>();
 	    for (int i = 0; i < vgood.length; i++){
-    		final LoaderImageView image = new LoaderImageView(getContext(), vgood[i].getImageUrl(),(int)(ratio *90),(int)(ratio *90));
+	    	
+    		final LoaderImageView image = new LoaderImageView(getContext(), vgood[i].getImageUrl(),(int)(ratio *80),(int)(ratio *80));
     		
     		TableRow row = createRow(image, vgood[i].getName(),vgood[i].getEnddate(), table.getContext());
 			row.setId(count);
@@ -255,7 +266,7 @@ public class Wallet extends Dialog implements OnClickListener{
 		
 	private View createSpacer(Context activity, int color, int height) {
 		  View spacer = new View(activity);
-		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,(int)(ratio*height)));
+		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
 		  if(color == 1)
 			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
 		  else if(color == 2)
@@ -286,6 +297,20 @@ public class Wallet extends Dialog implements OnClickListener{
 		toConvert.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));
 	}
 	
+	private void showLoading (){
+		ProgressBar pb = new ProgressBar(getContext());
+		pb.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));
+		TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,TableLayout.LayoutParams.WRAP_CONTENT);
+		params.setMargins(0, (int)(100*ratio), 0, 0);		
+		TableRow row = new TableRow(getContext());
+		row.setLayoutParams(params);
+		row.setGravity(Gravity.CENTER);
+		row.addView(pb);
+		TableLayout table = (TableLayout) findViewById(R.id.table);
+		table.removeAllViews();
+		table.addView(row);
+	}
+	
 	private Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {
@@ -295,7 +320,7 @@ public class Wallet extends Dialog implements OnClickListener{
 					bb.show();						        
 			  	break;
 			  	case LOAD_TABLE:
-			  		loadWallet(true);
+			  		loadWallet();
 				break;			  	
 			  }
 			super.handleMessage(msg);

@@ -17,7 +17,7 @@
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline"></LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"
-			android:id="@+id/textlayout" android:paddingLeft="15dip" android:gravity="center_vertical" android:layout_height="60dip">
+			android:id="@+id/textlayout" android:paddingLeft="15dip" android:gravity="center_vertical" android:layout_height="93dip">
 			<TextView android:id="@+id/textView1" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:typeface="sans"
 				android:textSize="16dip" android:textColor="#333133" android:text="@string/boxUserLogin"></TextView>
@@ -41,8 +41,7 @@
 
 			<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:layout_gravity="right" android:orientation="horizontal"
-				android:layout_marginTop="20dip">
+				android:layout_gravity="right" android:orientation="horizontal" android:layout_marginTop="15dip">
 				<Button android:padding="0dip" android:layout_margin="0dip"
 					android:id="@+id/go" android:layout_centerInParent="true"
 					android:text="@string/loginbt" android:textColor="#FFFFFF" android:layout_height="50dip" android:layout_width="294dip" android:textSize="18dip"></Button>
@@ -50,7 +49,7 @@
 			<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:layout_gravity="right" android:orientation="horizontal"
-				android:gravity="center" android:layout_marginTop="5dip">
+				android:gravity="center" android:layout_marginTop="25dip">
 
 				<Button android:id="@+id/newuser"
 					android:gravity="center" android:text="@string/newuser" android:textColor="#FFFFFF" android:layout_height="50dip" android:layout_width="294dip" android:textSize="18dip"></Button>

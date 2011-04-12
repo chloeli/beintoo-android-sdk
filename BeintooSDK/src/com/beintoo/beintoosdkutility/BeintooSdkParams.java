@@ -19,4 +19,5 @@ public class BeintooSdkParams {
 	public static String apiUrl = "https://api.beintoo.com/api/rest/";
 	public static String sandboxUrl = "https://sandbox-elb.beintoo.com/api/rest/";
 	public static boolean useSandbox = false;
+	public static String version = "v2.1beta";
 }
