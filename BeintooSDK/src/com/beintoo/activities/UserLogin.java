@@ -128,9 +128,7 @@ public class UserLogin extends Dialog{
 							}else{ // SHOW NETWORK ERROR
 								ErrorDisplayer.showConnectionError("Connection error.\nPlease check your Internet connection.", getContext(),null);
 							}
-            			}catch(Exception e){
-            				ErrorDisplayer.externalReport(e);
-            			}	            			
+            			}catch(Exception e){}	            			
             			dialog.dismiss();
             		} 
 				}).start();		
@@ -182,6 +180,8 @@ public class UserLogin extends Dialog{
 								dialog.dismiss();
 							}							
             			}catch(Exception e){
+            				dialog.dismiss();
+            				ErrorDisplayer.showConnectionErrorOnThread(getContext().getString(R.string.wronglogin), getContext(),null);
             			}	
             			
             		} 

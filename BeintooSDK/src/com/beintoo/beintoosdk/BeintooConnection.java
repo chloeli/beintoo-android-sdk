@@ -32,6 +32,7 @@ import android.net.NetworkInfo;
 import com.beintoo.wrappers.Message;
 
 import com.beintoo.beintoosdkutility.ApiCallException;
+import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
@@ -60,24 +61,26 @@ public class BeintooConnection {
 		try {
 			String postParams = "";
 			
-			if(post != null)
+			if(post != null){
 				for(int i = 0; i<post.getKey().size(); i++){
 					if(i==0)
 						postParams = postParams + post.getKey().get(i)+"="+URLEncoder.encode(post.getValue().get(i), "UTF-8");
 					else
 						postParams = postParams + "&"+post.getKey().get(i)+"="+URLEncoder.encode(post.getValue().get(i), "UTF-8");
 				}
-			
+			}
 			url = new URL(apiurl);
 			
 			System.setProperty("http.keepAlive", "false");
-			
+
 			postUrlConnection = (HttpsURLConnection) url.openConnection();
 			
 			postUrlConnection.setUseCaches(false);
 			postUrlConnection.setDoOutput(true);
 			postUrlConnection.setDoInput(true);
-
+			
+			header.getKey().add("X-BEINTOO-SDK-VERSION");
+			header.getValue().add(BeintooSdkParams.version);
 			for(int i = 0; i<header.getKey().size(); i++){
 				postUrlConnection.setRequestProperty(header.getKey().get(i),header.getValue().get(i));
 			}
@@ -107,7 +110,6 @@ public class BeintooConnection {
 					InputStream postInputStream = postUrlConnection.getErrorStream();
 					jsonString = readStream(postInputStream);
 					Message msg = new Gson().fromJson(jsonString, Message.class);
-					System.out.println("SUPER TIRO EXCEPTIONM CAZZO");
 					throw new ApiCallException(msg.getMessage());
 				}
 			} catch (IOException e1) {
@@ -142,7 +144,7 @@ public class BeintooConnection {
 	}
 	
 	/**
-	 * Check if is active the internet connection
+	 * Check if is active the internet connection - REMOVED
 	 * @param ctx current application Context
 	 * @return a boolean that return the connection state
 	 */

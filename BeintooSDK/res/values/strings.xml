@@ -5,7 +5,7 @@
     <string name="challEnd">End date:</string>
     <string name="challWinner">Winner:</string>
     <string name="challPrize">Prize:</string>
-    <string name="challNoPending">You don\'t have any pending challenge request</string>
+    <string name="challNoPending">You have no pending challenge request</string>
     <string name="challFromTo">From you to\u0020</string>
     <string name="challFrom">From\u0020</string>
     <string name="challYou">\u0020to you</string>
@@ -23,7 +23,7 @@
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Score:\u0020</string>
     <string name="friendSel">Select a friend</string>
-    <string name="friendsNo">You don\'t have any friends</string>
+    <string name="friendsNo">You have no friends</string>
     <string name="friendSure">Are you sure you want to send this coupon as a gift to </string>
     <string name="friendSent">Gift sent to\u0020</string> 
     <string name="friendLoading">Loading friends...</string>
@@ -33,13 +33,13 @@
     <string name="profileTotalScore">Total score:\u0020</string>
     <string name="profileBestScore">Best score:\u0020</string>
     <string name="profileLastScore">Last score:\u0020</string>
-    <string name="profileNoScores">You don\'t have any scores for this app</string>
+    <string name="profileNoScores">You have no scores for this app</string>
     <string name="profileDetach">Remove account from device</string>
     
     <string name="vgoodWhoAlso">Who also purchased</string>
     <string name="vgoodEnd">End date:</string>
     
-    <string name="walletNoGoods">You don\'t have any virtual goods</string>
+    <string name="walletNoGoods">You have no virtual goods</string>
     <string name="walletConverted">Redeemed goods</string>
     <string name="walletNotConverted">To be redeemed</string>
    
@@ -59,6 +59,7 @@
     <string name="boxWallet">Here\'s your wallet of great rewards</string>
     <string name="boxChallenge">Here are your challenges\nIt\'s time to win</string>
     <string name="boxCoupon">Congratulations! You deserve a reward</string>
+    <string name="boxCouponList">Congratulations! Choose your reward</string>
     <string name="boxUserSel">Which profile do you want to use?\nSelect one or use another account</string>
     <string name="boxUserLogin">Login on Beintoo\nor use your Facebook account</string>
     <!-- BUTTONS -->
@@ -89,4 +90,9 @@
     <string name="challenges">Challenges</string>
     <string name="challengesdesc">manage your challenges</string>
     
+    <!-- VGOOD DIALOG -->
+    <string name="vgoodmessagealert">Hey! You won a Beintoo reward by using this app!\nTap redeem and get it</string>
+    <string name="vgoodmessagepositive">Redeem</string>
+    <string name="vgoodmessagenegative">Later</string>
+    <string name="vgoodmessagebanner">Hey! You got a Beintoo reward by using this app!\nTap here and redeem it</string>
 </resources>

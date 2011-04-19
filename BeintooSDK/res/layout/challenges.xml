@@ -22,19 +22,19 @@
 				android:gravity="center">
 				<Button android:id="@+id/pendingchall" android:text="@string/pending"
 					android:layout_height="35dip"
-					android:layout_width="106dip" android:padding="0dip" android:textColor="#545859"></Button>
+					android:padding="0dip" android:textColor="#545859" android:layout_width="fill_parent" android:layout_weight="1"></Button>
 				<LinearLayout android:layout_width="0.75dip"
 					android:layout_height="fill_parent" android:background="#8F9193"
 					android:id="@+id/grayline"></LinearLayout>
 				<Button android:id="@+id/acceptedchall" android:text="@string/ongoing"
 					android:layout_height="35dip"
-					android:layout_width="106dip" android:padding="0dip" android:textColor="#545859"></Button>
+					android:padding="0dip" android:textColor="#545859" android:layout_width="fill_parent" android:layout_weight="1"></Button>
 				<LinearLayout android:layout_width="0.75dip"
 					android:layout_height="fill_parent" android:background="#8F9193"
 					android:id="@+id/grayline"></LinearLayout>
 				<Button android:id="@+id/endedchall" android:text="@string/ended"
 					android:layout_height="35dip"
-					android:layout_width="106dip" android:padding="0dip" android:textColor="#545859"></Button>
+					android:padding="0dip" android:textColor="#545859" android:layout_width="fill_parent" android:layout_weight="1"></Button>
 			</LinearLayout>
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="0.75dip" android:background="#8F9193"

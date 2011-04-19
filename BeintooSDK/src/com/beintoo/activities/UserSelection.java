@@ -182,9 +182,8 @@ public class UserSelection extends Dialog implements OnClickListener{
 					
 					UIhandler.sendEmptyMessage(1);
 					
-    			}catch(Exception e){ErrorDisplayer.externalReport(e);}	
+    			}catch(Exception e){}	
         			dialog.dismiss();
-        			
         		}
 			}).start();		
 	}

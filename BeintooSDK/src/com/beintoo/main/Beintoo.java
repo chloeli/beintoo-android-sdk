@@ -15,9 +15,12 @@
  ******************************************************************************/
 package com.beintoo.main;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
-import com.beintoo.activities.VGoodGetDialog;
 import com.beintoo.activities.tryBeintoo;
 import com.beintoo.activities.tryDialog;
 import com.beintoo.beintoosdk.BeintooPlayer;
@@ -30,9 +33,14 @@ import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LocationManagerUtils;
 import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.vgood.VGoodGetList;
+import com.beintoo.vgood.VgoodAcceptDialog;
+import com.beintoo.vgood.VgoodBanner;
+import com.beintoo.wrappers.LocalScores;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerScore;
 import com.beintoo.wrappers.Vgood;
+import com.beintoo.wrappers.VgoodChooseOne;
 import com.google.gson.Gson;
 
 import android.app.Dialog;
@@ -46,13 +54,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.Gravity;
+import android.widget.LinearLayout;
 
  
 public class Beintoo{
 	static Context currentContext;
 	
 	private final static int GO_HOME = 1;
-	private final static int GET_VGOOD = 2;
+	private final static int GET_VGOOD_BANNER = 2;
+	private final static int GET_VGOOD_ALERT = 7;
+	private final static int GET_MULTI_VGOOD = 6;
 	private final static int LOGIN_MESSAGE = 3;
 	private final static int SUBMITSCORE_POPUP = 4;
 	private final static int TRY_DIALOG_POPUP = 5;
@@ -60,12 +71,17 @@ public class Beintoo{
 	public static Dialog currentDialog = null;
 	public static Dialog homeDialog = null;
 	public static Vgood vgood = null;
+	public static VgoodChooseOne vgoodlist = null;
 	
 	public static String[] usedFeatures = null; 
 	public static String FEATURE_PROFILE = "profile";
 	public static String FEATURE_LEADERBOARD = "leaderboard";
 	public static String FEATURE_WALLET = "wallet";
 	public static String FEATURE_CHALLENGES = "challenges";
+	
+	public static int VGOOD_NOTIFICATION_BANNER = 1; 
+	public static int VGOOD_NOTIFICATION_ALERT = 2;
+	private static LinearLayout vgood_container = null;
 	
 	/**
 	 * Set the developer apikey
@@ -156,8 +172,9 @@ public class Beintoo{
 	 * It retrieves the user location used to find a Vgood in nearby 
 	 * 
 	 * @param ctx current Context
+	 * @param isMultiple if true retrieve a list of vgood in wich the player can choose a virtual good
 	 */	
-	public static void GetVgood(final Context ctx){
+	public static void GetVgood(final Context ctx, final boolean isMultiple, final LinearLayout container, final int notificationType){
 		currentContext = ctx;	
 		
 		try {
@@ -179,11 +196,37 @@ public class Beintoo{
 							    	final Location l = location;
 							    					    				
 		    						// GET A VGOOD WITH COORDINATES
-		    				    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
-		    								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);    						 
-		    				    	if(vgood.getName() != null){
-		    				    		UIhandler.sendEmptyMessage(GET_VGOOD);
-		    				    	}
+							    	if(!isMultiple) { // ASSIGN A SINGLE VGOOD TO THE PLAYER
+			    				    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
+			    								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
+			    				    	// ADD THE SINGLE VGOOD TO THE LIST
+			    				    	List<Vgood> list = new ArrayList<Vgood>();
+			    				    	list.add(vgood);
+			    				    	VgoodChooseOne v = new VgoodChooseOne(list);	    				    	
+			    				    	vgoodlist = v;
+								    	
+			    				    	if(vgood.getName() != null){
+			    				    		if(notificationType == VGOOD_NOTIFICATION_BANNER){
+			    				    			vgood_container = container;
+			    				    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
+			    				    		}else{
+			    				    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
+			    				    		}
+			    				    	}
+							    	}else { // ASSIGN A LIST OF VGOOD TO THE PLAYER
+							    		vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
+			    								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);    						 
+			    				    	if(vgoodlist != null){
+			    				    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
+		    				    			if(notificationType == VGOOD_NOTIFICATION_BANNER){
+		    				    				vgood_container = container;
+			    				    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
+		    				    			}else{
+			    				    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
+		    				    			}
+			    				    	}
+							    	}
+							    	
 		    				    	Looper.myLooper().quit(); //QUIT THE THREAD
 							    }
 								public void onProviderDisabled(String provider) {}
@@ -194,7 +237,7 @@ public class Beintoo{
 		    				}; 
 							locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener); //NETWORK_PROVIDER
 							Looper.loop();
-		    			}catch(Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}	
+		    			}catch(Exception e){e.printStackTrace();}	
 		    		}		
 	    		}).start();
 	    	}else {
@@ -202,19 +245,49 @@ public class Beintoo{
 		    		public void run(){
 		    			try{			 
 		            		// GET A VGOOD WITHOUT COORDINATES
-					    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, null, 
-									null, null, false);   				    	
-		            		if(vgood.getName() != null){
-		            			UIhandler.sendEmptyMessage(GET_VGOOD);
-					    	}
-		    			}catch(Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}
+		    				if(!isMultiple) { // ASSIGN A SINGLE VGOOD TO THE PLAYER
+						    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, null, 
+										null, null, false);   		
+						    	// ADD THE SINGLE VGOOD TO THE LIST
+						    	List<Vgood> l = new ArrayList<Vgood>();
+						    	l.add(vgood);
+	    				    	VgoodChooseOne v = new VgoodChooseOne(l);	    				    	
+	    				    	vgoodlist = v;
+						    	if(vgood.getName() != null){
+	    				    		if(notificationType == VGOOD_NOTIFICATION_BANNER){
+	    				    			vgood_container = container;
+	    				    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
+	    				    		}else{
+	    				    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
+	    				    		}
+	    				    	}
+		    				} else { // ASSIGN A LIST OF VGOOD TO THE PLAYER		    					
+		    					vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), null, null, 
+										null, null, false);   				    		    					
+			            		if(vgoodlist != null){
+			            			// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
+			            			if(vgoodlist != null){
+		    				    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
+	    				    			if(notificationType == VGOOD_NOTIFICATION_BANNER){
+	    				    				vgood_container = container;
+		    				    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
+	    				    			}else{
+		    				    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
+	    				    			}
+		    				    	}
+						    	}
+		    				}
+		    			}catch(Exception e){e.printStackTrace();}
 		    		}
 				}).start();			
 	    	}
 		}catch (Exception e){
-			e.printStackTrace(); ErrorDisplayer.externalReport(e);
+			e.printStackTrace();
 		}
-    			
+	}
+	
+	public static void GetVgood(final Context ctx) {
+		GetVgood(ctx, false, null, VGOOD_NOTIFICATION_ALERT);
 	}
 	
 	
@@ -267,7 +340,7 @@ public class Beintoo{
     				savePlayerLocation(currentContext);
     				
     			}catch (Exception e){
-    				e.printStackTrace(); logout(ctx); ErrorDisplayer.externalReport(e);
+    				e.printStackTrace();
     			}	
     		}
 		}).start();	
@@ -281,7 +354,8 @@ public class Beintoo{
 	 * @param score score to submit
 	 * @param treshold the score treshold for a new vgood
 	 */
-	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold){
+	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold, boolean isMultiple,
+			LinearLayout container, int notificationType){
 		currentContext = ctx;
 		try{
 			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
@@ -290,16 +364,20 @@ public class Beintoo{
 			int currentTempScore = PreferencesHandler.getInt(key, ctx);
 			currentTempScore+=score;
 			
-			submitScore(ctx, score, -1, null, true, Gravity.BOTTOM);
+			submitScore(ctx, score, null, true, Gravity.BOTTOM);
 			
 			if(currentTempScore >= treshold) { // THE USER REACHED THE DEVELOPER TRESHOLD SEND VGOOD AND SAVE THE REST
 				PreferencesHandler.saveInt(key, currentTempScore-treshold, ctx);
-				GetVgood(ctx);
+				GetVgood(ctx,isMultiple,container,notificationType);
 			}else{
 				PreferencesHandler.saveInt(key, currentTempScore, ctx);
 			}
 		
-		}catch(Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}
+		}catch(Exception e){e.printStackTrace(); }
+	}
+	
+	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold){
+		submitScoreWithVgoodCheck (ctx, score, treshold, true, null, VGOOD_NOTIFICATION_ALERT);
 	}
 	
 	
@@ -332,31 +410,32 @@ public class Beintoo{
 					
 					
 					/* check if there is a previously submitted score that could not be submitted because of
-					 connection error */					
-					final int errorScore = PreferencesHandler.getInt("errorScore", ctx);
-					
+					 connection error */										
 					final BeintooPlayer player = new BeintooPlayer();
 					String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
 					final Player p = JSONconverter.playerJsonToObject(jsonPlayer);
 					com.beintoo.wrappers.Message result;
 					if(location != null){
-						result = player.submitScore(p.getGuid(), codeID, null, lastScore+errorScore, balance,Double.toString(location.getLatitude()), 
+						result = player.submitScore(p.getGuid(), codeID, null, lastScore, balance,Double.toString(location.getLatitude()), 
 								Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), null);
 					}else{
-						result = player.submitScore(p.getGuid(), codeID, null, lastScore+errorScore, balance, null, null, null, null);
+						result = player.submitScore(p.getGuid(), codeID, null, lastScore, balance, null, null, null, null);
 					}
-					
-					if(!result.getMessage().equals("OK")){
-						int errorTScore = PreferencesHandler.getInt("errorScore", ctx);
-						errorTScore += lastScore;
-						PreferencesHandler.saveInt("errorScore", errorTScore, ctx);
-					}else									
-						PreferencesHandler.clearPref("errorScore", ctx);
-					
+					 
+					if(!result.getMessage().equals("OK")){ // SAVE THE SCORE LOCALLY
+						LocalScores.saveLocalScore(ctx,lastScore,codeID);
+					}else{		
+						// THERE ARE SOME SCORES TO SUBMIT
+						if(PreferencesHandler.getString("localScores", ctx) != null){
+							String jsonScore = PreferencesHandler.getString("localScores", ctx); 
+							PreferencesHandler.clearPref("localScores", ctx);
+							player.submitSavedScores(p.getGuid(), null, null, jsonScore, null, null, null, null);							
+						}
+					}
 					if(showNotification)
 						UIhandler.sendMessage(msg);
 				
-				}catch (Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}
+				}catch (Exception e){e.printStackTrace();}
     		}	
     	}).start();				
 	}
@@ -367,11 +446,10 @@ public class Beintoo{
 	 * 
 	 * @param ctx the current Context
 	 * @param lastScore the score to submit
-	 * @param balance the total user score balance (used in performance apps)
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @param showNotification if true it will show a notification to the user when receive a submit score 
 	 */	
-	public static void submitScore(final Context ctx, final int lastScore, final int balance, final String codeID, final boolean showNotification, int gravity){
+	public static void submitScore(final Context ctx, final int lastScore, final String codeID, final boolean showNotification, int gravity){
 		currentContext = ctx;
 		String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
 		final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
@@ -381,37 +459,32 @@ public class Beintoo{
 				Location pLoc = getSavedPlayerLocation();
 	        	if(pLoc != null){
 	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
-	        			submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,pLoc, gravity);
+	        			submitScoreHelper(ctx,lastScore,-1,codeID,showNotification,pLoc, gravity);
 	        		}else {
-	        			submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,null, gravity);
+	        			submitScoreHelper(ctx,lastScore,-1,codeID,showNotification,null, gravity);
 	        		}
 	        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
-	        		submitScoreHelper(ctx,lastScore,balance,codeID,showNotification,null, gravity);
+	        		submitScoreHelper(ctx,lastScore,-1,codeID,showNotification,null, gravity);
 	        	}	
 			}catch(Exception e){ 
-				e.printStackTrace(); ErrorDisplayer.externalReport(e);	    				
+				e.printStackTrace();    				
 			}		    			
 		}
 	}
 	
 	public static void submitScore(Context ctx, int lastScore, boolean showNotification, int gravity){
-		submitScore(ctx, lastScore, -1, null, showNotification, gravity);
+		submitScore(ctx, lastScore, null, showNotification, gravity);
 	}
 	
 	public static void submitScore(Context ctx, int lastScore, boolean showNotification){
-		submitScore(ctx, lastScore, -1, null, showNotification, Gravity.BOTTOM);
+		submitScore(ctx, lastScore, null, showNotification, Gravity.BOTTOM);
 	}
-	
-	public static void submitScore(Context ctx, int lastScore, int balance, boolean showNotification){
-		submitScore(ctx, lastScore, balance, null, showNotification, Gravity.BOTTOM);
-	}
-	
+		
 	public static void submitScore(Context ctx, int lastScore, String codeID, boolean showNotification){
-		submitScore(ctx, lastScore, -1, codeID, showNotification, Gravity.BOTTOM);
-	}
+		submitScore(ctx, lastScore, codeID, showNotification, Gravity.BOTTOM);
+	}	
 	
-	
-	/**
+	/** 
 	 * Get the current player score
 	 * 
 	 * @param ctx
@@ -430,7 +503,7 @@ public class Beintoo{
 			
 			return p;
 		} catch (Exception e) {
-			e.printStackTrace(); ErrorDisplayer.externalReport(e);
+			e.printStackTrace();
 		}
 		
 		return null;
@@ -461,10 +534,18 @@ public class Beintoo{
 	            	currentDialog = beintooHome;
 					beintooHome.show();
 	            break;
-	            case GET_VGOOD: // GET A VGOOD (GET_VGOOD)
-	            	VGoodGetDialog getVgood = new VGoodGetDialog(currentContext, vgood);
-		    		currentDialog = getVgood;
-    				getVgood.show();	            	
+	            case GET_VGOOD_BANNER: // GET A VGOOD (GET_VGOOD)
+					VgoodBanner vb = new VgoodBanner(currentContext,vgood_container, vgoodlist);
+	            	vb.show();
+	            break;
+	            case GET_VGOOD_ALERT: // GET A VGOOD (GET_VGOOD)
+	            	VgoodAcceptDialog d = new VgoodAcceptDialog(currentContext, vgoodlist);
+	  			  	d.show();
+	            break;
+	            case GET_MULTI_VGOOD:
+	            	VGoodGetList getVgoodList = new VGoodGetList(currentContext, vgoodlist);
+		    		currentDialog = getVgoodList;
+		    		getVgoodList.show();
 	            break;
 	            case LOGIN_MESSAGE:	            	
 	            	MessageDisplayer.showMessage(currentContext, msg.getData().getString("Message"), msg.getData().getInt("Gravity"));
@@ -511,12 +592,12 @@ public class Beintoo{
 						};   
 						locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.myLooper());
 						Looper.loop();
-	    				}catch(Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}
+	    				}catch(Exception e){e.printStackTrace();}
 	        		}	
 	        	}).start();		
     		}
 		}catch(Exception e){ 
-			e.printStackTrace(); ErrorDisplayer.externalReport(e);	     				
+			e.printStackTrace(); 				
 		}		    
 	}
 	

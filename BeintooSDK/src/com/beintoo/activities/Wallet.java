@@ -158,7 +158,7 @@ public class Wallet extends Dialog implements OnClickListener{
     				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
     				vgood = bv.showByUser(p.getUser().getId(), null, false);
     				UIhandler.sendEmptyMessage(LOAD_TABLE);
-    			}catch (Exception e){ErrorDisplayer.externalReport(e);}
+    			}catch (Exception e){}
     		}
 		}).start();	
 	}

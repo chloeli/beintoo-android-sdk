@@ -73,13 +73,16 @@ public class BeintooUser {
 		header.getValue().add(password);
 
  		BeintooConnection conn = new BeintooConnection();
-		String json = conn.httpRequest(apiUrl, header, null);
-		Gson gson = new Gson();
+ 		Gson gson = new Gson();
+				
 		User user = null;
-		try { 
+		try {
+			String json = conn.httpRequest(apiUrl, header, null);
 			user = gson.fromJson(json, User.class);
 		} catch (final JsonParseException e) {  
-			user = null;
+			return user;
+		} catch (Exception e){
+			return user;
 		}
 		 
 		return user;

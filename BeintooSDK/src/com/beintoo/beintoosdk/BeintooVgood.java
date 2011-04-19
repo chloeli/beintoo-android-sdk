@@ -20,6 +20,7 @@ import com.beintoo.beintoosdkutility.HeaderParams;
 
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.Vgood;
+import com.beintoo.wrappers.VgoodChooseOne;
 import com.google.gson.Gson;
 
 public class BeintooVgood {
@@ -69,6 +70,44 @@ public class BeintooVgood {
 		vgood = gson.fromJson(json, Vgood.class);
 		
 		return vgood;
+	}
+	
+	/**
+	 * Retrieve a vgood for the requested user
+	 * 
+	 * @param guid user guid
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @param latitude
+	 * @param longitude
+	 * @param radius
+	 * @param privategood a bool to set if the vgood has to be private
+	 * @return a json object with vgood data
+	 */
+	public VgoodChooseOne getVgoodList(String guid, String codeID,String latitude, String longitude, String radius, boolean privategood) {
+		
+		String apiUrl = apiPreUrl+"vgood/byguid/"+guid+"/?";
+		
+		if(privategood == true) apiUrl = apiUrl + "private=true"; else apiUrl = apiUrl + "private=false";  
+		if(latitude != null) apiUrl = apiUrl + "&latitude="+latitude;
+		if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
+		if(radius != null) apiUrl = apiUrl + "&radius="+radius;
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		header.getKey().add("guid");
+		header.getValue().add(guid);
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		
+		VgoodChooseOne vgoods = new Gson().fromJson(json, VgoodChooseOne.class);
+		
+		return vgoods;
 	}
 	
 	/**
@@ -134,6 +173,36 @@ public class BeintooVgood {
 		return msg;	
 	}
 
+	/**
+	 * Accept a vgood from a user
+	 * 
+	 * @param vgoodExt the vgood id 
+	 * @param userExt the user id of the gift sender
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return a Message object with the status of the sendAsAgift operation
+	 */
+	public Vgood acceptVgood (String vgoodExt, String userExt, String codeID){
+			
+		String apiUrl = apiPreUrl+"vgood/accept/"+vgoodExt+"/"+userExt;
+	
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		Gson gson = new Gson();
+		
+		Vgood v = gson.fromJson(json, Vgood.class);
+		
+		return v;	
+	}
+	
 	/**
 	 * Post a user vgood on the marketplace
 	 * 

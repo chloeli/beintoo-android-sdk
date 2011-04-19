@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:layout_width="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent" android:background="#000000"
+	android:orientation="horizontal">
+	<Button android:id="@+id/button1" android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:text="uno" android:layout_weight="1"></Button>
+	<Button android:id="@+id/button2" android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_toRightOf="@+id/button01"
+		android:text="due" android:layout_weight="1"></Button>
+
+
+
+</LinearLayout>

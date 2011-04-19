@@ -39,8 +39,8 @@ public class FriendList extends Dialog implements OnClickListener{
 	protected static final int OPEN_FRIENDS_FROM_VGOOD = 1;
 	protected static final int OPEN_FRIENDS_FROM_GPS = 2;
 	Dialog current;
-	Dialog previous;
-	String vgoodID;
+	public Dialog previous;
+	public String vgoodID;
 	Context currentContext;
 	ArrayList<String> usersExts;
 	ArrayList<String> usersNicks;	

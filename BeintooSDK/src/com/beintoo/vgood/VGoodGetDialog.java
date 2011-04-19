@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.beintoo.activities;
+package com.beintoo.vgood;
 
 import java.util.Collection;
 
 import com.beintoo.R;
+import com.beintoo.activities.FriendList;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooBrowser;

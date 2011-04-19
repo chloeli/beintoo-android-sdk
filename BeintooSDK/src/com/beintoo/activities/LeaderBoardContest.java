@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.beintoo.activities;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -48,8 +47,6 @@ import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.EntryCouplePlayer;
 import com.beintoo.wrappers.Player;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class LeaderBoardContest extends Dialog implements OnClickListener{
 	Dialog current;
@@ -165,7 +162,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 		BeButton b = new BeButton(getContext());
 		
 		final ArrayList<View> rowList = new ArrayList<View>();
-		Iterator<?> it = deserializeLeaderboard().entrySet().iterator();
+		Iterator<?> it = leader.entrySet().iterator();
 		int count = 0;
 	    while (it.hasNext()) {
 	    	@SuppressWarnings("unchecked")
@@ -210,15 +207,6 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 		      table.addView(row);
 		}
 	}
-	 
-	public Map<String, List<EntryCouplePlayer>> deserializeLeaderboard (){
-		Type mapType = new TypeToken<Map<String, ArrayList<EntryCouplePlayer>>>() {}.getType();
-		String jsonLeaderboard = PreferencesHandler.getString("leaderboard",currentContext);
-		Map<String, List<EntryCouplePlayer>> Leaderboard = new Gson().fromJson(jsonLeaderboard, mapType);
-		
-		return Leaderboard;
-	}
-	
 	
 	public TableRow createRow(String txt, Context activity) {
 		  TableRow row = new TableRow(activity);
@@ -311,7 +299,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 			  if(msg.what == 0)
 				  loadContestTable();
 			  else if(msg.what == 1){
-				  LeaderBoard leaderboard = new LeaderBoard(currentContext);
+				  LeaderBoard leaderboard = new LeaderBoard(currentContext,leader);
 				  leaderboard.show();
 			  }
 			  super.handleMessage(msg);

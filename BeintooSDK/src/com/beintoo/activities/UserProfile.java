@@ -24,7 +24,6 @@ import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DeviceId;
-import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -132,10 +131,7 @@ public class UserProfile extends Dialog {
 					currentPlayer = bPlayer.getPlayer(currentSaved.getGuid());				
 					UIhandler.sendEmptyMessage(LOAD_PROFILE);
 					
-			}catch (Exception e){				
-				ErrorDisplayer.externalReport(e);
-			}
-			
+    			}catch (Exception e){}			
     		}
 		}).start();
 	}

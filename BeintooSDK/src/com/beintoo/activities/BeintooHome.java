@@ -27,7 +27,6 @@ import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
 import com.google.gson.Gson;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Handler;

@@ -15,8 +15,6 @@
  ******************************************************************************/
 package com.beintoo.activities;
 
-import java.lang.reflect.Type;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +52,7 @@ import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.EntryCouplePlayer;
 import com.beintoo.wrappers.Player;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
 
 public class LeaderBoard extends Dialog implements OnClickListener{
 	Dialog current;
@@ -65,12 +63,15 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 	final double ratio;
 	final int SHOW_MESSAGE = 1;
 	final int LOAD_CONTEST = 2;
-	public LeaderBoard(Context ctx) {
+	Map<String, List<EntryCouplePlayer>> leaders;
+	
+	public LeaderBoard(Context ctx, Map<String, List<EntryCouplePlayer>> l) {
 		super(ctx, R.style.ThemeBeintoo);
 		setContentView(R.layout.leaderboard);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
 		current = this;
 		currentContext = ctx;
+		leaders = l;
 		
 		// GETTING DENSITY PIXELS RATIO
 		ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);	
@@ -109,7 +110,7 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		
 		Player p = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", getContext()), Player.class);
 		
-		Iterator<?> it = deserializeLeaderboard().entrySet().iterator();		
+		Iterator<?> it = leaders.entrySet().iterator();		
 		int selectedContest = Integer.parseInt(PreferencesHandler.getString("selectedContest", currentContext));
 		// SET TITLE
 		TextView contestName = (TextView)findViewById(R.id.dialogTitle);
@@ -168,14 +169,6 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 	    for (View row : rowList) {	      
 		      table.addView(row);
 		}
-	}
-	
-	public Map<String, List<EntryCouplePlayer>> deserializeLeaderboard (){
-		Type mapType = new TypeToken<Map<String, ArrayList<EntryCouplePlayer>>>() {}.getType();
-		String jsonLeaderboard = PreferencesHandler.getString("leaderboard",currentContext);
-		Map<String, List<EntryCouplePlayer>> Leaderboard = new Gson().fromJson(jsonLeaderboard, mapType);
-		
-		return Leaderboard;
 	}
 	
 	public TableRow createRow(View image, String nick,String score, Context activity, int pposition) {
