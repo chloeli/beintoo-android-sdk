@@ -75,9 +75,12 @@ If you want to submit a score to your players you have to call for example
 
 We provide two different methods of develivering virtual goods.
 1) A dialog that informs the user that he won a reward and he can decide to see the prize or to close the dialog.  To do this you should call
+
 	Beintoo.GetVgood(this, true, null, Beintoo.VGOOD_NOTIFICATION_ALERT)
+
 2) A banner instead of the dialog but in this case you should allocate a LinearLayout where to show the banner, as you do with adnetworks.
 To do this you should call
+
 	Beintoo.GetVgood(this, true, container, Beintoo.VGOOD_NOTIFICATION_BANNER)
 
 If you want to assign a single virtual good to your users you must set to false the second parameter.
