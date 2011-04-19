@@ -69,11 +69,12 @@ You should also put a Beintoo button in your main activity where you will call
 	
 this will start the main Beintoo app where your users will see Profile, Leaderboards, Challenges and Wallet
 
-If you want to submit a score to your players you have to call for example
+If you want to submit a score to your players you should call for example
 	
 	Beintoo.submitScore(getContext(), score, true);
 
 We provide two different methods of develivering virtual goods.
+
 1) A dialog that informs the user that he won a reward and he can decide to see the prize or to close the dialog.  To do this you should call
 
 	Beintoo.GetVgood(this, true, null, Beintoo.VGOOD_NOTIFICATION_ALERT)
