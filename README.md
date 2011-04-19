@@ -86,7 +86,7 @@ To do this you should call
 
 If you want to assign a single virtual good to your users you must set to false the second parameter.
 	
-Now for assign a Virtual Good to a player for example every 10 points, an AlertDialog with a choice of virtual goods you should do something like
+Now for assign a Virtual Good to a player for example every 10 points, and notify the player with an AlertDialog and a choice of multiple virtual goods you should do something like
 	
 	PlayerScore p = Beintoo.getPlayerScore(getContext());
 	if(p != null){
