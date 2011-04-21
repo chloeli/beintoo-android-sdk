@@ -95,4 +95,10 @@
     <string name="vgoodmessagepositive">Redeem</string>
     <string name="vgoodmessagenegative">Later</string>
     <string name="vgoodmessagebanner">Hey! You got a Beintoo reward by using this app!\nTap here and redeem it</string>
+    
+    <!-- MESSAGES -->
+    <string name="messages">Messages</string>
+    <string name="messagesnewmsg">New message</string>
+    <string name="messagefrom"><b>From:</b></string>
+    <string name="messagedate"><b>Date:</b></string>
 </resources>

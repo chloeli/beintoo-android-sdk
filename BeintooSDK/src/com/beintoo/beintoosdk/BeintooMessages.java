@@ -48,18 +48,19 @@ public class BeintooMessages {
 		return new Gson().fromJson(json, Message.class);		
 	}
 	
-	public List<UsersMessage> getUserMessages(String to, String status){
-		String apiUrl = apiPreUrl+"message";
+	public List<UsersMessage> getUserMessages(String to, String status, int start, int rows){
+		String apiUrl = apiPreUrl+"message/?start="+start+"&rows="+rows;
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);		
 		header.getKey().add("to");
 		header.getValue().add(to);
-		header.getKey().add("status");
-		header.getValue().add(status);
-		
-		
+		if(status != null){
+			header.getKey().add("status");
+			header.getValue().add(status);
+		}
+				 		
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl, header, null);
 

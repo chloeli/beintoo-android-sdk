@@ -30,7 +30,15 @@ public class User {
 	Integer level;
 	Double bedollars;
 	Double bescore;
+	Number unreadMessages;
 
+	public Number getUnreadMessages() {
+		return unreadMessages;
+	}
+
+	public void setUnreadMessages(Number unreadMessages) {
+		this.unreadMessages = unreadMessages;
+	}
 
 	public String getId() {
 		return id;

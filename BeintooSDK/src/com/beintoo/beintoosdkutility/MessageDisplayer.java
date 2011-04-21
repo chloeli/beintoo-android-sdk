@@ -66,47 +66,51 @@ public class MessageDisplayer{
 		toast.setView(ll);
 		toast.setDuration(Toast.LENGTH_SHORT);
 		toast.show();*/
-		
-		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);
-		wM = (WindowManager) ctx.getApplicationContext()
-         .getSystemService(Context.WINDOW_SERVICE);
-		if(v != null){
-			if(v.isShown()){
-				wM.removeView(v);
-				mHandler.removeCallbacks(mRunnable);
+		try {
+			double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);
+			wM = (WindowManager) ctx.getApplicationContext()
+	         .getSystemService(Context.WINDOW_SERVICE);
+			if(v != null){
+				if(v.isShown()){
+					wM.removeView(v);
+					mHandler.removeCallbacks(mRunnable);
+				}
 			}
-		}
+				
+			WindowManager.LayoutParams mParams = new WindowManager.LayoutParams();
+			 LayoutInflater inflate = (LayoutInflater) ctx
+			         .getApplicationContext().getSystemService(
+			                 Context.LAYOUT_INFLATER_SERVICE);
+			v = inflate.inflate(R.layout.notification, null);
 			
-		WindowManager.LayoutParams mParams = new WindowManager.LayoutParams();
-		 LayoutInflater inflate = (LayoutInflater) ctx
-		         .getApplicationContext().getSystemService(
-		                 Context.LAYOUT_INFLATER_SERVICE);
-		v = inflate.inflate(R.layout.notification, null);
+			TextView tw = (TextView) v.findViewById(R.id.message);
+			tw.setText(message);
+			
+			LinearLayout ll = (LinearLayout) v.findViewById(R.id.main);
+			ll.setBackgroundColor(Color.argb(200, 65, 65, 65)); 
+			
+			mParams.gravity = g;
+			mParams.height = (int)(ratio*30);
+			mParams.width = WindowManager.LayoutParams.FILL_PARENT;
+			mParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+			mParams.format = PixelFormat.TRANSLUCENT;
+			mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+			mParams.windowAnimations = android.R.style.Animation_Toast;		
+			wM.addView(v, mParams);
 		
-		TextView tw = (TextView) v.findViewById(R.id.message);
-		tw.setText(message);
 		
-		LinearLayout ll = (LinearLayout) v.findViewById(R.id.main);
-		ll.setBackgroundColor(Color.argb(200, 65, 65, 65)); 
-		
-		mParams.gravity = g;
-		mParams.height = (int)(ratio*30);
-		mParams.width = WindowManager.LayoutParams.FILL_PARENT;
-		mParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-		mParams.format = PixelFormat.TRANSLUCENT;
-		mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-		mParams.windowAnimations = android.R.style.Animation_Toast;		
-		wM.addView(v, mParams);
-	
-		mHandler = new Handler();
-		mHandler.postDelayed(mRunnable, getDelay(tw.length()));
+			mHandler = new Handler();
+			mHandler.postDelayed(mRunnable, getDelay(tw.length()));
+		}catch (Exception e){}
 	}
 	
 	private static Runnable mRunnable = new Runnable()
 	{
 	    public void run()
 	    {	    	
-	    	wM.removeView(v);
+	    	try {
+	    		wM.removeView(v);
+	    	}catch(Exception e){}
 	    }
 	 };
 	

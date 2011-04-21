@@ -513,6 +513,35 @@ public class Beintoo{
 		return getPlayerScore(ctx,null);
 	}
 	
+	/** 
+	 * Get the current player score with a callback
+	 * 
+	 * @param ctx
+	 * @param codeID
+	 * @return
+	 */
+	public static void getPlayerScoreAsync(final Context ctx, final String codeID, final BScoreListener listener){
+		new Thread(new Runnable(){     					
+    		public void run(){	
+				try {
+					PlayerScore p = null;
+					BeintooPlayer player = new BeintooPlayer();
+					String guid = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", ctx)).getGuid();
+					if(codeID != null)
+						p = player.getScoreForContest(guid, codeID);
+					else
+						p = player.getScore(guid);
+					
+					listener.onComplete(p);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					listener.onBeintooError(e);
+				}				
+    		}
+		}).start();
+	}
+	
 	/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
@@ -641,4 +670,9 @@ public class Beintoo{
 		if(currentDialog != null)
 			currentDialog.show();
 	}
+	
+	 public static interface BScoreListener {
+		 public void onComplete(PlayerScore p);
+		 public void onBeintooError(Exception e);
+	 }
 }

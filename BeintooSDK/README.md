@@ -69,20 +69,24 @@ You should also put a Beintoo button in your main activity where you will call
 	
 this will start the main Beintoo app where your users will see Profile, Leaderboards, Challenges and Wallet
 
-If you want to submit a score to your players you have to call for example
+If you want to submit a score to your players you should call for example
 	
 	Beintoo.submitScore(getContext(), score, true);
 
 We provide two different methods of develivering virtual goods.
+
 1) A dialog that informs the user that he won a reward and he can decide to see the prize or to close the dialog.  To do this you should call
+
 	Beintoo.GetVgood(this, true, null, Beintoo.VGOOD_NOTIFICATION_ALERT)
+
 2) A banner instead of the dialog but in this case you should allocate a LinearLayout where to show the banner, as you do with adnetworks.
 To do this you should call
+
 	Beintoo.GetVgood(this, true, container, Beintoo.VGOOD_NOTIFICATION_BANNER)
 
 If you want to assign a single virtual good to your users you must set to false the second parameter.
 	
-Now for assign a Virtual Good to a player for example every 10 points, an AlertDialog with a choice of virtual goods you should do something like
+Now for assign a Virtual Good to a player for example every 10 points, and notify the player with an AlertDialog and a choice of multiple virtual goods you should do something like
 	
 	PlayerScore p = Beintoo.getPlayerScore(getContext());
 	if(p != null){
@@ -91,13 +95,14 @@ Now for assign a Virtual Good to a player for example every 10 points, an AlertD
    	  }
 	}	
 	
-BeintooSDK also provide a method in where the developer can pass 2 parameters, one is the score to submit and the other is a threshold. If the user reached that threshold 
+BeintooSDK also provide a method where the developer can pass 2 parameters, one is the score to submit and the other is a threshold. If the user reached that threshold 
 the method automatically assign a vgood.
-Here an example of submit 1 point and a threshold of 10 points. Every 10 points it will assign a good.
+Here an example of submit 1 point and a threshold of 10 points. Every 10 points it will assign a virtual good.
 
 	Beintoo.submitScoreWithVgoodCheck (context, 1, 10);
 
 By default this method use an AlertDialog and a multiple choice of virtual goods. If you want to specify other parameters you should call
 	
-	Beintoo.submitScoreWithVgoodCheck (final Context ctx, int score, int treshold, boolean isMultiple,LinearLayout container, int notificationType)
+	Beintoo.submitScoreWithVgoodCheck (final Context ctx, int score, int treshold, boolean isMultiple,
+	LinearLayout container, int notificationType)
 

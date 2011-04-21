@@ -100,4 +100,10 @@
     <string name="vgoodmessagepositive">Ottieni</string>
     <string name="vgoodmessagenegative">Più tardi</string>
     <string name="vgoodmessagebanner">Hai vinto un premio da Beintoo utilizzando questa app!\nClicca qui per riceverlo ora</string>
+    
+    <!-- MESSAGES -->
+    <string name="messages">Messaggi</string>
+    <string name="messagesnewmsg">Nuovo messaggio</string>
+    <string name="messagefrom"><b>Da:</b></string>
+    <string name="messagedate"><b>Data:</b></string>
 </resources>

@@ -124,7 +124,8 @@ public class VgoodBanner implements OnClickListener {
 	};
 	
 	private Runnable goneRunnable = new Runnable() {
-		public void run() {			
+		public void run() {	
+			try {
 			container.setVisibility(LinearLayout.GONE);
 			container.removeAllViews();
 			if((hasClicked == false) && (vgood.getVgoods().size() > 1)){ // AUTO ASSIGN A VGOOD
@@ -138,6 +139,7 @@ public class VgoodBanner implements OnClickListener {
 	        		}	
 	        	}).start();	
 			}
+			}catch(Exception e){}
 		}
 	};
 
