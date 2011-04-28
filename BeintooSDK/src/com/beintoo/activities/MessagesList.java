@@ -95,8 +95,6 @@ public class MessagesList extends Dialog implements OnClickListener{
 	 
 	public void startFirstLoading (){
 		try{
-			System.out.println("COUNT TOTAL pre "+totalMessageDisplayed + " "+totalUserMessages);
-			
 			messages = new ArrayList<UsersMessage>();
 			currentStartPosition = 0;
 			totalMessageDisplayed = 0;
@@ -104,7 +102,6 @@ public class MessagesList extends Dialog implements OnClickListener{
 			table.removeAllViews();
 			showLoading(FIRST_LOADING);
 			loadData(currentStartPosition, FIRST_LOADING);
-			System.out.println("COUNT TOTAL POST "+totalMessageDisplayed + " "+totalUserMessages);
 		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(),e);}		
 	}
 	
@@ -173,7 +170,6 @@ public class MessagesList extends Dialog implements OnClickListener{
 				totalMessageDisplayed++;	
 			    }		    
 			    
-			    System.out.println("COUNT TOTAL "+totalMessageDisplayed + " "+totalUserMessages);
 			    if(totalMessageDisplayed < totalUserMessages){
 			    	loadMore(table.getContext(),rowList);
 			    }
