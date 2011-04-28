@@ -38,18 +38,20 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-/**
- * WORKING
- * 
- */
+
+
 public class MessagesList extends Dialog implements OnClickListener{
-	Dialog current;
+	MessagesList current;
 	private double ratio;	
 	private List<UsersMessage> messages;
 	private int currentStartPosition = 0;
+	private int totalUserMessages = 0;
+	private int totalMessageDisplayed = 0;
 	
 	private final int FIRST_LOADING = 0;
 	private final int NEXT_LOADING = 1;
+	
+	private Player p; 
 	
 	public MessagesList(Context context) {
 		super(context, R.style.ThemeBeintoo);
@@ -79,20 +81,32 @@ public class MessagesList extends Dialog implements OnClickListener{
 						new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));			    	 
 	    newmessage.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
-																
+				MessagesWrite mw = new MessagesWrite(current.getContext());
+				mw.show();
 			}
-		}); 	
-	    
-	    
-	    messages = new ArrayList<UsersMessage>();
-	    
-	    try{
+		}); 
+	     
+	    try {
+	    	p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));	    
+	    	totalUserMessages = p.getUser().getMessages();
+	    }catch (Exception e){e.printStackTrace();}
+	    startFirstLoading();
+	} 
+	 
+	public void startFirstLoading (){
+		try{
+			System.out.println("COUNT TOTAL pre "+totalMessageDisplayed + " "+totalUserMessages);
+			
+			messages = new ArrayList<UsersMessage>();
+			currentStartPosition = 0;
+			totalMessageDisplayed = 0;
+			TableLayout table = (TableLayout) findViewById(R.id.table);
+			table.removeAllViews();
 			showLoading(FIRST_LOADING);
 			loadData(currentStartPosition, FIRST_LOADING);
-		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , context,e);}
-		
-		
-	} 
+			System.out.println("COUNT TOTAL POST "+totalMessageDisplayed + " "+totalUserMessages);
+		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(),e);}		
+	}
 	
 	private void loadData (final int start, final int action) {
 		new Thread(new Runnable(){      
@@ -100,9 +114,8 @@ public class MessagesList extends Dialog implements OnClickListener{
     			try{ 
 					BeintooMessages bm = new BeintooMessages();            				
 					// GET THE CURRENT LOGGED PLAYER
-					Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
 					List<UsersMessage> tmp = bm.getUserMessages(p.getUser().getId(), null,start, 10);
-					messages.addAll(tmp);					
+					messages.addAll(tmp);	
 					UIhandler.sendEmptyMessage(action);
     			}catch (Exception e){
     				e.printStackTrace();
@@ -115,56 +128,68 @@ public class MessagesList extends Dialog implements OnClickListener{
 		try{
 			TableLayout table = (TableLayout) findViewById(R.id.table);	
 			final ArrayList<View> rowList = new ArrayList<View>();
-			
 			addSpacerLines(rowList);
-			
-		    for (int i = currentStartPosition; i < messages.size(); i++){
-		    	final LoaderImageView image;
-		    	String nick;
-		    	String date;
-		    	String msgtext;
-				image = new LoaderImageView(getContext(),messages.get(i).getUserFrom().getUserimg(),(int)(ratio * 65),(int)(ratio * 65));
-				nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+messages.get(i).getUserFrom().getNickname();
-				
-				SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss"); 
-				curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			
-				Date msgDate = curFormater.parse(messages.get(i).getCreationdate());			
-				curFormater.setTimeZone(TimeZone.getDefault());			
-				date = "<b>"+getContext().getString(R.string.messagedate)+"</b> "+(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(msgDate));
-				
-				msgtext = messages.get(i).getText();
-				
-				boolean unread = false;
-				if(messages.get(i).equals("UNREAD")) unread = true;
-				
-	    		
-	    		TableRow row = createRow(image, nick,date,msgtext, unread, table.getContext());
-	    		    		
-				row.setId(i);
-				rowList.add(row);
-				row.setOnClickListener(this);
-				
-				BeButton b = new BeButton(getContext());
-				if(i % 2 == 0)
-		    		row.setBackgroundDrawable(b.setPressedBackg(
-				    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT),
-							new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
-							new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-				else
-					row.setBackgroundDrawable(b.setPressedBackg(
-				    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.GRAY_GRADIENT),
-							new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
-							new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-				
-				addSpacerLines(rowList);
-		    }		    
-		 
-		    loadMore(table.getContext(),rowList);
-		    
-		    for (View row : rowList) {		 
-			      table.addView(row);
+			if(messages.size() > 0){
+			    for (int i = currentStartPosition; i < messages.size(); i++){
+			    	final LoaderImageView image;
+			    	String nick;
+			    	String date;
+			    	String msgtext;
+					image = new LoaderImageView(getContext(),messages.get(i).getUserFrom().getUserimg(),(int)(ratio * 65),(int)(ratio * 65));
+					nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+messages.get(i).getUserFrom().getNickname();
+					
+					SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss"); 
+					curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			
+					Date msgDate = curFormater.parse(messages.get(i).getCreationdate());			
+					curFormater.setTimeZone(TimeZone.getDefault());			
+					date = "<b>"+getContext().getString(R.string.messagedate)+"</b> "+(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(msgDate));
+					
+					msgtext = messages.get(i).getText();
+					
+					boolean unread = false;
+					if(messages.get(i).getStatus().equals("UNREAD")) unread = true;
+					
+		    		
+		    		TableRow row = createRow(image, nick,date,msgtext, unread, table.getContext());
+		    		    		
+					row.setId(i);
+					rowList.add(row);
+					row.setOnClickListener(this);
+					
+					BeButton b = new BeButton(getContext());
+					if(i % 2 == 0)
+			    		row.setBackgroundDrawable(b.setPressedBackg(
+					    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+								new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
+								new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+					else
+						row.setBackgroundDrawable(b.setPressedBackg(
+					    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.GRAY_GRADIENT),
+								new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
+								new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+					
+					addSpacerLines(rowList);
+					
+				totalMessageDisplayed++;	
+			    }		    
+			    
+			    System.out.println("COUNT TOTAL "+totalMessageDisplayed + " "+totalUserMessages);
+			    if(totalMessageDisplayed < totalUserMessages){
+			    	loadMore(table.getContext(),rowList);
+			    }
+			    
+			    for (View row : rowList) {		 
+				      table.addView(row);
+				}
+
+			}else {
+				TextView noMsg = new TextView(getContext());
+				noMsg.setText(getContext().getString(R.string.messageempty));
+				noMsg.setTextColor(Color.GRAY);
+				noMsg.setGravity(Gravity.CENTER);
+				noMsg.setPadding(0,(int)(ratio*50),0,0);						
+				table.addView(noMsg);
 			}
-		    
 		}catch (Exception e){e.printStackTrace();}
 	}
 	
@@ -193,7 +218,9 @@ public class MessagesList extends Dialog implements OnClickListener{
 		  nameView.setTextColor(Color.parseColor("#545859"));
 		  nameView.setTextSize(14);
 		  nameView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  if(isUnread) nameView.setTypeface(Typeface.SERIF,Typeface.BOLD);
+		  if(isUnread){
+			  nameView.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
+		  }
 		  
 		  TextView dateView = new TextView(activity);		
 		  dateView.setText(Html.fromHtml(date));		  
@@ -201,7 +228,9 @@ public class MessagesList extends Dialog implements OnClickListener{
 		  dateView.setTextColor(Color.parseColor("#545859"));
 		  dateView.setTextSize(14);
 		  dateView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  if(isUnread) dateView.setTypeface(Typeface.SERIF,Typeface.BOLD);
+		  if(isUnread){
+			  dateView.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
+		  }
 		  
 		  TextView textView = new TextView(activity);
 		  InputFilter[] fArray = new InputFilter[1];
@@ -211,8 +240,12 @@ public class MessagesList extends Dialog implements OnClickListener{
 		  textView.setPadding(0, 10, 0, 0);
 		  textView.setTextColor(Color.parseColor("#787A77"));
 		  textView.setTextSize(14);
+		  textView.setSingleLine(true);
 		  textView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  
+		  if(isUnread){
+			  textView.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
+			  textView.setTextColor(Color.BLACK);
+		  }
 		  
 		  fromData.addView(nameView);
 		  fromData.addView(dateView);
@@ -230,7 +263,7 @@ public class MessagesList extends Dialog implements OnClickListener{
 		row.setGravity(Gravity.CENTER);
 		
 		TextView moreView = new TextView(context);		
-		moreView.setText("Load more");
+		moreView.setText(context.getString(R.string.messageloadmore));
 		moreView.setTextColor(Color.parseColor("#545859"));
 		moreView.setTextSize(14);
 		moreView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -287,7 +320,6 @@ public class MessagesList extends Dialog implements OnClickListener{
 	
 	private void clearTable(){
 		TableLayout table = (TableLayout) findViewById(R.id.table);
-		//table.setColumnStretchable(1, true);
 		table.removeAllViews();
 	}
 	
@@ -305,7 +337,8 @@ public class MessagesList extends Dialog implements OnClickListener{
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		if(v.getId()>=0){ 
-			System.out.println(v.getId());
+			MessagesRead mr = new MessagesRead(v.getContext(), messages.get(v.getId()),current);
+			mr.show();
 		}else if(v.getId() == -200){ // LOAD MORE
 			removeView(v);
 			showLoading(NEXT_LOADING);			

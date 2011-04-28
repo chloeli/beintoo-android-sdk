@@ -106,4 +106,17 @@
     <string name="messagesnewmsg">Nuovo messaggio</string>
     <string name="messagefrom"><b>Da:</b></string>
     <string name="messagedate"><b>Data:</b></string>
+    <string name="messagereply">Rispondi</string>
+    <string name="messagedelete">Elimina</string>
+    <string name="messagedeleting">Eliminazione...</string>
+    <string name="messageaskdelete">Vuoi davvero eliminare questo messaggio?</string>  
+    <string name="messagesend">Invia messaggio</string>
+    <string name="messagesending">Invio...</string>  
+    <string name="messageselect">Seleziona un amico e scrivi il messaggio</string>
+    <string name="messageto">A:</string>
+    <string name="messagetext">Messaggio:</string> 
+    <string name="messageempty">Non hai nessun messaggio ricevuto</string>
+    <string name="messageloadmore">Carica precedenti</string>  
+    <string name="messagesent">Messaggio inviato a \u0020</string>
+    <string name="messagenotification">Hai %d messaggi non letti</string> 
 </resources>

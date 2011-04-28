@@ -30,10 +30,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
+import android.graphics.Bitmap;
 import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.beintoosdk.BeintooPlayer;
@@ -100,7 +101,6 @@ public class BeintooFacebookLogin extends Dialog {
 				p.setProgress(progress);
 			}
 			
-			@SuppressWarnings("unused")
 			public void onConsoleMessage (String message, int lineNumber, String sourceID){
 				if(isGinger()){ // IF IS GINGER INTERCEPT THE JS ERROR AND START BEINTOO
 					if(message.contains("aloggedbt"))
@@ -114,6 +114,16 @@ public class BeintooFacebookLogin extends Dialog {
 					String description, String failingUrl) {
 					Toast.makeText(getContext(), "Oh no! " + description,
 						Toast.LENGTH_SHORT).show();
+			}
+			
+			public void onPageFinished(WebView view, String url){
+				ProgressBar p = (ProgressBar) findViewById(R.id.progress);
+				p.setVisibility(LinearLayout.GONE);
+			}
+			
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				ProgressBar p = (ProgressBar) findViewById(R.id.progress);
+				p.setVisibility(LinearLayout.VISIBLE);
 			}
 		});
 		webview.setInitialScale(1);

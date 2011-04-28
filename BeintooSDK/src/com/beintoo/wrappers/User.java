@@ -30,15 +30,8 @@ public class User {
 	Integer level;
 	Double bedollars;
 	Double bescore;
-	Number unreadMessages;
-
-	public Number getUnreadMessages() {
-		return unreadMessages;
-	}
-
-	public void setUnreadMessages(Number unreadMessages) {
-		this.unreadMessages = unreadMessages;
-	}
+	Integer messages;
+    Integer unreadMessages;
 
 	public String getId() {
 		return id;
@@ -151,5 +144,23 @@ public class User {
 	public void setUsersmallimg(String usersmallimg) {
 		this.usersmallimg = usersmallimg;
 	}
+
+	public Integer getMessages() {
+		return messages;
+	}
+
+	public void setMessages(Integer messages) {
+		this.messages = messages;
+	}
+
+	public Integer getUnreadMessages() {
+		return unreadMessages;
+	}
+
+	public void setUnreadMessages(Integer unreadMessages) {
+		this.unreadMessages = unreadMessages;
+	}
+	
+	
 
 }

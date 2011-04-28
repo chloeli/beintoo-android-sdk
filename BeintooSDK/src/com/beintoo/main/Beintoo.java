@@ -121,8 +121,9 @@ public class Beintoo{
 							BeintooPlayer player = new BeintooPlayer();
 							// DEBUG
 							DebugUtility.showLog("current saved player: "+PreferencesHandler.getString("currentPlayer", ctx));											
-							// LOGIN TO BEINTOO
-							Player newPlayer = player.playerLogin(currentPlayer.getUser().getId(),null,null,DeviceId.getUniqueDeviceId(ctx),null, null);
+
+							// LOGIN TO BEINTOO							
+							Player newPlayer = player.getPlayer(currentPlayer.getGuid());
 							if(newPlayer.getUser().getId() != null){				
 								PreferencesHandler.saveString("currentPlayer", gson.toJson(newPlayer), ctx);
 								// GO HOME
@@ -132,6 +133,7 @@ public class Beintoo{
             				dialog.dismiss();
             				e.printStackTrace();
             				ErrorDisplayer.showConnectionErrorOnThread(ErrorDisplayer.CONN_ERROR, ctx,e);
+            				logout(ctx);
             			}
             			dialog.dismiss();
             		}
@@ -226,7 +228,7 @@ public class Beintoo{
 		    				    			}
 			    				    	}
 							    	}
-							    	
+							    	saveLocationHelper (location); 
 		    				    	Looper.myLooper().quit(); //QUIT THE THREAD
 							    }
 								public void onProviderDisabled(String provider) {}
@@ -325,12 +327,15 @@ public class Beintoo{
     					PreferencesHandler.saveString("currentPlayer", gson.toJson(loginPlayer), ctx);
     					// DEBUG  
         				DebugUtility.showLog("After playerLogin "+gson.toJson(loginPlayer));        				
-    				} 
+    				}  
     				
     				if(loginPlayer.getUser()!=null){
         				Message msg = new Message();
         				Bundle b = new Bundle();
-    					b.putString("Message", ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname());
+        				int unread = loginPlayer.getUser().getUnreadMessages();        				
+        				String message = ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname();
+        				if(unread > 0) message = message +"\n"+String.format(ctx.getString(R.string.messagenotification), unread);
+    					b.putString("Message", message);
     					b.putInt("Gravity", Gravity.BOTTOM);
     					msg.setData(b);
     					msg.what = LOGIN_MESSAGE;
@@ -604,15 +609,11 @@ public class Beintoo{
 						final LocationListener locationListener = new LocationListener() {
 						    public void onLocationChanged(Location location) {
 						    	// SAVE PLAYER LOCATION
-						    	PreferencesHandler.saveString("playerLatitude",Double.toString(location.getLatitude()), currentContext);
-						    	PreferencesHandler.saveString("playerLongitude", Double.toString(location.getLongitude()), currentContext);
-						    	PreferencesHandler.saveString("playerAccuracy", Float.toString(location.getAccuracy()), currentContext);
-						    	PreferencesHandler.saveString("playerLastTimeLocation", Long.toString(location.getTime()), currentContext);
-								DebugUtility.showLog("PLAYER LOCATION: "+location);
+						    	saveLocationHelper (location);
 						    	locationManager.removeUpdates(this);
 						    	// QUIT THE THREAD
 						    	Looper.myLooper().quit();
-						    }
+						    } 
 							public void onProviderDisabled(String provider) {}
 		
 							public void onProviderEnabled(String provider) {}
@@ -628,6 +629,14 @@ public class Beintoo{
 		}catch(Exception e){ 
 			e.printStackTrace(); 				
 		}		    
+	}
+	
+	private static void saveLocationHelper (Location location){
+		PreferencesHandler.saveString("playerLatitude",Double.toString(location.getLatitude()), currentContext);
+    	PreferencesHandler.saveString("playerLongitude", Double.toString(location.getLongitude()), currentContext);
+    	PreferencesHandler.saveString("playerAccuracy", Float.toString(location.getAccuracy()), currentContext);
+    	PreferencesHandler.saveString("playerLastTimeLocation", Long.toString(location.getTime()), currentContext);    	
+    	DebugUtility.showLog("SAVED PLAYER LOCATION: "+location);
 	}
 	
 	private static Location getSavedPlayerLocation(){

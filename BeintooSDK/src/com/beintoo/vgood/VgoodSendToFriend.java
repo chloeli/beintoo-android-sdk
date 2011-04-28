@@ -1,4 +1,4 @@
-package com.beintoo.activities;
+package com.beintoo.vgood;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class FriendList extends Dialog implements OnClickListener{
+public class VgoodSendToFriend extends Dialog implements OnClickListener{
 	protected static final int OPEN_FRIENDS_FROM_VGOOD = 1;
 	protected static final int OPEN_FRIENDS_FROM_GPS = 2;
 	Dialog current;
@@ -46,7 +46,7 @@ public class FriendList extends Dialog implements OnClickListener{
 	ArrayList<String> usersNicks;	
 	User [] friends;
 	final double ratio;
-	public FriendList(Context context, int calledFrom) {
+	public VgoodSendToFriend(Context context, int calledFrom) {
 		super(context);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.friendlist);

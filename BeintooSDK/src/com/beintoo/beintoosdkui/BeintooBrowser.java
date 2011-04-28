@@ -17,6 +17,7 @@ package com.beintoo.beintoosdkui;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,12 +32,14 @@ import android.webkit.WebViewClient;
 import android.webkit.GeolocationPermissions.Callback;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.beintoo.R;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 
 
@@ -87,6 +90,8 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 				callback.invoke(origin, true, false);
 			}
 			
+			
+			
 		}); 
 		webview.setWebViewClient(new WebViewClient() {
 			public void onReceivedError(WebView view, int errorCode,
@@ -94,9 +99,23 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 					Toast.makeText(getContext(), "Oh no! " + description,
 						Toast.LENGTH_SHORT).show();
 			}
+			
+			public void onPageFinished(WebView view, String url){
+				ProgressBar p = (ProgressBar) findViewById(R.id.progress);
+				p.setVisibility(LinearLayout.GONE);
+			}
+			
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				ProgressBar p = (ProgressBar) findViewById(R.id.progress);
+				p.setVisibility(LinearLayout.VISIBLE);
+			}
 		});
 		webview.setInitialScale(1);
-		webview.loadUrl(getUrlOpenUrl());
+		
+		String url = getUrlOpenUrl();		
+		webview.loadUrl(url);		
+		// DEBUG CALLED URL
+		DebugUtility.showLog(url);
 		
 		Button close = (Button) findViewById(R.id.close);
 		BeButton b = new BeButton(ctx);
@@ -124,9 +143,24 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 	private String getUrlOpenUrl() {
 		String openUrl = PreferencesHandler.getString("openUrl", getContext());
 		if (openUrl != null) {
-			return openUrl;
+			return openUrl+getSavedPlayerLocationParams();
 		}
 		return "";
+	}
+	
+	private String getSavedPlayerLocationParams(){
+		try {
+			Double latitude = Double.parseDouble(PreferencesHandler.getString("playerLatitude", current.getContext()));
+			Double longitude = Double.parseDouble(PreferencesHandler.getString("playerLongitude", current.getContext()));
+			Float accuracy = Float.parseFloat(PreferencesHandler.getString("playerAccuracy", current.getContext()));
+
+			String params = "&lat="+latitude+"&lng="+longitude+"&acc="+accuracy;
+			
+			return params;
+		}catch (Exception e){
+			return "";
+		}
+		
 	}
 
 	/*public void clearCache() {

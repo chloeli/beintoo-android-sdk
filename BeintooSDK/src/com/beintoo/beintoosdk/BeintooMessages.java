@@ -71,16 +71,18 @@ public class BeintooMessages {
 		return messages;
 	}
 	
-	public UsersMessage markAsRead (String messageID, String status){
+	public UsersMessage markAsRead (String messageID, String userExt){
 		String apiUrl = apiPreUrl+"message/"+messageID;
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
+		header.getKey().add("userExt");
+		header.getValue().add(userExt);
 		
 		PostParams post = new PostParams();
 		post.getKey().add("status");
-		post.getValue().add(status);		
+		post.getValue().add("READ");		
 		
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl, header, post,true);		 
@@ -88,16 +90,17 @@ public class BeintooMessages {
 		return new Gson().fromJson(json, UsersMessage.class);	
 	}
 	
-	public UsersMessage markAsArchived (String messageID, String status){
+	public UsersMessage markAsArchived (String messageID, String userExt){
 		String apiUrl = apiPreUrl+"message/"+messageID;
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
-		
+		header.getKey().add("userExt");
+		header.getValue().add(userExt);
 		PostParams post = new PostParams();
-		post.getKey().add("archived");
-		post.getValue().add(status);		
+		post.getKey().add("status");
+		post.getValue().add("ARCHIVED");		
 		
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl, header, post,true);		 

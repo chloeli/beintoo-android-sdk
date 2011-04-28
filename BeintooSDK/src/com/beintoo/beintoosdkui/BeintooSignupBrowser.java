@@ -30,9 +30,11 @@ import com.google.gson.Gson;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
@@ -42,6 +44,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -102,7 +105,6 @@ public class BeintooSignupBrowser extends Dialog {
 				p.setProgress(progress);
 			}
 			
-			@SuppressWarnings("unused")
 			public void onConsoleMessage (String message, int lineNumber, String sourceID){
 				if(isGinger()){ // IF IS GINGER INTERCEPT THE JS ERROR AND START BEINTOO
 					if(message.contains("ok"))
@@ -115,6 +117,16 @@ public class BeintooSignupBrowser extends Dialog {
 					String description, String failingUrl) {
 					Toast.makeText(getContext(), "Oh no! " + description,
 						Toast.LENGTH_SHORT).show();
+			}
+			
+			public void onPageFinished(WebView view, String url){
+				ProgressBar p = (ProgressBar) findViewById(R.id.progress);
+				p.setVisibility(LinearLayout.GONE);
+			}
+			
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				ProgressBar p = (ProgressBar) findViewById(R.id.progress);
+				p.setVisibility(LinearLayout.VISIBLE);
 			}
 		});
 
@@ -185,6 +197,18 @@ public class BeintooSignupBrowser extends Dialog {
 		});
 		t.start();
 		current.dismiss();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	if(webview.canGoBack())
+	    		webview.goBack();
+	    	else
+	    		current.dismiss();
+	        return false; 
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 	
 	private boolean isGinger (){

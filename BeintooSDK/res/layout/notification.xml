@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="20dip"
-	android:id="@+id/main" android:background="#FFFFFF" android:gravity="center_vertical">
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:id="@+id/main" android:background="#FFFFFF" android:gravity="center_vertical"
+	android:paddingTop="3dip" android:paddingBottom="3dip">
 	<ImageView android:layout_width="wrap_content" android:id="@+id/imageView1"
 		android:layout_height="20dip" android:src="@drawable/beintoobtn"></ImageView>
-	<TextView android:text="TextView" android:layout_height="20dip"
+	<TextView android:layout_height="wrap_content"
 		android:id="@+id/message" android:textColor="#FFFFFF"
 		android:ellipsize="marquee" android:marqueeRepeatLimit="1"
-		android:maxLines="1" android:scrollHorizontally="true"
-		android:layout_width="fill_parent" android:singleLine="true"
+		android:maxLines="2" android:scrollHorizontally="true"
+		android:layout_width="fill_parent" android:singleLine="false"
 		android:focusable="true"
-		android:focusableInTouchMode="true" />
+		android:focusableInTouchMode="true"/>
 </LinearLayout>

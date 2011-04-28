@@ -29,6 +29,7 @@ import com.beintoo.wrappers.User;
 import com.google.gson.Gson;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -44,6 +45,8 @@ public class BeintooHome extends Dialog {
 	private final int OPEN_LEADERBOARD = 2;
 	private final int OPEN_WALLET = 3;
 	private final int OPEN_CHALLENGE = 4;
+	private final int UPDATE_UNREAD_MSG = 5;
+	User u;
 	Dialog current;
 	public BeintooHome(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
@@ -93,11 +96,26 @@ public class BeintooHome extends Dialog {
 				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 		
 		try {
+			u = getCurrentUser();
 			// set the nickname
 			TextView nickname = (TextView) findViewById(R.id.nickname);
-			nickname.setText(getCurrentUser().getNickname());
+			nickname.setText(u.getNickname());
 			TextView bedollars = (TextView) findViewById(R.id.bedollars);
-			bedollars.setText(getCurrentUser().getBedollars().intValue() + " BeDollars");
+			bedollars.setText(u.getBedollars().intValue() + " BeDollars");
+			LinearLayout unread = (LinearLayout) findViewById(R.id.messages);
+			int unreadcount = u.getUnreadMessages();			
+			if(unreadcount == 0){
+				unread.setVisibility(LinearLayout.GONE);
+				LinearLayout gray = (LinearLayout) findViewById(R.id.graylineu);
+				gray.setVisibility(LinearLayout.GONE);
+				LinearLayout white = (LinearLayout) findViewById(R.id.whitelineu);
+				white.setVisibility(LinearLayout.GONE);
+			}else{
+				TextView unreadtxt = (TextView) findViewById(R.id.unmessage);
+				unread.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+				unreadtxt.setText(String.format(ctx.getString(R.string.messagenotification), unreadcount));
+			}
+			
 			// CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
 			setFeatureToUse();
 		}catch (Exception e){e.printStackTrace();}
@@ -185,13 +203,24 @@ public class BeintooHome extends Dialog {
 		return new User();		
 	}
 	
+	/*
+	 * Used in the MessageRead.java to update users unread messages
+	 */
+	public void updateMessage (int count){
+		Message msg = new Message();
+		Bundle b = new Bundle();
+		b.putInt("count",count);
+		msg.setData(b);
+		msg.what = UPDATE_UNREAD_MSG;
+		UIhandler.sendMessage(msg);
+	}
+	
 	/**
 	 *  Returns the current logged in Player in json
 	 */
 	public String getCurrentPlayer () {		
 		return PreferencesHandler.getString("currentPlayer", getContext());		
 	}
-	
 	
 	/**
 	 * This Handler open this listed Dialogs:
@@ -221,6 +250,9 @@ public class BeintooHome extends Dialog {
 				  Challenges challenges = new Challenges(getContext());
 				  Beintoo.currentDialog = challenges;
 				  challenges.show();
+			  }else if(msg.what == UPDATE_UNREAD_MSG){
+				  TextView unreadtxt = (TextView) findViewById(R.id.unmessage);
+				  unreadtxt.setText(String.format(current.getContext().getString(R.string.messagenotification), msg.getData().getInt("count")));
 			  }
 			  
 			  super.handleMessage(msg);

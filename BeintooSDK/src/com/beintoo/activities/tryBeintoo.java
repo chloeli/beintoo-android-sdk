@@ -49,7 +49,6 @@ public class tryBeintoo extends Dialog {
 		final Dialog current = this;
 		
 		
-		
 		// GETTING DENSITY PIXELS RATIO
 		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);		
 				

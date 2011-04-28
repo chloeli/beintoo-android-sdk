@@ -101,4 +101,17 @@
     <string name="messagesnewmsg">New message</string>
     <string name="messagefrom"><b>From:</b></string>
     <string name="messagedate"><b>Date:</b></string>
+    <string name="messagereply">Reply</string>
+    <string name="messagedelete">Delete</string>
+    <string name="messagedeleting">Deleting...</string>
+    <string name="messageaskdelete">Do you really want to delete this message?</string>
+    <string name="messagesending">Sending...</string>
+    <string name="messagesend">Send message</string>
+    <string name="messageselect">Select a friend and write your message</string>
+    <string name="messageto">To:</string>
+    <string name="messagetext">Message:</string>
+    <string name="messageempty">You have no received messages</string>
+    <string name="messageloadmore">Load previous</string>
+    <string name="messagesent">Messagge sent to\u0020</string>
+    <string name="messagenotification">You have %d unread messages</string>
 </resources>

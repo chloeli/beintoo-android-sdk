@@ -39,35 +39,7 @@ public class MessageDisplayer{
 	static View v;
 	static Handler mHandler;
 	public static void showMessage (Context ctx, String message, int g){
-		/*Toast toast = new Toast(ctx);
-		LinearLayout ll = new LinearLayout(ctx);
-		ll.setLayoutParams(new LinearLayout.LayoutParams(
-		          LinearLayout.LayoutParams.WRAP_CONTENT,
-		          LinearLayout.LayoutParams.WRAP_CONTENT
-		      ));
-		ll.setPadding(10, 10, 10, 10);
-		ll.setGravity(Gravity.CENTER_VERTICAL);		
-		ll.setBackgroundDrawable(messageBackground());
-		
-		ImageView logo = new ImageView(ctx);		
-		logo.setImageResource(R.drawable.beintoobtn);
-		
-		TextView messageView = new TextView(ctx);
-		messageView.setPadding(10,0,0,0);
-		messageView.setText(message);
-		messageView.setTextColor(Color.WHITE);
-		messageView.setTypeface(Typeface.DEFAULT_BOLD, 0);
-		messageView.setGravity(Gravity.CENTER_VERTICAL);
-		 
-		ll.addView(logo);
-		ll.addView(messageView);
-
-		toast.setGravity(Gravity.CENTER, 0, 20);
-		toast.setView(ll);
-		toast.setDuration(Toast.LENGTH_SHORT);
-		toast.show();*/
 		try {
-			double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);
 			wM = (WindowManager) ctx.getApplicationContext()
 	         .getSystemService(Context.WINDOW_SERVICE);
 			if(v != null){
@@ -90,7 +62,7 @@ public class MessageDisplayer{
 			ll.setBackgroundColor(Color.argb(200, 65, 65, 65)); 
 			
 			mParams.gravity = g;
-			mParams.height = (int)(ratio*30);
+			mParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 			mParams.width = WindowManager.LayoutParams.FILL_PARENT;
 			mParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
 			mParams.format = PixelFormat.TRANSLUCENT;

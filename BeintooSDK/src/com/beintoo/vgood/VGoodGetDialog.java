@@ -18,7 +18,6 @@ package com.beintoo.vgood;
 import java.util.Collection;
 
 import com.beintoo.R;
-import com.beintoo.activities.FriendList;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooBrowser;
@@ -159,7 +158,7 @@ public class VGoodGetDialog extends Dialog{
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {			  
-			  FriendList f = new FriendList(getContext(),OPEN_FRIENDS_FROM_VGOOD);
+			  VgoodSendToFriend f = new VgoodSendToFriend(getContext(),OPEN_FRIENDS_FROM_VGOOD);
 			  f.previous = current;
 			  f.vgoodID = vgoodExtId;
 			  f.show();

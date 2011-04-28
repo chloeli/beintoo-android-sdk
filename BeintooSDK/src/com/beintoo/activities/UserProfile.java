@@ -40,6 +40,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -119,6 +120,15 @@ public class UserProfile extends Dialog {
 				}catch (Exception e){e.printStackTrace();}	
 			}
 		});
+		
+		
+		ImageButton messages = (ImageButton) findViewById(R.id.messagesbt);
+		messages.setOnClickListener(new ImageButton.OnClickListener(){
+			public void onClick(View v) {
+				MessagesList ml = new MessagesList(current.getContext());
+		        ml.show();											
+			}
+		});
 	}
 	
 	
@@ -128,7 +138,7 @@ public class UserProfile extends Dialog {
     			try{ 
 					BeintooPlayer bPlayer = new BeintooPlayer();
 					Player currentSaved = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));				
-					currentPlayer = bPlayer.getPlayer(currentSaved.getGuid());				
+					currentPlayer = bPlayer.getPlayer(currentSaved.getGuid());
 					UIhandler.sendEmptyMessage(LOAD_PROFILE);
 					
     			}catch (Exception e){}			
@@ -149,7 +159,11 @@ public class UserProfile extends Dialog {
 		level.setText(getContext().getString(R.string.profileLevel)+fromIntToLevel(currentPlayer.getUser().getLevel()));
 		dollars.setText("Bedollars: "+currentPlayer.getUser().getBedollars());
 		bescore.setText("Bescore: "+currentPlayer.getUser().getBescore());
-		
+		ImageButton messages = (ImageButton) findViewById(R.id.messagesbt);
+		System.out.println("PLAY"+PreferencesHandler.getString("currentPlayer", getContext()));
+		if(currentPlayer.getUser().getUnreadMessages() == 0)
+			messages.setAlpha(158);
+	    
 		
 		Map<String, PlayerScore> playerScore = currentPlayer.getPlayerScore();
 		
@@ -224,8 +238,6 @@ public class UserProfile extends Dialog {
 		mc.removeView(l);		
 		LinearLayout gc = (LinearLayout) findViewById(R.id.goodcontent);
 		gc.setVisibility(LinearLayout.VISIBLE);
-		
-		
 	}
 	
 	public Player getCurrentPlayer () {
@@ -257,7 +269,9 @@ public class UserProfile extends Dialog {
 		  public void handleMessage(Message msg) {
 			  
 			  if(msg.what == LOAD_PROFILE){
-				  loadData();
+				  try {
+					  loadData();
+				  }catch(Exception e){e.printStackTrace();}
 			  }
 			  
 			  super.handleMessage(msg);
