@@ -17,6 +17,7 @@ package com.beintoo.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 import com.beintoo.R;
@@ -84,6 +85,8 @@ public class Beintoo{
 	private static LinearLayout vgood_container = null;
 	
 	public static boolean OPEN_DASHBOARD_AFTER_LOGIN = true;
+	
+	private static AtomicLong LAST_LOGIN = new AtomicLong(0);
 	
 	/**
 	 * Set the developer apikey
@@ -304,52 +307,59 @@ public class Beintoo{
 		currentContext = ctx;	
 		new Thread(new Runnable(){     					
     		public void run(){
-    			try{
-    				Gson gson = new Gson();
-    				String currentPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-    				Player loggedUser = null;
-    				if(currentPlayer != null)
-    					loggedUser = gson.fromJson(currentPlayer, Player.class);
-    				
-    				BeintooPlayer player = new BeintooPlayer();
-    				Player loginPlayer; 
+    			synchronized (LAST_LOGIN){
+	    			try{
+	    				Gson gson = new Gson();
+	    				String currentPlayer = PreferencesHandler.getString("currentPlayer", ctx);
+	    				Player loggedUser = null;
+	    				if(currentPlayer != null)
+	    					loggedUser = gson.fromJson(currentPlayer, Player.class);
+	    				
+	    				BeintooPlayer player = new BeintooPlayer();
+	    				Player loginPlayer; 
 
-    				if(loggedUser == null){ // FIRST EXECUTION
-    					loginPlayer = player.playerLogin(null,null,null,
-    						DeviceId.getUniqueDeviceId(currentContext),null, null);
-    				}else if(loggedUser.getUser() == null){ // A PLAYER EXISTS BUT NOT A USER
-    					loginPlayer = player.playerLogin(null,loggedUser.getGuid(),null,
-        						DeviceId.getUniqueDeviceId(currentContext),null, null);
-    				}else{ // PLAYER HAS A REGISTERED USER
-    					loginPlayer = player.playerLogin(loggedUser.getUser().getId(),null,null,
-        						DeviceId.getUniqueDeviceId(currentContext),null, null);
-    				} 
-    				
-    				if(loginPlayer.getGuid()!= null){
-    					PreferencesHandler.saveString("currentPlayer", gson.toJson(loginPlayer), ctx);
-    					// DEBUG  
-        				DebugUtility.showLog("After playerLogin "+gson.toJson(loginPlayer));        				
-    				}  
-    				
-    				if(loginPlayer.getUser()!=null){
-        				Message msg = new Message();
-        				Bundle b = new Bundle();
-        				int unread = loginPlayer.getUser().getUnreadMessages();        				
-        				String message = ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname();
-        				if(unread > 0) message = message +"\n"+String.format(ctx.getString(R.string.messagenotification), unread);
-    					b.putString("Message", message);
-    					b.putInt("Gravity", Gravity.BOTTOM);
-    					msg.setData(b);
-    					msg.what = LOGIN_MESSAGE;
-    					UIhandler.sendMessage(msg);
-    				}
-    				
-    				savePlayerLocation(currentContext);
-    				
-    			}catch (Exception e){
-    				e.printStackTrace();
-    			}	
-    		}
+	    				if(System.currentTimeMillis() > LAST_LOGIN.get() + 600000){	
+	    					LAST_LOGIN.set(System.currentTimeMillis());
+	    					
+		    				if(loggedUser == null){ // FIRST EXECUTION
+		    					loginPlayer = player.playerLogin(null,null,null,
+		    						DeviceId.getUniqueDeviceId(currentContext),null, null);
+		    				}else if(loggedUser.getUser() == null){ // A PLAYER EXISTS BUT NOT A USER
+		    					loginPlayer = player.playerLogin(null,loggedUser.getGuid(),null,
+		        						DeviceId.getUniqueDeviceId(currentContext),null, null);
+		    				}else{ // PLAYER HAS A REGISTERED USER
+		    					loginPlayer = player.playerLogin(loggedUser.getUser().getId(),null,null,
+		        						DeviceId.getUniqueDeviceId(currentContext),null, null);
+		    				} 
+		    				
+		    				if(loginPlayer.getGuid()!= null){
+		    					PreferencesHandler.saveString("currentPlayer", gson.toJson(loginPlayer), ctx);
+		        				DebugUtility.showLog("After playerLogin "+gson.toJson(loginPlayer));        				
+		    				}  
+	    				}else {
+	    					loginPlayer = loggedUser;    					
+	    				}
+	    				
+	    				if(loginPlayer.getUser()!=null){
+	        				Message msg = new Message();
+	        				Bundle b = new Bundle();
+	        				int unread = loginPlayer.getUser().getUnreadMessages();        				
+	        				String message = ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname();
+	        				if(unread > 0) message = message +"\n"+String.format(ctx.getString(R.string.messagenotification), unread);
+	    					b.putString("Message", message);
+	    					b.putInt("Gravity", Gravity.BOTTOM);
+	    					msg.setData(b);
+	    					msg.what = LOGIN_MESSAGE;
+	    					UIhandler.sendMessage(msg);
+	    				}
+	    				
+	    				savePlayerLocation(currentContext);
+	    				
+	    			}catch (Exception e){
+	    				e.printStackTrace();
+	    			}
+	    		}    			
+    		}    		
 		}).start();	
 	}
 	
