@@ -44,7 +44,7 @@ public class MessagesWrite extends Dialog{
 		
 		// SET TITLE
 		TextView t = (TextView)findViewById(R.id.dialogTitle);
-		t.setText(R.string.messages);		
+		t.setText(R.string.messagesend);		
 		// GETTING DENSITY PIXELS RATIO
 		ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
@@ -96,7 +96,7 @@ public class MessagesWrite extends Dialog{
 	    EditText to = (EditText) findViewById(R.id.editto);
 	    to.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				MessagesFriends mf = new MessagesFriends(current.getContext(), current);
+				FriendsList mf = new FriendsList(current.getContext(), current, FriendsList.FROM_MESSAGES, android.R.style.Theme_Dialog);
 				mf.show();
 			}
 		});

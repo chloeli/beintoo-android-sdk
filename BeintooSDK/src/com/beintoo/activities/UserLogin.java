@@ -215,8 +215,10 @@ public class UserLogin extends Dialog{
 		  @Override
 		  public void handleMessage(Message msg) {
 			  if(msg.what == GO_HOME){
-				BeintooHome beintooHome = new BeintooHome(getContext());
-			  	beintooHome.show();	
+				if(Beintoo.OPEN_DASHBOARD_AFTER_LOGIN){
+				  BeintooHome beintooHome = new BeintooHome(getContext());
+				  beintooHome.show();
+				}
 			  	Beintoo.currentDialog.dismiss();
 			  	current.dismiss();
 			  }else  if(msg.what == SIGNUP_BROWSER){

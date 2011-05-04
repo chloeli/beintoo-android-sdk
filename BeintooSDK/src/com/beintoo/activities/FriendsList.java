@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.beintoo.R;
 
 import com.beintoo.beintoosdk.BeintooUser;
+import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
@@ -30,19 +31,28 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class MessagesFriends extends Dialog implements OnClickListener{
+public class FriendsList extends Dialog implements OnClickListener{
 	private Dialog current;
-	private MessagesWrite previous;
+	private Dialog previous;
 	private double ratio;
+	
+	public static final int FROM_MESSAGES = 1;
+	public static final int FROM_PROFILE = 2;
+	
+	private int whichSection;
+	
 	User [] friends;
 	
-	public MessagesFriends(Context context, MessagesWrite p) {
-		super(context);
-		current = this;
+	public FriendsList(Context context, Dialog p, int ws, int theme) {
+		super(context,theme);
+		current = this; 
 		previous = p;
+		whichSection = ws;
 		
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.friendlist);
+		
+		
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
 		
 		// GETTING DENSITY PIXELS RATIO
@@ -50,7 +60,17 @@ public class MessagesFriends extends Dialog implements OnClickListener{
 		// SET UP LAYOUTS
 		double pixels = ratio * 40;
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
-		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.LIGHT_GRAY_GRADIENT));
+		
+		TextView title = (TextView) findViewById(R.id.dialogTitle);		
+		if(ws == FROM_MESSAGES){
+			beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.LIGHT_GRAY_GRADIENT));
+			title.setTextColor(Color.BLACK);
+			title.setText(current.getContext().getString(R.string.friendSel));
+		}else if(ws == FROM_PROFILE){
+			beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));			
+			title.setTextColor(Color.WHITE);
+			title.setText(current.getContext().getString(R.string.friendsTitle));
+		}
 		
 		startLoading();
 	}
@@ -114,8 +134,17 @@ public class MessagesFriends extends Dialog implements OnClickListener{
 			View spacer2 = createSpacer(getContext(),2,1);
 			spacer2.setId(-100);
 			rowList.add(spacer2);
-			
-			row.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+			BeButton b = new BeButton(current.getContext());
+			if(i % 2 == 0)
+	    		row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			else
+				row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 	
     	}	 
 	    
@@ -152,7 +181,7 @@ public class MessagesFriends extends Dialog implements OnClickListener{
 		  nickname.setTextColor(Color.parseColor("#545859"));
 		  nickname.setMaxLines(1);
 		  nickname.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  
+		   
 		  TextView scoreView = new TextView(activity);		
 		  scoreView.setText(name);	
 		  scoreView.setPadding(5, 0, 0, 0);
@@ -165,7 +194,7 @@ public class MessagesFriends extends Dialog implements OnClickListener{
 		 // row.addView(img);
 		  
 		  return row;
-	}
+	} 
 	
 	private static View createSpacer(Context activity, int color, int height) {
 		  View spacer = new View(activity);
@@ -179,9 +208,14 @@ public class MessagesFriends extends Dialog implements OnClickListener{
 	}
 	
 	public void onClick(View v) {
-		previous.setToNickname(friends[v.getId()].getNickname());
-		previous.setToExtId(friends[v.getId()].getId());
-		current.dismiss();
+		if(whichSection == FROM_MESSAGES){
+			((MessagesWrite) previous).setToNickname(friends[v.getId()].getNickname());
+			((MessagesWrite)previous).setToExtId(friends[v.getId()].getId());
+			current.dismiss();
+		}else if(whichSection == FROM_PROFILE){
+			UserProfile userProfile = new UserProfile(getContext(),friends[v.getId()].getId());
+			userProfile.show();
+		}
 	}
 	
 	Handler UIhandler = new Handler() {

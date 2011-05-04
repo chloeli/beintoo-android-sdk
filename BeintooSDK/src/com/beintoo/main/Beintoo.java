@@ -83,6 +83,8 @@ public class Beintoo{
 	public static int VGOOD_NOTIFICATION_ALERT = 2;
 	private static LinearLayout vgood_container = null;
 	
+	public static boolean OPEN_DASHBOARD_AFTER_LOGIN = true;
+	
 	/**
 	 * Set the developer apikey
 	 * 
@@ -98,8 +100,9 @@ public class Beintoo{
 	 * 
 	 * @param ctx current Context
 	 */
-	public static void BeintooStart(final Context ctx){
+	public static void BeintooStart(final Context ctx, boolean goToDashboard){
 		currentContext = ctx;
+		OPEN_DASHBOARD_AFTER_LOGIN = goToDashboard;
 		
 		try{
 			final Gson gson = new Gson();
@@ -139,11 +142,10 @@ public class Beintoo{
             		}
 				});
 				t.start();
-		
 			}else{
-					tryBeintoo tryBe = new tryBeintoo(ctx);
-					currentDialog = tryBe;
-					tryBe.show();
+				tryBeintoo tryBe = new tryBeintoo(ctx);
+				currentDialog = tryBe;
+				tryBe.show();
 			}
 		}catch (Exception e ){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx,e); logout(ctx);}
 	}
@@ -551,8 +553,11 @@ public class Beintoo{
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
 	 */
-	public static void featureToUse(String[] features){
+	public static void setFeaturesToUse(String[] features){
 		usedFeatures = features;
+	}
+	public static void featureToUse(String[] features){
+		setFeaturesToUse(features);
 	}
 	
 	/*
@@ -589,7 +594,7 @@ public class Beintoo{
 	            break;
 	            case TRY_DIALOG_POPUP:
 	            	tryDialog t = new tryDialog(currentContext);
-	            	t.show();
+	            	t.open();
 	            break;
 		    }
 	        super.handleMessage(msg);

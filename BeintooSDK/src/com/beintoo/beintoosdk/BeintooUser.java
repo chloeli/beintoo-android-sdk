@@ -15,13 +15,18 @@
  ******************************************************************************/
 package com.beintoo.beintoosdk;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.wrappers.Challenge;
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.User;
+import com.beintoo.wrappers.UserCredit;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
 public class BeintooUser {
 	String apiPreUrl = null;
@@ -72,6 +77,35 @@ public class BeintooUser {
 		header.getKey().add("password");
 		header.getValue().add(password);
 
+ 		BeintooConnection conn = new BeintooConnection();
+ 		Gson gson = new Gson();
+				
+		User user = null;
+		try {
+			String json = conn.httpRequest(apiUrl, header, null);
+			user = gson.fromJson(json, User.class);
+		} catch (final JsonParseException e) {  
+			return user;
+		} catch (Exception e){
+			return user;
+		}
+		 
+		return user;
+	}
+	
+	/**
+	 * Return a user by his userExt
+	 * @param userExt the user unique id identifier 
+	 * @param (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return json object of the requested user
+	 */
+	public User getUserByUserExt (String userExt, String codeID) {
+		
+		String apiUrl = apiPreUrl+"user/"+userExt;
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
  		BeintooConnection conn = new BeintooConnection();
  		Gson gson = new Gson();
 				
@@ -196,6 +230,28 @@ public class BeintooUser {
 		Message msg = gson.fromJson(json, Message.class);
 		
 		return msg;		
+	}
+	
+	public List<UserCredit> getUserBalance (String userExt, int start, int rows){
+		String apiUrl = apiPreUrl+"user/balance/"+userExt+"/";
+		if(start != -1 && rows != -1){
+			String params = "?start="+start+"&rows="+rows;			
+			apiUrl = apiUrl + params;			
+		} 
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		
+		Gson gson = new Gson();
+		
+		Type type = new TypeToken<List<UserCredit>>() {}.getType();
+		List<UserCredit> balance = gson.fromJson(json, type);
+		
+		return balance;				
 	}
 
 }

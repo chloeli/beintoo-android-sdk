@@ -23,9 +23,9 @@
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Punteggio:\u0020</string>
     
+    <string name="friendsTitle">I tuoi amici</string>
     <string name="friendSel">Seleziona un amico</string>
-    <string name="friendsNo">Non hai alcun amico</string>
-    
+    <string name="friendsNo">Non hai alcun amico</string>    
     <string name="friendSure" xml:space="preserve">Sei sicuro di voler inviare questo coupon come regalo a\u0020</string>
     <string name="friendSent" xml:space="preserve">Regalo inviato a\u0020</string> 
     <string name="friendLoading">Caricamento amici...</string>
@@ -39,6 +39,7 @@
     <string name="profileLastScore" xml:space="preserve">Ultimo punteggio:\u0020</string>
     <string name="profileNoScores">Non hai nessun punteggio per questa app</string>
     <string name="profileDetach">Rimuovi account dal dispositivo</string>
+    <string name="profileOf">Profile di %s</string>
     
     <string name="vgoodWhoAlso">Chi ha già acquistato</string>
     <string name="vgoodEnd">Data di fine:</string>

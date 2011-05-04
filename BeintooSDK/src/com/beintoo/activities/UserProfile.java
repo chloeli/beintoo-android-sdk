@@ -35,12 +35,14 @@ import com.google.gson.Gson;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -49,21 +51,36 @@ import android.widget.TextView;
 public class UserProfile extends Dialog {
 	Dialog current;
 	double ratio;
-	final int LOAD_PROFILE = 1;
 	Player currentPlayer;
 	
+	private final int LOAD_PROFILE = 1;
+	private final int SET_NEWMSG_BUTTON = 2;
+	
+	public static final int CURRENT_USER_PROFILE = 1; 
+	public static final int FRIEND_USER_PROFILE = 2;
+	
 	public UserProfile(final Context ctx) {
-		super(ctx, R.style.ThemeBeintoo);		
+		super(ctx, R.style.ThemeBeintoo);				
+		current = this;
+		setupMainLayoutGradients();
+		showLoading();
+		setupCurrentUserProfileLayout();
+		startLoading(null, CURRENT_USER_PROFILE);		
+	}
+	
+	public UserProfile(final Context ctx, final String userExt) {
+		super(ctx, R.style.ThemeBeintoo);				
+		current = this;
+		setupMainLayoutGradients();		
+		showLoading();
+		setupFriendProfileLayout();
+		startLoading(userExt, FRIEND_USER_PROFILE);
+	}
+	
+	private void setupMainLayoutGradients (){
 		setContentView(R.layout.profileb);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		current = this;
-		// SET TITLE
-		TextView t = (TextView)findViewById(R.id.dialogTitle);
-		t.setText(R.string.profile);
-
-		// GETTING DENSITY PIXELS RATIO
-		ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
-		// SET UP LAYOUTS
+		ratio = (current.getContext().getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
 		double pixels = ratio * 40;
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
@@ -72,18 +89,17 @@ public class UserProfile extends Dialog {
 		pixels = ratio * 104;
 		LinearLayout textlayout = (LinearLayout) findViewById(R.id.textlayout);
 		textlayout.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.GRAY_GRADIENT));
-		
-		
-		
+	}
+	
+	private void setupCurrentUserProfileLayout (){
+		// SET TITLE
+		TextView t = (TextView)findViewById(R.id.dialogTitle);
+		t.setText(R.string.profile);
 		LinearLayout gc = (LinearLayout) findViewById(R.id.goodcontent);
 		gc.setVisibility(LinearLayout.INVISIBLE);
 		
-		showLoading();
-		startLoading();
-		
-	   
-	    Button logout = (Button) findViewById(R.id.logout);
-	    BeButton b = new BeButton(ctx);
+		Button logout = (Button) findViewById(R.id.logout);
+	    BeButton b = new BeButton(current.getContext());
 	    logout.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
 	    logout.setBackgroundDrawable(
 	    		b.setPressedBackg(
@@ -112,7 +128,7 @@ public class UserProfile extends Dialog {
 				Player currentPlayer;
 				try {
 					currentPlayer = getCurrentPlayer();					
-					usr.detachUserFromDevice(DeviceId.getUniqueDeviceId(ctx), currentPlayer.getUser().getId());
+					usr.detachUserFromDevice(DeviceId.getUniqueDeviceId(current.getContext()), currentPlayer.getUser().getId());
 					PreferencesHandler.saveBool("isLogged", false, getContext());
 					PreferencesHandler.saveString("currentPlayer", null, getContext());
 					Beintoo.homeDialog.dismiss();
@@ -131,14 +147,39 @@ public class UserProfile extends Dialog {
 		});
 	}
 	
+	private void setupFriendProfileLayout (){
+		TextView t = (TextView)findViewById(R.id.dialogTitle);
+		Button logout = (Button) findViewById(R.id.logout);
+		Button detach = (Button) findViewById(R.id.detach);
+		LinearLayout gc = (LinearLayout) findViewById(R.id.goodcontent);
+		ImageView mail = (ImageView) findViewById(R.id.messagesbt);
+		
+		t.setText(R.string.profile);				
+		logout.setVisibility(LinearLayout.GONE);
+		detach.setVisibility(LinearLayout.GONE);
+		gc.setVisibility(LinearLayout.INVISIBLE);
+		mail.setVisibility(LinearLayout.GONE); 		
+	}
 	
-	private void startLoading () {
+	private void startLoading (final String userExt, final int ws) {
 		new Thread(new Runnable(){      
     		public void run(){
     			try{ 
 					BeintooPlayer bPlayer = new BeintooPlayer();
-					Player currentSaved = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));				
-					currentPlayer = bPlayer.getPlayer(currentSaved.getGuid());
+					if(ws == CURRENT_USER_PROFILE){
+						Player currentSaved = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));				
+						currentPlayer = bPlayer.getPlayer(currentSaved.getGuid());
+					}else if(ws == FRIEND_USER_PROFILE){
+						currentPlayer = bPlayer.getPlayerByUser(userExt, null);
+						Bundle b = new Bundle();
+						b.putString("nickname", currentPlayer.getUser().getNickname());
+						b.putString("userExt", currentPlayer.getUser().getId());
+						Message msg = new Message();
+						msg.setData(b);
+						msg.what = SET_NEWMSG_BUTTON;
+						UIhandler.sendMessage(msg);
+					}
+					
 					UIhandler.sendEmptyMessage(LOAD_PROFILE);
 					
     			}catch (Exception e){}			
@@ -160,7 +201,7 @@ public class UserProfile extends Dialog {
 		dollars.setText("Bedollars: "+currentPlayer.getUser().getBedollars());
 		bescore.setText("Bescore: "+currentPlayer.getUser().getBescore());
 		ImageButton messages = (ImageButton) findViewById(R.id.messagesbt);
-		System.out.println("PLAY"+PreferencesHandler.getString("currentPlayer", getContext()));
+		
 		if(currentPlayer.getUser().getUnreadMessages() == 0)
 			messages.setAlpha(158);
 	    
@@ -255,6 +296,29 @@ public class UserProfile extends Dialog {
 		mc.addView(pb);
 	}
 	
+	// USED FOR FRIEND PROFILE NEW MESSAGE BUTTON
+	private void setMsgButton(final String extId, final String nickname){
+		Button newMessage = (Button) findViewById(R.id.logout);
+	    BeButton b = new BeButton(current.getContext());
+	    newMessage.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+	    newMessage.setVisibility(LinearLayout.VISIBLE);
+	    newMessage.setText(current.getContext().getString(R.string.messagesend));
+	    newMessage.setBackgroundDrawable(
+	    		b.setPressedBackg(
+			    		new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));			    	 
+	    newMessage.setOnClickListener(new Button.OnClickListener(){
+			public void onClick(View v) {
+				MessagesWrite mw = new MessagesWrite(current.getContext());
+				mw.setToExtId(extId);
+				mw.setToNickname(nickname);
+				mw.show();												
+			}
+		});
+	}
+	
+	
 	public String fromIntToLevel (int level) {
 		if(level == 1) return "Novice";
 		if(level == 2) return "Learner";
@@ -266,12 +330,18 @@ public class UserProfile extends Dialog {
 	
 	Handler UIhandler = new Handler() {
 		  @Override
-		  public void handleMessage(Message msg) {
-			  
+		  public void handleMessage(Message msg) {			  
 			  if(msg.what == LOAD_PROFILE){
-				  try {
-					  loadData();
-				  }catch(Exception e){e.printStackTrace();}
+				try {
+					loadData();
+				}catch(Exception e){e.printStackTrace();}
+			  }else if(msg.what == SET_NEWMSG_BUTTON){
+				Bundle b = msg.getData();
+				try{
+					setMsgButton(b.getString("userExt"),b.getString("nickname"));
+					TextView t = (TextView)findViewById(R.id.dialogTitle);
+					t.setText(String.format(current.getContext().getString(R.string.profileOf), b.getString("nickname")));
+			  	}catch(Exception e){e.printStackTrace();}
 			  }
 			  
 			  super.handleMessage(msg);

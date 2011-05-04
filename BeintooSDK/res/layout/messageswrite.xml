@@ -36,9 +36,10 @@
 			<LinearLayout android:focusable="true"
                 android:focusableInTouchMode="true" android:layout_width="0px"
                 android:layout_height="0px" />	
-			<EditText android:layout_width="fill_parent"
+                <!-- android:imeOptions="actionDone"  -->
+			<EditText android:layout_width="fill_parent" 
 				android:gravity="top" android:id="@+id/edittext"
-				android:imeOptions="actionDone" android:focusable="true" android:focusableInTouchMode="true" android:layout_margin="1dip" android:layout_height="130dip"></EditText>
+				android:focusable="true" android:focusableInTouchMode="true" android:layout_margin="1dip" android:layout_height="130dip"></EditText>
 		</LinearLayout>
 
 		<LinearLayout android:layout_width="fill_parent"

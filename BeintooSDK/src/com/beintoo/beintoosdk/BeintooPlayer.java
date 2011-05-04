@@ -148,6 +148,32 @@ public class BeintooPlayer {
 	}
 	
 	/**
+	 * Returns a json of the player from the userExt of the associated user
+	 * @param guid player guid
+	 * @param codeID a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return json object contains data of the requested player
+	 */
+	public Player getPlayerByUser (String userExt, String codeID){
+		String apiUrl = apiPreUrl+"player/byuser/"+userExt;
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		Gson gson = new Gson();
+		Player pla = new Player();
+		pla = gson.fromJson(json, Player.class);
+		
+		return pla;		
+	}
+	
+	/**
 	 * Submit the player score
 	 * 
 	 * @param guid player guid

@@ -42,7 +42,7 @@ public class tryBeintoo extends Dialog {
 	private static final int GO_REG = 1;
 	private static final int USER_SEL = 2;
 	public tryBeintoo(Context ctx) {
-		super(ctx, R.style.ThemeBeintooOn);
+		super(ctx, R.style.ThemeBeintooOn);		
 		setContentView(R.layout.trybeintoo);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		

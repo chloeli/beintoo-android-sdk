@@ -65,7 +65,7 @@ in your main activity
 
 You should also put a Beintoo button in your main activity where you will call 
 	
-	Beintoo.BeintooStart(getContext());
+	Beintoo.BeintooStart(getContext(), true);
 	
 this will start the main Beintoo app where your users will see Profile, Leaderboards, Challenges and Wallet
 

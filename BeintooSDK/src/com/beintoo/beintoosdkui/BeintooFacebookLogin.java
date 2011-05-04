@@ -219,8 +219,10 @@ public class BeintooFacebookLogin extends Dialog {
 		  @Override
 		  public void handleMessage(Message msg) {			  
 			  if(msg.what == GO_HOME){
-				BeintooHome beintooHome = new BeintooHome(getContext());
-				beintooHome.show();							
+				  if(Beintoo.OPEN_DASHBOARD_AFTER_LOGIN){
+					  BeintooHome beintooHome = new BeintooHome(getContext());
+					  beintooHome.show();
+				  }
 				current.dismiss();
 				Beintoo.currentDialog.dismiss();
 			  }

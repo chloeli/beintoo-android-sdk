@@ -23,6 +23,7 @@
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Score:\u0020</string>
     <string name="friendSel">Select a friend</string>
+    <string name="friendsTitle">Your friends</string>
     <string name="friendsNo">You have no friends</string>
     <string name="friendSure">Are you sure you want to send this coupon as a gift to </string>
     <string name="friendSent">Gift sent to\u0020</string> 
@@ -35,6 +36,7 @@
     <string name="profileLastScore">Last score:\u0020</string>
     <string name="profileNoScores">You have no scores for this app</string>
     <string name="profileDetach">Remove account from device</string>
+	<string name="profileOf">%s Profile</string>
     
     <string name="vgoodWhoAlso">Who also purchased</string>
     <string name="vgoodEnd">End date:</string>

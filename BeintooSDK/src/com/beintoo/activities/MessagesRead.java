@@ -49,9 +49,6 @@ public class MessagesRead extends Dialog{
 		setContentView(R.layout.messagesread);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
 		
-		// SET TITLE
-		TextView t = (TextView)findViewById(R.id.dialogTitle);
-		t.setText(R.string.messages);		
 		// GETTING DENSITY PIXELS RATIO
 		ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
@@ -60,9 +57,12 @@ public class MessagesRead extends Dialog{
 		// SET UP VIEWS BACKGROUND
 		LinearLayout top = (LinearLayout) findViewById(R.id.top);
 		top.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*85),BDrawableGradient.GRAY_GRADIENT));
-		
+		 
 		try {
-			// SET UP TEXTS
+			// SET TITLE BAR
+			TextView t = (TextView)findViewById(R.id.dialogTitle);
+			t.setText(message.getUserFrom().getNickname());		
+			
 			LoaderImageView profilepict = (LoaderImageView) findViewById(R.id.profilepict);
 			profilepict.setImageDrawable(message.getUserFrom().getUserimg());
 			String nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+message.getUserFrom().getNickname();

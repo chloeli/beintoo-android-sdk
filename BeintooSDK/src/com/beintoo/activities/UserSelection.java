@@ -191,11 +191,12 @@ public class UserSelection extends Dialog implements OnClickListener{
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {
-			BeintooHome beintooHome = new BeintooHome(getContext());
-			beintooHome.show();					          	
-			current.dismiss();
+			  if(Beintoo.OPEN_DASHBOARD_AFTER_LOGIN){
+				  BeintooHome beintooHome = new BeintooHome(getContext());
+				  beintooHome.show();
+			  }  
+			  current.dismiss();
 	        super.handleMessage(msg);
-			  //do something in the user interface to display data from message
 		  }
 	};
 }
