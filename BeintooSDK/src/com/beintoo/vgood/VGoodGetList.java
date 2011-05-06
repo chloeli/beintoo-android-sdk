@@ -165,7 +165,7 @@ public class VGoodGetList extends Dialog implements OnClickListener{
 			Player loggedPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", current.getContext()), Player.class);
 			if(loggedPlayer.getUser() != null){
 				BeintooVgood bv = new BeintooVgood();	    					
-				bv.acceptVgood(vgood.getId(), loggedUser.getUser().getId(), null);
+				bv.acceptVgood(vgood.getId(), loggedPlayer.getUser().getId(), null);
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
