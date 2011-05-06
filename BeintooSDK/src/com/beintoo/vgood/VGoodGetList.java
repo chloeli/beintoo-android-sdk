@@ -154,16 +154,22 @@ public class VGoodGetList extends Dialog implements OnClickListener{
 	
 	// CALLED WHEN A ROW IS CLICKED
 	public void onClick(final View v) {
-		Vgood vgood = vgoodList.getVgoods().get(v.getId());
-		VGoodGetDialog getVgood = new VGoodGetDialog(current.getContext(), vgood);
-		Beintoo.currentDialog = getVgood;
-		getVgood.show();
-		current.dismiss();
+		try {
+			Vgood vgood = vgoodList.getVgoods().get(v.getId());
+			VGoodGetDialog getVgood = new VGoodGetDialog(current.getContext(), vgood);
+			Beintoo.currentDialog = getVgood;
+			getVgood.show();
+			current.dismiss();
 		
-		// ASSIGN THE VGOOD
-		Player loggedUser = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", current.getContext()), Player.class);
-		BeintooVgood bv = new BeintooVgood();	    					
-		bv.acceptVgood(vgood.getId(), loggedUser.getUser().getId(), null);
+			// ASSIGN THE VGOOD IF IS LOGGED
+			Player loggedPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", current.getContext()), Player.class);
+			if(loggedPlayer.getUser() != null){
+				BeintooVgood bv = new BeintooVgood();	    					
+				bv.acceptVgood(vgood.getId(), loggedUser.getUser().getId(), null);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private View createSpacer(Context activity, int color, int height) {
