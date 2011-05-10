@@ -3,6 +3,7 @@ package com.beintoo.wrappers;
 public class App {
 	String name;
     String imageSmallUrl;
+    String imageUrl;
     
     public App(){}
 
@@ -21,4 +22,14 @@ public class App {
 	public void setImageSmallUrl(String imageSmallUrl) {
 		this.imageSmallUrl = imageSmallUrl;
 	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	
+	
 }

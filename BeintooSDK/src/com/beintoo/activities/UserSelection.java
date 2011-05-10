@@ -179,9 +179,10 @@ public class UserSelection extends Dialog implements OnClickListener{
 					PreferencesHandler.saveString("currentPlayer", jsonPlayer, getContext());
 					// SET THAT THE PLAYER IS LOGGED IN BEINTOO
 					PreferencesHandler.saveBool("isLogged", true, getContext());
-					
-					UIhandler.sendEmptyMessage(1);
-					
+					if(newPlayer.getUser() != null)
+						UIhandler.sendEmptyMessage(1);
+					else 
+						UIhandler.sendEmptyMessage(0);
     			}catch(Exception e){}	
         			dialog.dismiss();
         		}
@@ -191,10 +192,12 @@ public class UserSelection extends Dialog implements OnClickListener{
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {
-			  if(Beintoo.OPEN_DASHBOARD_AFTER_LOGIN){
-				  BeintooHome beintooHome = new BeintooHome(getContext());
-				  beintooHome.show();
-			  }  
+			  if(msg.what == 1){
+				  if(Beintoo.OPEN_DASHBOARD_AFTER_LOGIN){
+					  BeintooHome beintooHome = new BeintooHome(getContext());
+					  beintooHome.show();
+				  } 
+			  }
 			  current.dismiss();
 	        super.handleMessage(msg);
 		  }

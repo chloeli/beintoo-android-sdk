@@ -96,7 +96,7 @@ public class MessagesWrite extends Dialog{
 	    EditText to = (EditText) findViewById(R.id.editto);
 	    to.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				FriendsList mf = new FriendsList(current.getContext(), current, FriendsList.FROM_MESSAGES, android.R.style.Theme_Dialog);
+				Friends mf = new Friends(current.getContext(), current, Friends.SHOW_FRIENDS_FROM_MESSAGES, android.R.style.Theme_Dialog);
 				mf.show();
 			}
 		});

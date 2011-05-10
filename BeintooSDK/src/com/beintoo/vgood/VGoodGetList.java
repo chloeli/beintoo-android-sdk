@@ -160,7 +160,7 @@ public class VGoodGetList extends Dialog implements OnClickListener{
 			Beintoo.currentDialog = getVgood;
 			getVgood.show();
 			current.dismiss();
-			
+		
 			// ASSIGN THE VGOOD IF IS LOGGED
 			final Player loggedPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", current.getContext()), Player.class);
 			if(loggedPlayer.getUser() != null){

@@ -242,9 +242,8 @@ public class Wallet extends Dialog implements OnClickListener{
 		  nameView.setTextSize(14);
 		  nameView.setMaxWidth(50);
 		  TextView enddate = new TextView(activity);
-		  try { // try catch for SimpleDateFormat parse
-			  
-			  SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss",Locale.UK); 
+		  try { // try catch for SimpleDateFormat parse			  
+			  SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
 			  curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			  
 			  Date endDate = curFormater.parse(end);			  
 			  curFormater.setTimeZone(TimeZone.getDefault());

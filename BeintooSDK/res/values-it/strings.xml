@@ -23,12 +23,29 @@
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Punteggio:\u0020</string>
     
+    <!-- FRIENDS -->
     <string name="friendsTitle">I tuoi amici</string>
     <string name="friendSel">Seleziona un amico</string>
     <string name="friendsNo">Non hai alcun amico</string>    
     <string name="friendSure" xml:space="preserve">Sei sicuro di voler inviare questo coupon come regalo a\u0020</string>
     <string name="friendSent" xml:space="preserve">Regalo inviato a\u0020</string> 
     <string name="friendLoading">Caricamento amici...</string>
+    <string name="friendTitle">Amici</string> 
+    <string name="friendFind">Trova amici</string>
+    <string name="friendFindT">Trova amici su Beintoo</string>
+    <string name="friendYours">I tuoi amici</string>
+    <string name="friendYoursT">Vedi i tuoi amici su Beintoo</string>
+    <string name="friendFriendshipReqT">Gestisci le tue richieste di amicizia</string>    
+    <string name="friendFindeditsearch">Cerca un nickname, un nome o un\'email</string>
+    <string name="friendSendReq">Vuoi mandare a %s una richiesta di amicizia?</string>
+    <string name="friendReqTitle">Richieste di amicizia</string>
+    <string name="friendReqSubtitle">Clicca su un nome per accettare</string>
+    <string name="friendReqEmpty">Non hai richieste di amicizia</string>
+    <string name="friendReqAccept">Accetti la richiesta di amicizia?</string>
+    <string name="friendNotfound">Non trovato</string>
+     <string name="friendReqSent">Richiesta inviata</string>
+    <string name="friendReqAcc">Richiesta accettata</string>
+    <string name="friendReqIgn">Richiesta riufiutata</string>
     
     <string name="homeWelcome" xml:space="preserve">Bentornato\u0020</string>
     
@@ -85,6 +102,7 @@
     <!-- OTHERS -->
     <string name="no">No</string>
     <string name="yes">Si</string>
+    <string name="cancel">Annulla</string>
     
     <!-- HOME -->
     <string name="profile">Profilo</string>
@@ -120,4 +138,24 @@
     <string name="messageloadmore">Carica precedenti</string>  
     <string name="messagesent">Messaggio inviato a \u0020</string>
     <string name="messagenotification">Hai %d messaggi non letti</string> 
+    
+    <!-- BALANCE -->
+    <string name="balance">Bilancio</string> 
+    <string name="BADGE_WIN">Vincita Badge</string>
+	<string name="CHALLENGE_ACCEPT">Sfida Accettata</string>
+	<string name="CHALLENGE_INVITE">Invito a sfida</string>
+	<string name="CHALLENGE_WiN">Vincita Sfida</string>
+	<string name="COMMENT">Commento</string>
+	<string name="CONTEST_WIN">Contest Vinto</string>
+	<string name="CREATE_USER">Creazione utente</string>
+	<string name="FRIEND_ADDED">Amico aggiunto</string>
+	<string name="FRIEND_INVITE">Amico invitato</string>
+	<string name="LEADERBOARD_IMPROVE">Miglioramento nella Leaderboard</string>
+	<string name="MARKETPLACE_BUY">Acquisto Marketplace</string>
+	<string name="MARKETPLACE_SELL">Vendita Marketplace</string>
+	<string name="SEND_BEDOLLAR_METHOD">Versamento da App</string>
+	<string name="SHARE">Condivisione</string>
+	<string name="SUBMIT_SCORE">Submit Score</string>
+	<string name="VGOOD_CONVERSION">VGood convertito</string>
+	<string name="WEEKLY_PAYMENT">Salario settimanale</string>
 </resources>

@@ -67,7 +67,7 @@ public class MessagesRead extends Dialog{
 			profilepict.setImageDrawable(message.getUserFrom().getUserimg());
 			String nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+message.getUserFrom().getNickname();
 			
-			SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss"); 
+			SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
 			curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			
 			Date msgDate = curFormater.parse(message.getCreationdate());			
 			curFormater.setTimeZone(TimeZone.getDefault());			

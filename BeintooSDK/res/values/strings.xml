@@ -22,12 +22,31 @@
     
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Score:\u0020</string>
+    
+    <!-- FRIENDS -->
     <string name="friendSel">Select a friend</string>
     <string name="friendsTitle">Your friends</string>
     <string name="friendsNo">You have no friends</string>
     <string name="friendSure">Are you sure you want to send this coupon as a gift to </string>
     <string name="friendSent">Gift sent to\u0020</string> 
     <string name="friendLoading">Loading friends...</string>
+    <string name="friendTitle">Friends</string>    
+    <string name="friendFind">Find Friends</string>
+    <string name="friendFindT">Find people on Beintoo community</string>
+    <string name="friendYours">Your friends</string>
+    <string name="friendYoursT">View your Beintoo friends</string>
+    <string name="friendFriendshipReqT">Manage your friendship requests</string>    
+    <string name="friendFindeditsearch">Search a nickname, name or mail</string>
+    <string name="friendSendReq">Send %s a friend request?</string>
+    <string name="friendReqTitle">Friend requests</string>
+    <string name="friendReqSubtitle">Click on name to accept</string>
+    <string name="friendReqEmpty">You have no friendship requests</string>
+    <string name="friendReqAccept">Do you accept the friendship request?</string>
+    <string name="friendNotfound">Not found</string>
+    <string name="friendReqSent">Friend request sent</string>
+    <string name="friendReqAcc">Friend request accepted</string>
+    <string name="friendReqIgn">Friend request refused</string>
+    
     <string name="homeWelcome" xml:space="preserve">Welcome back\u0020</string>
     <string name="profileScore">Your scores</string>
     <string name="profileLevel">Level:\u0020</string>
@@ -81,6 +100,7 @@
     <!-- OTHERS -->
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
     
     <!-- HOME -->
     <string name="profile">Profile</string>
@@ -116,4 +136,25 @@
     <string name="messageloadmore">Load previous</string>
     <string name="messagesent">Messagge sent to\u0020</string>
     <string name="messagenotification">You have %d unread messages</string>
+    
+    <!-- BALANCE -->
+    <string name="balance">Balance</string>        
+    <string name="BADGE_WIN">Badge Won</string>
+	<string name="CHALLENGE_ACCEPT">Challenge Accepted</string>
+	<string name="CHALLENGE_INVITE">Challenge Invited</string>
+	<string name="CHALLENGE_WiN">Challenge Won</string>
+	<string name="COMMENT">Comment</string>
+	<string name="CONTEST_WIN">Contest Won</string>
+	<string name="CREATE_USER">User creation</string>
+	<string name="FRIEND_ADDED">Friend Added</string>
+	<string name="FRIEND_INVITE">Friend invited</string>
+	<string name="LEADERBOARD_IMPROVE">Leaderboard improvement</string>
+	<string name="MARKETPLACE_BUY">Marketplace Purchase</string>
+	<string name="MARKETPLACE_SELL">Marketplace Sale</string>
+	<string name="SEND_BEDOLLAR_METHOD">Given by App</string>
+	<string name="SHARE">Sharing</string>
+	<string name="SUBMIT_SCORE">Score submitted</string>
+	<string name="VGOOD_CONVERSION">VGood converted</string>
+	<string name="WEEKLY_PAYMENT">Weekly salary</string>
+    
 </resources>

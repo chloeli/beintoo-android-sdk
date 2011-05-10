@@ -65,7 +65,7 @@ public class ChallengeOverview extends Dialog{
 				TextView toScore = (TextView) findViewById(R.id.scoreto);
 				toScore.setText(getContext().getString(R.string.leadScore)+reqChallenge.getPlayerToScore().toString());
 				
-				SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss"); 
+				SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
 				curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));
 				
 				Date startDate = curFormater.parse(reqChallenge.getStartdate());

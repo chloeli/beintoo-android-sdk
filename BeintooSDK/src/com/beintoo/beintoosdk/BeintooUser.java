@@ -16,10 +16,12 @@
 package com.beintoo.beintoosdk;
 
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.List;
 
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
+import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.wrappers.Challenge;
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.User;
@@ -252,6 +254,162 @@ public class BeintooUser {
 		List<UserCredit> balance = gson.fromJson(json, type);
 		
 		return balance;				
+	}
+
+	/**
+	 * Return pending friend requests 
+	 * 
+	 * @param userExt the unique beintoo id of registered user.
+	 * @param codeID (optional)  a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return a list of users
+	 */
+	public User[] getUserFriendshipRequests(String userExt, String codeID){
+		String apiUrl = apiPreUrl+"user/friendshiprequest/"+userExt+"/";
+		
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}		
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		
+		Gson gson = new Gson();
+		User[] friendship = gson.fromJson(json, User[].class);
+		
+		return friendship;		
+	}
+	
+	/**
+	 * Respond to a friendship request 
+	 * 
+	 * @param userExtFrom the unique beintoo id of the current registered user.
+	 * @param userExtTo the unique beintoo id of registered user to respond the request.
+	 * @param action accept, refuse, invite
+	 * @param codeID (optional)  a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return a message
+	 */
+	public Message respondToFriendshipRequests(String userExtFrom, String userExtTo, String action, String codeID){
+		String apiUrl = apiPreUrl+"user/friendshiprequest/"+userExtFrom+"/"+action+"/"+userExtTo;
+		
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}		
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		
+		Gson gson = new Gson();
+		Message msg = gson.fromJson(json, Message.class);
+		
+		return msg;		
+	}
+	
+	/**
+	 * Find a friend from nickname, name or email
+	 * 
+	 * @param query Data to search
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return a list of users
+	 */
+	public User[] findFriendsByQuery(String query, String userExt, Boolean skipFriends, String codeID){
+		String apiUrl = apiPreUrl+"user/byquery/?query="+URLEncoder.encode(query) + ((userExt!=null) ? ("&userExt="+userExt+"&skipFriends="+skipFriends) : "");
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}		
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		
+		Gson gson = new Gson();
+		User[] queryres = gson.fromJson(json, User[].class);
+		
+		return queryres;		
+	}
+	
+	/**
+	 * You can use this method to automatize the user-registration of one of your player, providing us some information.
+	 * 
+	 * @param guid the current player guid
+	 * @param email mandatory, return error if a user with that email is already registered
+	 * @param nickname mandatory
+	 * @param password (optional), will be generated automatically if not provided
+	 * @param name mandatory
+	 * @param address (optional)
+	 * @param country (optional)
+	 * @param gender (optional), integer
+	 * @param sendGreetingsEmail (optional), default true, whether or not to send a greeting email to the new user
+	 * @param imageurl (optional), URL of userimage
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return
+	 */
+	public User setUser(String guid, String email, String nickname, String password, String name, String address, String country, Integer gender, Boolean sendGreetingsEmail, String imageurl, String codeID){
+		String apiUrl = apiPreUrl+"user/set";
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);		
+		header.getKey().add("guid");
+		header.getValue().add(guid);
+		if(codeID != null) {
+			header.getKey().add("guid");
+			header.getValue().add(guid);
+		}
+		
+		PostParams post = new PostParams();
+		post.getKey().add("email");
+		post.getValue().add(email);	
+		post.getKey().add("nickname");
+		post.getValue().add(nickname);
+		if(password != null) {
+			post.getKey().add("password");
+			post.getValue().add(password);			
+		}		
+		if(name != null) {
+			post.getKey().add("name");
+			post.getValue().add(name);			
+		}
+		if(address != null) {
+			post.getKey().add("address");
+			post.getValue().add(address);			
+		}
+		if(country != null) {
+			post.getKey().add("country");
+			post.getValue().add(country);			
+		}
+		if(gender != null) {
+			post.getKey().add("gender");
+			post.getValue().add(gender.toString());			
+		}
+		if(sendGreetingsEmail != null) {
+			post.getKey().add("sendGreetingsEmail");
+			post.getValue().add(sendGreetingsEmail.toString());			
+		}
+		if(imageurl != null) {
+			post.getKey().add("imageurl");
+			post.getValue().add(imageurl);			
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, post,true);		 
+		
+		return new Gson().fromJson(json, User.class);
+		
 	}
 
 }

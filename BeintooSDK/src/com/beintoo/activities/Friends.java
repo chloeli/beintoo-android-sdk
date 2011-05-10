@@ -1,0 +1,559 @@
+package com.beintoo.activities;
+
+import java.util.ArrayList;
+
+import com.beintoo.R;
+
+import com.beintoo.beintoosdk.BeintooUser;
+import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.JSONconverter;
+import com.beintoo.beintoosdkutility.LoaderImageView;
+import com.beintoo.beintoosdkutility.MessageDisplayer;
+import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.wrappers.Player;
+import com.beintoo.wrappers.User;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
+public class Friends extends Dialog implements OnClickListener{
+	private Dialog current;
+	private Dialog previous;
+	private double ratio;
+	
+	public static final int MAIN_FRIENDS_MENU = 0;
+	public static final int SHOW_FRIENDS_FROM_MESSAGES = 1;
+	public static final int SHOW_FRIENDS_FROM_PROFILE = 2;
+	public static final int FIND_FRIENDS = 3;
+	public static final int FRIENDSHIP_REQUESTS = 4;
+	
+	public static final int SHOW_EMPTY = 5;
+	public static final int LOAD_TABLE = 6;
+	public static final int SHOW_MESSAGE = 7;
+	
+	
+	private int whichSection;
+	
+	User [] friends;
+	
+	public Friends(Context context, Dialog p, int ws, int theme) {
+		super(context,theme);
+		current = this; 
+		previous = p;
+		whichSection = ws;
+		
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
+		setContentView(R.layout.friendlist);
+				
+		ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+				
+		if(ws == SHOW_FRIENDS_FROM_MESSAGES){
+			initFromMessage();
+		}else if(ws == SHOW_FRIENDS_FROM_PROFILE){
+			initFromProfile();
+		}else if(ws == MAIN_FRIENDS_MENU){
+			initMainMenu();			
+		}else if(ws == FRIENDSHIP_REQUESTS){
+			initFriendshipReq();
+		}else if(ws == FIND_FRIENDS){
+			initFindFriends();
+		}
+	}
+
+	private void initFromMessage(){
+		setContentView(R.layout.friendlist);
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 40),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+		TextView title = (TextView) findViewById(R.id.dialogTitle);
+		title.setTextColor(Color.BLACK);
+		title.setText(current.getContext().getString(R.string.friendSel));
+		startLoading();
+	}
+	
+	private void initFromProfile(){
+		setContentView(R.layout.friendlist);
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 40),BDrawableGradient.BAR_GRADIENT));
+		TextView title = (TextView) findViewById(R.id.dialogTitle);
+		title.setTextColor(Color.WHITE);
+		title.setText(current.getContext().getString(R.string.friendsTitle));
+		startLoading();
+	}
+	
+	private void initMainMenu(){
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 40),BDrawableGradient.BAR_GRADIENT));
+		TextView title = (TextView) findViewById(R.id.dialogTitle);
+		title.setTextColor(Color.WHITE);
+		title.setText(current.getContext().getString(R.string.friends));
+		loadSelectionTable();
+	}
+	
+	private void initFindFriends(){
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 40),BDrawableGradient.BAR_GRADIENT));
+		TextView title = (TextView) findViewById(R.id.dialogTitle);
+		title.setTextColor(Color.WHITE);
+		title.setText(current.getContext().getString(R.string.friendFind));
+	
+		ImageView searchicon = new ImageView(current.getContext());
+		searchicon.setImageResource(R.drawable.findfriend);
+		EditText querytext = new EditText(current.getContext());
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT);
+		lp.setMargins(10, 0, 0, 0);
+		querytext.setLayoutParams(lp);
+		querytext.setHint(current.getContext().getString(R.string.friendFindeditsearch));
+		querytext.setPadding((int)(ratio * 10), 0, 0, 0);
+		querytext.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+		querytext.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            	if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    actionId == EditorInfo.IME_ACTION_DONE ||
+                    event.getAction() == KeyEvent.ACTION_DOWN &&
+                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {            		
+            		
+            		InputMethodManager imm = (InputMethodManager)current.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            		imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            		
+                	loadSearchResults(v.getText().toString());                	
+                	return true;
+                }
+                return false;
+            }
+        });
+		LinearLayout searchBar = new LinearLayout(current.getContext());
+		searchBar.setOrientation(LinearLayout.HORIZONTAL);
+		searchBar.setPadding(10, 10, 10, 10);
+		searchBar.addView(searchicon);
+		searchBar.addView(querytext);
+		searchBar.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.GRAY_GRADIENT));		
+		LinearLayout searchlayout = (LinearLayout) findViewById(R.id.searchspace);
+		searchlayout.addView(searchBar);
+		searchlayout.addView(createSpacer(current.getContext(),1,1));
+		searchlayout.addView(createSpacer(current.getContext(),2,1));
+		searchlayout.setVisibility(LinearLayout.VISIBLE);
+	}
+	
+	private void initFriendshipReq (){
+		setContentView(R.layout.friendlist);
+		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
+		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 40),BDrawableGradient.BAR_GRADIENT));
+		TextView title = (TextView) findViewById(R.id.dialogTitle);
+		title.setTextColor(Color.WHITE);
+		title.setText(current.getContext().getString(R.string.friendReqTitle));		
+		TextView tiptext = (TextView) findViewById(R.id.subtitleinfo);
+		tiptext.setText(current.getContext().getString(R.string.friendReqSubtitle));		
+		LinearLayout tip = (LinearLayout) findViewById(R.id.tip);
+		tip.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*27),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+		tip.setVisibility(LinearLayout.VISIBLE);		
+		startLoading();
+	}
+	
+	private void startLoading(){
+		TableLayout table = (TableLayout) findViewById(R.id.table);
+		table.removeAllViews();
+		showLoading();
+		if(whichSection == SHOW_FRIENDS_FROM_MESSAGES || whichSection == SHOW_FRIENDS_FROM_PROFILE){
+			loadFriendsData();
+		}else if(whichSection == FRIENDSHIP_REQUESTS){
+			loadPendingFriendsReq();
+		}	
+	}
+	
+	private void loadFriendsData () {
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{ 
+    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
+    				BeintooUser u = new BeintooUser();
+    				friends = u.getUserFriends(p.getUser().getId(), null);
+    				if(friends.length > 0)
+    					UIhandler.sendEmptyMessage(LOAD_TABLE);
+    				else
+    					setEmptyTable(SHOW_FRIENDS_FROM_MESSAGES);
+    			}catch (Exception e){
+    				e.printStackTrace();
+    			}
+    		}
+		}).start();
+	}
+	 
+	private void loadPendingFriendsReq () {
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{ 
+    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
+    				BeintooUser u = new BeintooUser();
+    				friends = u.getUserFriendshipRequests(p.getUser().getId(), null);		
+    				if(friends.length > 0)
+    					UIhandler.sendEmptyMessage(LOAD_TABLE);
+    				else
+    					setEmptyTable(FRIENDSHIP_REQUESTS);
+    			}catch (Exception e){
+    				e.printStackTrace();
+    			}
+    		} 
+		}).start();
+	}
+	
+	private void loadSearchResults (final String query) {		
+		showLoading();
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{  
+    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
+    				BeintooUser u = new BeintooUser();
+    				friends = u.findFriendsByQuery(query, p.getUser().getId(), true,  null);
+    				
+    				System.out.println("FFFFF "+friends);
+    				if(friends.length > 0)
+    					UIhandler.sendEmptyMessage(LOAD_TABLE);
+    				else
+    					setEmptyTable(FIND_FRIENDS);
+    			}catch (Exception e){
+    				setEmptyTable(FIND_FRIENDS);
+    				e.printStackTrace();
+    			}
+    		}
+		}).start();
+	}   
+	
+	private void showLoading (){
+		ProgressBar pb = new ProgressBar(getContext());
+		pb.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));
+		
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+		pb.setPadding(0, (int)(50*ratio), 0, (int)(50*ratio));		
+		pb.setLayoutParams(params);
+		pb.setId(5000);
+		TableLayout table = (TableLayout) findViewById(R.id.table);
+		table.removeAllViews();
+		table.setGravity(Gravity.CENTER);
+		table.addView(pb);
+	} 
+	
+	public void loadFriendsTable(){
+		TableLayout table = (TableLayout) findViewById(R.id.table);
+		table.removeAllViews();
+		
+		final ArrayList<View> rowList = new ArrayList<View>();
+		
+    	for(int i = 0; i<friends.length; i++){
+    		final LoaderImageView image = new LoaderImageView(getContext(),friends[i].getUserimg(),(int)(ratio * 70),(int)(ratio *70));
+       		
+    		TableRow row = createRowFriendList(image, friends[i].getNickname(),friends[i].getName(), getContext());
+			row.setId(i);
+			rowList.add(row);			 
+			row.setOnClickListener(this);
+			
+			View spacer = createSpacer(getContext(),1,1);
+			spacer.setId(-100);
+			rowList.add(spacer);
+			View spacer2 = createSpacer(getContext(),2,1);
+			spacer2.setId(-100);
+			rowList.add(spacer2);
+			
+			BeButton b = new BeButton(current.getContext());
+			if(i % 2 == 0)
+	    		row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			else
+				row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+	
+    	}	 
+	    
+	    for (View row : rowList) {	      
+		      table.addView(row);
+		}
+	} 
+	
+	public void loadSelectionTable(){
+		TableLayout table = (TableLayout) findViewById(R.id.table);
+		table.removeAllViews();		
+				
+		final ArrayList<View> rowList = new ArrayList<View>();
+		
+		
+		for(int i = 0; i < 3;i++){
+	    	ImageView icon = new ImageView(getContext());
+	    	String section = "";
+	    	String description = "";
+	    	if(i == 0){
+	    		icon.setImageResource(R.drawable.findfriend);
+	    		section = current.getContext().getString(R.string.friendFind);
+	    		description = current.getContext().getString(R.string.friendFindT);
+	    	}else if(i == 1){
+	    		icon.setImageResource(R.drawable.yourfriend);
+	    		section = current.getContext().getString(R.string.friendYours);
+	    		description = current.getContext().getString(R.string.friendYoursT);
+	    	}else if(i == 2){
+	    		icon.setImageResource(R.drawable.friendreq);
+	    		section = current.getContext().getString(R.string.friendReqTitle);
+	    		description = current.getContext().getString(R.string.friendFriendshipReqT);
+	    	}
+	    	
+			TableRow row = createRowFriendList(icon, section,description, getContext());
+			row.setId(i);
+			rowList.add(row);			
+			row.setOnClickListener(this);
+			
+			View spacer = createSpacer(getContext(),1,1);
+			spacer.setId(-100);
+			rowList.add(spacer);
+			View spacer2 = createSpacer(getContext(),2,1);
+			spacer2.setId(-100);
+			rowList.add(spacer2);
+			
+			BeButton b = new BeButton(current.getContext());
+			if(i % 2 == 0)
+	    		row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			else
+				row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+	
+		}
+	    
+	    for (View row : rowList) {	      
+		      table.addView(row);
+		}
+	}
+	
+	public TableRow createRowFriendList(View image, String nick,String name, Context activity) {
+		  TableRow row = new TableRow(activity);
+		  row.setGravity(Gravity.CENTER);
+		  
+		  image.setPadding(15, 4, 10, 4);
+		  
+		  LinearLayout foto = new LinearLayout(row.getContext());
+		  foto.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  foto.setOrientation(LinearLayout.VERTICAL);
+		  
+		  foto.addView(image);
+		  row.addView(foto,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT)); //
+		 
+		  LinearLayout main = new LinearLayout(row.getContext());
+		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  main.setOrientation(LinearLayout.VERTICAL);
+		  main.setGravity(Gravity.CENTER_VERTICAL);
+		  
+		  TextView nickname = new TextView(activity);		  
+		  nickname.setText(nick);
+		  nickname.setPadding(5, 0, 0, 0);
+		  nickname.setTextColor(Color.parseColor("#545859")); 
+		  nickname.setMaxLines(1);
+		  nickname.setTextSize(16);
+		  nickname.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));		  
+		  
+		  TextView scoreView = new TextView(activity);		
+		  scoreView.setText(name);	
+		  scoreView.setPadding(5, 0, 0, 0);
+		  scoreView.setTextColor(Color.parseColor("#787A77"));		  
+		  scoreView.setTextSize(12);
+		  scoreView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  
+		  main.addView(nickname);
+		  main.addView(scoreView);		  
+		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio * 80))); 
+		  
+		  return row;
+	} 
+	
+	private static View createSpacer(Context activity, int color, int height) {
+		  View spacer = new View(activity);
+		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
+		  if(color == 1)
+			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
+		  else if(color == 2)
+			  spacer.setBackgroundColor(Color.WHITE);
+		  
+		  return spacer;
+	}
+	
+	private void setEmptyTable(int section){
+		Message msg = new Message();
+		Bundle b = new Bundle();
+		if(section == SHOW_FRIENDS_FROM_MESSAGES || section == SHOW_FRIENDS_FROM_PROFILE){
+			msg.what = SHOW_EMPTY;
+			b.putString("message", current.getContext().getString(R.string.friendsNo));
+			msg.setData(b);
+			UIhandler.sendMessage(msg);
+		}else if(section == FIND_FRIENDS){
+			msg.what = SHOW_EMPTY;
+			b.putString("message", current.getContext().getString(R.string.friendNotfound));
+			msg.setData(b);
+			UIhandler.sendMessage(msg);
+		}else if(section == FRIENDSHIP_REQUESTS){
+			msg.what = SHOW_EMPTY;
+			b.putString("message", current.getContext().getString(R.string.friendReqEmpty));
+			msg.setData(b);
+			UIhandler.sendMessage(msg);
+		} 
+	}
+	
+	private void showFriendShipDialog(final String userExtTo, final View row){
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		builder.setMessage(current.getContext().getString(R.string.friendReqAccept))
+		       .setCancelable(false)
+		       .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   friendshipThread(userExtTo, "accept");
+		        	   TableLayout table = (TableLayout) findViewById(R.id.table);
+		        	   table.removeView(row);
+		           }
+		       })
+		       .setNegativeButton(current.getContext().getString(R.string.no), new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   friendshipThread(userExtTo, "ignore");
+		        	   TableLayout table = (TableLayout) findViewById(R.id.table);
+		        	   table.removeView(row);
+		           }
+		       }).setNeutralButton(current.getContext().getString(R.string.cancel),  new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   
+		           }
+		       });
+		AlertDialog alert = builder.create();
+		alert.show(); 
+	}
+	
+	private void addFriendDialog(final String userExtTo, final String nickname){
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		
+		builder.setMessage(String.format(current.getContext().getString(R.string.friendSendReq), nickname))
+		       .setCancelable(false)
+		       .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   friendshipThread(userExtTo, "invite");
+		           }
+		       })
+		       .setNegativeButton(getContext().getString(R.string.no), new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   
+		           }
+		       });
+		AlertDialog alert = builder.create();
+		alert.show(); 
+	}
+	 
+	private void friendshipThread(final String userExtTo, final String action){		
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{  
+    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
+    				BeintooUser bu = new BeintooUser();
+    				Message msg = new Message();
+    				Bundle b = new Bundle();
+    				if(action.equalsIgnoreCase("accept")){
+    					com.beintoo.wrappers.Message m = bu.respondToFriendshipRequests(p.getUser().getId(), userExtTo, action, null);
+    					if(m.getMessage().equalsIgnoreCase("OK")){
+    						b.putString("message", getContext().getString(R.string.friendReqAcc));
+    						msg.what = SHOW_MESSAGE;
+    						msg.setData(b);
+    						UIhandler.sendMessage(msg);
+    					}
+    				}else if(action.equalsIgnoreCase("ignore")){
+    					com.beintoo.wrappers.Message m = bu.respondToFriendshipRequests(userExtTo, p.getUser().getId(), action, null);
+    					if(m.getMessage().equalsIgnoreCase("OK")){
+    						b.putString("message", getContext().getString(R.string.friendReqIgn));
+    						msg.what = SHOW_MESSAGE;
+    						msg.setData(b);
+    						UIhandler.sendMessage(msg);
+    					}
+    				}else if(action.equalsIgnoreCase("invite")){
+    					com.beintoo.wrappers.Message m = bu.respondToFriendshipRequests(p.getUser().getId(), userExtTo, action, null);
+    					if(m.getMessage().equalsIgnoreCase("OK")){
+    						b.putString("message", getContext().getString(R.string.friendReqSent));
+    						msg.what = SHOW_MESSAGE;
+    						msg.setData(b);
+    						UIhandler.sendMessage(msg);
+    					}
+    				}
+    			}catch (Exception e){
+    				e.printStackTrace();
+    			} 
+    		}
+		}).start();
+	}  
+	
+	public void onClick(View v) {
+		if(whichSection == SHOW_FRIENDS_FROM_MESSAGES){
+			((MessagesWrite) previous).setToNickname(friends[v.getId()].getNickname());
+			((MessagesWrite)previous).setToExtId(friends[v.getId()].getId());
+			current.dismiss();
+		}else if(whichSection == SHOW_FRIENDS_FROM_PROFILE){
+			UserProfile userProfile = new UserProfile(getContext(),friends[v.getId()].getId());
+			userProfile.show();
+		}else if(whichSection == MAIN_FRIENDS_MENU){
+			 if(v.getId() == 0){
+				Friends friend = new Friends(getContext(), null, Friends.FIND_FRIENDS, R.style.ThemeBeintoo);
+				friend.show();
+			}else if(v.getId() == 1){
+				Friends friend = new Friends(getContext(), null, Friends.SHOW_FRIENDS_FROM_PROFILE, R.style.ThemeBeintoo);
+				friend.show();
+			}else if(v.getId() == 2){
+				Friends friend = new Friends(getContext(), null, Friends.FRIENDSHIP_REQUESTS, R.style.ThemeBeintoo);
+				friend.show();
+			}
+		}else if(whichSection == FRIENDSHIP_REQUESTS){
+			showFriendShipDialog(friends[v.getId()].getId(),v);
+		}else if(whichSection == FIND_FRIENDS){
+			addFriendDialog(friends[v.getId()].getId(), friends[v.getId()].getNickname());
+		}
+	}
+	
+	Handler UIhandler = new Handler() {
+		  @Override
+		  public void handleMessage(Message msg) {
+			  if(msg.what == LOAD_TABLE)
+				  loadFriendsTable();
+			  else if (msg.what == SHOW_EMPTY){
+				  TableLayout table = (TableLayout) findViewById(R.id.table);
+				  table.removeAllViews();
+				  TextView t = new TextView(current.getContext());
+				  t.setText(msg.getData().getString("message"));
+				  t.setTextColor(Color.GRAY);
+				  t.setPadding(15,15,0,0);
+				  table.addView(t);
+			  }else if(msg.what == SHOW_MESSAGE){
+				  MessageDisplayer.showMessage(getContext(), msg.getData().getString("message"), Gravity.BOTTOM);
+			  }		  
+				  
+			  super.handleMessage(msg);
+		  }
+	};
+}

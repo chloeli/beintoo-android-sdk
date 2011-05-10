@@ -51,7 +51,9 @@ import android.widget.TextView;
 public class UserProfile extends Dialog {
 	Dialog current;
 	double ratio;
-	Player currentPlayer;
+	private Player currentPlayer;
+	
+	private int currentSection;
 	
 	private final int LOAD_PROFILE = 1;
 	private final int SET_NEWMSG_BUTTON = 2;
@@ -62,15 +64,17 @@ public class UserProfile extends Dialog {
 	public UserProfile(final Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);				
 		current = this;
+		currentSection = CURRENT_USER_PROFILE;
 		setupMainLayoutGradients();
 		showLoading();
-		setupCurrentUserProfileLayout();
-		startLoading(null, CURRENT_USER_PROFILE);		
+		setupCurrentUserProfileLayout();		
+		startLoading(null, CURRENT_USER_PROFILE);			
 	}
 	
 	public UserProfile(final Context ctx, final String userExt) {
 		super(ctx, R.style.ThemeBeintoo);				
 		current = this;
+		currentSection = FRIEND_USER_PROFILE;
 		setupMainLayoutGradients();		
 		showLoading();
 		setupFriendProfileLayout();
@@ -97,6 +101,8 @@ public class UserProfile extends Dialog {
 		t.setText(R.string.profile);
 		LinearLayout gc = (LinearLayout) findViewById(R.id.goodcontent);
 		gc.setVisibility(LinearLayout.INVISIBLE);
+		
+		currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", getContext()), Player.class);	
 		
 		Button logout = (Button) findViewById(R.id.logout);
 	    BeButton b = new BeButton(current.getContext());
@@ -125,9 +131,7 @@ public class UserProfile extends Dialog {
 		detach.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				BeintooUser usr = new BeintooUser();
-				Player currentPlayer;
-				try {
-					currentPlayer = getCurrentPlayer();					
+				try {													
 					usr.detachUserFromDevice(DeviceId.getUniqueDeviceId(current.getContext()), currentPlayer.getUser().getId());
 					PreferencesHandler.saveBool("isLogged", false, getContext());
 					PreferencesHandler.saveString("currentPlayer", null, getContext());
@@ -138,13 +142,42 @@ public class UserProfile extends Dialog {
 		});
 		
 		
+		/*
+		 * SETUP TOOLBAR BUTTONS 
+		 */
+		
+		ImageButton friends = (ImageButton) findViewById(R.id.friendsbt);
+		friends.setOnClickListener(new ImageButton.OnClickListener(){
+			public void onClick(View v) {
+				Friends mf = new Friends(getContext(), null, Friends.MAIN_FRIENDS_MENU, R.style.ThemeBeintoo);
+		        mf.show();										
+			}
+		});
+		
 		ImageButton messages = (ImageButton) findViewById(R.id.messagesbt);
 		messages.setOnClickListener(new ImageButton.OnClickListener(){
 			public void onClick(View v) {
-				MessagesList ml = new MessagesList(current.getContext());
+				MessagesList ml = new MessagesList(getContext());
 		        ml.show();											
 			}
 		});
+		
+		ImageButton balancebt = (ImageButton) findViewById(R.id.balancebt);
+		balancebt.setOnClickListener(new ImageButton.OnClickListener(){
+			public void onClick(View v) {
+				UserBalance ub = new UserBalance(getContext());
+		        ub.show();											
+			}
+		});
+				
+		try {
+			TextView unread = (TextView) findViewById(R.id.msgunread);
+			unread.setText(Integer.toString(currentPlayer.getUser().getUnreadMessages()));			
+		}catch(Exception e){e.printStackTrace();}
+		
+		LinearLayout toolbar = (LinearLayout) findViewById(R.id.toolbar);
+		toolbar.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_BUTTON_GRADIENT));
+		
 	}
 	
 	private void setupFriendProfileLayout (){
@@ -158,7 +191,10 @@ public class UserProfile extends Dialog {
 		logout.setVisibility(LinearLayout.GONE);
 		detach.setVisibility(LinearLayout.GONE);
 		gc.setVisibility(LinearLayout.INVISIBLE);
-		mail.setVisibility(LinearLayout.GONE); 		
+		mail.setVisibility(LinearLayout.GONE); 	
+		
+		LinearLayout toolbar = (LinearLayout) findViewById(R.id.toolbar);
+		toolbar.setVisibility(LinearLayout.GONE);
 	}
 	
 	private void startLoading (final String userExt, final int ws) {
@@ -200,11 +236,6 @@ public class UserProfile extends Dialog {
 		level.setText(getContext().getString(R.string.profileLevel)+fromIntToLevel(currentPlayer.getUser().getLevel()));
 		dollars.setText("Bedollars: "+currentPlayer.getUser().getBedollars());
 		bescore.setText("Bescore: "+currentPlayer.getUser().getBescore());
-		ImageButton messages = (ImageButton) findViewById(R.id.messagesbt);
-		
-		if(currentPlayer.getUser().getUnreadMessages() == 0)
-			messages.setAlpha(158);
-	    
 		
 		Map<String, PlayerScore> playerScore = currentPlayer.getPlayerScore();
 		
@@ -267,23 +298,20 @@ public class UserProfile extends Dialog {
 		        }
 		    }
 		}else { // NO SCORES FOR THE APP
-			TextView noScores = new TextView(getContext());
-			noScores.setText(getContext().getString(R.string.profileNoScores));
-			noScores.setPadding(5,10,0,2);
-			noScores.setTextColor(Color.BLACK);
-			contests.addView(noScores);	
-		}
+			if(currentSection == CURRENT_USER_PROFILE){
+				TextView noScores = new TextView(getContext());
+				noScores.setText(getContext().getString(R.string.profileNoScores));
+				noScores.setPadding(5,10,0,2);
+				noScores.setTextColor(Color.BLACK);
+				contests.addView(noScores);	
+			}
+		} 
 		
 		LinearLayout mc = (LinearLayout) findViewById(R.id.maincontainer);
 		LinearLayout l = (LinearLayout) findViewById(R.id.loading);
 		mc.removeView(l);		
 		LinearLayout gc = (LinearLayout) findViewById(R.id.goodcontent);
 		gc.setVisibility(LinearLayout.VISIBLE);
-	}
-	
-	public Player getCurrentPlayer () {
-		Gson gson = new Gson();		
-		return gson.fromJson(PreferencesHandler.getString("currentPlayer", getContext()), Player.class);		
 	}
 	
 	private void showLoading (){

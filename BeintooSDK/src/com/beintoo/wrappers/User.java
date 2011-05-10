@@ -32,6 +32,7 @@ public class User {
 	Double bescore;
 	Integer messages;
     Integer unreadMessages;
+    Integer pendingFriendRequest;
 
 	public String getId() {
 		return id;
@@ -159,6 +160,14 @@ public class User {
 
 	public void setUnreadMessages(Integer unreadMessages) {
 		this.unreadMessages = unreadMessages;
+	}
+
+	public Integer getPendingFriendRequest() {
+		return pendingFriendRequest;
+	}
+
+	public void setPendingFriendRequest(Integer pendingFriendRequest) {
+		this.pendingFriendRequest = pendingFriendRequest;
 	}
 	
 	

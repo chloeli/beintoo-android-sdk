@@ -19,11 +19,7 @@ import java.util.Collection;
 
 public class Vgood {
 	private String getRealURL;
-    private String acceptURL;
-    private String refuseURL;
-    private String sendAsGiftURL;
     private String showURL;
-    // private String registerURL;
     private String description;
     private String descriptionSmall;
     private String id; //extId actually
@@ -39,24 +35,6 @@ public class Vgood {
 	}
 	public void setGetRealURL(String getRealURL) {
 		this.getRealURL = getRealURL;
-	}
-	public String getAcceptURL() {
-		return acceptURL;
-	}
-	public void setAcceptURL(String acceptURL) {
-		this.acceptURL = acceptURL;
-	}
-	public String getRefuseURL() {
-		return refuseURL;
-	}
-	public void setRefuseURL(String refuseURL) {
-		this.refuseURL = refuseURL;
-	}
-	public String getSendAsGiftURL() {
-		return sendAsGiftURL;
-	}
-	public void setSendAsGiftURL(String sendAsGiftURL) {
-		this.sendAsGiftURL = sendAsGiftURL;
 	}
 	public String getShowURL() {
 		return showURL;

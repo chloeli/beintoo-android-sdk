@@ -390,7 +390,7 @@ public class Beintoo{
 				PreferencesHandler.saveInt(key, currentTempScore, ctx);
 			}
 		
-		}catch(Exception e){e.printStackTrace(); }
+		}catch(Exception e){e.printStackTrace(); } 
 	}
 	
 	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold){

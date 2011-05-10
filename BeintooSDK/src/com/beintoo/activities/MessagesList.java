@@ -135,7 +135,7 @@ public class MessagesList extends Dialog implements OnClickListener{
 					image = new LoaderImageView(getContext(),messages.get(i).getUserFrom().getUserimg(),(int)(ratio * 65),(int)(ratio * 65));
 					nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+messages.get(i).getUserFrom().getNickname();
 					
-					SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss"); 
+					SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
 					curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			
 					Date msgDate = curFormater.parse(messages.get(i).getCreationdate());			
 					curFormater.setTimeZone(TimeZone.getDefault());			
