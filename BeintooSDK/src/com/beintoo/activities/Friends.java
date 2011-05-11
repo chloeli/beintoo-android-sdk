@@ -147,6 +147,7 @@ public class Friends extends Dialog implements OnClickListener{
             }
         });
 		LinearLayout searchBar = new LinearLayout(current.getContext());
+		searchBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 		searchBar.setOrientation(LinearLayout.HORIZONTAL);
 		searchBar.setPadding(10, 10, 10, 10);
 		searchBar.addView(searchicon);
