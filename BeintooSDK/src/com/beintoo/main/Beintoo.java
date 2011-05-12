@@ -24,7 +24,6 @@ import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.activities.tryBeintoo;
 import com.beintoo.activities.tryDialog;
-import com.beintoo.beintoosdk.BeintooAchievements;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
