@@ -141,6 +141,7 @@
     
     <!-- BALANCE -->
     <string name="balance">Bilancio</string> 
+    <string name="balanceempty">Non hai ancora guadagnato e speso beDollars</string>
     <string name="BADGE_WIN">Vincita Badge</string>
 	<string name="CHALLENGE_ACCEPT">Sfida Accettata</string>
 	<string name="CHALLENGE_INVITE">Invito a sfida</string>
@@ -158,4 +159,5 @@
 	<string name="SUBMIT_SCORE">Submit Score</string>
 	<string name="VGOOD_CONVERSION">VGood convertito</string>
 	<string name="WEEKLY_PAYMENT">Salario settimanale</string>
+	<string name="ACHIEVEMENT_UNLOCKED">Achievement sbloccato</string>
 </resources>

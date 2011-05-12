@@ -24,6 +24,7 @@ import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.activities.tryBeintoo;
 import com.beintoo.activities.tryDialog;
+import com.beintoo.beintoosdk.BeintooAchievements;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
@@ -39,6 +40,7 @@ import com.beintoo.vgood.VgoodAcceptDialog;
 import com.beintoo.vgood.VgoodBanner;
 import com.beintoo.wrappers.LocalScores;
 import com.beintoo.wrappers.Player;
+import com.beintoo.wrappers.PlayerAchievement;
 import com.beintoo.wrappers.PlayerScore;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
@@ -558,6 +560,56 @@ public class Beintoo{
     		}
 		}).start();
 	}
+	/*	 
+	public static void submitAchievementScore(final String achievement, final Float percentage, final Float value, 
+			final boolean showNotification, final int gravity){
+		new Thread(new Runnable(){     					
+    		public void run(){	
+				try {
+					Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
+					BeintooAchievements ba = new BeintooAchievements();
+					List<PlayerAchievement> prevachievements = ba.getUserAchievements(p.getUser().getId());
+					
+					// GET IF PREVIOUS UNLOCKED ACHIEVEMENT 
+					boolean previousUnlocked = false;					
+					for(PlayerAchievement pa : prevachievements){
+						if(pa.getAchievement().getId().equals(achievement)){
+							if(pa.getStatus().equals("UNLOCKED")){
+								previousUnlocked = true;
+							}
+						}  
+					}   
+					
+					if(!previousUnlocked){
+						List<PlayerAchievement> achievements = ba.submitUserAchievement(p.getUser().getId(), achievement, percentage, value);
+												   
+						StringBuilder message = new StringBuilder("You have unlocked the following achievement(s): ");
+						boolean hasUnlocked = false;
+						for(PlayerAchievement pa : achievements){
+							if(pa.getStatus().equals("UNLOCKED")){ 
+									hasUnlocked = true; 
+									message.append(pa.getAchievement().getName());
+									message.append(",");
+							} 
+						}					
+						message.replace(message.length()-1, message.length(), "");
+						
+						if(hasUnlocked && showNotification){
+							Message msg = new Message();
+							Bundle b = new Bundle();						
+							b.putString("Message", message.toString()); 						
+							b.putInt("Gravity", gravity);						
+							msg.setData(b);
+							msg.what = SUBMITSCORE_POPUP;
+							UIhandler.sendMessage(msg);
+						}
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	} */
 	
 	/**
 	 * Se which features to use in your app
@@ -697,6 +749,11 @@ public class Beintoo{
 	
 	 public static interface BScoreListener {
 		 public void onComplete(PlayerScore p);
+		 public void onBeintooError(Exception e);
+	 }
+	 
+	 public static interface BAchievementListener {
+		 public void onComplete(List<PlayerAchievement> a);
 		 public void onBeintooError(Exception e);
 	 }
 }

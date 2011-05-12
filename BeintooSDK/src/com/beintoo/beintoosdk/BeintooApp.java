@@ -116,7 +116,6 @@ public class BeintooApp {
 		else
 			apiUrl = apiPreUrl+"app/topscore/"+userExt;
 		
-		System.out.println(apiUrl);
 		//Set the auth request header
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");

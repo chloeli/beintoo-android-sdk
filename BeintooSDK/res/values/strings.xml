@@ -138,7 +138,8 @@
     <string name="messagenotification">You have %d unread messages</string>
     
     <!-- BALANCE -->
-    <string name="balance">Balance</string>        
+    <string name="balance">Balance</string>  
+    <string name="balanceempty">You have no beDollars transactions</string>      
     <string name="BADGE_WIN">Badge Won</string>
 	<string name="CHALLENGE_ACCEPT">Challenge Accepted</string>
 	<string name="CHALLENGE_INVITE">Challenge Invited</string>
@@ -156,5 +157,6 @@
 	<string name="SUBMIT_SCORE">Score submitted</string>
 	<string name="VGOOD_CONVERSION">VGood converted</string>
 	<string name="WEEKLY_PAYMENT">Weekly salary</string>
+	<string name="ACHIEVEMENT_UNLOCKED">Achievement unlocked</string>
     
 </resources>

@@ -408,8 +408,6 @@ public class BeintooUser {
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl, header, post,true);		 
 		
-		return new Gson().fromJson(json, User.class);
-		
+		return new Gson().fromJson(json, User.class);		
 	}
-
 }

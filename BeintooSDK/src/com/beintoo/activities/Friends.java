@@ -434,14 +434,14 @@ public class Friends extends Dialog implements OnClickListener{
 		           public void onClick(DialogInterface dialog, int id) {
 		        	   friendshipThread(userExtTo, "accept");
 		        	   TableLayout table = (TableLayout) findViewById(R.id.table);
-		        	   table.removeView(row);
+		        	   table.removeView(row);		        	   
 		           }
 		       })
 		       .setNegativeButton(current.getContext().getString(R.string.no), new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		        	   friendshipThread(userExtTo, "ignore");
 		        	   TableLayout table = (TableLayout) findViewById(R.id.table);
-		        	   table.removeView(row);
+		        	   table.removeView(row);		        	   
 		           }
 		       }).setNeutralButton(current.getContext().getString(R.string.cancel),  new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
@@ -488,7 +488,7 @@ public class Friends extends Dialog implements OnClickListener{
     						UIhandler.sendMessage(msg);
     					}
     				}else if(action.equalsIgnoreCase("ignore")){
-    					com.beintoo.wrappers.Message m = bu.respondToFriendshipRequests(userExtTo, p.getUser().getId(), action, null);
+    					com.beintoo.wrappers.Message m = bu.respondToFriendshipRequests(p.getUser().getId(), userExtTo, action, null);
     					if(m.getMessage().equalsIgnoreCase("OK")){
     						b.putString("message", getContext().getString(R.string.friendReqIgn));
     						msg.what = SHOW_MESSAGE;
@@ -504,6 +504,7 @@ public class Friends extends Dialog implements OnClickListener{
     						UIhandler.sendMessage(msg);
     					}
     				}
+    				
     			}catch (Exception e){
     				e.printStackTrace();
     			} 

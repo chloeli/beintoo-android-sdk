@@ -75,8 +75,11 @@ public class UserBalance extends Dialog{
     			try{ 
     				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
     				BeintooUser u = new BeintooUser();    				
-    				balance = u.getUserBalance(p.getUser().getId(), 0, 20);		
-					UIhandler.sendEmptyMessage(0);
+    				balance = u.getUserBalance(p.getUser().getId(), 0, 20);	
+    				if(balance.size() > 0)
+    					UIhandler.sendEmptyMessage(0);
+    				else 
+    					UIhandler.sendEmptyMessage(1);
     			}catch (Exception e){
     				e.printStackTrace();
     			}
@@ -139,9 +142,9 @@ public class UserBalance extends Dialog{
 	
 	public TableRow createRow(View image, String appName,String date, double value, String reason, Context activity) {
 		  TableRow row = new TableRow(activity);
-		  row.setGravity(Gravity.CENTER);
+		  row.setGravity(Gravity.CENTER); 
 		  
-		  image.setPadding((int)(ratio*0), 0, 0, 0);
+		  image.setPadding((int)(ratio*10), 0, (int)(ratio*15), 0);
 		  ((LinearLayout) image).setGravity(Gravity.LEFT);
 		  
 		  LinearLayout img = new LinearLayout(row.getContext());
@@ -215,7 +218,7 @@ public class UserBalance extends Dialog{
 		  position.addView(movvalue);
 		  
 		  TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT);
-		  params.setMargins(0, 0, 10, 0);
+		  params.setMargins(0, 0, 15, 0);
 		  row.addView(position,params);
 		  
 		  return row;
@@ -235,7 +238,17 @@ public class UserBalance extends Dialog{
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {	
-			  loadTable();
+			  if(msg.what == 0)
+				  loadTable();
+			  else if(msg.what == 1){				
+				  TableLayout table = (TableLayout) findViewById(R.id.table);
+				  table.removeAllViews();
+				  TextView t = new TextView(current.getContext());
+				  t.setText(current.getContext().getString(R.string.balanceempty));
+				  t.setTextColor(Color.GRAY);
+				  t.setPadding(15,25,0,0);
+				  table.addView(t);			  
+			  }
 			  super.handleMessage(msg);
 		  }
 	};

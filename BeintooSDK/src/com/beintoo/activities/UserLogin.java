@@ -23,6 +23,7 @@ import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooFacebookLogin;
 import com.beintoo.beintoosdkui.BeintooSignupBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
@@ -114,7 +115,12 @@ public class UserLogin extends Dialog{
 		    					newPlayer = player.playerLogin(null,loggedUser.getGuid(),null,DeviceId.getUniqueDeviceId(getContext()), null, null);
 		    				
 							if(newPlayer.getGuid() != null){
-								String signupUrl = "http://www.beintoo.com/connect.html?" +
+								
+								String web = BeintooSdkParams.webUrl;
+								if(BeintooSdkParams.useSandbox) 
+									web = BeintooSdkParams.sandboxWebUrl;
+																
+								String signupUrl = web+"connect.html?" +
 								"apikey="+DeveloperConfiguration.apiKey+"&guid="+newPlayer.getGuid()+"" +
 										"&display=touch&" +
 								"redirect_uri=http://static.beintoo.com/sdk/register_ok.html&logged_uri=http://static.beintoo.com/sdk/already_logged.html";
@@ -193,8 +199,13 @@ public class UserLogin extends Dialog{
 		Button fblogin = (Button) findViewById(R.id.fblogin);
 		fblogin.setBackgroundDrawable(b.setPressedBg(R.drawable.facebook, R.drawable.facebook_h, R.drawable.facebook_h));
 		fblogin.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {								
-				String loginUrl = "http://www.beintoo.com/connect.html?signup=facebook&apikey="
+			public void onClick(View v) {
+				
+				String web = BeintooSdkParams.webUrl;
+				if(BeintooSdkParams.useSandbox) 
+					web = BeintooSdkParams.sandboxWebUrl;
+				
+				String loginUrl = web+"connect.html?signup=facebook&apikey="
 						+ DeveloperConfiguration.apiKey
 						+ "&display=touch&redirect_uri=http://static.beintoo.com/sdk/register_ok.html&logged_uri=http://static.beintoo.com/sdk/fblogin.html";				
 				
