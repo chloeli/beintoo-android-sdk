@@ -56,6 +56,8 @@
     <string name="profileNoScores">You have no scores for this app</string>
     <string name="profileDetach">Remove account from device</string>
 	<string name="profileOf">%s Profile</string>
+	<string name="password">Password</string>
+    <string name="logout">Logout</string>
     
     <string name="vgoodWhoAlso">Who also purchased</string>
     <string name="vgoodEnd">End date:</string>

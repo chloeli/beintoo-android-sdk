@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="challStatus">Statut:</string>
+    <string name="challStart">Début:</string>
+    <string name="challEnd">Jusqu\'au:</string>
+    <string name="challWinner">Gagnant:</string>
+    <string name="challPrize">Prix:</string>
+    <string name="challNoPending">Vous n\'avez aucune demande de défi en attente</string>
+    <string name="challFromTo" xml:space="preserve">De vous à\u0020</string>
+    <string name="challFrom" xml:space="preserve">De\u0020</string>
+    <string name="challYou" xml:space="preserve">\u0020à vous</string>
+    <string name="challRefused">Défi refusé</string>
+    <string name="challAccepted">Défi accepté</string>
+    <string name="challNoPendingC">Vous n\'avez aucune demande de défi en attente</string>
+    <string name="challNoAccepted">Vous n\'avez accepté aucun défi</string>
+    <string name="challNoEnded">Vous n\'avez aucun défi achevé</string>
+    <string name="challChallenge">Défi</string>
+    <string name="challSent" xml:space="preserve">Défi envoyé à\u0020</string>
+    <string name="challAccept">Voulez-vous accepter ce défi au coût de\u0020</string>
+    <string name="challSend">Voulez-vous envoyer un défi?\nPariez 10 BeDollars, vous pourriez en gagner 25.</string>
+    <string name="challTip">cliquez sur un ami pour le défier</string>
+    
+    <string name="leadTitle">Leaderboard</string>
+    <string name="leadScore">Score:\u0020</string>
+    
+    <!-- FRIENDS -->
+    <string name="friendsTitle">Vos amis</string>
+    <string name="friendSel">Sélectionnez un ami</string>
+    <string name="friendsNo">Vous n\'avez aucun amis pour l\'instant</string>    
+    <string name="friendSure" xml:space="preserve">Êtes vous sûr de vouloir envoyer ce coupon comme cadeau à\u0020</string>
+    <string name="friendSent" xml:space="preserve">Cadeau envoyé à\u0020</string> 
+    <string name="friendLoading">Chargement en cours...</string>
+    <string name="friendTitle">Amis</string> 
+    <string name="friendFind">Retrouver amis</string>
+    <string name="friendFindT">Retrouver amis sur Beintoo</string>
+    <string name="friendYours">Vos amis</string>
+    <string name="friendYoursT">Voir vos amis sur Beintoo</string>
+    <string name="friendFriendshipReqT">Gérez vos demandes d\'amitié.</string>    
+    <string name="friendFindeditsearch">Rechercher un pseudo, un nom ou une email</string>
+    <string name="friendSendReq">Voulez-vous envoyer une demande d\'amitié à %s?</string>
+    <string name="friendReqTitle">Demande d\'amitié</string>
+    <string name="friendReqSubtitle">Cliquez sur le nom pour accepter</string>
+    <string name="friendReqEmpty">Vous n\'avez pas de demandes d\'amitié</string>
+    <string name="friendReqAccept">Acceptez-vous la demande d\'amitié?</string>
+    <string name="friendNotfound">Aucun résultat trouvé</string>
+     <string name="friendReqSent">Demande envoyée</string>
+    <string name="friendReqAcc">Demande acceptée</string>
+    <string name="friendReqIgn">Demande refusée</string>
+    
+    <string name="homeWelcome" xml:space="preserve">Bienvenue\u0020</string>
+    
+    <string name="profileScore">Votre Score</string>
+    <string name="profileLevel" xml:space="preserve">Niveau:\u0020</string>
+    <string name="profileTotalScore" xml:space="preserve">Score total:\u0020</string>
+    <string name="profileBestScore" xml:space="preserve">Meilleur score:\u0020</string>
+    <string name="profileLastScore" xml:space="preserve">Dernier score:\u0020</string>
+    <string name="profileNoScores">Vous n\'avez encore aucun score sur cette Appli</string>
+    <string name="profileDetach">Éliminer profil de ce dispositif</string>
+    <string name="profileOf">Profil de %s</string>
+    <string name="password">Mot de passe</string>
+    <string name="logout">Déconnexion</string>
+    
+    <string name="vgoodWhoAlso">Ont déjà obtenu le prix</string>
+    <string name="vgoodEnd">Valable jusqu\'au:</string>
+    
+    <string name="walletNoGoods">Vous n\'avez aucun prix pour l\'instant</string>
+    <string name="walletConverted">Obtenus</string>
+    <string name="walletNotConverted">À obtenir</string>
+   
+   
+   	<string name="tryBe">Beintoo transforme votre passion pour les Applis en de vrais prix.\nC\'est gratuit et extrèmement facile!</string>
+    <string name="pressBt">Cliquez si dessous et essayez Beintoo</string>
+    
+    <!-- ERROR DISPLAYER AND TOAST MESSAGES -->
+    <string name="connectionError">Erreur de connexion.\nVérifiez votre connexion à Internet s\'il vous plait.</string>
+    <string name="loadingBeintoo">Chargement Beintoo...</string>
+    <string name="loading">Chargement en cours...</string>
+    <string name="login">Connexion...</string>
+    <string name="wronglogin">Nom ou mot de passe incorrect</string>
+    <string name="earnedBalance">Votre score total est de: %d</string>
+    <string name="earnedScore">Vous avez gagné %d points.\u0020</string>
+    
+    <!-- BOXES -->
+    <string name="boxWallet">Vos prix</string>
+    <string name="boxChallenge">Vos défis\nIl est temps de gagner</string>
+    <string name="boxCoupon">Félicitations! Vous méritez un prix</string>
+    <string name="boxCouponList">Félicitations! Choisissez votre prix</string>
+    <string name="boxUserSel">Quel profil voulez-vous utiliser?\nSélectionnez-le ou ajoutez-en un autre</string>
+    <string name="boxUserLogin">Connectez-vous à Beintoo ou enregistrez-vous.\nSi vous êtes déjà enregistré sur Facebook vous pouvez utiliser ce compte.</string>
+    
+    <!-- BUTTONS -->
+    <string name="trynow">Essayez Beintoo maintenant</string>
+    <string name="nothanks">Non merci</string>
+    <string name="anotheraccount">Utiliser un autre profil</string>
+    <string name="all">Tous</string>
+    <string name="friends">Amis</string>
+    <string name="pending">En attente</string>
+    <string name="ongoing">En cours</string>
+    <string name="ended">Achevés</string>
+    <string name="getcoupon">Obtenir le prix</string>
+    <string name="sendasgift">Envoyer comme cadeau</string>
+    <string name="loginbt">Connexion</string>
+    <string name="newuser">Enregistrez-vous</string>
+    <!-- OTHERS -->
+    <string name="no">Non</string>
+    <string name="yes">Oui</string>
+    <string name="cancel">Annuller</string>
+    
+    <!-- HOME -->
+    <string name="profile">Profil</string>
+    <string name="profiledesc">Voir vos statistiques</string>
+    <string name="leaderboard">Classement</string>
+    <string name="leaderboarddesc">voir les scores totaux</string>    
+    <string name="wallet">Vos prix</string>
+    <string name="walletdesc">gérez vos prix virtuels</string>
+    <string name="challenges">Défis</string>
+    <string name="challengesdesc">gérez vos défis</string>
+    
+    <!-- VGOOD DIALOG -->
+    <string name="vgoodmessagealert">Vous avez gagné un prix en utilisant cette Appli!\nCliquez sur obtenir pour l\'avoir tout de suite</string>
+    <string name="vgoodmessagepositive">Obtenir</string>
+    <string name="vgoodmessagenegative">Plus tard</string>
+    <string name="vgoodmessagebanner">Vous avez gagné un prix en utilisant cette Appli!\nCliquez sur obtenir pour l\'avoir tout de suite</string>
+    
+    <!-- MESSAGES -->
+    <string name="messages">Messages</string>
+    <string name="messagesnewmsg">Nouveau message</string>
+    <string name="messagefrom"><b>De:</b></string>
+    <string name="messagedate"><b>Date:</b></string>
+    <string name="messagereply">Répondre</string>
+    <string name="messagedelete">Eliminer</string>
+    <string name="messagedeleting">Elimination en cours...</string>
+    <string name="messageaskdelete">Voulez-vous vraiment éliminer ce message?</string>  
+    <string name="messagesend">Envoyer</string>
+    <string name="messagesending">Envoi en cours...</string>  
+    <string name="messageselect">Selectionnez un ami et écrire un message</string>
+    <string name="messageto">À:</string>
+    <string name="messagetext">Message:</string> 
+    <string name="messageempty">Vous n\'avez reçu aucun message</string>
+    <string name="messageloadmore">Voir plus</string>  
+    <string name="messagesent">Message envoyé à \u0020</string>
+    <string name="messagenotification">Vous avez %d messages non lus</string> 
+    
+    <!-- BALANCE -->
+    <string name="balance">Budget</string> 
+    <string name="balanceempty">Vous n\'avez pas encore de Bedollars</string>
+    <string name="BADGE_WIN">Badge gagné</string>
+	<string name="CHALLENGE_ACCEPT">Défi accepté</string>
+	<string name="CHALLENGE_INVITE">Demande de défi</string>
+	<string name="CHALLENGE_WiN">Défi gagné</string>
+	<string name="COMMENT">Commentaire</string>
+	<string name="CONTEST_WIN">Contest Gagné</string>
+	<string name="CREATE_USER">Création utilisateur</string>
+	<string name="FRIEND_ADDED">Amis ajouté</string>
+	<string name="FRIEND_INVITE">Amis invité</string>
+	<string name="LEADERBOARD_IMPROVE">Affermissement dans la Leaderboard</string>
+	<string name="MARKETPLACE_BUY">Achat Marketplace</string>
+	<string name="MARKETPLACE_SELL">Vente Marketplace</string>
+	<string name="SEND_BEDOLLAR_METHOD">Versement depuis Appli</string>
+	<string name="SHARE">Partage d\'une info</string>
+	<string name="SUBMIT_SCORE">Nouveau score</string>
+	<string name="VGOOD_CONVERSION">Prix obtenu</string>
+	<string name="WEEKLY_PAYMENT">Salaire hebdomadaire</string>
+	<string name="ACHIEVEMENT_UNLOCKED">Objectif atteint</string>
+</resources>

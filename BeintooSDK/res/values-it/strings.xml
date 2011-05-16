@@ -56,7 +56,9 @@
     <string name="profileLastScore" xml:space="preserve">Ultimo punteggio:\u0020</string>
     <string name="profileNoScores">Non hai nessun punteggio per questa app</string>
     <string name="profileDetach">Rimuovi account dal dispositivo</string>
-    <string name="profileOf">Profile di %s</string>
+    <string name="profileOf">Profilo di %s</string>
+    <string name="password">Password</string>
+    <string name="logout">Logout</string>
     
     <string name="vgoodWhoAlso">Chi ha già acquistato</string>
     <string name="vgoodEnd">Data di fine:</string>

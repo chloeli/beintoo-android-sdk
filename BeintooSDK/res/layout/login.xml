@@ -36,8 +36,8 @@
 
 			<EditText android:id="@+id/password" android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:password="true"
-				android:hint="Password" android:nextFocusDown="@+id/go"
-				android:lines="1" android:maxLines="1" android:imeOptions="actionDone"></EditText>
+				android:nextFocusDown="@+id/go"
+				android:lines="1" android:maxLines="1" android:imeOptions="actionDone" android:hint="@string/password"></EditText>
 
 			<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"

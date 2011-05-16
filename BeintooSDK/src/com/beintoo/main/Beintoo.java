@@ -318,18 +318,21 @@ public class Beintoo{
 	    		public void run(){
 	    			try{	    				
 	    				Location location = getSavedPlayerLocation();
-	    				 
-	    				if(location != null){
+	    				Long currentTime = System.currentTimeMillis();
+	    				if(location != null && (currentTime - location.getTime()) < 900000){ // SAVED AND UP TO DATE LOCATION
 	    					com.beintoo.wrappers.Message msg = null;
 	    					try {
 	    						msg = vgooddispatcher.isEligibleForVgood(p.getGuid(), null, Double.toString(location.getLatitude()), 
 	    						Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()));
 	    						
-	    						checkVgoodEligibility(msg.getMessageID(), p,el);
+	    						checkVgoodEligibility(msg, p,el);
 	    					}catch (ApiCallException e){
-	    						checkVgoodEligibility(e.getId(), p,el);
+	    						msg = new com.beintoo.wrappers.Message();
+	    						msg.setMessage(e.getError());
+	    						msg.setMessageID(e.getId());
+	    						checkVgoodEligibility(msg, p,el);
 	    					}
-	    				}else{
+	    				}else{ // NO LOCATION AVAILABLE
 	    					final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
 	    			    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
 	    			    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){	    			    		
@@ -342,9 +345,12 @@ public class Beintoo{
 	    			    					msg = vgooddispatcher.isEligibleForVgood(p.getGuid(), null, Double.toString(location.getLatitude()), 
 				    						Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()));
 	    			    					
-	    			    					checkVgoodEligibility(msg.getMessageID(), p,el);
+	    			    					checkVgoodEligibility(msg, p,el);
 	    			    				}catch(ApiCallException e){
-	    			    					checkVgoodEligibility(e.getId(), p,el);
+	    			    					msg = new com.beintoo.wrappers.Message();
+	    		    						msg.setMessage(e.getError());
+	    		    						msg.setMessageID(e.getId());
+	    		    						checkVgoodEligibility(msg, p,el);
 	    			    				}
 	    			    				Looper.myLooper().quit();
 	    			    			} 
@@ -361,13 +367,16 @@ public class Beintoo{
 	    			    		try {
 	    			    			msg = vgooddispatcher.isEligibleForVgood(p.getGuid(), null, null, 
 			    						null, null);
-	    			    			checkVgoodEligibility(msg.getMessageID(), p,el);
+	    			    			checkVgoodEligibility(msg, p,el);
 	    			    		}catch (ApiCallException e){
-	    			    			checkVgoodEligibility(e.getId(), p,el);
+	    			    			msg = new com.beintoo.wrappers.Message();
+		    						msg.setMessage(e.getError());
+		    						msg.setMessageID(e.getId());
+		    						checkVgoodEligibility(msg, p,el);
 	    			    		} 
 	    			    	}	
 	    				}
-	    			}catch(Exception e){e.printStackTrace();}
+	    			}catch(Exception e){e.printStackTrace();el.onError();}
 	    		}
 			}).start();			
 		}catch (Exception e){
@@ -375,14 +384,16 @@ public class Beintoo{
 		}
 	}
 	
-	private static void checkVgoodEligibility(Integer msgId, Player p, BEligibleVgoodListener el){
-		el.onComplete(p);
-		if(msgId == 0){
+	private static void checkVgoodEligibility(com.beintoo.wrappers.Message msg, Player p, BEligibleVgoodListener el){
+		el.onComplete(msg, p);
+		if(msg.getMessageID() == 0){
 			el.vgoodAvailable(p);	    						 
-		}else if(msgId == -11){
+		}else if(msg.getMessageID() == -11){
 			el.isOverQuota(p);
-		}else if(msgId == -10 || msgId == -21){
+		}else if(msg.getMessageID() == -10 || msg.getMessageID() == -21){
 			el.nothingToDispatch(p);
+		}else{
+			el.onError();
 		}
 	}
 	
@@ -648,6 +659,65 @@ public class Beintoo{
 	}
 		 
 	/**
+	 *  WORK IN PROGRESS 
+	 *  
+	 * @param achievement
+	 * @param percentage
+	 * @param value
+	 * @param showNotification
+	 * @param gravity
+	 */
+	/*public static void submitAchievementScore(final String achievement, final Float percentage, final Float value, 
+			final boolean showNotification, final int gravity){
+		new Thread(new Runnable(){     					
+    		public void run(){	
+				try {
+					Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
+					BeintooAchievements ba = new BeintooAchievements();
+					List<PlayerAchievement> prevachievements = ba.getUserAchievements(p.getUser().getId());
+					
+					// GET IF PREVIOUS UNLOCKED ACHIEVEMENT 
+					boolean previousUnlocked = false;					
+					for(PlayerAchievement pa : prevachievements){
+						if(pa.getAchievement().getId().equals(achievement)){
+							if(pa.getStatus().equals("UNLOCKED")){
+								previousUnlocked = true;
+							}
+						}  
+					}   
+					
+					if(!previousUnlocked){
+						List<PlayerAchievement> achievements = ba.submitUserAchievement(p.getUser().getId(), achievement, percentage, value);
+												   
+						StringBuilder message = new StringBuilder("You have unlocked the following achievement(s): ");
+						boolean hasUnlocked = false;
+						for(PlayerAchievement pa : achievements){
+							if(pa.getStatus().equals("UNLOCKED")){ 
+									hasUnlocked = true; 
+									message.append(pa.getAchievement().getName());
+									message.append(",");
+							} 
+						}					
+						message.replace(message.length()-1, message.length(), "");
+						
+						if(hasUnlocked && showNotification){
+							Message msg = new Message();
+							Bundle b = new Bundle();						
+							b.putString("Message", message.toString()); 						
+							b.putInt("Gravity", gravity);						
+							msg.setData(b);
+							msg.what = SUBMITSCORE_POPUP;
+							UIhandler.sendMessage(msg);
+						}
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	} 
+	*/
+	/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
 	 */
@@ -794,7 +864,7 @@ public class Beintoo{
 	 }
 	 
 	 public static interface BEligibleVgoodListener {
-		 public void onComplete(Player p);
+		 public void onComplete(com.beintoo.wrappers.Message msg, Player p);
 		 public void vgoodAvailable(Player p);
 		 public void isOverQuota(Player p);
 		 public void nothingToDispatch(Player p);
