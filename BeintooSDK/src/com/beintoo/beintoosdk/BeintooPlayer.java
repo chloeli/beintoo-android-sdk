@@ -149,7 +149,7 @@ public class BeintooPlayer {
 	
 	/**
 	 * Returns a json of the player from the userExt of the associated user
-	 * @param guid player guid
+	 * @param userExt user userExt
 	 * @param codeID a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @return json object contains data of the requested player
 	 */
@@ -187,12 +187,12 @@ public class BeintooPlayer {
 	 * @param language
 	 * @return a json message with the status
 	 */
-	public Message submitScore (String guid, String codeID, String deviceUUID, int lastScore, int balance,
+	public Message submitScore (String guid, String codeID, String deviceUUID, int lastScore, Integer balance,
 			String latitude, String longitude, String radius, String language) {
 		
 			String apiUrl = apiPreUrl+"player/submitscore/?lastScore="+lastScore;
 			
-			if(balance != -1) apiUrl = apiUrl + "&balance="+balance;
+			if(balance != null) apiUrl = apiUrl + "&balance="+balance;
 			if(language != null) apiUrl = apiUrl + "&language="+language;
 			if(latitude != null) apiUrl = apiUrl + "&latitude="+latitude;
 			if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;

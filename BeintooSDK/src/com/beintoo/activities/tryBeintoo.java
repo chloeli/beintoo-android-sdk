@@ -77,27 +77,30 @@ public class tryBeintoo extends Dialog {
 				Thread t = new Thread(new Runnable(){      
             		public void run(){
             			User[] arr = null;
-            			try{             				
-            				arr = usr.getUsersByDeviceUDID(DeviceId.getUniqueDeviceId(getContext()));
-            				if(arr.length == 0) { // Loading the registration form 
-            					Message msg = new Message();
-            			        msg.what = GO_REG;
-            			        UIhandler.sendMessage(msg);
-            				}else if(arr.length > 0){ // check the existing users
-            					Gson gson = new Gson();
-            					String jsonUsers = gson.toJson(arr);
-            					// SAVE THE CURRENT USERS BY DEVICE UDID
-            					PreferencesHandler.saveString("deviceUsersList", jsonUsers, getContext());
-            					
-            					Message msg = new Message();
-            			        msg.what = 2;
-            			        UIhandler.sendMessage(msg);            					
-            				} 
-            			}catch(Exception e){}
+            			try{             			
+            				String deviceID = DeviceId.getUniqueDeviceId(getContext());            				
+            				if(deviceID != null){ // CHECK IF WE ARE ON FROYO AND WITHOUT SIM (BUG)
+	            				arr = usr.getUsersByDeviceUDID(deviceID);
+	            				if(arr.length == 0) { // Loading the registration form 
+	            					Message msg = new Message();
+	            			        msg.what = GO_REG;
+	            			        UIhandler.sendMessage(msg);
+	            				}else if(arr.length > 0){ // check the existing users
+	            					Gson gson = new Gson();
+	            					String jsonUsers = gson.toJson(arr);
+	            					// SAVE THE CURRENT USERS BY DEVICE UDID
+	            					PreferencesHandler.saveString("deviceUsersList", jsonUsers, getContext());
+	            					
+	            					Message msg = new Message();
+	            			        msg.what = 2;
+	            			        UIhandler.sendMessage(msg);            					
+	            				} 
+            				}else {
+            					UIhandler.sendEmptyMessage(GO_REG);            					
+            				}
+            			}catch(Exception e){ ErrorDisplayer.showConnectionErrorOnThread("Connection error.\nPlease check your Internet connection.", getContext(),null); }
             			dialog.dismiss();
-            			current.dismiss();
-            			// CHECK IF THE USER WAS CONNECTED (arr != null)
-            			if(!checkConnection(arr)) ErrorDisplayer.showConnectionErrorOnThread("Connection error.\nPlease check your Internet connection.", getContext(),null);
+            			current.dismiss();	 
             		}
         		});
         		t.start();
@@ -138,13 +141,4 @@ public class tryBeintoo extends Dialog {
 	        super.handleMessage(msg);
 		  }
 	};
-	
-	// IF THE USERS ARRAY IS NULL WE HAD CONNECTION PROBLEMS 
-	public boolean checkConnection (User[] arr){
-		if(arr != null)
-			return true;
-		else{ 
-			return false;
-		}
-	}
 }

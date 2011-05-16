@@ -356,7 +356,7 @@ public class BeintooUser {
 	 * @param sendGreetingsEmail (optional), default true, whether or not to send a greeting email to the new user
 	 * @param imageurl (optional), URL of userimage
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
-	 * @return
+	 * @return a user wrapper
 	 */
 	public User setUser(String guid, String email, String nickname, String password, String name, String address, String country, Integer gender, Boolean sendGreetingsEmail, String imageurl, String codeID){
 		String apiUrl = apiPreUrl+"user/set";

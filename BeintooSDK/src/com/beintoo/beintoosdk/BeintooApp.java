@@ -46,7 +46,7 @@ public class BeintooApp {
 	 * @param codeID (Optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 */
 	
-	public void TopVGood(String codeID){
+	public void topVGood(String codeID){
 		@SuppressWarnings("unused")
 		String apiUrl = apiPreUrl+"app/topvgood";
 		//Set the auth request header
@@ -59,8 +59,8 @@ public class BeintooApp {
 		}
 	} 
 	
-	public void TopVGood(){
-		TopVGood(null);
+	public void topVGood(){
+		topVGood(null);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class BeintooApp {
 	 * @param codeID (Optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @param rows the maximum number of results (max is set to 50, default 20).
 	 */
-	public Map<String, List<EntryCouplePlayer>> TopScore(String codeID, int rows){
+	public Map<String, List<EntryCouplePlayer>> topScore(String codeID, int rows){
 		String apiUrl;
 		if(rows != 0)
 			apiUrl = apiPreUrl+"app/topscore?rows="+rows;
@@ -95,12 +95,12 @@ public class BeintooApp {
 		return leaders;
 	}
 	
-	public void TopScore(String codeID){
-		TopScore(codeID, 0);
+	public void topScore(String codeID){
+		topScore(codeID, 0);
 	}
 	
-	public void TopScore(int rows){
-		TopScore(null,rows);
+	public void topScore(int rows){
+		topScore(null,rows);
 	}
 	
 	/**
@@ -109,7 +109,7 @@ public class BeintooApp {
 	 * @param rows (Optional) the maximum number of results (max is set to 50, default 20).
 	 * @param userExt the unique beintoo id of registered user.
 	 */
-	public Map<String, List<EntryCouplePlayer>> TopScoreByUserExt(String codeID, int rows, String userExt){
+	public Map<String, List<EntryCouplePlayer>> topScoreByUserExt(String codeID, int rows, String userExt){
 		String apiUrl;
 		if(rows != 0)
 			apiUrl = apiPreUrl+"app/topscore/"+userExt+"?rows="+rows;
@@ -143,8 +143,8 @@ public class BeintooApp {
 	 * @param userExt the unique beintoo id of registered user.
 	 * @see #TopScoreByUserExt(String codeID, int rows, String userExt)
 	 */
-	public void TopScoreByUserExt(String codeID, String userExt){
-		TopScoreByUserExt(codeID, 0,userExt);
+	public void topScoreByUserExt(String codeID, String userExt){
+		topScoreByUserExt(codeID, 0,userExt);
 	}
 	
 	/**
@@ -154,8 +154,8 @@ public class BeintooApp {
 	 * @param userExt the unique beintoo id of registered user.
 	 * @see #TopScoreByUserExt(String codeID, int rows, String userExt)
 	 */
-	public void TopScoreByUserExt(int rows, String userExt){
-		TopScoreByUserExt(null,rows,userExt);
+	public void topScoreByUserExt(int rows, String userExt){
+		topScoreByUserExt(null,rows,userExt);
 	}
 	
 	/**
@@ -164,8 +164,8 @@ public class BeintooApp {
 	 * @param userExt the unique beintoo id of registered user.
 	 * @see #TopScoreByUserExt(String codeID, int rows, String userExt)
 	 */
-	public void TopScoreByUserExt(String userExt){
-		TopScoreByUserExt(null,0,userExt);
+	public void topScoreByUserExt(String userExt){
+		topScoreByUserExt(null,0,userExt);
 	}
 	
 	/**

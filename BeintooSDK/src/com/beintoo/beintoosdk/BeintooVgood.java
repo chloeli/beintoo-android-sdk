@@ -143,6 +143,43 @@ public class BeintooVgood {
 	}
 	
 	/**
+	 * Determinate if a player is eligible to receive a new virtual good
+	 * 
+	 * @param guid user guid
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @param latitude
+	 * @param longitude
+	 * @param radius
+	 * @param privategood a bool to set if the vgood has to be private
+	 * @return
+	 */
+	public Message isEligibleForVgood(String guid, String codeID,String latitude, String longitude, String radius) {
+		
+		String apiUrl = apiPreUrl+"vgood/iseligible/byguid/"+guid+"/?";
+		
+		if(latitude != null) apiUrl = apiUrl + "latitude="+latitude;
+		if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
+		if(radius != null) apiUrl = apiUrl + "&radius="+radius;
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		header.getKey().add("guid");
+		header.getValue().add(guid);
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		
+		Message resp = new Gson().fromJson(json, Message.class);
+		
+		return resp;
+	}
+	
+	/**
 	 * Send a Vgood as a gift from a user to another user
 	 * 
 	 * @param vgoodExt the vgood id 

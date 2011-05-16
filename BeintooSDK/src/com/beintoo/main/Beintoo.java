@@ -27,6 +27,7 @@ import com.beintoo.activities.tryDialog;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
+import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
@@ -128,7 +129,7 @@ public class Beintoo{
 							BeintooPlayer player = new BeintooPlayer();
 							// DEBUG
 							DebugUtility.showLog("current saved player: "+PreferencesHandler.getString("currentPlayer", ctx));											
-
+ 
 							// LOGIN TO BEINTOO							
 							Player newPlayer = player.getPlayer(currentPlayer.getGuid());
 							if(newPlayer.getUser().getId() != null){				
@@ -298,6 +299,92 @@ public class Beintoo{
 		GetVgood(ctx, false, null, VGOOD_NOTIFICATION_ALERT);
 	}
 	
+	/**
+	 * Check if the user is eligible for a new virtual good
+	 * 
+	 * @param ctx
+	 * @param el
+	 */
+	public static void isEligibleForVgood(final Context ctx, final BEligibleVgoodListener el){
+		currentContext = ctx;
+		
+		try {
+			final Player p = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));
+			final BeintooVgood vgooddispatcher = new BeintooVgood();
+			
+			if(p.getGuid() == null) return;
+			
+    		new Thread(new Runnable(){     					
+	    		public void run(){
+	    			try{	    				
+	    				Location location = getSavedPlayerLocation();
+	    				 
+	    				if(location != null){
+	    					com.beintoo.wrappers.Message msg = null;
+	    					try {
+	    						msg = vgooddispatcher.isEligibleForVgood(p.getGuid(), null, Double.toString(location.getLatitude()), 
+	    						Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()));
+	    						
+	    						checkVgoodEligibility(msg.getMessageID(), p,el);
+	    					}catch (ApiCallException e){
+	    						checkVgoodEligibility(e.getId(), p,el);
+	    					}
+	    				}else{
+	    					final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
+	    			    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
+	    			    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){	    			    		
+	    			    		Looper.prepare();
+	    			    		final LocationListener locationListener = new LocationListener() {
+	    			    			public void onLocationChanged(Location location) {
+	    			    				locationManager.removeUpdates(this);
+	    			    				com.beintoo.wrappers.Message msg = null;
+	    			    				try {
+	    			    					msg = vgooddispatcher.isEligibleForVgood(p.getGuid(), null, Double.toString(location.getLatitude()), 
+				    						Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()));
+	    			    					
+	    			    					checkVgoodEligibility(msg.getMessageID(), p,el);
+	    			    				}catch(ApiCallException e){
+	    			    					checkVgoodEligibility(e.getId(), p,el);
+	    			    				}
+	    			    				Looper.myLooper().quit();
+	    			    			} 
+	    			    			public void onProviderDisabled(String provider) {}
+			
+	    			    			public void onProviderEnabled(String provider) {}
+			
+	    			    			public void onStatusChanged(String provider,int status, Bundle extras) {}
+	    			    		};   
+	    			    		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.myLooper());
+	    			    		Looper.loop();
+	    			    	}else{ // LOCATION NOT AVAILABLE
+	    			    		com.beintoo.wrappers.Message msg = null;
+	    			    		try {
+	    			    			msg = vgooddispatcher.isEligibleForVgood(p.getGuid(), null, null, 
+			    						null, null);
+	    			    			checkVgoodEligibility(msg.getMessageID(), p,el);
+	    			    		}catch (ApiCallException e){
+	    			    			checkVgoodEligibility(e.getId(), p,el);
+	    			    		} 
+	    			    	}	
+	    				}
+	    			}catch(Exception e){e.printStackTrace();}
+	    		}
+			}).start();			
+		}catch (Exception e){
+			e.printStackTrace(); 
+		}
+	}
+	
+	private static void checkVgoodEligibility(Integer msgId, Player p, BEligibleVgoodListener el){
+		el.onComplete(p);
+		if(msgId == 0){
+			el.vgoodAvailable(p);	    						 
+		}else if(msgId == -11){
+			el.isOverQuota(p);
+		}else if(msgId == -10 || msgId == -21){
+			el.nothingToDispatch(p);
+		}
+	}
 	
 	/**
 	 * Do a player login and save player data 
@@ -409,14 +496,14 @@ public class Beintoo{
 	 * @param showNotification show a toast notification to the player with the score
 	 * @param location player Location
 	 */
-	private static void submitScoreHelper (final Context ctx, final int lastScore, final int balance, final String codeID, 
+	private static void submitScoreHelper (final Context ctx, final int lastScore, final Integer balance, final String codeID, 
 			final boolean showNotification,final Location location, final int gravity){
 		new Thread(new Runnable(){     					
     		public void run(){	
 				try {
 	    			final Message msg = new Message();
 					Bundle b = new Bundle();
-					if(balance != -1)
+					if(balance != null)
 						b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore)+String.format(ctx.getString(R.string.earnedBalance), balance)); 
 					else
 						b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore));
@@ -477,12 +564,12 @@ public class Beintoo{
 				Location pLoc = getSavedPlayerLocation();
 	        	if(pLoc != null){
 	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
-	        			submitScoreHelper(ctx,lastScore,-1,codeID,showNotification,pLoc, gravity);
+	        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,pLoc, gravity);
 	        		}else {
-	        			submitScoreHelper(ctx,lastScore,-1,codeID,showNotification,null, gravity);
+	        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity);
 	        		}
 	        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
-	        		submitScoreHelper(ctx,lastScore,-1,codeID,showNotification,null, gravity);
+	        		submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity);
 	        	}	
 			}catch(Exception e){ 
 				e.printStackTrace();    				
@@ -559,7 +646,66 @@ public class Beintoo{
     		}
 		}).start();
 	}
-	
+		 
+	/**
+	 *  WORK IN PROGRESS 
+	 *  
+	 * @param achievement
+	 * @param percentage
+	 * @param value
+	 * @param showNotification
+	 * @param gravity
+	 */
+	/*public static void submitAchievementScore(final String achievement, final Float percentage, final Float value, 
+			final boolean showNotification, final int gravity){
+		new Thread(new Runnable(){     					
+    		public void run(){	
+				try {
+					Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
+					BeintooAchievements ba = new BeintooAchievements();
+					List<PlayerAchievement> prevachievements = ba.getUserAchievements(p.getUser().getId());
+					
+					// GET IF PREVIOUS UNLOCKED ACHIEVEMENT 
+					boolean previousUnlocked = false;					
+					for(PlayerAchievement pa : prevachievements){
+						if(pa.getAchievement().getId().equals(achievement)){
+							if(pa.getStatus().equals("UNLOCKED")){
+								previousUnlocked = true;
+							}
+						}  
+					}   
+					
+					if(!previousUnlocked){
+						List<PlayerAchievement> achievements = ba.submitUserAchievement(p.getUser().getId(), achievement, percentage, value);
+												   
+						StringBuilder message = new StringBuilder("You have unlocked the following achievement(s): ");
+						boolean hasUnlocked = false;
+						for(PlayerAchievement pa : achievements){
+							if(pa.getStatus().equals("UNLOCKED")){ 
+									hasUnlocked = true; 
+									message.append(pa.getAchievement().getName());
+									message.append(",");
+							} 
+						}					
+						message.replace(message.length()-1, message.length(), "");
+						
+						if(hasUnlocked && showNotification){
+							Message msg = new Message();
+							Bundle b = new Bundle();						
+							b.putString("Message", message.toString()); 						
+							b.putInt("Gravity", gravity);						
+							msg.setData(b);
+							msg.what = SUBMITSCORE_POPUP;
+							UIhandler.sendMessage(msg);
+						}
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	} 
+	*/
 	/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
@@ -704,5 +850,13 @@ public class Beintoo{
 	 public static interface BAchievementListener {
 		 public void onComplete(List<PlayerAchievement> a);
 		 public void onBeintooError(Exception e);
+	 }
+	 
+	 public static interface BEligibleVgoodListener {
+		 public void onComplete(Player p);
+		 public void vgoodAvailable(Player p);
+		 public void isOverQuota(Player p);
+		 public void nothingToDispatch(Player p);
+		 public void onError();
 	 }
 }

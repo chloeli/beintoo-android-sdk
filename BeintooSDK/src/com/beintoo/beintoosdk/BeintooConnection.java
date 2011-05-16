@@ -110,7 +110,8 @@ public class BeintooConnection {
 					InputStream postInputStream = postUrlConnection.getErrorStream();
 					jsonString = readStream(postInputStream);
 					Message msg = new Gson().fromJson(jsonString, Message.class);
-					throw new ApiCallException(msg.getMessage());
+					System.out.println("asdfg"+msg.getMessage());
+					throw new ApiCallException(msg.getMessage(), msg.getMessageID());
 				}
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block

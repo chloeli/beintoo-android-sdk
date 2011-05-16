@@ -26,24 +26,30 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 
 
-public class DeviceId {	
+public class DeviceId {
+	private final static String BUGGED_ANDROID_ID = "9774d56d682e549c";
+		
 	public static String getUniqueDeviceId(Context context){		
 	    final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 	    String tmDevice, tmSerial,androidId = null;
 	    
 	    tmDevice = "" + tm.getDeviceId();
-	    tmSerial = "" + tm.getSimSerialNumber();
+	    tmSerial = tm.getSimSerialNumber();
 	    androidId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-	    
+	   
 	    // LET'S CHECK IF WE ARE IN THE ANDROID SIMULATOR TO PREVENT SAME DEVICEID FOR EVERY DEVELOPER
-	    if(androidId == null){
+	    if(androidId == null){ // EMULATOR
 	    	return toSHA1(DeveloperConfiguration.apiKey);
-	    }else {
+	    }else if(androidId.equals(BUGGED_ANDROID_ID) && ("000000000000000".equals(tmDevice))){ // EMULATOR 2.2 BUGGED
+	    	return toSHA1(DeveloperConfiguration.apiKey);
+	    }else if((androidId.equals(BUGGED_ANDROID_ID)) && (tmSerial == null)){ // BUGGED 2.2 WITHOUT SIM
+	    	return null;
+	    }else { // GOOD
 	    	UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());	    
 	    	String deviceId = deviceUuid.toString();
 	    	return deviceId;
 	    }	
-	} 
+	}  
 	
 	public static String getRandomIdentifier(){
 		return toSHA1(UUID.randomUUID()+":"+System.nanoTime());
@@ -67,5 +73,5 @@ public class DeviceId {
             
         }
         return null;
-	} 
+	}
 }

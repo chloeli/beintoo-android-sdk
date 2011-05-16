@@ -98,7 +98,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
             		public void run(){
             			try{ 
 							BeintooApp app = new BeintooApp();							
-							leader = app.TopScore(null, 0);
+							leader = app.topScore(null, 0);
 							UIhandler.sendEmptyMessage(0);
             			}catch (Exception e){
             				e.printStackTrace();
@@ -128,7 +128,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
             			try{ 
 							BeintooApp app = new BeintooApp();				
 							Player player = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
-							leader = app.TopScoreByUserExt(null, 0, player.getUser().getId());							
+							leader = app.topScoreByUserExt(null, 0, player.getUser().getId());							
 							UIhandler.sendEmptyMessage(0); 
             			}catch (Exception e){
             				e.printStackTrace();
@@ -144,7 +144,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
     		public void run(){
     			try{ 
     				BeintooApp app = new BeintooApp();							
-    				leader = app.TopScore(null, 0);					
+    				leader = app.topScore(null, 0);					
 					UIhandler.sendEmptyMessage(0);
     			}catch (Exception e){
     				e.printStackTrace();
