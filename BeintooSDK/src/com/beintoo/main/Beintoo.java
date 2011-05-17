@@ -156,7 +156,7 @@ public class Beintoo{
 	}
 	
 	/**
-	 * Show a dialog with the try Beintoo message. The dialog is show with an interval of days passed in daysInterval
+	 * Show a dialog with the try Beintoo message. The dialog is shown interval of days passed in daysInterval
 	 * 
 	 * @param ctx current Context
 	 * @param daysInterval interval of days you want to show the dialog
@@ -188,7 +188,6 @@ public class Beintoo{
 		
 		try {
 			final Player currentPlayer = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));
-			final BeintooVgood vgoodHand = new BeintooVgood();
 			
 			if(currentPlayer.getGuid() == null) return;
 	    	
@@ -202,39 +201,9 @@ public class Beintoo{
 							final LocationListener locationListener = new LocationListener() {
 							    public void onLocationChanged(Location location) {
 							    	locationManager.removeUpdates(this);
-							    	final Location l = location;
-							    					    				
+							    	final Location l = location;							    					    				
 		    						// GET A VGOOD WITH COORDINATES
-							    	if(!isMultiple) { // ASSIGN A SINGLE VGOOD TO THE PLAYER
-			    				    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
-			    								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
-			    				    	// ADD THE SINGLE VGOOD TO THE LIST
-			    				    	List<Vgood> list = new ArrayList<Vgood>();
-			    				    	list.add(vgood);
-			    				    	VgoodChooseOne v = new VgoodChooseOne(list);	    				    	
-			    				    	vgoodlist = v;
-								    	
-			    				    	if(vgood.getName() != null){
-			    				    		if(notificationType == VGOOD_NOTIFICATION_BANNER){
-			    				    			vgood_container = container;
-			    				    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
-			    				    		}else{
-			    				    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
-			    				    		}
-			    				    	}
-							    	}else { // ASSIGN A LIST OF VGOOD TO THE PLAYER
-							    		vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
-			    								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);    						 
-			    				    	if(vgoodlist != null){
-			    				    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
-		    				    			if(notificationType == VGOOD_NOTIFICATION_BANNER){
-		    				    				vgood_container = container;
-			    				    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
-		    				    			}else{
-			    				    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
-		    				    			}
-			    				    	}
-							    	}
+							    	getVgoodHelper(isMultiple,container,notificationType,l,currentPlayer);
 							    	saveLocationHelper (location); 
 		    				    	Looper.myLooper().quit(); //QUIT THE THREAD
 							    }
@@ -254,38 +223,7 @@ public class Beintoo{
 		    		public void run(){
 		    			try{			 
 		            		// GET A VGOOD WITHOUT COORDINATES
-		    				if(!isMultiple) { // ASSIGN A SINGLE VGOOD TO THE PLAYER
-						    	vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, null, 
-										null, null, false);   		
-						    	// ADD THE SINGLE VGOOD TO THE LIST
-						    	List<Vgood> l = new ArrayList<Vgood>();
-						    	l.add(vgood);
-	    				    	VgoodChooseOne v = new VgoodChooseOne(l);	    				    	
-	    				    	vgoodlist = v;
-						    	if(vgood.getName() != null){
-	    				    		if(notificationType == VGOOD_NOTIFICATION_BANNER){
-	    				    			vgood_container = container;
-	    				    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
-	    				    		}else{
-	    				    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
-	    				    		}
-	    				    	}
-		    				} else { // ASSIGN A LIST OF VGOOD TO THE PLAYER		    					
-		    					vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), null, null, 
-										null, null, false);   				    		    					
-			            		if(vgoodlist != null){
-			            			// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
-			            			if(vgoodlist != null){
-		    				    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
-	    				    			if(notificationType == VGOOD_NOTIFICATION_BANNER){
-	    				    				vgood_container = container;
-		    				    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
-	    				    			}else{
-		    				    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
-	    				    			}
-		    				    	}
-						    	}
-		    				}
+		    				getVgoodHelper(isMultiple,container,notificationType,null,currentPlayer);
 		    			}catch(Exception e){e.printStackTrace();}
 		    		}
 				}).start();			
@@ -297,6 +235,50 @@ public class Beintoo{
 	
 	public static void GetVgood(final Context ctx) {
 		GetVgood(ctx, false, null, VGOOD_NOTIFICATION_ALERT);
+	}
+	
+	private static void getVgoodHelper (boolean isMultiple,final LinearLayout container, final int notificationType, Location l, Player currentPlayer){
+		final BeintooVgood vgoodHand = new BeintooVgood();
+		if(!isMultiple) { // ASSIGN A SINGLE VGOOD TO THE PLAYER
+			if(l != null){
+				vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
+					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
+			}else {
+				vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, null, 
+						null,null, false);
+			}
+	    	// ADD THE SINGLE VGOOD TO THE LIST
+	    	List<Vgood> list = new ArrayList<Vgood>();
+	    	list.add(vgood);
+	    	VgoodChooseOne v = new VgoodChooseOne(list);	    				    	
+	    	vgoodlist = v;
+	    	
+	    	if(vgood.getName() != null){
+	    		if(notificationType == VGOOD_NOTIFICATION_BANNER){
+	    			vgood_container = container;
+	    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
+	    		}else{
+	    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
+	    		}
+	    	}
+    	}else { // ASSIGN A LIST OF VGOOD TO THE PLAYER
+    		if(l != null){
+    			vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
+					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
+    		}else {
+    			vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), null, null, 
+    					null,null, false);
+    		}
+	    	if(vgoodlist != null){
+	    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
+    			if(notificationType == VGOOD_NOTIFICATION_BANNER){
+    				vgood_container = container;
+	    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
+    			}else{
+	    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
+    			}
+	    	}
+    	}
 	}
 	
 	/**
