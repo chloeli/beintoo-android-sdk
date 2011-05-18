@@ -8,8 +8,8 @@ import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.wrappers.AchievementWrap;
 import com.beintoo.wrappers.PlayerAchievement;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.beintoogson.Gson;
+import com.google.beintoogson.reflect.TypeToken;
 
 public class BeintooAchievements {
 	String apiPreUrl = null;

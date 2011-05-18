@@ -44,7 +44,7 @@ import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
-import com.google.gson.Gson;
+import com.google.beintoogson.Gson;
 
 public class BeintooFacebookLogin extends Dialog {
 	WebView webview;

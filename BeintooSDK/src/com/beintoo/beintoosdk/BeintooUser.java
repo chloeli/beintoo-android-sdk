@@ -26,9 +26,9 @@ import com.beintoo.wrappers.Challenge;
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.User;
 import com.beintoo.wrappers.UserCredit;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
+import com.google.beintoogson.Gson;
+import com.google.beintoogson.JsonParseException;
+import com.google.beintoogson.reflect.TypeToken;
 
 public class BeintooUser {
 	String apiPreUrl = null;

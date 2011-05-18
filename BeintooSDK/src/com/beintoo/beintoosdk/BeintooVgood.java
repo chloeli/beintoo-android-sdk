@@ -21,7 +21,7 @@ import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
-import com.google.gson.Gson;
+import com.google.beintoogson.Gson;
 
 public class BeintooVgood {
 	String apiPreUrl = null;

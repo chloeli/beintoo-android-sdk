@@ -29,7 +29,7 @@ import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
 import com.beintoo.wrappers.Vgood;
-import com.google.gson.Gson;
+import com.google.beintoogson.Gson;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;

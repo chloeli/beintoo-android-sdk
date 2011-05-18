@@ -30,7 +30,7 @@ import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerScore;
-import com.google.gson.Gson;
+import com.google.beintoogson.Gson;
 
 import android.app.Dialog;
 import android.content.Context;

@@ -25,7 +25,7 @@ import com.beintoo.wrappers.Player;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
-import com.google.gson.Gson;
+import com.google.beintoogson.Gson;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;

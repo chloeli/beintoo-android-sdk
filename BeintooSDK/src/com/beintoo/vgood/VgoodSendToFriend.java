@@ -14,7 +14,7 @@ import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
-import com.google.gson.Gson;
+import com.google.beintoogson.Gson;
 
 import android.os.Handler;
 import android.os.Message;

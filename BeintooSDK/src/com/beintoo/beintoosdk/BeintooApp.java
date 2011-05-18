@@ -23,8 +23,8 @@ import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.wrappers.EntryCouplePlayer;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.beintoogson.Gson;
+import com.google.beintoogson.reflect.TypeToken;
 
 public class BeintooApp {
 	String apiPreUrl = null;

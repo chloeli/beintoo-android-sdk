@@ -36,7 +36,7 @@ import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
-import com.google.gson.Gson;
+import com.google.beintoogson.Gson;
 
 public class BeintooConnection {
 	

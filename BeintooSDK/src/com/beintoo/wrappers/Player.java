@@ -25,6 +25,8 @@ public class Player {
 	    Float rank;
 	    Map<String, PlayerScore> playerScore;
 		
+//	    public Player(){}
+	    
 	    public String getGuid() {
 			return guid;
 		}

@@ -16,7 +16,7 @@
 package com.beintoo.beintoosdkutility;
 
 import com.beintoo.wrappers.Player;
-import com.google.gson.Gson;
+import com.google.beintoogson.Gson;
 
 public class JSONconverter {
 	public static String playerToJson(Player p){

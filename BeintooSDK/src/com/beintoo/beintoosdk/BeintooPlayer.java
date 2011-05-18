@@ -17,13 +17,12 @@ package com.beintoo.beintoosdk;
 
 
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
-import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerScore;
-import com.google.gson.Gson;
+import com.google.beintoogson.Gson;
 
 public class BeintooPlayer {
 	String apiPreUrl = null;
@@ -47,7 +46,6 @@ public class BeintooPlayer {
 	 * @return return a json object of the logged in player
 	 */
 	public Player playerLogin(String userExt, String guid, String codeID, String deviceUUID, String language, String publicname) {
-		DebugUtility.showLog("DEVICE ID:"+deviceUUID);
 		String apiUrl = apiPreUrl+"player/login?";
 		
 		if(language != null) apiUrl = apiUrl  + "language="+language;

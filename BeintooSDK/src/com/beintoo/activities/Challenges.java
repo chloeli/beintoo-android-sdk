@@ -48,7 +48,7 @@ import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Challenge;
 import com.beintoo.wrappers.Player;
-import com.google.gson.Gson;
+import com.google.beintoogson.Gson;
 
 public class Challenges extends Dialog implements OnClickListener{
 	static Dialog current;

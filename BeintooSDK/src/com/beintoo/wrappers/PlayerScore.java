@@ -21,6 +21,8 @@ public class PlayerScore {
     Double bestscore;
     Double balance;
     
+//    public PlayerScore(){}
+    
 	public Contest getContest() {
 		return contest;
 	}

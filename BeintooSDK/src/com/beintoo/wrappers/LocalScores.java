@@ -7,8 +7,8 @@ import java.util.List;
 import android.content.Context;
 
 import com.beintoo.beintoosdkutility.PreferencesHandler;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.beintoogson.Gson;
+import com.google.beintoogson.reflect.TypeToken;
 
 public class LocalScores {
 	String codeID;
