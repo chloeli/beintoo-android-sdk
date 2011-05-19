@@ -642,65 +642,6 @@ public class Beintoo{
 	}
 		 
 	/**
-	 *  WORK IN PROGRESS 
-	 *  
-	 * @param achievement
-	 * @param percentage
-	 * @param value
-	 * @param showNotification
-	 * @param gravity
-	 */
-	/*public static void submitAchievementScore(final String achievement, final Float percentage, final Float value, 
-			final boolean showNotification, final int gravity){
-		new Thread(new Runnable(){     					
-    		public void run(){	
-				try {
-					Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
-					BeintooAchievements ba = new BeintooAchievements();
-					List<PlayerAchievement> prevachievements = ba.getUserAchievements(p.getUser().getId());
-					
-					// GET IF PREVIOUS UNLOCKED ACHIEVEMENT 
-					boolean previousUnlocked = false;					
-					for(PlayerAchievement pa : prevachievements){
-						if(pa.getAchievement().getId().equals(achievement)){
-							if(pa.getStatus().equals("UNLOCKED")){
-								previousUnlocked = true;
-							}
-						}  
-					}   
-					
-					if(!previousUnlocked){
-						List<PlayerAchievement> achievements = ba.submitUserAchievement(p.getUser().getId(), achievement, percentage, value);
-												   
-						StringBuilder message = new StringBuilder("You have unlocked the following achievement(s): ");
-						boolean hasUnlocked = false;
-						for(PlayerAchievement pa : achievements){
-							if(pa.getStatus().equals("UNLOCKED")){ 
-									hasUnlocked = true; 
-									message.append(pa.getAchievement().getName());
-									message.append(",");
-							} 
-						}					
-						message.replace(message.length()-1, message.length(), "");
-						
-						if(hasUnlocked && showNotification){
-							Message msg = new Message();
-							Bundle b = new Bundle();						
-							b.putString("Message", message.toString()); 						
-							b.putInt("Gravity", gravity);						
-							msg.setData(b);
-							msg.what = SUBMITSCORE_POPUP;
-							UIhandler.sendMessage(msg);
-						}
-					}
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	} 
-	*/
-	/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
 	 */
