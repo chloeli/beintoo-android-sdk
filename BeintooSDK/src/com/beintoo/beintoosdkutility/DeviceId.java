@@ -34,15 +34,14 @@ public class DeviceId {
 	    String tmDevice, tmSerial,androidId = null;
 	    
 	    tmDevice = "" + tm.getDeviceId();
-	    tmSerial = tm.getSimSerialNumber();
+	    tmSerial = tm.getSimSerialNumber() != null ? tm.getSimSerialNumber() : "";
 	    androidId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-	   
 	    // LET'S CHECK IF WE ARE IN THE ANDROID SIMULATOR TO PREVENT SAME DEVICEID FOR EVERY DEVELOPER
 	    if(androidId == null){ // EMULATOR
 	    	return toSHA1(DeveloperConfiguration.apiKey);
 	    }else if(androidId.equals(BUGGED_ANDROID_ID) && ("000000000000000".equals(tmDevice))){ // EMULATOR 2.2 BUGGED
 	    	return toSHA1(DeveloperConfiguration.apiKey);
-	    }else if((androidId.equals(BUGGED_ANDROID_ID)) && (tmSerial == null)){ // BUGGED 2.2 WITHOUT SIM
+	    }else if((androidId.equals(BUGGED_ANDROID_ID)) && (tmSerial.equals(""))){ // BUGGED 2.2 WITHOUT SIM
 	    	return null;
 	    }else { // GOOD
 	    	UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());	    

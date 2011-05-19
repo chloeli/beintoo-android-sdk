@@ -186,10 +186,9 @@ public class BeintooSignupBrowser extends Dialog {
 					// SAVE THE CURRENT PLAYER
 					String jsonUser = gson.toJson(newPlayer);
 					PreferencesHandler.saveString("currentPlayer", jsonUser,getContext());
-					// FINALLY GO HOME
-					if(Beintoo.OPEN_DASHBOARD_AFTER_LOGIN){
-						UIhandler.sendEmptyMessage(GO_HOME);
-					}
+					
+					// FINALLY GO HOME					
+					UIhandler.sendEmptyMessage(GO_HOME);
 					
 				} catch (Exception e) {
 					ErrorDisplayer.externalReport(e);

@@ -30,7 +30,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
-public class ErrorDisplayer{
+public class ErrorDisplayer{	
+	private final static boolean reportingEnable = false;
 	public static final String CONN_ERROR = "Connection error.\nPlease check your Internet connection.";
 	
 	public static void showConnectionError (String Message, final Context ctx, Exception e){
@@ -98,7 +99,7 @@ public class ErrorDisplayer{
 	
 	public static void externalReport (Exception e){
 		try {
-			errorReport(StackStraceTostring(e));
+			if(reportingEnable) errorReport(StackStraceTostring(e));
 		}catch (Exception e1){e1.printStackTrace();}
 	} 
 }

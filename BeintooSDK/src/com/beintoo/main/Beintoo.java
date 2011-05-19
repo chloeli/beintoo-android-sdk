@@ -163,17 +163,18 @@ public class Beintoo{
 	 */
 	public static void tryBeintooDialog (Context ctx, int daysInterval){
 		currentContext = ctx;
-		  
-		long lastDay = PreferencesHandler.getLong("lastTryDialog", ctx);
-		long now = System.currentTimeMillis();
-		long daysIntervalMillis = 86400000 * daysInterval; //60000   
-		long nextPopup = lastDay + daysIntervalMillis;
-		boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
-		
-		if((lastDay == 0 || now >= nextPopup) && !isLogged){
-			UIhandler.sendEmptyMessage(TRY_DIALOG_POPUP);
-			PreferencesHandler.saveLong("lastTryDialog", now, ctx);
-		}
+		try { 
+			long lastDay = PreferencesHandler.getLong("lastTryDialog", ctx);
+			long now = System.currentTimeMillis();
+			long daysIntervalMillis = 86400000 * daysInterval; //60000   
+			long nextPopup = lastDay + daysIntervalMillis;
+			boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
+			
+			if((lastDay == 0 || now >= nextPopup) && !isLogged){
+				UIhandler.sendEmptyMessage(TRY_DIALOG_POPUP);
+				PreferencesHandler.saveLong("lastTryDialog", now, ctx);
+			}
+		}catch (Exception e){}
 	} 
 	
 	/** 
@@ -640,6 +641,7 @@ public class Beintoo{
 		}).start();
 	}
 		 
+	
 	/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
