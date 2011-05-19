@@ -114,8 +114,7 @@ public class UserProfile extends Dialog {
 						new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));			    	 
 		logout.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
-				PreferencesHandler.saveBool("isLogged", false, getContext());
-				PreferencesHandler.saveString("currentPlayer", null, getContext());
+				Beintoo.logout(getContext());
 				Beintoo.homeDialog.dismiss();
 				current.dismiss();												
 			}
