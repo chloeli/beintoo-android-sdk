@@ -454,7 +454,7 @@ public class Beintoo{
 	 * @param treshold the score treshold for a new vgood
 	 */
 	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold, boolean isMultiple,
-			LinearLayout container, int notificationType){
+			LinearLayout container, int notificationType, final BSubmitScoreListener listener){
 		currentContext = ctx;
 		try{
 			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
@@ -463,7 +463,7 @@ public class Beintoo{
 			int currentTempScore = PreferencesHandler.getInt(key, ctx);
 			currentTempScore+=score;
 			
-			submitScore(ctx, score, null, true, Gravity.BOTTOM);
+			submitScore(ctx, score, null, true, Gravity.BOTTOM, listener);
 			
 			if(currentTempScore >= treshold) { // THE USER REACHED THE DEVELOPER TRESHOLD SEND VGOOD AND SAVE THE REST
 				PreferencesHandler.saveInt(key, currentTempScore-treshold, ctx);
@@ -472,11 +472,16 @@ public class Beintoo{
 				PreferencesHandler.saveInt(key, currentTempScore, ctx);
 			}
 		
-		}catch(Exception e){e.printStackTrace(); } 
+		}catch(Exception e){e.printStackTrace(); if(listener != null) listener.onBeintooError(e);} 
 	}
 	
 	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold){
-		submitScoreWithVgoodCheck (ctx, score, treshold, true, null, VGOOD_NOTIFICATION_ALERT);
+		submitScoreWithVgoodCheck (ctx, score, treshold, true, null, VGOOD_NOTIFICATION_ALERT, null);
+	}
+	
+	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold, boolean isMultiple,
+			LinearLayout container, int notificationType){
+			submitScoreWithVgoodCheck (ctx, score, treshold, isMultiple,container, notificationType, null);
 	}
 	
 	
@@ -491,7 +496,7 @@ public class Beintoo{
 	 * @param location player Location
 	 */
 	private static void submitScoreHelper (final Context ctx, final int lastScore, final Integer balance, final String codeID, 
-			final boolean showNotification,final Location location, final int gravity){
+			final boolean showNotification,final Location location, final int gravity, final BSubmitScoreListener listener){
 		new Thread(new Runnable(){     					
     		public void run(){	
 				try {
@@ -516,11 +521,11 @@ public class Beintoo{
 					com.beintoo.wrappers.Message result;
 					if(location != null){
 						result = player.submitScore(p.getGuid(), codeID, null, lastScore, balance,Double.toString(location.getLatitude()), 
-								Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), null);
+								Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), null);						
 					}else{
 						result = player.submitScore(p.getGuid(), codeID, null, lastScore, balance, null, null, null, null);
 					}
-					 
+					
 					if(!result.getMessage().equals("OK")){ // SAVE THE SCORE LOCALLY
 						LocalScores.saveLocalScore(ctx,lastScore,codeID);
 					}else{		
@@ -534,7 +539,13 @@ public class Beintoo{
 					if(showNotification)
 						UIhandler.sendMessage(msg);
 				
-				}catch (Exception e){e.printStackTrace();}
+					if(listener != null)
+						listener.onComplete();
+					
+				}catch (Exception e){e.printStackTrace(); 
+					if(listener != null)
+						listener.onBeintooError(e);
+				}
     		}	
     	}).start();				
 	}
@@ -548,7 +559,7 @@ public class Beintoo{
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @param showNotification if true it will show a notification to the user when receive a submit score 
 	 */	
-	public static void submitScore(final Context ctx, final int lastScore, final String codeID, final boolean showNotification, int gravity){
+	public static void submitScore(final Context ctx, final int lastScore, final String codeID, final boolean showNotification, int gravity, final BSubmitScoreListener listener){
 		currentContext = ctx;
 		String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
 		final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
@@ -558,29 +569,34 @@ public class Beintoo{
 				Location pLoc = getSavedPlayerLocation();
 	        	if(pLoc != null){
 	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
-	        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,pLoc, gravity);
+	        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,pLoc, gravity, listener);
 	        		}else {
-	        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity);
+	        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity, listener);
 	        		}
 	        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
-	        		submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity);
+	        		submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity, listener);
 	        	}	
 			}catch(Exception e){ 
-				e.printStackTrace();    				
+				e.printStackTrace(); 
+				if(listener != null) listener.onBeintooError(e);
 			}		    			
 		}
 	}
 	
 	public static void submitScore(Context ctx, int lastScore, boolean showNotification, int gravity){
-		submitScore(ctx, lastScore, null, showNotification, gravity);
+		submitScore(ctx, lastScore, null, showNotification, gravity, null);
+	}
+	
+	public static void submitScore(Context ctx, int lastScore, boolean showNotification, int gravity, final BSubmitScoreListener listener){
+		submitScore(ctx, lastScore, null, showNotification, gravity, listener);
 	}
 	
 	public static void submitScore(Context ctx, int lastScore, boolean showNotification){
-		submitScore(ctx, lastScore, null, showNotification, Gravity.BOTTOM);
+		submitScore(ctx, lastScore, null, showNotification, Gravity.BOTTOM, null);
 	}
 		
 	public static void submitScore(Context ctx, int lastScore, String codeID, boolean showNotification){
-		submitScore(ctx, lastScore, codeID, showNotification, Gravity.BOTTOM);
+		submitScore(ctx, lastScore, codeID, showNotification, Gravity.BOTTOM, null);
 	}	
 	
 	/** 
@@ -641,7 +657,7 @@ public class Beintoo{
 		}).start();
 	}
 		 
-	/**
+		/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
 	 */
@@ -777,6 +793,11 @@ public class Beintoo{
 		if(currentDialog != null)
 			currentDialog.show();
 	}
+	
+	public static interface BSubmitScoreListener {
+		 public void onComplete();
+		 public void onBeintooError(Exception e);
+	 }
 	
 	 public static interface BScoreListener {
 		 public void onComplete(PlayerScore p);
