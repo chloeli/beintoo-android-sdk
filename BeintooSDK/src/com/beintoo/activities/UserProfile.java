@@ -132,8 +132,7 @@ public class UserProfile extends Dialog {
 				BeintooUser usr = new BeintooUser();
 				try {													
 					usr.detachUserFromDevice(DeviceId.getUniqueDeviceId(current.getContext()), currentPlayer.getUser().getId());
-					PreferencesHandler.saveBool("isLogged", false, getContext());
-					PreferencesHandler.saveString("currentPlayer", null, getContext());
+					Beintoo.logout(getContext());	
 					Beintoo.homeDialog.dismiss();
 					current.dismiss();
 				}catch (Exception e){e.printStackTrace();}	

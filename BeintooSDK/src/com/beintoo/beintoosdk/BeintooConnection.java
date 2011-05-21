@@ -104,19 +104,20 @@ public class BeintooConnection {
 			
 		} catch (IOException e) {			
 			e.printStackTrace();
+			
 			// IF THE SERVER RETURN ERROR THROW EXCEPTION
 			try {
 				if(postUrlConnection.getResponseCode() == 400){
 					InputStream postInputStream = postUrlConnection.getErrorStream();
 					jsonString = readStream(postInputStream);
 					Message msg = new Gson().fromJson(jsonString, Message.class);
-					System.out.println("asdfg"+msg.getMessage());
 					throw new ApiCallException(msg.getMessage(), msg.getMessageID());
 				}
+				
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}
+				throw new ApiCallException();
+			} 
 			return "{\"messageID\":0,\"message\":\"ERROR\",\"kind\":\"message\"}";
 		}
 	}

@@ -16,9 +16,11 @@
 package com.beintoo.beintoosdk;
 
 
+import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.beintoosdkutility.PostParams;
+import com.beintoo.wrappers.Contest;
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerScore;
@@ -212,17 +214,12 @@ public class BeintooPlayer {
 			}
 			
 			BeintooConnection conn = new BeintooConnection();
-			try {
-				String json = conn.httpRequest(apiUrl, header, null);
-				Gson gson = new Gson();
-				Message msg = new Message();
-				msg = gson.fromJson(json, Message.class);
-				return msg;
-			}catch (Exception e){
-				Message msg = new Message();
-				msg.setMessage("ERROR");
-				return msg;
-			}
+			
+			String json = conn.httpRequest(apiUrl, header, null);
+			Gson gson = new Gson();
+			Message msg = new Message();
+			msg = gson.fromJson(json, Message.class);
+			return msg;
 	}
 	
 	/**
@@ -283,12 +280,30 @@ public class BeintooPlayer {
 	}
 	
 	
-	public PlayerScore getScore (String guid){
-		return this.getPlayer(guid).getPlayerScore().get("default");
+	public PlayerScore getScore (String guid){		
+		return this.getScoreForContest(guid, "default");		
 	}
 	
 	public PlayerScore getScoreForContest(String guid, String contest){
-		return this.getPlayer(guid).getPlayerScore().get(contest);
+		try {
+			return this.getPlayer(guid).getPlayerScore().get(contest);
+		}catch (ApiCallException ace){
+			throw new ApiCallException();
+		}catch (Exception e){
+			PlayerScore p = new PlayerScore();
+			p.setBalance(0.0);
+			p.setBestscore(0.0);
+			p.setLastscore(0.0);
+			Contest c = new Contest();
+			c.setCodeID(contest!=null?contest:"default");
+			c.setDescription("");
+			c.setName(contest!=null?contest:"default");
+			c.setPublic(false);
+			p.setContest(c);
+			
+			return p;
+		}	
 	}
-		
+	
+	
 }

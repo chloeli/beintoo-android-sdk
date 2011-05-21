@@ -184,7 +184,7 @@ public class Beintoo{
 	 * @param ctx current Context
 	 * @param isMultiple if true retrieve a list of vgood in wich the player can choose a virtual good
 	 */	
-	public static void GetVgood(final Context ctx, final boolean isMultiple, final LinearLayout container, final int notificationType){
+	public static void GetVgood(final Context ctx, final boolean isMultiple, final LinearLayout container, final int notificationType, final BGetVgoodListener listener){
 		currentContext = ctx;	
 		
 		try {
@@ -204,7 +204,7 @@ public class Beintoo{
 							    	locationManager.removeUpdates(this);
 							    	final Location l = location;							    					    				
 		    						// GET A VGOOD WITH COORDINATES
-							    	getVgoodHelper(isMultiple,container,notificationType,l,currentPlayer);
+							    	getVgoodHelper(isMultiple,container,notificationType,l,currentPlayer, listener);
 							    	saveLocationHelper (location); 
 		    				    	Looper.myLooper().quit(); //QUIT THE THREAD
 							    }
@@ -224,7 +224,7 @@ public class Beintoo{
 		    		public void run(){
 		    			try{			 
 		            		// GET A VGOOD WITHOUT COORDINATES
-		    				getVgoodHelper(isMultiple,container,notificationType,null,currentPlayer);
+		    				getVgoodHelper(isMultiple,container,notificationType,null,currentPlayer, listener);
 		    			}catch(Exception e){e.printStackTrace();}
 		    		}
 				}).start();			
@@ -235,51 +235,75 @@ public class Beintoo{
 	}
 	
 	public static void GetVgood(final Context ctx) {
-		GetVgood(ctx, false, null, VGOOD_NOTIFICATION_ALERT);
+		GetVgood(ctx, false, null, VGOOD_NOTIFICATION_ALERT, null);
 	}
 	
-	private static void getVgoodHelper (boolean isMultiple,final LinearLayout container, final int notificationType, Location l, Player currentPlayer){
-		final BeintooVgood vgoodHand = new BeintooVgood();
-		if(!isMultiple) { // ASSIGN A SINGLE VGOOD TO THE PLAYER
-			if(l != null){
-				vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
-					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
-			}else {
-				vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, null, 
-						null,null, false);
-			}
-	    	// ADD THE SINGLE VGOOD TO THE LIST
-	    	List<Vgood> list = new ArrayList<Vgood>();
-	    	list.add(vgood);
-	    	VgoodChooseOne v = new VgoodChooseOne(list);	    				    	
-	    	vgoodlist = v;
-	    	
-	    	if(vgood.getName() != null){
-	    		if(notificationType == VGOOD_NOTIFICATION_BANNER){
-	    			vgood_container = container;
-	    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
-	    		}else{
-	    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
+	public static void GetVgood(final Context ctx, final boolean isMultiple, final LinearLayout container, final int notificationType){
+		GetVgood(ctx, isMultiple, container, notificationType, null);
+	}
+	
+	private static void getVgoodHelper (boolean isMultiple,final LinearLayout container, 
+			final int notificationType, Location l, Player currentPlayer, final BGetVgoodListener listener){
+		try {
+			final BeintooVgood vgoodHand = new BeintooVgood();
+			if(!isMultiple) { // ASSIGN A SINGLE VGOOD TO THE PLAYER
+				if(l != null){
+					vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
+						Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
+				}else {
+					vgood = vgoodHand.getVgood(currentPlayer.getGuid(), null, null, 
+							null,null, false);
+				}
+		    	// ADD THE SINGLE VGOOD TO THE LIST
+		    	List<Vgood> list = new ArrayList<Vgood>();
+		    	list.add(vgood);
+		    	VgoodChooseOne v = new VgoodChooseOne(list);	    				    	
+		    	vgoodlist = v;
+		    	
+		    	if(vgood.getName() != null){
+		    		if(notificationType == VGOOD_NOTIFICATION_BANNER){
+		    			vgood_container = container;
+		    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
+		    		}else{
+		    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
+		    		}
+		    	}
+	    	}else { // ASSIGN A LIST OF VGOOD TO THE PLAYER
+	    		if(l != null){
+	    			vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
+						Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
+	    		}else {
+	    			vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), null, null, 
+	    					null,null, false);
 	    		}
+		    	if(vgoodlist != null){
+		    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
+	    			if(notificationType == VGOOD_NOTIFICATION_BANNER){
+	    				vgood_container = container;
+		    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
+	    			}else{
+		    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
+	    			}
+		    	}
 	    	}
-    	}else { // ASSIGN A LIST OF VGOOD TO THE PLAYER
-    		if(l != null){
-    			vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), null, Double.toString(l.getLatitude()), 
-					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
-    		}else {
-    			vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), null, null, 
-    					null,null, false);
-    		}
-	    	if(vgoodlist != null){
-	    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
-    			if(notificationType == VGOOD_NOTIFICATION_BANNER){
-    				vgood_container = container;
-	    			UIhandler.sendEmptyMessage(GET_VGOOD_BANNER);
-    			}else{
-	    			UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
-    			}
-	    	}
-    	}
+			
+			if(listener != null)
+				listener.onComplete(vgoodlist);
+		}catch(ApiCallException e){	
+			try {
+				if(e.getId() == -11){
+					if(listener != null)
+						listener.isOverQuota();
+				}else if(e.getId() == -10 || e.getId() == -21){
+					if(listener != null)
+						listener.nothingToDispatch();
+				}else{
+					if(listener != null)
+						listener.onError();
+				}
+			}catch (Exception ex){ if(listener!= null) listener.onError(); }
+		}	
+		
 	}
 	
 	/**
@@ -364,6 +388,7 @@ public class Beintoo{
 			}).start();			
 		}catch (Exception e){
 			e.printStackTrace(); 
+			el.onError();
 		}
 	}
 	
@@ -454,7 +479,7 @@ public class Beintoo{
 	 * @param treshold the score treshold for a new vgood
 	 */
 	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold, boolean isMultiple,
-			LinearLayout container, int notificationType, final BSubmitScoreListener listener){
+			LinearLayout container, int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener){
 		currentContext = ctx;
 		try{
 			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
@@ -463,25 +488,30 @@ public class Beintoo{
 			int currentTempScore = PreferencesHandler.getInt(key, ctx);
 			currentTempScore+=score;
 			
-			submitScore(ctx, score, null, true, Gravity.BOTTOM, listener);
-			
+			System.out.println("current temp score: "+currentTempScore);
+			System.out.println("score: "+score);
+			System.out.println("treshold: "+treshold);
+						
 			if(currentTempScore >= treshold) { // THE USER REACHED THE DEVELOPER TRESHOLD SEND VGOOD AND SAVE THE REST
 				PreferencesHandler.saveInt(key, currentTempScore-treshold, ctx);
-				GetVgood(ctx,isMultiple,container,notificationType);
+				submitScore(ctx, score, null, true, Gravity.BOTTOM, slistener);
+				GetVgood(ctx,isMultiple,container,notificationType, glistener);
 			}else{
 				PreferencesHandler.saveInt(key, currentTempScore, ctx);
+				submitScore(ctx, score, null, true, Gravity.BOTTOM, slistener);				
 			}
-		
-		}catch(Exception e){e.printStackTrace(); if(listener != null) listener.onBeintooError(e);} 
+			
+			
+		}catch(Exception e){e.printStackTrace(); if(slistener != null) slistener.onBeintooError(e);} 
 	}
 	
 	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold){
-		submitScoreWithVgoodCheck (ctx, score, treshold, true, null, VGOOD_NOTIFICATION_ALERT, null);
+		submitScoreWithVgoodCheck (ctx, score, treshold, true, null, VGOOD_NOTIFICATION_ALERT, null, null);
 	}
 	
 	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int treshold, boolean isMultiple,
-			LinearLayout container, int notificationType){
-			submitScoreWithVgoodCheck (ctx, score, treshold, isMultiple,container, notificationType, null);
+		LinearLayout container, int notificationType){
+		submitScoreWithVgoodCheck (ctx, score, treshold, isMultiple,container, notificationType, null, null);
 	}
 	
 	
@@ -511,10 +541,7 @@ public class Beintoo{
 					
 					msg.setData(b);
 					msg.what = SUBMITSCORE_POPUP;
-					
-					
-					/* check if there is a previously submitted score that could not be submitted because of
-					 connection error */										
+														
 					final BeintooPlayer player = new BeintooPlayer();
 					String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
 					final Player p = JSONconverter.playerJsonToObject(jsonPlayer);
@@ -578,7 +605,6 @@ public class Beintoo{
 	        	}	
 			}catch(Exception e){ 
 				e.printStackTrace(); 
-				if(listener != null) listener.onBeintooError(e);
 			}		    			
 		}
 	}
@@ -623,7 +649,7 @@ public class Beintoo{
 		
 		return null;
 	}
-	
+	 
 	public static PlayerScore getPlayerScore(final Context ctx){
 		return getPlayerScore(ctx,null);
 	}
@@ -634,7 +660,7 @@ public class Beintoo{
 	 * @param ctx
 	 * @param codeID
 	 * @return
-	 */
+	 */ 
 	public static void getPlayerScoreAsync(final Context ctx, final String codeID, final BScoreListener listener){
 		new Thread(new Runnable(){     					
     		public void run(){	
@@ -648,16 +674,16 @@ public class Beintoo{
 						p = player.getScore(guid);
 					
 					listener.onComplete(p);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
+					  
+				} catch (Exception e) {	
 					listener.onBeintooError(e);
+					e.printStackTrace();
 				}				
     		}
 		}).start();
 	}
 		 
-		/**
+	/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
 	 */
@@ -778,10 +804,23 @@ public class Beintoo{
 		
 	} 
 	
+	public static boolean isLogged(Context ctx){
+		try {
+			return PreferencesHandler.getBool("isLogged", ctx);
+		}catch(Exception e){
+			return false;
+		}
+	}
+	
 	public static void logout(Context ctx){
-		PreferencesHandler.clearPref("currentPlayer", ctx);
-		PreferencesHandler.saveBool("isLogged", false, ctx);
-		LAST_LOGIN = new AtomicLong(0);
+		try {
+			PreferencesHandler.clearPref("currentPlayer", ctx);
+			PreferencesHandler.saveBool("isLogged", false, ctx);
+			LAST_LOGIN = new AtomicLong(0);
+			String guid = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", ctx)).getGuid();
+			String key = guid+":count";
+			PreferencesHandler.clearPref(key, ctx);
+		}catch(Exception e){}
 	}
 	
 	public static void clearBeintoo (){
@@ -794,8 +833,15 @@ public class Beintoo{
 			currentDialog.show();
 	}
 	
+	public static interface BGetVgoodListener {
+		 public void onComplete(VgoodChooseOne v);
+		 public void isOverQuota();
+		 public void nothingToDispatch();
+		 public void onError();
+	}
+	
 	public static interface BSubmitScoreListener {
-		 public void onComplete();
+		 public void onComplete();		 
 		 public void onBeintooError(Exception e);
 	 }
 	
