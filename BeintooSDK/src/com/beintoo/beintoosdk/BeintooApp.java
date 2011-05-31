@@ -95,12 +95,12 @@ public class BeintooApp {
 		return leaders;
 	}
 	
-	public void topScore(String codeID){
-		topScore(codeID, 0);
+	public Map<String, List<EntryCouplePlayer>> topScore(String codeID){
+		return topScore(codeID, 0);
 	}
 	
-	public void topScore(int rows){
-		topScore(null,rows);
+	public Map<String, List<EntryCouplePlayer>> topScore(int rows){
+		return topScore(null,rows);
 	}
 	
 	/**

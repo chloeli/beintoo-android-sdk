@@ -119,11 +119,28 @@ public class UserLogin extends Dialog{
 								String web = BeintooSdkParams.webUrl;
 								if(BeintooSdkParams.useSandbox) 
 									web = BeintooSdkParams.sandboxWebUrl;
-																
-								String signupUrl = web+"connect.html?" +
+								
+								
+								String redirect_uri = web + "m/landing_register_ok.html";
+								String logged_uri = web + "m/landing_logged.html";
+								
+								StringBuilder sb = new StringBuilder();
+								sb.append(web);
+								sb.append("connect.html?apikey=");
+								sb.append(DeveloperConfiguration.apiKey);
+								sb.append("&guid=");
+								sb.append(newPlayer.getGuid());
+								sb.append("&display=touch&redirect_uri=");
+								sb.append(redirect_uri); 
+								sb.append("&logged_uri=");
+								sb.append(logged_uri);
+								 
+								/*String signupUrl = web+"connect.html?" +
 								"apikey="+DeveloperConfiguration.apiKey+"&guid="+newPlayer.getGuid()+"" +
 										"&display=touch&" +
 								"redirect_uri=http://static.beintoo.com/sdk/register_ok.html&logged_uri=http://static.beintoo.com/sdk/already_logged.html";
+								*/
+								String signupUrl = sb.toString();
 								
 								// DEBUG
 								DebugUtility.showLog(signupUrl);
@@ -205,9 +222,25 @@ public class UserLogin extends Dialog{
 				if(BeintooSdkParams.useSandbox) 
 					web = BeintooSdkParams.sandboxWebUrl;
 				
-				String loginUrl = web+"connect.html?signup=facebook&apikey="
-						+ DeveloperConfiguration.apiKey
+				
+				String redirect_uri = web + "m/landing_register_ok.html";
+				String logged_uri = web+ "m/landing_welcome.html";
+				
+				StringBuilder sb = new StringBuilder();
+				sb.append(web);
+				sb.append("connect.html?signup=facebook&apikey=");
+				sb.append(DeveloperConfiguration.apiKey);
+				sb.append("&display=touch&redirect_uri=");
+				sb.append(redirect_uri);
+				sb.append("&logged_uri=");
+				sb.append(logged_uri);
+				
+				 
+				/*String loginUrl = web+"connect.html?signup=facebook&apikey="
+						+ DeveloperConfiguration.apiKey 
 						+ "&display=touch&redirect_uri=http://static.beintoo.com/sdk/register_ok.html&logged_uri=http://static.beintoo.com/sdk/fblogin.html";				
+				*/
+				String loginUrl = sb.toString();
 				
 				// DEBUG
 				DebugUtility.showLog(loginUrl);

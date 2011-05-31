@@ -46,8 +46,8 @@ import com.beintoo.beintoosdkutility.PreferencesHandler;
 public class BeintooBrowser extends Dialog implements android.webkit.GeolocationPermissions.Callback{
 	WebView webview;
 	final Dialog current;
-	
-	public BeintooBrowser(Context ctx) {
+	public String openUrl = null;
+	public BeintooBrowser(Context ctx, String url) {
 		super(ctx, R.style.ThemeBeintoo);		
 		current = this;		
 		setContentView(R.layout.browser);
@@ -61,6 +61,8 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
 		webview = (WebView) findViewById(R.id.webview);
+		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+			
 		webview.getSettings().setJavaScriptEnabled(true);
 		
 		 // ADD ZOOM CONTROLS
@@ -111,8 +113,11 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 			}
 		});
 		webview.setInitialScale(1);
+		String locationParams = getSavedPlayerLocationParams();
 		
-		String url = getUrlOpenUrl();		
+		if(url.contains("beintoo.com")) // ADD LOCATION COORDINATES IF ON BEINTOO 
+			url = url + locationParams;
+		
 		webview.loadUrl(url);		
 		// DEBUG CALLED URL
 		DebugUtility.showLog(url);
@@ -138,14 +143,6 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 	        return false; 
 	    }
 	    return super.onKeyDown(keyCode, event);
-	}
-	
-	private String getUrlOpenUrl() {
-		String openUrl = PreferencesHandler.getString("openUrl", getContext());
-		if (openUrl != null) {
-			return openUrl+getSavedPlayerLocationParams();
-		}
-		return "";
 	}
 	
 	private String getSavedPlayerLocationParams(){
@@ -182,7 +179,6 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 		}
 	}*/
 
-	
 	private void clearAllCookies (){ // NOW NOT USED
 	    webview.clearCache(true);
 	    webview.clearHistory();

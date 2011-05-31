@@ -53,9 +53,11 @@ import com.google.beintoogson.Gson;
 public class Challenges extends Dialog implements OnClickListener{
 	static Dialog current;
 	Challenge [] challenge;
-	final int PENDING = 0;
-	final int ACCEPTED = 1;
-	final int ENDED = 2;
+	private final int PENDING = 0;
+	private final int ACCEPTED = 1;
+	private final int ENDED = 2;
+	private final int CONNECTION_ERROR = 3;
+	
 	int CURRENT_SECTION = 0;
 	final double ratio;
 	public Challenges(Context ctx) {
@@ -78,7 +80,7 @@ public class Challenges extends Dialog implements OnClickListener{
 		try{
 			showLoading();
 			startLoading();
-		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx,e);}
+		}catch (Exception e){e.printStackTrace();}
 		
 		
 		final BeButton b = new BeButton(ctx);
@@ -107,6 +109,7 @@ public class Challenges extends Dialog implements OnClickListener{
 							UIhandler.sendEmptyMessage(PENDING);
 						}catch (Exception e){
 							e.printStackTrace();
+							manageConnectionException();
 						}
 					}
 				}).start();
@@ -137,6 +140,7 @@ public class Challenges extends Dialog implements OnClickListener{
 							UIhandler.sendEmptyMessage(ACCEPTED);
             			}catch (Exception e){
             				e.printStackTrace();
+            				manageConnectionException();
             			}
             		}
 				}).start();	
@@ -170,6 +174,7 @@ public class Challenges extends Dialog implements OnClickListener{
 							UIhandler.sendEmptyMessage(ENDED);
             			}catch (Exception e){
             				e.printStackTrace();
+            				manageConnectionException();
             			}
             			//dialog.dismiss();
             		}
@@ -189,6 +194,7 @@ public class Challenges extends Dialog implements OnClickListener{
 					UIhandler.sendEmptyMessage(PENDING);
     			}catch (Exception e){
     				e.printStackTrace();
+    				manageConnectionException();
     			}
     		}
 		}).start();
@@ -436,6 +442,10 @@ public class Challenges extends Dialog implements OnClickListener{
 		table.addView(row);
 	}
 	
+	private void manageConnectionException (){
+		UIhandler.sendEmptyMessage(3);		
+	}
+	
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {			  
@@ -457,6 +467,10 @@ public class Challenges extends Dialog implements OnClickListener{
 				  else { // NO CHALLENGE REQUEST
 						loadEmptySection(ENDED);
 				  }
+			  }else if(msg.what == CONNECTION_ERROR){
+				  TableLayout table = (TableLayout) findViewById(R.id.table);
+				  table.removeAllViews();
+				  ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(), null);
 			  }
 			  super.handleMessage(msg);
 		  }

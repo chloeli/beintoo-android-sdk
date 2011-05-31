@@ -231,7 +231,6 @@ public class Friends extends Dialog implements OnClickListener{
     				BeintooUser u = new BeintooUser();
     				friends = u.findFriendsByQuery(query, p.getUser().getId(), true,  null);
     				
-    				System.out.println("FFFFF "+friends);
     				if(friends.length > 0)
     					UIhandler.sendEmptyMessage(LOAD_TABLE);
     				else

@@ -24,6 +24,7 @@ import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DeviceId;
+import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -55,12 +56,15 @@ public class UserProfile extends Dialog {
 	
 	private int currentSection;
 	
+	// HANDLERS
 	private final int LOAD_PROFILE = 1;
 	private final int SET_NEWMSG_BUTTON = 2;
+	private static final int CONNECTION_ERROR = 3;
 	
+	// SECTIONS
 	public static final int CURRENT_USER_PROFILE = 1; 
 	public static final int FRIEND_USER_PROFILE = 2;
-	
+		
 	public UserProfile(final Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);				
 		current = this;
@@ -165,7 +169,7 @@ public class UserProfile extends Dialog {
 			public void onClick(View v) {
 				UserBalance ub = new UserBalance(getContext());
 		        ub.show();											
-			}
+			} 
 		});
 				
 		try {
@@ -216,7 +220,7 @@ public class UserProfile extends Dialog {
 					
 					UIhandler.sendEmptyMessage(LOAD_PROFILE);
 					
-    			}catch (Exception e){}			
+    			}catch (Exception e){manageConnectionException();}			
     		}
 		}).start();
 	}
@@ -344,6 +348,9 @@ public class UserProfile extends Dialog {
 		});
 	}
 	
+	private void manageConnectionException (){
+		UIhandler.sendEmptyMessage(3);		
+	}
 	
 	public String fromIntToLevel (int level) {
 		if(level == 1) return "Novice";
@@ -368,6 +375,12 @@ public class UserProfile extends Dialog {
 					TextView t = (TextView)findViewById(R.id.dialogTitle);
 					t.setText(String.format(current.getContext().getString(R.string.profileOf), b.getString("nickname")));
 			  	}catch(Exception e){e.printStackTrace();}
+			  }else if(msg.what == CONNECTION_ERROR){
+				  LinearLayout mc = (LinearLayout) findViewById(R.id.goodcontent);
+				  LinearLayout loading = (LinearLayout) findViewById(R.id.loading);
+				  mc.removeAllViews();
+				  loading.removeAllViews();
+				  ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(), null);
 			  }
 			  
 			  super.handleMessage(msg);

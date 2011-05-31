@@ -119,6 +119,7 @@
     <!-- VGOOD DIALOG -->
     <string name="vgoodmessagealert">Vous avez gagné un prix en utilisant cette Appli!\nCliquez sur obtenir pour l\'avoir tout de suite</string>
     <string name="vgoodmessagepositive">Obtenir</string>
+    <string name="vgoodrecommpositive">Plus d\'infos</string>
     <string name="vgoodmessagenegative">Plus tard</string>
     <string name="vgoodmessagebanner">Vous avez gagné un prix en utilisant cette Appli!\nCliquez sur obtenir pour l\'avoir tout de suite</string>
     

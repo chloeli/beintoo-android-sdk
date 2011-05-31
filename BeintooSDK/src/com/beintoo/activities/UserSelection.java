@@ -51,6 +51,7 @@ import android.widget.TextView;
 public class UserSelection extends Dialog implements OnClickListener{
 	User[] users;
 	final Dialog current;
+	private static double ratio;
 	public UserSelection(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.userselection);
@@ -59,7 +60,7 @@ public class UserSelection extends Dialog implements OnClickListener{
 		current = this;
 		
 		// GETTING DENSITY PIXELS RATIO
-		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
 		// SET UP LAYOUTS
 		double pixels = ratio * 47;
 		LinearLayout beintooBar = (LinearLayout) findViewById(R.id.beintoobar);
@@ -79,11 +80,11 @@ public class UserSelection extends Dialog implements OnClickListener{
 			Gson gson = new Gson();
 			users = gson.fromJson(currentUsersList, User[].class);
 			
-			double rowHeightpx = ratio * 104;
+			double rowHeightpx = ratio * 70;
 			
 			for(int i = 0; i< users.length; i++){
 				if(users[i] != null){
-					final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUserimg(),70,70);
+					final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUserimg(),(int)(ratio*70),(int)(ratio*70));
 					TableRow row = createRow(image, users[i].getNickname(), getContext());
 					
 					if(i % 2 == 0)
@@ -132,20 +133,27 @@ public class UserSelection extends Dialog implements OnClickListener{
     
 	public static TableRow createRow(View image, String txt, Context activity) {
 		  TableRow row = new TableRow(activity);
-		  row.setGravity(Gravity.CENTER);
+		  row.setGravity(Gravity.CENTER_VERTICAL);
+		  
+		  LinearLayout main = new LinearLayout(row.getContext());
+		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  main.setOrientation(LinearLayout.HORIZONTAL);
+		  main.setGravity(Gravity.CENTER_VERTICAL);
 		  
 		  TextView text = new TextView(activity);
 		  text.setText(txt);
-		  text.setPadding(10, 0, 0, 0);
+		  text.setPadding(0, 0, 0, 0);
 		  text.setTextColor(Color.parseColor("#000000"));
 		  
-		  image.setPadding(15, 4, 10, 4);
+		  image.setPadding((int)(ratio * 15), 0, (int)(ratio * 15), 0);
 		  		  
 		  ((LinearLayout) image).setGravity(Gravity.LEFT);
 		  
-		  row.addView(image);
-		  row.addView(text);
-		   
+		  main.addView(image);
+		  main.addView(text);
+		  
+		  row.addView(main, new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio * 75)));
+		  
 		  return row;
 	}
 	

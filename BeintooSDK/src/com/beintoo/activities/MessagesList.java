@@ -50,6 +50,7 @@ public class MessagesList extends Dialog implements OnClickListener{
 	
 	private final int FIRST_LOADING = 0;
 	private final int NEXT_LOADING = 1;
+	private final int CONNECTION_ERROR = 3;
 	
 	private Player p; 
 	
@@ -102,7 +103,7 @@ public class MessagesList extends Dialog implements OnClickListener{
 			table.removeAllViews();
 			showLoading(FIRST_LOADING);
 			loadData(currentStartPosition, FIRST_LOADING);
-		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(),e);}		
+		}catch (Exception e){e.printStackTrace();}		
 	}
 	
 	private void loadData (final int start, final int action) {
@@ -116,6 +117,7 @@ public class MessagesList extends Dialog implements OnClickListener{
 					UIhandler.sendEmptyMessage(action);
     			}catch (Exception e){
     				e.printStackTrace();
+    				manageConnectionException ();
     			}
     		}
 		}).start();
@@ -343,6 +345,10 @@ public class MessagesList extends Dialog implements OnClickListener{
 		}
 	}
 	
+	private void manageConnectionException (){
+		UIhandler.sendEmptyMessage(CONNECTION_ERROR);		
+	}
+	
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {	
@@ -354,7 +360,12 @@ public class MessagesList extends Dialog implements OnClickListener{
 				  case NEXT_LOADING:
 					  loadTableRows();
 					  removeProgress();
-				  break;	
+				  break;
+				  case CONNECTION_ERROR:
+					  TableLayout table = (TableLayout) findViewById(R.id.table);
+					  table.removeAllViews();
+					  ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(), null);
+				  break;
 			  }
 			  super.handleMessage(msg);
 		  }

@@ -102,6 +102,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 							UIhandler.sendEmptyMessage(0);
             			}catch (Exception e){
             				e.printStackTrace();
+            				manageConnectionException();
             			}
             		}
 				}).start();
@@ -132,6 +133,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 							UIhandler.sendEmptyMessage(0); 
             			}catch (Exception e){
             				e.printStackTrace();
+            				manageConnectionException();
             			}
             		}
 				}).start();
@@ -147,6 +149,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
     				leader = app.topScore(null, 0);					
 					UIhandler.sendEmptyMessage(0);
     			}catch (Exception e){
+    				manageConnectionException();
     				e.printStackTrace();
     			}
     		}
@@ -261,21 +264,11 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 		friends.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));
 	}
 	
-	// CALLED WHEN THE USER SELECT A USER IN THE TABLE
+	// CALLED WHEN THE USER SELECT A CONTEST
 	public void onClick(View v) {
 		final int selectedRow = v.getId();
-		//final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-		/*new Thread(new Runnable(){      
-    		public void run(){
-    			try{ */     				
-    				PreferencesHandler.saveString("selectedContest", ""+selectedRow, currentContext);
-    				UIhandler.sendEmptyMessage(1);
-    			/*}catch (Exception e){
-    				e.printStackTrace();
-    			}
-    			//dialog.dismiss();
-    		}
-		}).start(); */		
+		PreferencesHandler.saveString("selectedContest", ""+selectedRow, currentContext);
+    	UIhandler.sendEmptyMessage(1);    				
 	}
 	
 	private void showLoading (){
@@ -293,6 +286,10 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 		table.addView(row);
 	}
 	
+	private void manageConnectionException (){
+		UIhandler.sendEmptyMessage(3);		
+	}
+	
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {			  
@@ -301,6 +298,10 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 			  else if(msg.what == 1){
 				  LeaderBoard leaderboard = new LeaderBoard(currentContext,leader);
 				  leaderboard.show();
+			  }else if(msg.what == 3){
+				  TableLayout table = (TableLayout) findViewById(R.id.tablecontest);
+				  table.removeAllViews();
+				  ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(), null);
 			  }
 			  super.handleMessage(msg);
 		  }

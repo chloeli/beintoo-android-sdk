@@ -74,7 +74,6 @@ public class BeintooConnection {
 			System.setProperty("http.keepAlive", "false");
 
 			postUrlConnection = (HttpsURLConnection) url.openConnection();
-			
 			postUrlConnection.setUseCaches(false);
 			postUrlConnection.setDoOutput(true);
 			postUrlConnection.setDoInput(true);
@@ -95,7 +94,7 @@ public class BeintooConnection {
 			      wr.flush ();
 			      wr.close ();				
 			}
-
+			
 			InputStream postInputStream = postUrlConnection.getInputStream();
 	
 			jsonString = readStream(postInputStream);
@@ -125,6 +124,10 @@ public class BeintooConnection {
 	public String httpRequest(String apiurl,HeaderParams header,PostParams get){
 		return httpRequest(apiurl, header, get, false);
 	}
+	
+	/*public String httpRequest(String apiurl,HeaderParams header,PostParams post, boolean isPost){
+	  return httpRequest(apiurl, header, post, isPost, null);
+	}*/
 	
 	private String readStream (InputStream postInputStream){
 		String jsonString = ""; 

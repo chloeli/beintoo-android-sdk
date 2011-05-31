@@ -118,8 +118,7 @@ public class VGoodGetDialog extends Dialog{
 						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));
 		getVgood.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
-				PreferencesHandler.saveString("openUrl", vgood.getGetRealURL(), v.getContext());
-				BeintooBrowser bb = new BeintooBrowser(v.getContext());
+				BeintooBrowser bb = new BeintooBrowser(v.getContext(),vgood.getGetRealURL());
 				bb.show();
 				current.dismiss();
 			}

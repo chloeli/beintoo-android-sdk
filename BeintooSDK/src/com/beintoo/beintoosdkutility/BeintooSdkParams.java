@@ -17,9 +17,9 @@ package com.beintoo.beintoosdkutility;
 
 public class BeintooSdkParams {
 	public static String apiUrl = "https://api.beintoo.com/api/rest/";
-	public static String sandboxUrl = "https://sandbox-elb.beintoo.com/api/rest/";	
+	public static String sandboxUrl = "https://sandbox-elb.beintoo.com/api/rest/";
 	public static String webUrl = "http://www.beintoo.com/";
 	public static String sandboxWebUrl = "http://sandbox.beintoo.com/";	
 	public static boolean useSandbox = false;
-	public static String version = "2.5.3beta-android";
+	public static String version = "2.6beta-android";
 }

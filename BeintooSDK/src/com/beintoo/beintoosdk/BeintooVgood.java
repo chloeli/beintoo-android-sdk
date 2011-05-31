@@ -18,6 +18,7 @@ package com.beintoo.beintoosdk;
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 
+import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
@@ -46,9 +47,9 @@ public class BeintooVgood {
 	 */
 	public Vgood getVgood(String guid, String codeID,String latitude, String longitude, String radius, boolean privategood) {
 		
-		String apiUrl = apiPreUrl+"vgood/get/byguid/"+guid+"/?";
+		String apiUrl = apiPreUrl+"vgood/get/byguid/"+guid+"/?allowBanner=true";
 		
-		if(privategood == true) apiUrl = apiUrl + "private=true"; else apiUrl = apiUrl + "private=false";  
+		if(privategood == true) apiUrl = apiUrl + "&private=true"; else apiUrl = apiUrl + "&private=false";  
 		if(latitude != null) apiUrl = apiUrl + "&latitude="+latitude;
 		if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
 		if(radius != null) apiUrl = apiUrl + "&radius="+radius;
@@ -62,6 +63,16 @@ public class BeintooVgood {
 			header.getKey().add("codeID");
 			header.getValue().add(codeID);
 		}
+		
+		try {
+		// ADD THE USER AGENT
+			String userAgent = Beintoo.userAgent;
+			if(userAgent != null){
+				header.getKey().add("User-Agent");
+				header.getValue().add(userAgent);
+			}
+		}catch (Exception e){e.printStackTrace();}
+		
 		
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl, header, null);
@@ -85,9 +96,9 @@ public class BeintooVgood {
 	 */
 	public VgoodChooseOne getVgoodList(String guid, String codeID,String latitude, String longitude, String radius, boolean privategood) {
 		
-		String apiUrl = apiPreUrl+"vgood/byguid/"+guid+"/?";
+		String apiUrl = apiPreUrl+"vgood/byguid/"+guid+"/?allowBanner=true";
 		
-		if(privategood == true) apiUrl = apiUrl + "private=true"; else apiUrl = apiUrl + "private=false";  
+		if(privategood == true) apiUrl = apiUrl + "&private=true"; else apiUrl = apiUrl + "&private=false";  
 		if(latitude != null) apiUrl = apiUrl + "&latitude="+latitude;
 		if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
 		if(radius != null) apiUrl = apiUrl + "&radius="+radius;
@@ -102,6 +113,15 @@ public class BeintooVgood {
 			header.getValue().add(codeID);
 		}
 		
+		try {
+		// ADD THE USER AGENT
+			String userAgent = Beintoo.userAgent;
+			if(userAgent != null){
+				header.getKey().add("User-Agent");
+				header.getValue().add(userAgent);
+			}
+		}catch (Exception e){e.printStackTrace();}
+		
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl, header, null);
 		
@@ -109,6 +129,7 @@ public class BeintooVgood {
 		
 		return vgoods;
 	}
+
 	
 	/**
 	 * Returns an array with all the vgoods earned by the user

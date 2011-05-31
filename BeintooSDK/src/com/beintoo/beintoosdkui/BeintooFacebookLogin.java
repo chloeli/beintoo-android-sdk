@@ -57,6 +57,7 @@ public class BeintooFacebookLogin extends Dialog {
 		setContentView(R.layout.browser);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		webview = (WebView) findViewById(R.id.webview);
+		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		
 		// GETTING DENSITY PIXELS RATIO
 		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						

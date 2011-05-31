@@ -117,7 +117,8 @@
     <!-- VGOOD DIALOG -->
     <string name="vgoodmessagealert">Hey! You won a Beintoo reward by using this app!\nTap redeem and get it</string>
     <string name="vgoodmessagepositive">Redeem</string>
-    <string name="vgoodmessagenegative">Later</string>
+    <string name="vgoodrecommpositive">See More</string>
+    <string name="vgoodmessagenegative">Later</string>    
     <string name="vgoodmessagebanner">Hey! You got a Beintoo reward by using this app!\nTap here and redeem it</string>
     
     <!-- MESSAGES -->

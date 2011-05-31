@@ -15,14 +15,17 @@
  ******************************************************************************/
 package com.beintoo.beintoosdkutility;
 
+
 import java.io.IOException;
 import java.net.MalformedURLException;
+
 
 import com.beintoo.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -45,7 +48,7 @@ public class LoaderImageView extends LinearLayout{
 	private static final int COMPLETE = 0;
 	private static final int FAILED = 1;
 
-	private Context mContext;
+	private static Context mContext;
 	private Drawable mDrawable;
 	private ProgressBar mSpinner;
 	private ImageView mImage;
@@ -70,8 +73,6 @@ public class LoaderImageView extends LinearLayout{
 		instantiate(context, imageUrl, width, height);
 	}
 
-	
-	
 	private void instantiate(final Context context, final String imageUrl) {
 		this.instantiate(context, imageUrl, 0, 0);
 	}
@@ -130,8 +131,6 @@ public class LoaderImageView extends LinearLayout{
 		public boolean handleMessage(Message msg) {
 			switch (msg.what) {
 			case COMPLETE:
-				//Bitmap d = ((BitmapDrawable)mDrawable).getBitmap();
-				//mImage.setImageDrawable(new BitmapDrawable(LoaderImageView.getRoundedCornerBitmap(d,15)));
 				mImage.setImageDrawable(mDrawable);
 				mImage.setVisibility(View.VISIBLE);
 				mSpinner.setVisibility(View.GONE);
@@ -147,8 +146,8 @@ public class LoaderImageView extends LinearLayout{
 	});
 
 	private static Drawable getDrawableFromUrl(final String url) throws IOException, MalformedURLException {
-		try{
-			return Drawable.createFromStream(((java.io.InputStream)new java.net.URL(url).getContent()), "name");
+		try{						
+			return Drawable.createFromStream(((java.io.InputStream)new java.net.URL(url).getContent()), "name");			
 		}catch(Exception e){
 			e.printStackTrace();
 		}

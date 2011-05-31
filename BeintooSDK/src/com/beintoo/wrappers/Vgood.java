@@ -30,6 +30,8 @@ public class Vgood {
     private String name;
     private Collection<VgoodPoi> vgoodPOIs;
     private Collection<User> whoAlsoConverted;
+    private boolean isBanner;
+    
 	public String getGetRealURL() {
 		return getRealURL;
 	}
@@ -102,6 +104,14 @@ public class Vgood {
 	public void setWhoAlsoConverted(Collection<User> whoAlsoConverted) {
 		this.whoAlsoConverted = whoAlsoConverted;
 	}
+	public boolean isBanner() {
+		return isBanner;
+	}
+	public void setBanner(boolean isBanner) {
+		this.isBanner = isBanner;
+	}
+	
+	
     
     
 }

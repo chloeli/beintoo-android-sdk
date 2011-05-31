@@ -119,6 +119,7 @@
     <!-- VGOOD DIALOG -->
     <string name="vgoodmessagealert">Hai vinto un premio da Beintoo utilizzando questa app!\nClicca su ottieni per riceverlo ora</string>
     <string name="vgoodmessagepositive">Ottieni</string>
+    <string name="vgoodrecommpositive">Clicca qui</string>
     <string name="vgoodmessagenegative">Più tardi</string>
     <string name="vgoodmessagebanner">Hai vinto un premio da Beintoo utilizzando questa app!\nClicca qui per riceverlo ora</string>
     

@@ -26,6 +26,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -63,6 +64,7 @@ public class Wallet extends Dialog implements OnClickListener{
 	
 	private final int OPEN_BROWSER = 1;
 	private final int LOAD_TABLE = 2;
+	private final int CONNECTION_ERROR = 3;
 	
 	public Wallet(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
@@ -107,6 +109,7 @@ public class Wallet extends Dialog implements OnClickListener{
             				UIhandler.sendEmptyMessage(LOAD_TABLE);
             			}catch (Exception e){
             				e.printStackTrace();
+            				manageConnectionException();
             			}
             		}
 				}).start();
@@ -137,6 +140,7 @@ public class Wallet extends Dialog implements OnClickListener{
             				UIhandler.sendEmptyMessage(LOAD_TABLE);
             			}catch (Exception e){
             				e.printStackTrace();
+            				manageConnectionException();
             			}
             		}
 				}).start();
@@ -158,7 +162,7 @@ public class Wallet extends Dialog implements OnClickListener{
     				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
     				vgood = bv.showByUser(p.getUser().getId(), null, false);
     				UIhandler.sendEmptyMessage(LOAD_TABLE);
-    			}catch (Exception e){}
+    			}catch (Exception e){manageConnectionException();}
     		}
 		}).start();	
 	}
@@ -176,7 +180,7 @@ public class Wallet extends Dialog implements OnClickListener{
 				table.removeAllViews();
 				table.addView(noGoods);
 			}
-		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(),e);}
+		}catch (Exception e){e.printStackTrace();}
 	}
 	
 	public void prepareWallet(){
@@ -280,8 +284,11 @@ public class Wallet extends Dialog implements OnClickListener{
 		new Thread(new Runnable(){      
     		public void run(){
     			try{ 
-    				PreferencesHandler.saveString("openUrl", vgood[selectedRow].getShowURL(), current.getContext());		
-    				UIhandler.sendEmptyMessage(OPEN_BROWSER);
+    				Message msg = new Message();
+    				Bundle b = new Bundle();
+    				b.putInt("id", selectedRow);
+    				msg.what = OPEN_BROWSER;
+    				UIhandler.sendMessage(msg);
     			}catch (Exception e){
     			}
     			dialog.dismiss();
@@ -310,17 +317,26 @@ public class Wallet extends Dialog implements OnClickListener{
 		table.addView(row);
 	}
 	
+	private void manageConnectionException (){
+		UIhandler.sendEmptyMessage(CONNECTION_ERROR);		
+	}
+	
 	private Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {
 			  switch(msg.what){
-			  	case OPEN_BROWSER:
-			  		BeintooBrowser bb = new BeintooBrowser(current.getContext());
+			  	case OPEN_BROWSER:			  					  	
+			  		BeintooBrowser bb = new BeintooBrowser(current.getContext(),vgood[msg.getData().getInt("id")].getShowURL());
 					bb.show();						        
 			  	break;
 			  	case LOAD_TABLE:
 			  		loadWallet();
-				break;			  	
+				break;	
+			  	case CONNECTION_ERROR:
+			  		TableLayout table = (TableLayout) findViewById(R.id.table);
+					table.removeAllViews();
+					ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(), null);
+			  	break;
 			  }
 			super.handleMessage(msg);
 		  }
