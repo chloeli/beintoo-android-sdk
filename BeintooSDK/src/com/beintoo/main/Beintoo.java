@@ -508,7 +508,7 @@ public class Beintoo{
 	 * @param threshold the score threshold for a new vgood
 	 */
 	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int threshold, boolean isMultiple,
-			LinearLayout container, int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener){
+			LinearLayout container, int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener, String codeID){
 		currentContext = ctx;
 		try{
 			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
@@ -519,24 +519,23 @@ public class Beintoo{
 					
 			if(currentTempScore >= threshold) { // THE USER REACHED THE DEVELOPER TRESHOLD SEND VGOOD AND SAVE THE REST
 				PreferencesHandler.saveInt(key, currentTempScore-threshold, ctx);
-				submitScore(ctx, score, null, true, Gravity.BOTTOM, slistener);
+				submitScore(ctx, score, codeID, true, Gravity.BOTTOM, slistener);
 				GetVgood(ctx,isMultiple,container,notificationType, glistener);
 			}else{
 				PreferencesHandler.saveInt(key, currentTempScore, ctx);
-				submitScore(ctx, score, null, true, Gravity.BOTTOM, slistener);				
+				submitScore(ctx, score, codeID, true, Gravity.BOTTOM, slistener);				
 			}
-			
 			
 		}catch(Exception e){e.printStackTrace(); if(slistener != null) slistener.onBeintooError(e);} 
 	}
 	
 	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int threshold){
-		submitScoreWithVgoodCheck (ctx, score, threshold, true, null, VGOOD_NOTIFICATION_ALERT, null, null);
+		submitScoreWithVgoodCheck (ctx, score, threshold, true, null, VGOOD_NOTIFICATION_ALERT, null, null, null);
 	}
 	
 	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int threshold, boolean isMultiple,
 		LinearLayout container, int notificationType){
-		submitScoreWithVgoodCheck (ctx, score, threshold, isMultiple,container, notificationType, null, null);
+		submitScoreWithVgoodCheck (ctx, score, threshold, isMultiple,container, notificationType, null, null, null);
 	}
 	
 	
@@ -571,22 +570,26 @@ public class Beintoo{
 					final BeintooPlayer player = new BeintooPlayer();
 					String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
 					final Player p = JSONconverter.playerJsonToObject(jsonPlayer);
-					com.beintoo.wrappers.Message result;
-					if(location != null){
-						result = player.submitScore(p.getGuid(), codeID, null, lastScore, balance,Double.toString(location.getLatitude()), 
-								Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), null);						
-					}else{
-						result = player.submitScore(p.getGuid(), codeID, null, lastScore, balance, null, null, null, null);
-					}
+					com.beintoo.wrappers.Message result = null;
+					try {
+						if(location != null){
+							result = player.submitScore(p.getGuid(), codeID, null, lastScore, balance,Double.toString(location.getLatitude()), 
+									Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), null);						
+						}else{
+							result = player.submitScore(p.getGuid(), codeID, null, lastScore, balance, null, null, null, null);
+						}
+					}catch(ApiCallException e){listener.onBeintooError(e);}	
 					
-					if(!result.getMessage().equals("OK")){ // SAVE THE SCORE LOCALLY
+					if(result == null){ // SAVE THE SCORE LOCALLY
 						LocalScores.saveLocalScore(ctx,lastScore,codeID);
 					}else{		
 						// THERE ARE SOME SCORES TO SUBMIT
 						if(PreferencesHandler.getString("localScores", ctx) != null){
-							String jsonScore = PreferencesHandler.getString("localScores", ctx); 
-							PreferencesHandler.clearPref("localScores", ctx);
-							player.submitSavedScores(p.getGuid(), null, null, jsonScore, null, null, null, null);							
+							try{
+								String jsonScore = PreferencesHandler.getString("localScores", ctx); 
+								PreferencesHandler.clearPref("localScores", ctx);
+								player.submitSavedScores(p.getGuid(), null, null, jsonScore, null, null, null, null);
+							}catch(Exception e){}
 						}
 					}
 					if(showNotification)
@@ -709,7 +712,65 @@ public class Beintoo{
 		}).start();
 	}
 		 
-	
+	/**
+	 *  WORK IN PROGRESS 
+	 *  
+	 * @param achievement
+	 * @param percentage
+	 * @param value
+	 * @param showNotification
+	 * @param gravity
+	 */
+	/*public static void submitAchievementScore(final String achievement, final Float percentage, final Float value, 
+			final boolean showNotification, final int gravity){
+		new Thread(new Runnable(){     					
+    		public void run(){	
+				try {
+					Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
+					BeintooAchievements ba = new BeintooAchievements();
+					List<PlayerAchievement> prevachievements = ba.getUserAchievements(p.getUser().getId());
+					
+					// GET IF PREVIOUS UNLOCKED ACHIEVEMENT 
+					boolean previousUnlocked = false;					
+					for(PlayerAchievement pa : prevachievements){
+						if(pa.getAchievement().getId().equals(achievement)){
+							if(pa.getStatus().equals("UNLOCKED")){
+								previousUnlocked = true;
+							}
+						}  
+					}   
+					
+					if(!previousUnlocked){
+						List<PlayerAchievement> achievements = ba.submitUserAchievement(p.getUser().getId(), achievement, percentage, value);
+												   
+						StringBuilder message = new StringBuilder("You have unlocked the following achievement(s): ");
+						boolean hasUnlocked = false;
+						for(PlayerAchievement pa : achievements){
+							if(pa.getStatus().equals("UNLOCKED")){ 
+									hasUnlocked = true; 
+									message.append(pa.getAchievement().getName());
+									message.append(",");
+							} 
+						}					
+						message.replace(message.length()-1, message.length(), "");
+						
+						if(hasUnlocked && showNotification){
+							Message msg = new Message();
+							Bundle b = new Bundle();						
+							b.putString("Message", message.toString()); 						
+							b.putInt("Gravity", gravity);						
+							msg.setData(b);
+							msg.what = SUBMITSCORE_POPUP;
+							UIhandler.sendMessage(msg);
+						}
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	} 
+	*/
 	/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
@@ -844,7 +905,12 @@ public class Beintoo{
 	
 	public static boolean isLogged(Context ctx){
 		try {
-			return PreferencesHandler.getBool("isLogged", ctx);
+			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
+			boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
+			if(currentPlayer != null && isLogged)
+				return true;
+			else 
+				return false;
 		}catch(Exception e){
 			return false;
 		}
