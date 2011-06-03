@@ -512,7 +512,7 @@ public class Beintoo{
 		currentContext = ctx;
 		try{
 			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
-			String key = currentPlayer.getGuid()+":count";
+			String key = currentPlayer.getGuid()+":count:"+codeID;
 			
 			int currentTempScore = PreferencesHandler.getInt(key, ctx);
 			currentTempScore+=score;
@@ -712,7 +712,7 @@ public class Beintoo{
 		}).start();
 	}
 		 
-		/**
+	/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
 	 */
