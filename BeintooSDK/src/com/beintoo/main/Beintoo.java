@@ -513,10 +513,11 @@ public class Beintoo{
 		try{
 			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
 			String key;
+			
 			if(codeID != null)
 				key = currentPlayer.getGuid()+":count:"+codeID;
 			else 
-				key = currentPlayer.getGuid()+":count:";
+				key = currentPlayer.getGuid()+":count";
 
 			int currentTempScore = PreferencesHandler.getInt(key, ctx);
 			currentTempScore+=score;
