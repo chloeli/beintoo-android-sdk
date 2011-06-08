@@ -1,8 +1,6 @@
 package com.beintoo.vgood;
 
 
-
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,10 +10,14 @@ import java.net.URL;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -31,22 +33,25 @@ import android.widget.LinearLayout;
 import com.beintoo.R;
 
 import com.beintoo.beintoosdkui.BeButton;
-import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 
 import com.beintoo.wrappers.VgoodChooseOne;
 
 public class BeintooRecomDialog extends Dialog implements OnClickListener{
 	Context ctx;
+	private Dialog current;
 	VgoodChooseOne vgood;
+	private ImageView image;
 	
 	public BeintooRecomDialog(Context context, VgoodChooseOne v) {
 		super(context, R.style.ThemeBeintooVgood);
 		this.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		ctx = context;
 		vgood = v;
+		current = this;
 		
 		try {
+			
 			LinearLayout main = new LinearLayout(context);
 			LinearLayout.LayoutParams mainparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
 			main.setPadding(toDip(5), 0, toDip(5), 0);		
@@ -79,13 +84,10 @@ public class BeintooRecomDialog extends Dialog implements OnClickListener{
 			bottom.setLayoutParams(bottomparams);
 			bottom.setBackgroundColor(Color.TRANSPARENT);		
 			
-			
-			ImageView image = new ImageView(ctx);
-			image.setImageBitmap(getDrawableFromUrl(vgood.getVgoods().get(0).getImageUrl()));			
+			image = new ImageView(ctx);			
 			image.setPadding(0, 0, toDip(10), 0);			
 			top.addView(image);
 
-			
 			// BUTTONS
 			LinearLayout.LayoutParams buttonsparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,toDip(30),1f);
 			buttonsparams.setMargins(toDip(5), 0, toDip(5), 0);
@@ -122,11 +124,16 @@ public class BeintooRecomDialog extends Dialog implements OnClickListener{
 			main.addView(bg,mainparams);
 			main.addView(bottom,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT));	
 			
-			this.setContentView(main);
+			this.setContentView(main);			
 			
 		}catch (Exception e) {e.printStackTrace();}	
 	}
 	
+	public void loadAlert(){
+		try{
+			getDrawableFromUrl(vgood.getVgoods().get(0).getImageUrl());
+		}catch(Exception e){e.printStackTrace();}
+	}
 	
 	private int toDip (int px) {
 		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);
@@ -139,12 +146,21 @@ public class BeintooRecomDialog extends Dialog implements OnClickListener{
 			if(v.getId() == 0){ // REFUSE
 				this.cancel();
 			}else if(v.getId() == 1){ // ACCEPT
-				BeintooBrowser bb = new BeintooBrowser(ctx,vgood.getVgoods().get(0).getGetRealURL());
-				bb.show();
+				//BeintooBrowser bb = new BeintooBrowser(ctx,vgood.getVgoods().get(0).getGetRealURL());
+				//bb.show();
+				Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(vgood.getVgoods().get(0).getGetRealURL()));
+				ctx.startActivity(browserIntent);
 				this.cancel();
 			}
 		}catch(Exception e){}
 	}
+	
+	Handler UIhandler = new Handler() {
+		  @Override
+		  public void handleMessage(Message msg) {
+			  current.show();
+		  }
+	};
 	
 	private String getWebUserAgent(){
 		String userAgent = null;
@@ -157,25 +173,31 @@ public class BeintooRecomDialog extends Dialog implements OnClickListener{
 		return userAgent;
 	}
 	
-	private Bitmap getDrawableFromUrl(final String url) throws IOException, MalformedURLException {
+	private void getDrawableFromUrl(final String url) throws IOException, MalformedURLException {
 		try{ 
-			HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-			String userAgent = getWebUserAgent();
-			if(userAgent != null)
-				conn.setRequestProperty("User-Agent", userAgent);
-			conn.connect();	            
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            Bitmap bmImg = BitmapFactory.decodeStream(is);
-            // SCALE THE IMAGE TO FIT THE DEVICE SIZE
-            Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmImg, toDip(bmImg.getWidth()), toDip(bmImg.getHeight()), true);
-            bis.close();
-            is.close();
-            
-            return resizedbitmap;
+			new Thread(new Runnable(){     					
+				public void run(){ 
+					try{
+						HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+						String userAgent = getWebUserAgent();
+						if(userAgent != null)
+							conn.setRequestProperty("User-Agent", userAgent);
+						conn.connect();	            
+			            InputStream is = conn.getInputStream();
+			            BufferedInputStream bis = new BufferedInputStream(is);
+			            Bitmap bmImg = BitmapFactory.decodeStream(is);
+			            // SCALE THE IMAGE TO FIT THE DEVICE SIZE
+			            Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmImg, toDip(bmImg.getWidth()), toDip(bmImg.getHeight()), true);
+			            bis.close();
+			            is.close();
+			            
+			            image.setImageBitmap(resizedbitmap);
+			            UIhandler.sendEmptyMessage(0);
+					}catch (Exception e){e.printStackTrace();} 
+				}
+			}).start();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return null;
 	}
 }

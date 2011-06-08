@@ -17,6 +17,8 @@ package com.beintoo.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
 
 
@@ -207,13 +209,15 @@ public class Beintoo{
 		    		public void run(){
 		    			try{	
 				    		Looper.prepare();
+				    		final Timer t = new Timer();
 							final LocationListener locationListener = new LocationListener() {
 							    public void onLocationChanged(Location location) {
 							    	locationManager.removeUpdates(this);
+							    	t.cancel();
 							    	final Location l = location;							    					    				
 		    						// GET A VGOOD WITH COORDINATES
 							    	getVgoodHelper(codeID, isMultiple,container,notificationType,l,currentPlayer, listener);
-							    	saveLocationHelper (location); 
+							    	saveLocationHelper (location); 					    	
 		    				    	Looper.myLooper().quit(); //QUIT THE THREAD
 							    }
 								public void onProviderDisabled(String provider) {}
@@ -223,6 +227,7 @@ public class Beintoo{
 								public void onStatusChanged(String provider,int status, Bundle extras) {}
 		    				}; 
 							locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener); //NETWORK_PROVIDER
+							timeoutLocationManager(locationManager, locationListener, Looper.myLooper(),t); // START A TIMEOUT TIMER
 							Looper.loop();
 		    			}catch(Exception e){e.printStackTrace();}	
 		    		}		
@@ -262,13 +267,14 @@ public class Beintoo{
 					vgood = vgoodHand.getVgood(currentPlayer.getGuid(), codeID, null, 
 							null,null, false);
 				}
+				
 		    	// ADD THE SINGLE VGOOD TO THE LIST
 		    	List<Vgood> list = new ArrayList<Vgood>();
 		    	list.add(vgood);
 		    	VgoodChooseOne v = new VgoodChooseOne(list);	    				    	
 		    	vgoodlist = v;
 		    	
-		    	if(vgood.getName() != null){
+		    	if(vgood.getName() != null){		    		
 		    		if(notificationType == VGOOD_NOTIFICATION_BANNER){
 		    			vgood_container = container;
 		    			if(!vgood.isBanner()) // NORMAL VGOOD REWARD
@@ -276,6 +282,7 @@ public class Beintoo{
 		    			else // BEINTOO RECOMMENDATION
 		    				UIhandler.sendEmptyMessage(GET_RECOMM_BANNER);
 		    		}else{
+		    			
 		    			if(!vgood.isBanner()) // NORMAL VGOOD REWARD
 		    				UIhandler.sendEmptyMessage(GET_VGOOD_ALERT);
 		    			else // BEINTOO RECOMMENDATION
@@ -364,9 +371,11 @@ public class Beintoo{
 	    			    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
 	    			    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){	    			    		
 	    			    		Looper.prepare();
+	    			    		final Timer t = new Timer();
 	    			    		final LocationListener locationListener = new LocationListener() {
 	    			    			public void onLocationChanged(Location location) {
 	    			    				locationManager.removeUpdates(this);
+	    			    				t.cancel();
 	    			    				com.beintoo.wrappers.Message msg = null;
 	    			    				try {
 	    			    					msg = vgooddispatcher.isEligibleForVgood(p.getGuid(), null, Double.toString(location.getLatitude()), 
@@ -388,6 +397,7 @@ public class Beintoo{
 	    			    			public void onStatusChanged(String provider,int status, Bundle extras) {}
 	    			    		};   
 	    			    		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.myLooper());
+	    			    		timeoutLocationManager(locationManager, locationListener, Looper.myLooper(),t); // START A TIMEOUT TIMER
 	    			    		Looper.loop();
 	    			    	}else{ // LOCATION NOT AVAILABLE
 	    			    		com.beintoo.wrappers.Message msg = null;
@@ -467,18 +477,20 @@ public class Beintoo{
 	    					loginPlayer = loggedUser;    					
 	    				}
 	    				
-	    				if(loginPlayer.getUser()!=null){
-	        				Message msg = new Message();
-	        				Bundle b = new Bundle();
-	        				int unread = loginPlayer.getUser().getUnreadMessages();        				
-	        				String message = ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname();
-	        				if(unread > 0) message = message +"\n"+String.format(ctx.getString(R.string.messagenotification), unread);
-	    					b.putString("Message", message);
-	    					b.putInt("Gravity", Gravity.BOTTOM);
-	    					msg.setData(b);
-	    					msg.what = LOGIN_MESSAGE;
-	    					UIhandler.sendMessage(msg);
-	    				}
+	    				try {
+		    				if(loginPlayer.getUser()!=null){
+		        				Message msg = new Message();
+		        				Bundle b = new Bundle();
+		        				int unread = loginPlayer.getUser().getUnreadMessages();        				
+		        				String message = ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname();
+		        				if(unread > 0) message = message +"\n"+String.format(ctx.getString(R.string.messagenotification), unread);
+		    					b.putString("Message", message);
+		    					b.putInt("Gravity", Gravity.BOTTOM);
+		    					msg.setData(b);
+		    					msg.what = LOGIN_MESSAGE;
+		    					UIhandler.sendMessage(msg);
+		    				}
+	    				}catch (Exception e){e.printStackTrace(); LAST_LOGIN = new AtomicLong(0);}
 	    				
 	    				if(listener != null) listener.onComplete(loginPlayer);
 	    				
@@ -489,6 +501,7 @@ public class Beintoo{
 	    			}catch (Exception e){
 	    				e.printStackTrace();
 	    				if(listener != null) listener.onError();
+	    				LAST_LOGIN = new AtomicLong(0);
 	    			}
 	    		}    			
     		}    		
@@ -513,12 +526,11 @@ public class Beintoo{
 		try{
 			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
 			String key;
-			
 			if(codeID != null)
 				key = currentPlayer.getGuid()+":count:"+codeID;
-			else 
+			else
 				key = currentPlayer.getGuid()+":count";
-
+			
 			int currentTempScore = PreferencesHandler.getInt(key, ctx);
 			currentTempScore+=score;
 					
@@ -756,11 +768,11 @@ public class Beintoo{
 	            break;
 	            case GET_RECOMM_BANNER:
 	            	BeintooRecomBanner brb = new BeintooRecomBanner(currentContext,vgood_container,vgoodlist);
-	            	brb.show();	            	
+	            	brb.loadBanner();
 	            break;
 	            case GET_RECOMM_ALERT:
 	            	BeintooRecomDialog brd = new BeintooRecomDialog(currentContext,vgoodlist);
-	            	brd.show();
+	            	brd.loadAlert();
 	            break;	
 	            case LOGIN_MESSAGE:	            	
 	            	MessageDisplayer.showMessage(currentContext, msg.getData().getString("Message"), msg.getData().getInt("Gravity"));
@@ -790,11 +802,13 @@ public class Beintoo{
 	        		public void run(){	
 	    				try {
 	        			Looper.prepare();
+	        			final Timer t = new Timer();
 						final LocationListener locationListener = new LocationListener() {
 						    public void onLocationChanged(Location location) {
 						    	// SAVE PLAYER LOCATION
-						    	saveLocationHelper (location);
 						    	locationManager.removeUpdates(this);
+						    	t.cancel();
+						    	saveLocationHelper (location);
 						    	// QUIT THE THREAD
 						    	Looper.myLooper().quit();
 						    } 
@@ -804,7 +818,8 @@ public class Beintoo{
 		
 							public void onStatusChanged(String provider,int status, Bundle extras) {}
 						};   
-						locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.myLooper());
+						locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.myLooper());						
+						timeoutLocationManager(locationManager, locationListener, Looper.myLooper(),t); // START A TIMEOUT TIMER
 						Looper.loop();
 	    				}catch(Exception e){e.printStackTrace();}
 	        		}	
@@ -845,9 +860,22 @@ public class Beintoo{
 		
 		}catch (Exception e){
 			return null;
-		}
-		
+		}		
 	} 
+	
+	private static void timeoutLocationManager (final LocationManager lm, final LocationListener ll, Looper looper, final Timer t){
+		final Looper l = looper; 
+		t.schedule(
+		new TimerTask() {
+           public void run() {
+        	   try {
+        		   lm.removeUpdates(ll);   
+        		   if(l.getThread().isAlive())                		
+        			   l.quit();
+        		   t.cancel();     
+            	}catch(Exception e) {}
+        }},60000);
+	}
 	
 	public static boolean isLogged(Context ctx){
 		try {

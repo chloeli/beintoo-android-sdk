@@ -43,6 +43,7 @@ public class BeintooConnection {
 	
 	HttpsURLConnection postUrlConnection = null;
 	String jsonString = "";
+	InputStream postInputStream;
 	/**
 	 * This is the main HTTREQUEST method
 	 * 
@@ -77,6 +78,8 @@ public class BeintooConnection {
 			postUrlConnection.setUseCaches(false);
 			postUrlConnection.setDoOutput(true);
 			postUrlConnection.setDoInput(true);
+			//postUrlConnection.setReadTimeout(10000);
+			//postUrlConnection.setConnectTimeout(5000);
 			
 			header.getKey().add("X-BEINTOO-SDK-VERSION");
 			header.getValue().add(BeintooSdkParams.version);
@@ -95,7 +98,7 @@ public class BeintooConnection {
 			      wr.close ();				
 			}
 			
-			InputStream postInputStream = postUrlConnection.getInputStream();
+			postInputStream = postUrlConnection.getInputStream();
 	
 			jsonString = readStream(postInputStream);
 			
@@ -103,7 +106,6 @@ public class BeintooConnection {
 			
 		} catch (IOException e) {			
 			e.printStackTrace();
-			
 			// IF THE SERVER RETURN ERROR THROW EXCEPTION
 			try {
 				if(postUrlConnection.getResponseCode() == 400){
@@ -112,12 +114,15 @@ public class BeintooConnection {
 					Message msg = new Gson().fromJson(jsonString, Message.class);
 					throw new ApiCallException(msg.getMessage(), msg.getMessageID());
 				}
-				
 			} catch (IOException e1) {
-				e1.printStackTrace();
 				throw new ApiCallException();
 			} 
 			return "{\"messageID\":0,\"message\":\"ERROR\",\"kind\":\"message\"}";
+		} finally {
+			if(postInputStream != null)
+				try {
+					postInputStream.close();
+				}catch (IOException e){e.printStackTrace();}
 		}
 	}
 	
@@ -140,6 +145,7 @@ public class BeintooConnection {
 				DebugUtility.showLog(postline);
 				jsonString = jsonString + postline;
 			}
+			postBufferedReader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

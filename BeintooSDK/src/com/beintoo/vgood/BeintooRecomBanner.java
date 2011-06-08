@@ -9,16 +9,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BeintooAnimations;
 import com.beintoo.wrappers.VgoodChooseOne;
 
-
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,11 +34,13 @@ public class BeintooRecomBanner implements OnClickListener{
 	private ViewFlipper vf;
 	private LinearLayout container;
 	private VgoodChooseOne vgood;
+	private ImageView image;
 	
 	public BeintooRecomBanner(Context context, LinearLayout c, VgoodChooseOne v) {
 		ctx = context;
 		vgood = v;
 		container = c;
+		
 		try {
 			vf = new ViewFlipper(context);
 			LinearLayout empty = new LinearLayout(context);
@@ -56,16 +59,20 @@ public class BeintooRecomBanner implements OnClickListener{
 			top.setBackgroundColor(Color.TRANSPARENT);
 			top.setGravity(Gravity.CENTER);
 	
-			ImageView image = new ImageView(ctx);
-			image.setImageBitmap(getDrawableFromUrl(vgood.getVgoods().get(0).getImageUrl()));
+			image = new ImageView(ctx);			
 			top.addView(image);
 			
 			vf.addView(top);
 			vf.setForegroundGravity(Gravity.CENTER);
 			vf.setLayoutParams(bgparams);
-			container.setOnClickListener(this);
-			
+			container.setOnClickListener(this);			
 		}catch(Exception e){}	
+	}
+	
+	public void loadBanner(){
+		try {
+			getDrawableFromUrl(vgood.getVgoods().get(0).getImageUrl());
+		}catch (Exception e){e.printStackTrace();}
 	}
 	
 	public void show(){ 
@@ -95,7 +102,9 @@ public class BeintooRecomBanner implements OnClickListener{
 
 	private Runnable outRunnable = new Runnable() {
 		public void run() {
-			vf.showPrevious();
+			try {
+				vf.showPrevious();
+			}catch(Exception e){}
 		}
 	};
 	
@@ -111,8 +120,10 @@ public class BeintooRecomBanner implements OnClickListener{
 	public void onClick(View v) {
 		try {
 			// OPEN BROWSER		
-			BeintooBrowser bb = new BeintooBrowser(ctx,vgood.getVgoods().get(0).getGetRealURL());
-			bb.show();
+			//BeintooBrowser bb = new BeintooBrowser(ctx,vgood.getVgoods().get(0).getGetRealURL());
+			//bb.show();
+			Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(vgood.getVgoods().get(0).getGetRealURL()));
+			ctx.startActivity(browserIntent);
 		}catch(Exception e){}
 	}
 	
@@ -127,26 +138,40 @@ public class BeintooRecomBanner implements OnClickListener{
 		return userAgent;
 	}
 	
-	private Bitmap getDrawableFromUrl(final String url) throws IOException, MalformedURLException {
+	Handler UIhandler = new Handler() {
+		  @Override
+		  public void handleMessage(Message msg) {
+			  show();
+		  }
+	};
+	
+	
+	private void getDrawableFromUrl(final String url) throws IOException, MalformedURLException {
 		try{ 
-			HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-			String userAgent = getWebUserAgent();
-			if(userAgent != null)
-				conn.setRequestProperty("User-Agent", userAgent);
-			conn.connect();	            
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            Bitmap bmImg = BitmapFactory.decodeStream(is);
-            // SCALE THE IMAGE TO FIT THE DEVICE SIZE
-            Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmImg, toDip(bmImg.getWidth()), toDip(bmImg.getHeight()), true);
-            bis.close();
-            is.close();
-            
-            return resizedbitmap;
+			new Thread(new Runnable(){     					
+				public void run(){ 
+					try{							
+						HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+						String userAgent = getWebUserAgent();
+						if(userAgent != null)
+							conn.setRequestProperty("User-Agent", userAgent);
+						conn.connect();	            
+			            InputStream is = conn.getInputStream();
+			            BufferedInputStream bis = new BufferedInputStream(is);
+			            Bitmap bmImg = BitmapFactory.decodeStream(is);
+			            // SCALE THE IMAGE TO FIT THE DEVICE SIZE
+			            Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmImg, toDip(bmImg.getWidth()), toDip(bmImg.getHeight()), true);
+			            bis.close();
+			            is.close();
+			            
+			            image.setImageBitmap(resizedbitmap);
+			            UIhandler.sendEmptyMessage(0);
+					}catch (Exception e){} 
+				}
+			}).start();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return null;
 	}
 	private int toDip (int px) {
 		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);

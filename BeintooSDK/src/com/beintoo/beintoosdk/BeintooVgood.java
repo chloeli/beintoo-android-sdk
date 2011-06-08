@@ -73,7 +73,6 @@ public class BeintooVgood {
 			}
 		}catch (Exception e){e.printStackTrace();}
 		
-		
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl, header, null);
 		Gson gson = new Gson();
