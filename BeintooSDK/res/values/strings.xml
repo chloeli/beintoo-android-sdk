@@ -107,7 +107,7 @@
     <!-- HOME -->
     <string name="profile">Profile</string>
     <string name="profiledesc">view your global scoring</string>
-    <string name="leaderboard">Leaderboard</string>
+    <string name="leaderboard">Leaderboards</string>
     <string name="leaderboarddesc">view your stats</string>
     <string name="wallet">Wallet</string>
     <string name="walletdesc">manage your virtual goods</string>

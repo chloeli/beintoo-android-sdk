@@ -287,6 +287,7 @@ public class Wallet extends Dialog implements OnClickListener{
     				Message msg = new Message();
     				Bundle b = new Bundle();
     				b.putInt("id", selectedRow);
+    				msg.setData(b);
     				msg.what = OPEN_BROWSER;
     				UIhandler.sendMessage(msg);
     			}catch (Exception e){
@@ -325,7 +326,7 @@ public class Wallet extends Dialog implements OnClickListener{
 		  @Override
 		  public void handleMessage(Message msg) {
 			  switch(msg.what){
-			  	case OPEN_BROWSER:			  					  	
+			  	case OPEN_BROWSER:			  	
 			  		BeintooBrowser bb = new BeintooBrowser(current.getContext(),vgood[msg.getData().getInt("id")].getShowURL());
 					bb.show();						        
 			  	break;
