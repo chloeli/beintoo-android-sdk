@@ -495,9 +495,9 @@ public class Beintoo{
 	    				if(listener != null) listener.onComplete(loginPlayer);
 	    				
 	    				savePlayerLocation(currentContext);
-	    				if(userAgent == null)
+	    				if(userAgent == null){
 	    					UIhandler.sendEmptyMessage(UPDATE_USER_AGENT);
-	    			
+	    				}
 	    			}catch (Exception e){
 	    				e.printStackTrace();
 	    				if(listener != null) listener.onError();
@@ -902,10 +902,12 @@ public class Beintoo{
 	}
 	
 	public static void getUA(){
-		WebView wv = new WebView(Beintoo.currentContext);		
-		userAgent = wv.getSettings().getUserAgentString();		
-		wv.pauseTimers();		
-		wv.destroy();		 
+		try{
+			WebView wv = new WebView(Beintoo.currentContext);		
+			userAgent = wv.getSettings().getUserAgentString();		
+			wv.pauseTimers();		
+			wv.destroy();
+		}catch (Exception e){e.printStackTrace();}
 	}
 	
 	public static void clearBeintoo (){

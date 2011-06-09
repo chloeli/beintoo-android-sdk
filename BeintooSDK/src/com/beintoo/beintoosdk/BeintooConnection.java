@@ -78,8 +78,6 @@ public class BeintooConnection {
 			postUrlConnection.setUseCaches(false);
 			postUrlConnection.setDoOutput(true);
 			postUrlConnection.setDoInput(true);
-			//postUrlConnection.setReadTimeout(10000);
-			//postUrlConnection.setConnectTimeout(5000);
 			
 			header.getKey().add("X-BEINTOO-SDK-VERSION");
 			header.getValue().add(BeintooSdkParams.version);

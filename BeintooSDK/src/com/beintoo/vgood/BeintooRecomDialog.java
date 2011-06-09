@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -35,6 +34,7 @@ import com.beintoo.R;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 
+import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.VgoodChooseOne;
 
 public class BeintooRecomDialog extends Dialog implements OnClickListener{
@@ -166,9 +166,8 @@ public class BeintooRecomDialog extends Dialog implements OnClickListener{
 		String userAgent = null;
 		
 		try {
-			WebView wv = new WebView(ctx);
-			userAgent = wv.getSettings().getUserAgentString();
-		}catch(Exception e){return userAgent;}
+			userAgent = Beintoo.userAgent;
+		}catch(Exception e){ e.printStackTrace(); return userAgent;}
 		
 		return userAgent;
 	}
@@ -180,6 +179,7 @@ public class BeintooRecomDialog extends Dialog implements OnClickListener{
 					try{
 						HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
 						String userAgent = getWebUserAgent();
+						
 						if(userAgent != null)
 							conn.setRequestProperty("User-Agent", userAgent);
 						conn.connect();	            
@@ -190,7 +190,6 @@ public class BeintooRecomDialog extends Dialog implements OnClickListener{
 			            Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmImg, toDip(bmImg.getWidth()), toDip(bmImg.getHeight()), true);
 			            bis.close();
 			            is.close();
-			            
 			            image.setImageBitmap(resizedbitmap);
 			            UIhandler.sendEmptyMessage(0);
 					}catch (Exception e){e.printStackTrace();} 

@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.beintoo.beintoosdkutility.BeintooAnimations;
+import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.VgoodChooseOne;
 
 import android.content.Context;
@@ -23,7 +24,6 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebView;
 
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -131,9 +131,8 @@ public class BeintooRecomBanner implements OnClickListener{
 		String userAgent = null;
 		
 		try {
-			WebView wv = new WebView(ctx);
-			userAgent = wv.getSettings().getUserAgentString();
-		}catch(Exception e){return userAgent;}
+			userAgent = Beintoo.userAgent;
+		}catch(Exception e){ e.printStackTrace(); return userAgent;}
 		
 		return userAgent;
 	}
@@ -163,7 +162,6 @@ public class BeintooRecomBanner implements OnClickListener{
 			            Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmImg, toDip(bmImg.getWidth()), toDip(bmImg.getHeight()), true);
 			            bis.close();
 			            is.close();
-			            
 			            image.setImageBitmap(resizedbitmap);
 			            UIhandler.sendEmptyMessage(0);
 					}catch (Exception e){} 
