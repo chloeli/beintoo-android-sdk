@@ -64,7 +64,7 @@
     <string name="walletConverted">Preise Gekauft</string>
     <string name="walletNotConverted">Preise zu Gekaufen</string>
    
- 	<string name="tryBe">Beintoo verwandelt deinturn your Passion for apps into real rewards.\nIt\'s free and extremely easy!</string>  
+ 	<string name="tryBe">Beintoo verwandelt deine Leindenschaft für die Apps in reale Preise.\nEs ist kostenlos und sehr einfach!</string>  
     <string name="pressBt">Drücke die Taste unten, um Beintoo zu versuchen</string>
     
     <!-- ERROR DISPLAYER AND TOAST MESSAGES -->
@@ -159,4 +159,9 @@
 	<string name="WEEKLY_PAYMENT">Wöchentliches Gehalt</string>
 	<string name="ACHIEVEMENT_UNLOCKED">Achievement entriegelt</string>
     
+    <!-- ACHIEVEMENTS -->
+    <string name="achievement">Achievements</string>
+    <string name="achievementdesc">Sieh deiner Achievements</string>
+    <string name="achievementempty">Es gibt keine Achievements für diese App.</string>
+    <string name="achievementunlocked">Du hast diese Achievements geöffnet:</string>
 </resources>
