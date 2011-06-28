@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2011 Beintoo
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <resources>
     <string name="challStatus">Stato:</string>
     <string name="challStart">Data inizio:</string>
@@ -51,9 +66,9 @@
     
     <string name="profileScore">Il tuo punteggio</string>
     <string name="profileLevel" xml:space="preserve">Livello:\u0020</string>
-    <string name="profileTotalScore" xml:space="preserve">Punteggio totale:\u0020</string>
-    <string name="profileBestScore" xml:space="preserve">Miglior punteggio:\u0020</string>
-    <string name="profileLastScore" xml:space="preserve">Ultimo punteggio:\u0020</string>
+    <string name="profileTotalScore" xml:space="preserve">Totale:\u0020</string>
+    <string name="profileBestScore" xml:space="preserve">Migliore:\u0020</string>
+    <string name="profileLastScore" xml:space="preserve">Ultimo:\u0020</string>
     <string name="profileNoScores">Non hai nessun punteggio per questa app</string>
     <string name="profileDetach">Rimuovi account dal dispositivo</string>
     <string name="profileOf">Profilo di %s</string>
@@ -122,6 +137,11 @@
     <string name="vgoodrecommpositive">Clicca qui</string>
     <string name="vgoodmessagenegative">Più tardi</string>
     <string name="vgoodmessagebanner">Hai vinto un premio da Beintoo utilizzando questa app!\nClicca qui per riceverlo ora</string>
+    <string name="vgoodhtmlmessage">Vedi qui il tuo premio</string>
+    <string name="vgoodchoosedialog">Scegli un\'opzione</string>
+    <string name="vgoodgetcoupondialog">Ottieni il coupon</string>
+    <string name="vgoodsendgiftdialog">Regala a un amico</string>
+    <string name="vgooddetaildialog">Più dettagli</string>
     
     <!-- MESSAGES -->
     <string name="messages">Messaggi</string>
@@ -163,4 +183,11 @@
 	<string name="VGOOD_CONVERSION">VGood convertito</string>
 	<string name="WEEKLY_PAYMENT">Salario settimanale</string>
 	<string name="ACHIEVEMENT_UNLOCKED">Achievement sbloccato</string>
+	
+	<!-- ACHIEVEMENTS -->
+    <string name="achievement">Achievements</string>
+  	<string name="achievementdesc">Vedi i tuoi achievements</string>
+  	<string name="achievementempty">Non hai ancora achievements su questa App</string>
+	<string name="achievementsunlocked">Hai sbloccato i seguenti achievements:\u0020</string>
+	<string name="achievementunlocked">Hai sbloccato il seguente achievement:\u0020</string>
 </resources>

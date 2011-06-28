@@ -1,25 +1,50 @@
+/*******************************************************************************
+ * Copyright 2011 Beintoo
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.beintoo.vgood;
 
 import java.util.ArrayList;
 
 import com.beintoo.R;
+import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
+import com.beintoo.wrappers.User;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
 import com.google.beintoogson.Gson;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,7 +58,10 @@ import android.widget.TextView;
 public class VGoodGetList extends Dialog implements OnClickListener{
 	Dialog current;
 	double ratio;
+	final int OPEN_FRIENDS_FROM_VGOOD = 1;
 	VgoodChooseOne vgoodList;
+	String vgoodExtId;
+	User[] friends;
 	
 	public VGoodGetList(Context ctx, final VgoodChooseOne vgoodlist) {
 		super(ctx,R.style.ThemeBeintoo);
@@ -154,29 +182,51 @@ public class VGoodGetList extends Dialog implements OnClickListener{
 	
 	// CALLED WHEN A ROW IS CLICKED
 	public void onClick(final View v) {
-		try {
-			final Vgood vgood = vgoodList.getVgoods().get(v.getId());
-			VGoodGetDialog getVgood = new VGoodGetDialog(current.getContext(), vgood);
-			Beintoo.currentDialog = getVgood;
-			getVgood.show();
-			current.dismiss();
+		vgoodExtId = vgoodList.getVgoods().get(v.getId()).getId();
+		showConfirmAlert(v.getId());
+	}
+	
+	public void showConfirmAlert(final int row){
 		
-			// ASSIGN THE VGOOD IF IS LOGGED
-			final Player loggedPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", current.getContext()), Player.class);
-			if(loggedPlayer.getUser() != null){
-				new Thread(new Runnable(){     					
-	        		public void run(){	
-	    				try {
-	    					BeintooVgood bv = new BeintooVgood();	    					
-	    					bv.acceptVgood(vgood.getId(), loggedPlayer.getUser().getId(), null);
-	    				}catch(Exception e){e.printStackTrace();}
-	        		}	
-	        	}).start();	
-				
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+		final Vgood vgood = vgoodList.getVgoods().get(row);
+		
+		final CharSequence[] items = {current.getContext().getString(R.string.vgoodgetcoupondialog), 
+				current.getContext().getString(R.string.vgoodsendgiftdialog), current.getContext().getString(R.string.vgooddetaildialog)};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(current.getContext());
+		builder.setTitle(current.getContext().getString(R.string.vgoodchoosedialog));
+		builder.setItems(items, new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int item) {
+		        if(item == 0){ // GET COUPON
+		        	try {
+		        		BeintooBrowser getVgood = new BeintooBrowser(current.getContext(),vgood.getGetRealURL());
+		        		Beintoo.currentDialog = getVgood;
+		        		getVgood.show();
+		        		current.dismiss();
+		        	}catch(Exception e){e.printStackTrace();}
+		        }else if(item == 1){ // SEND AS A GIFT
+		        	final ProgressDialog  loading = ProgressDialog.show(getContext(), "", getContext().getString(R.string.friendLoading),true);
+		        	new Thread(new Runnable(){      
+			    		public void run(){
+			    			try{     						    				
+			    				BeintooUser u = new BeintooUser();
+			    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
+			    				friends = u.getUserFriends(p.getUser().getId(), null);
+			    				UIhandler.sendEmptyMessage(1);
+			    			}catch (Exception e){
+			    				e.printStackTrace();
+			    			}
+			    			loading.dismiss();
+			    		}
+					}).start();	
+		        }else if(item == 2){ // MORE DETAILS
+		        	VGoodGetDialog m = new VGoodGetDialog(current.getContext(), vgood, current);
+		        	m.show();
+		        }
+		    }
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 	
 	private View createSpacer(Context activity, int color, int height) {
@@ -189,5 +239,40 @@ public class VGoodGetList extends Dialog implements OnClickListener{
 
 		  return spacer;
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	try {
+				// ASSIGN THE VGOOD WHEN THE USER CLOSE THE DIALOG WITHOUT CHOOSING ANY VGOOD
+				final Player loggedPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", current.getContext()), Player.class);
+				if(loggedPlayer.getUser() != null){
+					new Thread(new Runnable(){     					
+		        		public void run(){	
+		    				try {
+		    					BeintooVgood bv = new BeintooVgood();	    					
+		    					bv.acceptVgood(vgoodList.getVgoods().get(0).getId(), loggedPlayer.getUser().getId(), null);
+		    				}catch(Exception e){e.printStackTrace();}
+		        		}	
+		        	}).start();	
+					
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
+	
+	Handler UIhandler = new Handler() {
+		  @Override
+		  public void handleMessage(Message msg) {			  
+			  VgoodSendToFriend f = new VgoodSendToFriend(getContext(),OPEN_FRIENDS_FROM_VGOOD, friends);
+			  f.previous = current;
+			  f.vgoodID = vgoodExtId;
+			  f.show();
+			  super.handleMessage(msg);
+		  }
+	};
 	
 }

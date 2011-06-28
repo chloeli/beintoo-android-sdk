@@ -232,7 +232,7 @@ public class UserProfile extends Dialog {
 		TextView level = (TextView) findViewById(R.id.level);
 		TextView dollars = (TextView) findViewById(R.id.bedollars);
 		TextView bescore = (TextView) findViewById(R.id.salary);
-		LinearLayout contests = (LinearLayout) findViewById(R.id.contests);
+		LinearLayout contestsContainer = (LinearLayout) findViewById(R.id.contests);
 		profilepict.setImageDrawable(currentPlayer.getUser().getUserimg());
 		nickname.setText(currentPlayer.getUser().getNickname());
 		level.setText(getContext().getString(R.string.profileLevel)+fromIntToLevel(currentPlayer.getUser().getLevel()));
@@ -248,55 +248,72 @@ public class UserProfile extends Dialog {
 				Map.Entry<String, PlayerScore> pairs = (Map.Entry<String, PlayerScore>) it.next();
 		        if(pairs.getValue().getContest().isPublic()){
 			        PlayerScore pscore = pairs.getValue();
-			        TextView contestName = new TextView(getContext());				        
 			        
-			        contestName.setText(pscore.getContest().getName());
-			        contestName.setPadding(12,5,0,5);
-			        contestName.setTextColor(Color.BLACK);	 
-			        contestName.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*27),BDrawableGradient.GRAY_GRADIENT));
-			        
+			        LinearLayout contestsRow = new LinearLayout(getContext());
+			        LinearLayout contestsNameFeed = new LinearLayout(getContext());
+			        LinearLayout contests = new LinearLayout(getContext());
 			        LinearLayout grayLine = new LinearLayout(getContext());
-			        grayLine.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,1));
-			        grayLine.setBackgroundColor(Color.parseColor("#8F9193"));
 			        LinearLayout grayLine2 = new LinearLayout(getContext());
+			        
+			        contestsRow.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+			        contestsRow.setOrientation(LinearLayout.VERTICAL);
+			        contestsNameFeed.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+			        contestsNameFeed.setOrientation(LinearLayout.VERTICAL);		
+			        contestsNameFeed.setPadding(12,5,0,5);
+			        contestsNameFeed.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*27),BDrawableGradient.GRAY_GRADIENT));			        
+			        contests.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+			        contests.setOrientation(LinearLayout.HORIZONTAL);		
+			        contests.setPadding(12,5,0,5);
+			        grayLine.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,1));
+			        grayLine.setBackgroundColor(Color.parseColor("#8F9193"));			        
 			        grayLine2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,1));
 			        grayLine2.setBackgroundColor(Color.parseColor("#8F9193"));
-			        LinearLayout grayLine3 = new LinearLayout(getContext());
-			        grayLine3.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,1));
-			        grayLine3.setBackgroundColor(Color.parseColor("#8F9193"));
-			        LinearLayout grayLine4 = new LinearLayout(getContext());
-			        grayLine4.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,1));
-			        grayLine4.setBackgroundColor(Color.parseColor("#8F9193"));
-			        				        				        
+			        
+			        
+			        TextView contestName = new TextView(getContext());				        
+			        TextView feedData = null;
 			        TextView totalScore = new TextView(getContext());
 			        TextView lastScore = new TextView(getContext());
 			        TextView bestScore = new TextView(getContext());
-			        totalScore.setPadding(15,5,0,5);
+			        
+			        contestName.setText(pscore.getContest().getName());
+			        contestName.setTextColor(Color.BLACK);	 			        
+			        contestsNameFeed.addView(contestName);
+			        
+			        String feed = pscore.getContest().getFeed();			        
+			        if(feed != null){
+			        	feedData = new TextView(getContext());
+			        	feedData.setTextColor(Color.parseColor("#6E6E6E"));	 			        					        
+			        	feedData.setText(feed);
+			        	contestsNameFeed.addView(feedData);
+			        	contestsNameFeed.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*60),BDrawableGradient.GRAY_GRADIENT));
+			        }
+			        
+			        //totalScore.setPadding(15,5,0,5);
 			        totalScore.setText(getContext().getString(R.string.profileTotalScore)+pscore.getBalance());
 			        totalScore.setTextSize(12);
-			        totalScore.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*22),BDrawableGradient.LIGHT_GRAY_GRADIENT));
 			        totalScore.setTextColor(Color.parseColor("#545859"));
 			        
-			        lastScore.setPadding(15,5,0,5);
+			        lastScore.setPadding(10,0,0,0);
 			        lastScore.setText(getContext().getString(R.string.profileLastScore)+pscore.getLastscore());
 			        lastScore.setTextSize(12);
-			        lastScore.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*22),BDrawableGradient.LIGHT_GRAY_GRADIENT));
 			        lastScore.setTextColor(Color.parseColor("#545859"));
 			        
-			        bestScore.setPadding(15,5,0,5);
+			        bestScore.setPadding(10,0,0,0);
 			        bestScore.setText(getContext().getString(R.string.profileBestScore)+pscore.getBestscore());
 			        bestScore.setTextSize(12);
-			        bestScore.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*22),BDrawableGradient.LIGHT_GRAY_GRADIENT));
 			        bestScore.setTextColor(Color.parseColor("#545859"));
 			        				        
-			        contests.addView(contestName);	
-			        contests.addView(grayLine);
-			        contests.addView(totalScore);
-			        contests.addView(grayLine2);
+			        
+			        contestsRow.addView(contestsNameFeed);
+			        contestsRow.addView(grayLine);
+			        contests.addView(totalScore);			        
 			        contests.addView(lastScore);
-			        contests.addView(grayLine3);
 			        contests.addView(bestScore);
-			        contests.addView(grayLine4);
+			        contestsRow.addView(contests);
+			        contestsRow.addView(grayLine2);
+			        
+			        contestsContainer.addView(contestsRow);			        
 		        }
 		    }
 		}else { // NO SCORES FOR THE APP
@@ -305,7 +322,7 @@ public class UserProfile extends Dialog {
 				noScores.setText(getContext().getString(R.string.profileNoScores));
 				noScores.setPadding(5,10,0,2);
 				noScores.setTextColor(Color.BLACK);
-				contests.addView(noScores);	
+				contestsContainer.addView(noScores);	
 			}
 		} 
 		

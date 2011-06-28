@@ -17,43 +17,34 @@ package com.beintoo.vgood;
 
 
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import com.beintoo.beintoosdkutility.BeintooAnimations;
-import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BGetVgoodListener;
 import com.beintoo.wrappers.VgoodChooseOne;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
-import android.view.View;
-import android.view.View.OnClickListener;
-
-import android.widget.ImageView;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ViewFlipper;
 
-public class BeintooRecomBanner implements OnClickListener{
+public class BeintooRecomBannerHTML{
 	private Context ctx;
 	private ViewFlipper vf;
 	private LinearLayout container;
 	private VgoodChooseOne vgood;
-	private ImageView image;
+	private WebView webview;
 	private BGetVgoodListener gvl;
 	
-	public BeintooRecomBanner(Context context, LinearLayout c, VgoodChooseOne v, BGetVgoodListener listener) {
+	public BeintooRecomBannerHTML(Context context, LinearLayout c, VgoodChooseOne v, BGetVgoodListener listener) {
 		ctx = context;
 		vgood = v;
 		container = c;
@@ -77,20 +68,49 @@ public class BeintooRecomBanner implements OnClickListener{
 			top.setBackgroundColor(Color.TRANSPARENT);
 			top.setGravity(Gravity.CENTER);
 	
-			image = new ImageView(ctx);			
-			top.addView(image);
+			
+			webview = new WebView(ctx);
+			webview.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			
+			top.addView(webview);
 			
 			vf.addView(top);
 			vf.setForegroundGravity(Gravity.CENTER);
-			vf.setLayoutParams(bgparams);
-			container.setOnClickListener(this);			
+			vf.setLayoutParams(bgparams);		
 		}catch(Exception e){}	
 	}
 	
-	public void loadBanner(){
-		try {
-			getDrawableFromUrl(vgood.getVgoods().get(0).getImageUrl());
-		}catch (Exception e){e.printStackTrace();}
+	public void loadRecomm (){
+		new Thread(new Runnable(){     					
+			public void run(){ 
+				try{
+					webview.setVerticalScrollBarEnabled(false);
+					webview.setHorizontalScrollBarEnabled(false);
+					webview.setFocusableInTouchMode(false);
+					webview.setFocusable(false);					
+					webview.setWebViewClient(new WebViewClient() {
+						public void onReceivedError(WebView view, int errorCode,
+								String description, String failingUrl) {
+						}
+						
+						public void onPageFinished(WebView view, String url){
+							UIhandler.sendEmptyMessage(0);
+						}
+						
+						public void onPageStarted(WebView view, String url, Bitmap favicon) {				
+						}
+						
+					    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+					    	Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+							ctx.startActivity(browserIntent);
+					        return true;
+					    }
+					});
+					
+					webview.loadData(vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "utf-8");					
+				}catch (Exception e){e.printStackTrace();}
+			} 
+		}).start();
 	}
 	
 	public void show(){ 
@@ -102,13 +122,12 @@ public class BeintooRecomBanner implements OnClickListener{
 			
 			if(gvl != null)
 				gvl.onComplete(vgood);
-		}catch(Exception e){}
+		}catch(Exception e){e.printStackTrace();}
 	}
 
 	private Runnable inRunnable = new Runnable() {
 		public void run() {
-			try {
-				// SETTING UP CONTAINER			
+			try {	
 				container.setBackgroundColor(Color.TRANSPARENT);
 				container.setGravity(Gravity.CENTER);
 				container.addView(vf);		
@@ -138,63 +157,10 @@ public class BeintooRecomBanner implements OnClickListener{
 		}
 	};
 
-	public void onClick(View v) {
-		try {
-			// OPEN BROWSER		
-			//BeintooBrowser bb = new BeintooBrowser(ctx,vgood.getVgoods().get(0).getGetRealURL());
-			//bb.show();
-			Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(vgood.getVgoods().get(0).getGetRealURL()));
-			ctx.startActivity(browserIntent);
-		}catch(Exception e){}
-	}
-	
-	private String getWebUserAgent(){
-		String userAgent = null;
-		
-		try {
-			userAgent = Beintoo.userAgent;
-		}catch(Exception e){ e.printStackTrace(); return userAgent;}
-		
-		return userAgent;
-	}
-	
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {
 			  show();
 		  }
 	};
-	
-	
-	private void getDrawableFromUrl(final String url) throws IOException, MalformedURLException {
-		try{ 
-			new Thread(new Runnable(){     					
-				public void run(){ 
-					try{							
-						HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-						String userAgent = getWebUserAgent();
-						if(userAgent != null)
-							conn.setRequestProperty("User-Agent", userAgent);
-						conn.connect();	            
-			            InputStream is = conn.getInputStream();
-			            BufferedInputStream bis = new BufferedInputStream(is);
-			            Bitmap bmImg = BitmapFactory.decodeStream(is);
-			            // SCALE THE IMAGE TO FIT THE DEVICE SIZE
-			            Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmImg, toDip(bmImg.getWidth()), toDip(bmImg.getHeight()), true);
-			            bis.close();
-			            is.close();
-			            image.setImageBitmap(resizedbitmap);
-			            UIhandler.sendEmptyMessage(0);
-					}catch (Exception e){} 
-				}
-			}).start();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	private int toDip (int px) {
-		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);
-		
-		return (int)(ratio*px);
-	}
 }

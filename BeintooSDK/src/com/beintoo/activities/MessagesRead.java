@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2011 Beintoo
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.beintoo.activities;
 
 import java.text.DateFormat;
@@ -26,6 +41,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -61,11 +77,18 @@ public class MessagesRead extends Dialog{
 		try {
 			// SET TITLE BAR
 			TextView t = (TextView)findViewById(R.id.dialogTitle);
-			t.setText(message.getUserFrom().getNickname());		
-			
 			LoaderImageView profilepict = (LoaderImageView) findViewById(R.id.profilepict);
-			profilepict.setImageDrawable(message.getUserFrom().getUserimg());
-			String nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+message.getUserFrom().getNickname();
+			String nick;
+			
+			if(message.getUserFrom() != null){
+				t.setText(message.getUserFrom().getNickname());		
+				profilepict.setImageDrawable(message.getUserFrom().getUserimg());
+				nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+message.getUserFrom().getNickname();
+			}else{
+				t.setText(message.getApp().getName());		
+				profilepict.setImageDrawable(message.getApp().getImageUrl());
+				nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+message.getApp().getName();
+			}
 			
 			SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
 			curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			
@@ -78,11 +101,24 @@ public class MessagesRead extends Dialog{
 			TextView dateview = (TextView) findViewById(R.id.date);
 			dateview.setText(Html.fromHtml(date));						
 			TextView messageview = (TextView) findViewById(R.id.msgtext);
-			messageview.setText(message.getText());
+			
+			// IF IT'S AN APP NOTIFICATION CHECK IF IS HTML 
+			if(message.getUserFrom() != null) // message from user, avoid html
+				messageview.setText(message.getText());
+			else if(message.getType() != null && message.getType().equals("text/html")){ // message from app with html
+				messageview.setMovementMethod(LinkMovementMethod.getInstance());
+				messageview.setText(Html.fromHtml(message.getText()));
+			}else // message from app without html
+				messageview.setText(message.getText());
+			
 			
 		}catch (Exception e){e.printStackTrace();}
 		
 		Button reply = (Button) findViewById(R.id.reply);
+		
+		if(message.getUserFrom() == null)
+			reply.setVisibility(LinearLayout.GONE);
+		
 	    BeButton b = new BeButton(context);
 	    reply.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
 	    reply.setBackgroundDrawable(

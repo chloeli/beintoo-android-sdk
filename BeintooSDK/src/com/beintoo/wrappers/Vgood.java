@@ -31,6 +31,8 @@ public class Vgood {
     private Collection<VgoodPoi> vgoodPOIs;
     private Collection<User> whoAlsoConverted;
     private boolean isBanner;
+    private String contentType;
+    private String content;
     
 	public String getGetRealURL() {
 		return getRealURL;
@@ -110,8 +112,16 @@ public class Vgood {
 	public void setBanner(boolean isBanner) {
 		this.isBanner = isBanner;
 	}
-	
-	
-    
-    
+	public String getContentType() {
+		return contentType;
+	}
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
 }

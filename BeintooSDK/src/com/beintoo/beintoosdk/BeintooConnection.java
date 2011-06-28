@@ -94,7 +94,7 @@ public class BeintooConnection {
 			      wr.writeBytes (postParams);
 			      wr.flush ();
 			      wr.close ();				
-			}
+			}			
 			
 			postInputStream = postUrlConnection.getInputStream();
 	
@@ -112,7 +112,8 @@ public class BeintooConnection {
 					Message msg = new Gson().fromJson(jsonString, Message.class);
 					throw new ApiCallException(msg.getMessage(), msg.getMessageID());
 				}
-			} catch (IOException e1) {
+				DebugUtility.showLog("RESPONSE CODE "+postUrlConnection.getResponseCode());
+			} catch (IOException e1) {				
 				throw new ApiCallException();
 			} 
 			return "{\"messageID\":0,\"message\":\"ERROR\",\"kind\":\"message\"}";
@@ -120,7 +121,7 @@ public class BeintooConnection {
 			if(postInputStream != null)
 				try {
 					postInputStream.close();
-				}catch (IOException e){e.printStackTrace();}
+				}catch (IOException e){e.printStackTrace(); }
 		}
 	}
 	

@@ -38,8 +38,20 @@ public class PreferencesHandler {
 	    editor.commit();
 	}
 	
+	public static void saveBool (String file, String key, boolean value, Context ctx){
+		SharedPreferences settings = ctx.getSharedPreferences(file, 0);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putBoolean(key,value);
+	    editor.commit();
+	}
+	
 	public static boolean getBool (String key, Context ctx){
 		SharedPreferences settings = ctx.getSharedPreferences(key, 0);
+		return settings.getBoolean(key,false);		
+	}
+	
+	public static boolean getBool (String file, String key, Context ctx){
+		SharedPreferences settings = ctx.getSharedPreferences(file, 0);
 		return settings.getBoolean(key,false);		
 	}
 	

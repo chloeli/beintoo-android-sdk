@@ -20,6 +20,8 @@ public class Contest {
     private boolean isPublic;
     private String name;
     private String description;
+    private String feed;
+    
 	public String getCodeID() {
 		return codeID;
 	}
@@ -44,6 +46,10 @@ public class Contest {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-    
-    
+	public String getFeed() {
+		return feed;
+	}
+	public void setFeed(String feed) {
+		this.feed = feed;
+	}
 }

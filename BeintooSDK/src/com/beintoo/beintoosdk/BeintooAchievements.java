@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2011 Beintoo
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.beintoo.beintoosdk;
 
 import java.lang.reflect.Type;
@@ -51,15 +66,15 @@ public class BeintooAchievements {
 	 * 
 	 * @return a list of AchievementWrap
 	 */
-	public List<PlayerAchievement> getUserAchievements(String userExt){
+	public List<PlayerAchievement> getPlayerAchievements(String guid){
 		String apiUrl = apiPreUrl+"achievement/";
 				
 		//Set the auth request header
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
-		header.getKey().add("userExt");
-		header.getValue().add(userExt);
+		header.getKey().add("guid");
+		header.getValue().add(guid);
 		
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl, header, null);
@@ -82,14 +97,14 @@ public class BeintooAchievements {
 	 * @param value (optional) number of objectives conquered
 	 * @return a PlayerAchievement object
 	 */
-	public List<PlayerAchievement> submitUserAchievement(String userExt, String achievement, Float percentage, Float value){
+	public List<PlayerAchievement> submitPlayerAchievement(String guid, String achievement, Float percentage, Float value){
 		String apiUrl = apiPreUrl+"achievement/"+achievement;
 				
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
-		header.getKey().add("userExt");
-		header.getValue().add(userExt);
+		header.getKey().add("guid");
+		header.getValue().add(guid);
 		
 		PostParams post = new PostParams();
 		

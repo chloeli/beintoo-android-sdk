@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2011 Beintoo
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.beintoo.vgood;
 
 import java.util.ArrayList;
@@ -14,7 +29,6 @@ import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
-import com.google.beintoogson.Gson;
 
 import android.os.Handler;
 import android.os.Message;
@@ -46,13 +60,14 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 	ArrayList<String> usersNicks;	
 	User [] friends;
 	final double ratio;
-	public VgoodSendToFriend(Context context, int calledFrom) {
+	public VgoodSendToFriend(Context context, int calledFrom, User[] u) {
 		super(context);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.friendlist);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
 		current = this;
 		currentContext = context;
+		friends = u;
 		
 		// GETTING DENSITY PIXELS RATIO
 		ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
@@ -65,7 +80,6 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 		usersNicks = new ArrayList<String>();
 		
 		try {
-			friends = deserializeFriends();
 			if(friends.length > 0)
 				loadFriendsTable(calledFrom);
 			else { // NO VGOODS SHOW A MESSAGE
@@ -78,8 +92,6 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 			}
 			
 		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , context,e);}
-		
-		
 	}
 	
 	public void loadFriendsTable(int calledFrom){
@@ -98,7 +110,7 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 			row.setId(i);
 			rowList.add(row);
 			
-			// IF WHE CALLED THE DIALOG FROM SEND AS A GIFT WE NEED THE
+			// IF WE CALLED THE DIALOG FROM SEND AS A GIFT WE NEED THE
 			// ROW CLICKABLE TO SEND THE VGOOD AS A GIFT
 			if(calledFrom == OPEN_FRIENDS_FROM_VGOOD)
 				row.setOnClickListener(this);
@@ -121,14 +133,6 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 	    for (View row : rowList) {	      
 		      table.addView(row);
 		}
-	}
-	
-	public User[] deserializeFriends (){		
-		String jsonFriends = PreferencesHandler.getString("friends",currentContext);
-               
-		User[] friends = new Gson().fromJson(jsonFriends, User[].class);
-		
-		return friends;
 	}
 	
 	public TableRow createRow(View image, String nick,String name, Context activity) {

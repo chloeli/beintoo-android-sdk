@@ -168,7 +168,7 @@ public class UserSelection extends Dialog implements OnClickListener{
 		  return spacer;
 	}
 	 
-	
+	 
 	// CALLED WHEN THE USER SELECT A USER IN THE TABLE
 	public void onClick(View v) {
 		final int selectedRow = v.getId();
@@ -179,8 +179,15 @@ public class UserSelection extends Dialog implements OnClickListener{
 					Gson gson = new Gson();
 					
 					String userExt = users[selectedRow].getId();
+					String guid = null;
+					try {
+						Player p = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", current.getContext()), Player.class);
+						if(p!= null)
+							guid = p.getGuid(); 
+					}catch(Exception e){e.printStackTrace();}
+					
 					BeintooPlayer player = new BeintooPlayer();
-					Player newPlayer = player.playerLogin(userExt,null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
+					Player newPlayer = player.playerLogin(userExt,guid,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
 					String jsonPlayer = gson.toJson(newPlayer);
 					
 					// SAVE THE CURRENT PLAYER

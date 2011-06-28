@@ -49,6 +49,7 @@ import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.EntryCouplePlayer;
 import com.beintoo.wrappers.Player;
 import com.google.beintoogson.Gson;
@@ -83,6 +84,8 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		
 		LinearLayout tip = (LinearLayout) findViewById(R.id.tip);
 		tip.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*27),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+		if(!Beintoo.isLogged(ctx)) // IF THE USER IS NOT LOGGED HIDE TIPS FOR CHALLENGE
+			tip.setVisibility(LinearLayout.GONE);
 		
 		usersExts = new ArrayList<String>();
 		usersNicks = new ArrayList<String>();
@@ -125,18 +128,20 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 	    	List<EntryCouplePlayer> arr = pairs.getValue();
 	    	if(selectedContest == count){
 	    		contestName.setText(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().getName());
+	    		String feed = arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().getFeed();
 	    		codeID = pairs.getKey();
 		    	for(int i = 0; i<arr.size(); i++){
 		    		//final LoaderImageView image = new LoaderImageView(getContext(), arr.get(i).getObj().getUser().getUsersmallimg());
 		    		final LoaderImageView image = new LoaderImageView(getContext(),arr.get(i).getObj().getUser().getUserimg(),(int)(ratio*70),(int)(ratio*70));
-		    			
+		    		
 		    		TableRow row = createRow(image, arr.get(i).getObj().getUser().getNickname(),
-		    				arr.get(i).getVal().toString(), getContext(), i);
+		    				arr.get(i).getVal().toString(), feed, getContext(), i);
 					row.setId(i);
 					rowList.add(row);
 					
-					if(!p.getUser().getId().equals(arr.get(i).getObj().getUser().getId()))			    		
-		    			row.setOnClickListener(this);
+					if(p != null && p.getUser() != null)
+						if(!p.getUser().getId().equals(arr.get(i).getObj().getUser().getId()))			    		
+							row.setOnClickListener(this);
 					
 					View spacer = createSpacer(getContext(),1,1);
 					spacer.setId(-100);
@@ -171,7 +176,7 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		}
 	}
 	
-	public TableRow createRow(View image, String nick,String score, Context activity, int pposition) {
+	public TableRow createRow(View image, String nick,String score,String feed, Context activity, int pposition) {
 		  TableRow row = new TableRow(activity);
 		  row.setGravity(Gravity.CENTER);
 		  		  
@@ -200,7 +205,10 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 		  nickname.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  		    
 		  TextView scoreView = new TextView(activity);		
-		  scoreView.setText(activity.getString(R.string.leadScore)+score);	
+		  if(feed == null)
+			  scoreView.setText(activity.getString(R.string.leadScore)+score);
+		  else
+			  scoreView.setText(feed+":\n"+score);
 		  scoreView.setPadding(0, 0, 0, 0);
 		  scoreView.setTextColor(Color.parseColor("#787A77"));
 		  scoreView.setTextSize(14);

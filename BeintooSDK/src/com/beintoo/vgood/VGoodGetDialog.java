@@ -29,7 +29,6 @@ import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
 import com.beintoo.wrappers.Vgood;
-import com.google.beintoogson.Gson;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -48,10 +47,29 @@ import android.widget.TextView;
 
 public class VGoodGetDialog extends Dialog{
 	protected static final int OPEN_FRIENDS_FROM_VGOOD = 1;
-	Dialog current;
-	String vgoodExtId;
-	public VGoodGetDialog(Context ctx, final Vgood vgood) {
-		super(ctx, R.style.ThemeBeintooOn);	
+	private Dialog current;
+	private String vgoodExtId;
+	private User[] friends;
+	private Vgood vgood; 
+	private Context ctx;
+	private Dialog precurrent = null;
+	
+	public VGoodGetDialog(Context c, final Vgood v) {
+		super(c, R.style.ThemeBeintooOn);			
+		vgood = v;
+		ctx = c;
+		drawDialog();
+	}
+	
+	public VGoodGetDialog(Context c, final Vgood v, Dialog p) {
+		super(c, R.style.ThemeBeintooOn);			
+		vgood = v;
+		ctx = c;
+		precurrent = p;
+		drawDialog();
+	}
+	
+	public void drawDialog (){
 		setContentView(R.layout.vgood);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
 		current = this;
@@ -121,6 +139,8 @@ public class VGoodGetDialog extends Dialog{
 				BeintooBrowser bb = new BeintooBrowser(v.getContext(),vgood.getGetRealURL());
 				bb.show();
 				current.dismiss();
+				if(precurrent != null)
+					precurrent.dismiss();
 			}
 		});
 		
@@ -139,8 +159,7 @@ public class VGoodGetDialog extends Dialog{
 		    			try{     			
 		    				BeintooUser u = new BeintooUser();
 		    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
-		    				User[] friends = u.getUserFriends(p.getUser().getId(), null);
-		    				PreferencesHandler.saveString("friends", new Gson().toJson(friends), getContext());
+		    				friends = u.getUserFriends(p.getUser().getId(), null);
 		    				UIhandler.sendEmptyMessage(1);
 		    			}catch (Exception e){
 		    				e.printStackTrace();
@@ -157,7 +176,7 @@ public class VGoodGetDialog extends Dialog{
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {			  
-			  VgoodSendToFriend f = new VgoodSendToFriend(getContext(),OPEN_FRIENDS_FROM_VGOOD);
+			  VgoodSendToFriend f = new VgoodSendToFriend(getContext(),OPEN_FRIENDS_FROM_VGOOD, friends);
 			  f.previous = current;
 			  f.vgoodID = vgoodExtId;
 			  f.show();

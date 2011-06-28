@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2011 Beintoo
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.beintoo.activities;
 
 import java.text.DateFormat;
@@ -134,8 +149,14 @@ public class MessagesList extends Dialog implements OnClickListener{
 			    	String nick;
 			    	String date;
 			    	String msgtext;
-					image = new LoaderImageView(getContext(),messages.get(i).getUserFrom().getUserimg(),(int)(ratio * 65),(int)(ratio * 65));
-					nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+messages.get(i).getUserFrom().getNickname();
+			    	
+			    	if(messages.get(i).getUserFrom() != null){
+			    		image = new LoaderImageView(getContext(),messages.get(i).getUserFrom().getUserimg(),(int)(ratio * 65),(int)(ratio * 65));
+						nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+messages.get(i).getUserFrom().getNickname();						
+			    	}else{
+			    		image = new LoaderImageView(getContext(),messages.get(i).getApp().getImageUrl(),(int)(ratio * 65),(int)(ratio * 65));
+						nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+messages.get(i).getApp().getName();
+			    	}
 					
 					SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
 					curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			
@@ -144,6 +165,8 @@ public class MessagesList extends Dialog implements OnClickListener{
 					date = "<b>"+getContext().getString(R.string.messagedate)+"</b> "+(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(msgDate));
 					
 					msgtext = messages.get(i).getText();
+					msgtext = msgtext.replaceAll("\\<.*?>","");
+					msgtext = msgtext.replaceAll("\\&.*?\\;", "");
 					
 					boolean unread = false;
 					if(messages.get(i).getStatus().equals("UNREAD")) unread = true;
@@ -234,7 +257,7 @@ public class MessagesList extends Dialog implements OnClickListener{
 		  InputFilter[] fArray = new InputFilter[1];
 		  fArray[0] = new InputFilter.LengthFilter(32);
 		  textView.setFilters(fArray);
-		  textView.setText(text);		  
+		  textView.setText(text);
 		  textView.setPadding(0, 10, 0, 0);
 		  textView.setTextColor(Color.parseColor("#787A77"));
 		  textView.setTextSize(14);

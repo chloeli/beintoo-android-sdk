@@ -47,6 +47,8 @@ public class BeintooHome extends Dialog {
 	private final int OPEN_WALLET = 3;
 	private final int OPEN_CHALLENGE = 4;
 	private final int UPDATE_UNREAD_MSG = 5;
+	private final int OPEN_ACHIEVEMENTS = 6;
+	
 	User u;
 	Dialog current;
 	public BeintooHome(Context ctx) {
@@ -74,6 +76,7 @@ public class BeintooHome extends Dialog {
 		TableRow row2 = (TableRow) findViewById(R.id.secondRow);
 		TableRow row3 = (TableRow) findViewById(R.id.thirdRow);
 		TableRow row4 = (TableRow) findViewById(R.id.fourthRow);
+		TableRow row5 = (TableRow) findViewById(R.id.fifthRow);
 		
 		BeButton b = new BeButton(getContext());
 		row1.setBackgroundDrawable(b.setPressedBackg(
@@ -92,6 +95,11 @@ public class BeintooHome extends Dialog {
 				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 		
 		row4.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+		
+		row5.setBackgroundDrawable(b.setPressedBackg(
 				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
 				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
@@ -156,6 +164,15 @@ public class BeintooHome extends Dialog {
 				}
 			});
 		}
+		
+		// ACHIEVEMENTS
+		if(row5 != null){			    
+			row5.setOnClickListener(new TableRow.OnClickListener(){
+				public void onClick(View v) {								
+	            	UIhandler.sendEmptyMessage(OPEN_ACHIEVEMENTS);								            	
+				}
+			});
+		}
 	}
 	
 	public void setFeatureToUse(){
@@ -186,7 +203,12 @@ public class BeintooHome extends Dialog {
 				tl.removeView((LinearLayout)findViewById(R.id.fourthWhiteline));
 				tl.removeView((LinearLayout)findViewById(R.id.fourthGrayline));
 				tl.removeView((TableRow) findViewById(R.id.fourthRow));
-			}				
+			}	
+			if(!f.contains("achievements")){
+				tl.removeView((LinearLayout)findViewById(R.id.fifthWhiteline));
+				tl.removeView((LinearLayout)findViewById(R.id.fifthGrayline));
+				tl.removeView((TableRow) findViewById(R.id.fifthRow));
+			}
 		}
 	}
 	
@@ -254,6 +276,10 @@ public class BeintooHome extends Dialog {
 			  }else if(msg.what == UPDATE_UNREAD_MSG){
 				  TextView unreadtxt = (TextView) findViewById(R.id.unmessage);
 				  unreadtxt.setText(String.format(current.getContext().getString(R.string.messagenotification), msg.getData().getInt("count")));
+			  }else if(msg.what == OPEN_ACHIEVEMENTS){			  
+				  UserAchievements achievements = new UserAchievements(getContext());
+				  Beintoo.currentDialog = achievements;
+				  achievements.show();
 			  }
 			  
 			  super.handleMessage(msg);

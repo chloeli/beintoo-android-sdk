@@ -189,7 +189,14 @@ public class UserLogin extends Dialog{
 								ErrorDisplayer.showConnectionErrorOnThread(getContext().getString(R.string.wronglogin), getContext(),null);								
 							}else {// PLAYERLOGIN AND THEN CLOSE THE LOGIN FORM AND GO HOME
 								BeintooPlayer player = new BeintooPlayer();
-								Player newPlayer = player.playerLogin(loggedUser.getId(),null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
+								String guid = null;
+								try {
+									Player p = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", current.getContext()), Player.class);
+									if(p!= null)
+										guid = p.getGuid(); 
+								}catch(Exception e){e.printStackTrace();}
+								
+								Player newPlayer = player.playerLogin(loggedUser.getId(),guid,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
 								Gson gson = new Gson();					
 								String jsonPlayer = gson.toJson(newPlayer);
 								 

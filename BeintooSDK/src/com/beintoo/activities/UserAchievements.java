@@ -15,27 +15,25 @@
  ******************************************************************************/
 package com.beintoo.activities;
 
-import java.lang.reflect.Field;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+
 
 import com.beintoo.R;
-import com.beintoo.beintoosdk.BeintooUser;
+import com.beintoo.beintoosdk.BeintooAchievements;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Player;
-import com.beintoo.wrappers.UserCredit;
+import com.beintoo.wrappers.PlayerAchievement;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
@@ -43,6 +41,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -51,12 +50,18 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class UserBalance extends Dialog{
+public class UserAchievements extends Dialog implements OnClickListener{
+	
+	private List<PlayerAchievement> pachivement;
 	private Dialog current;
 	private double ratio;
-	private List<UserCredit> balance;
 	
-	public UserBalance(Context context) {
+	private int LOAD_DATA = 1;
+	private int EMPTY_TABLE = 2;
+	private int CONNECTION_ERROR = 3;
+	
+	
+	public UserAchievements(Context context) {
 		super(context,R.style.ThemeBeintoo);
 		current = this; 
 		
@@ -72,9 +77,10 @@ public class UserBalance extends Dialog{
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));		
 		TextView titleBar = (TextView)findViewById(R.id.dialogTitle);
-		titleBar.setText(current.getContext().getString(R.string.balance));
+		titleBar.setText(current.getContext().getString(R.string.achievement));
 
 		startLoading();
+
 	}
 
 	private void startLoading(){
@@ -89,14 +95,16 @@ public class UserBalance extends Dialog{
     		public void run(){
     			try{ 
     				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
-    				BeintooUser u = new BeintooUser();    				
-    				balance = u.getUserBalance(p.getUser().getId(), 0, 20);	
-    				if(balance.size() > 0)
-    					UIhandler.sendEmptyMessage(0);
+    				BeintooAchievements ba = new BeintooAchievements();    				
+    				pachivement = ba.getPlayerAchievements(p.getGuid());	
+    				if(pachivement.size() > 0)
+    					UIhandler.sendEmptyMessage(LOAD_DATA);
     				else 
-    					UIhandler.sendEmptyMessage(1);
+    					UIhandler.sendEmptyMessage(EMPTY_TABLE);
     			}catch (Exception e){
     				e.printStackTrace();
+    				UIhandler.sendEmptyMessage(CONNECTION_ERROR);
+    				ErrorDisplayer.showConnectionErrorOnThread(ErrorDisplayer.CONN_ERROR, getContext(), e);    				
     			}
     		}
 		}).start();
@@ -117,17 +125,17 @@ public class UserBalance extends Dialog{
 	
 	public void loadTable(){
 		TableLayout table = (TableLayout) findViewById(R.id.table);
-		//table.setColumnStretchable(1, true);
+		table.setColumnStretchable(1, true);
 		table.removeAllViews();		
 				
 		final ArrayList<View> rowList = new ArrayList<View>();
 		
-    	for(int i = 0; i<balance.size(); i++){
+    	for(int i = 0; i<pachivement.size(); i++){
     		//final LoaderImageView image = new LoaderImageView(getContext(), getUsersmallimg());
-    		final LoaderImageView image = new LoaderImageView(getContext(),balance.get(i).getApp().getImageUrl(),(int)(ratio * 60),(int)(ratio *60));
+    		final LoaderImageView image = new LoaderImageView(getContext(),pachivement.get(i).getAchievement().getImageURL(),(int)(ratio * 60),(int)(ratio *60));
        		
-    		TableRow row = createRow(image, balance.get(i).getApp().getName(),balance.get(i).getCreationdate(),
-    				balance.get(i).getValue(),balance.get(i).getReason(), getContext());
+    		TableRow row = createRow(image, pachivement.get(i).getAchievement().getName(),pachivement.get(i).getAchievement().getDescription(),
+    				pachivement.get(i).getAchievement().getBedollars(), pachivement.get(i).getStatus(),getContext());
 			row.setId(i);
 			rowList.add(row);
 			View spacer = createSpacer(getContext(),1,1);
@@ -155,86 +163,92 @@ public class UserBalance extends Dialog{
 		}
 	}
 	
-	public TableRow createRow(View image, String appName,String date, double value, String reason, Context activity) {
+	public TableRow createRow(View image, String appName,String description, double value, String unlocked, Context activity) {
 		  TableRow row = new TableRow(activity);
-		  row.setGravity(Gravity.CENTER); 
 		  
-		  image.setPadding((int)(ratio*10), 0, (int)(ratio*15), 0);
+		  image.setPadding((int)(ratio*10), 0, (int)(ratio*10), 0);
 		  ((LinearLayout) image).setGravity(Gravity.LEFT);
+		  
+		  LinearLayout center = new LinearLayout(row.getContext());
+		  center.setOrientation(LinearLayout.VERTICAL);
+		  center.setGravity(Gravity.CENTER_VERTICAL);
+		  
+		  LinearLayout end = new LinearLayout(row.getContext());
+		  end.setOrientation(LinearLayout.VERTICAL);
+		  end.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+		  end.setPadding(0, 0, (int)(ratio*15), 0);
 		  
 		  LinearLayout img = new LinearLayout(row.getContext());
 		  img.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  img.setOrientation(LinearLayout.HORIZONTAL);
 		  img.setGravity(Gravity.CENTER);
 		  img.addView(image);
 		  
-		  row.addView(img,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio*70)));
-		 
-		  LinearLayout main = new LinearLayout(row.getContext());
-		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  main.setOrientation(LinearLayout.VERTICAL);
+		  // GET THE SCREEN ORIENTATION
+		  int getOrient = current.getContext().getApplicationContext().getResources().getConfiguration().orientation;
 		  
-		  TextView appname = new TextView(activity);
-		  appname.setText(appName);
-		  appname.setPadding(0, 0, 0, 0);
-		  appname.setTextColor(Color.parseColor("#545859"));
-		  appname.setMaxLines(1);
-		  appname.setTextSize(16);
-		  appname.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  // ACHIEVEMENT NAME DESC
+		  TextView achievname = new TextView(activity);
+		  if(getOrient == Configuration.ORIENTATION_PORTRAIT || getOrient == Configuration.ORIENTATION_SQUARE || getOrient == Configuration.ORIENTATION_UNDEFINED)
+			  achievname.setMaxWidth((int)(ratio*170));
+		  else
+			  achievname.setMaxWidth((int)(ratio*320));
+		  achievname.setText(appName);
+		  achievname.setPadding(0, 0, 0, 0);
+		  if(unlocked.equals("UNLOCKED"))
+			  achievname.setTextColor(Color.parseColor("#545859"));
+		  else
+			  achievname.setTextColor(Color.argb(127, 84, 88, 89));			  
+		  achievname.setMaxLines(2);
+		  achievname.setTextSize(16);
+		  achievname.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  		    
-		  TextView movdate = new TextView(activity);
-		  // PARSE DATE AND SET TEXTVIEW
-		  try { 			  
-			  SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
-			  curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			  
-			  Date endDate = curFormater.parse(date);			  
-			  curFormater.setTimeZone(TimeZone.getDefault());
-			  
-			  movdate.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(endDate));	
-			  movdate.setPadding(0, 0, 0, 0);
-			  movdate.setTextColor(Color.parseColor("#787A77"));
-			  movdate.setTextSize(12);
-		  } catch (Exception e){e.printStackTrace();}		  
-		  movdate.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));		  
+		  // ACHIEVEMENT DESCRIPTION TEXTVIEW
+		  TextView achievdesc = new TextView(activity);
+		  if(getOrient == Configuration.ORIENTATION_PORTRAIT || getOrient == Configuration.ORIENTATION_SQUARE || getOrient == Configuration.ORIENTATION_UNDEFINED)
+			  achievdesc.setMaxWidth((int)(ratio*170));
+		  else
+			  achievdesc.setMaxWidth((int)(ratio*320));
+		  achievdesc.setText(description);	
+		  achievdesc.setPadding(0, 0, 0, 0);
+		  if(unlocked.equals("UNLOCKED"))
+			  achievdesc.setTextColor(Color.parseColor("#787A77"));
+		  else
+			  achievdesc.setTextColor(Color.argb(127, 84, 88, 89));
+		  achievdesc.setMaxLines(2);
+		  achievdesc.setTextSize(12);		  	  
+		  achievdesc.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));		  
 		  
-		  TextView movreason = new TextView(activity);
-		  Field field;
-		  try {
-			  field = (R.string.class.getField(reason));
-			  movreason.setText(activity.getString(field.getInt(R.string.class)));
-		  } catch (SecurityException e) {
-		  } catch (NoSuchFieldException e) {				
-		  } catch (IllegalArgumentException e) {
-		  } catch (IllegalAccessException e) {}
-		  	
-		  movreason.setPadding(0, 0, 0, 0);
-		  movreason.setTextColor(Color.parseColor("#545859"));
-		  movreason.setMaxLines(2);
-		  movreason.setTextSize(12);
-		  movreason.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  center.addView(achievname);
+		  center.addView(achievdesc);
 		  
-		  main.addView(appname);
-		  main.addView(movdate);
-		  main.addView(movreason); 
-		  
-		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT));
-		  
-		  LinearLayout position = new LinearLayout(row.getContext());
-		  position.setGravity(Gravity.CENTER);
+		  TextView bedollars = new TextView(activity);		  
+		  bedollars.setPadding(0, 0, 0, 0);
+		  bedollars.setTextColor(Color.parseColor("#545859"));
+		  bedollars.setTextSize(12);
+		  bedollars.setText("Bedollars");
+		  bedollars.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  
 		  TextView movvalue = new TextView(activity);
 		  String textvalue;
 		  if(value > 0) textvalue = "+"+String.format("%02d", (int)value);
-		  else textvalue = String.format("%02d", (int)value);
+		  else textvalue = String.format("%02d", (int)value); 
 		  movvalue.setText(textvalue);
 		  movvalue.setPadding(0, 0, 0, 0);
 		  movvalue.setTextColor(Color.GRAY);
 		  movvalue.setTextSize(30);
-		  position.addView(movvalue);
+		  movvalue.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  
-		  TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT);
-		  params.setMargins(0, 0, 15, 0);
-		  row.addView(position,params);
+		  end.addView(bedollars);
+		  end.addView(movvalue);
+		  
+		  row.addView(img,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio*70)));
+		  row.addView(center,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.FILL_PARENT));
+		  
+		  if(unlocked.equals("UNLOCKED"))
+			  row.addView(end,new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT,TableRow.LayoutParams.FILL_PARENT)); 
+		  
+		  //row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT,TableRow.LayoutParams.WRAP_CONTENT));
+		  
 		  
 		  return row;
 	} 
@@ -253,18 +267,26 @@ public class UserBalance extends Dialog{
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {	
-			  if(msg.what == 0)
+			  if(msg.what == LOAD_DATA)
 				  loadTable();
-			  else if(msg.what == 1){				
+			  else if(msg.what == EMPTY_TABLE){
 				  TableLayout table = (TableLayout) findViewById(R.id.table);
 				  table.removeAllViews();
 				  TextView t = new TextView(current.getContext());
-				  t.setText(current.getContext().getString(R.string.balanceempty));
+				  t.setText(current.getContext().getString(R.string.achievementempty));
 				  t.setTextColor(Color.GRAY);
 				  t.setPadding(15,25,0,0);
-				  table.addView(t);			  
+				  table.addView(t);	
+			  }else if(msg.what == CONNECTION_ERROR){				
+				  TableLayout table = (TableLayout) findViewById(R.id.table);
+				  table.removeAllViews(); 
 			  }
 			  super.handleMessage(msg);
 		  }
 	};
+	
+	public void onClick(View arg0) {
+		
+	}
+
 }

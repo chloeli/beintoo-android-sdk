@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2011 Beintoo
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <resources>
     <string name="challStatus">Status:</string>
     <string name="challStart">Start date:</string>
@@ -27,7 +42,7 @@
     <string name="friendSel">Select a friend</string>
     <string name="friendsTitle">Your friends</string>
     <string name="friendsNo">You have no friends</string>
-    <string name="friendSure">Are you sure you want to send this coupon as a gift to </string>
+    <string name="friendSure">Are you sure you want to send this coupon as a gift to\u0020</string>
     <string name="friendSent">Gift sent to\u0020</string> 
     <string name="friendLoading">Loading friends...</string>
     <string name="friendTitle">Friends</string>    
@@ -50,9 +65,9 @@
     <string name="homeWelcome" xml:space="preserve">Welcome back\u0020</string>
     <string name="profileScore">Your scores</string>
     <string name="profileLevel">Level:\u0020</string>
-    <string name="profileTotalScore">Total score:\u0020</string>
-    <string name="profileBestScore">Best score:\u0020</string>
-    <string name="profileLastScore">Last score:\u0020</string>
+    <string name="profileTotalScore">Tot:\u0020</string>
+    <string name="profileBestScore">Best:\u0020</string>
+    <string name="profileLastScore">Last:\u0020</string>
     <string name="profileNoScores">You have no scores for this app</string>
     <string name="profileDetach">Remove account from device</string>
 	<string name="profileOf">%s Profile</string>
@@ -120,6 +135,11 @@
     <string name="vgoodrecommpositive">See More</string>
     <string name="vgoodmessagenegative">Later</string>    
     <string name="vgoodmessagebanner">Hey! You got a Beintoo reward by using this app!\nTap here and redeem it</string>
+    <string name="vgoodhtmlmessage">View here the prize you get</string>
+    <string name="vgoodchoosedialog">Choose an option</string>
+    <string name="vgoodgetcoupondialog">Get the coupon</string>
+    <string name="vgoodsendgiftdialog">Send as a gift</string>
+    <string name="vgooddetaildialog">More details</string>
     
     <!-- MESSAGES -->
     <string name="messages">Messages</string>
@@ -161,5 +181,11 @@
 	<string name="VGOOD_CONVERSION">VGood converted</string>
 	<string name="WEEKLY_PAYMENT">Weekly salary</string>
 	<string name="ACHIEVEMENT_UNLOCKED">Achievement unlocked</string>
-    
+	
+	<!-- ACHIEVEMENTS -->
+    <string name="achievement">Achievements</string>
+    <string name="achievementdesc">view your achievements</string>
+    <string name="achievementempty">There are no achievements for this app</string>
+    <string name="achievementsunlocked">You have unlocked the following achievements:\u0020</string>
+    <string name="achievementunlocked">You have unlocked the following achievement:\u0020</string>
 </resources>

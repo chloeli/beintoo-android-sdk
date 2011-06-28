@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2011 Beintoo
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <resources>
     <string name="challStatus">Estado:</string>
     <string name="challStart">Fecha de inicio:</string>
@@ -27,7 +42,7 @@
     <string name="friendsTitle">Tu amìgos</string>
     <string name="friendSel">Selectiona un amigo</string>
     <string name="friendsNo">No tienes ningùn amigo</string>    
-    <string name="friendSure" xml:space="preserve">¿Estás seguro de enviar este coupon como regalo a\u0020?</string>
+    <string name="friendSure" xml:space="preserve">¿Estás seguro de enviar este coupon como regalo a\u0020</string>
     <string name="friendSent" xml:space="preserve">Regalo enviado a\u0020</string> 
     <string name="friendLoading">Cargando amigos...</string>
     <string name="friendTitle">Amigos</string> 
@@ -51,9 +66,9 @@
     
     <string name="profileScore">Tu tanteo</string>
     <string name="profileLevel" xml:space="preserve">Nivel:\u0020</string>
-    <string name="profileTotalScore" xml:space="preserve">Tanteo total:\u0020</string>
-    <string name="profileBestScore" xml:space="preserve">Mejor tanteo:\u0020</string>
-    <string name="profileLastScore" xml:space="preserve">Último tanteo:\u0020</string>
+    <string name="profileTotalScore" xml:space="preserve">Tot:\u0020</string>
+    <string name="profileBestScore" xml:space="preserve">Mejor:\u0020</string>
+    <string name="profileLastScore" xml:space="preserve">Último:\u0020</string>
     <string name="profileNoScores">No hay ningùn tanteo para esta Aplicatión</string>
     <string name="profileDetach">Eliminar cuenta en este dispositivo</string>
     <string name="profileOf">Perfil de %s</string>
@@ -122,6 +137,11 @@
     <string name="vgoodrecommpositive">Ver más</string>
     <string name="vgoodmessagenegative">Después</string>
     <string name="vgoodmessagebanner">¡Has ganado un premio untilizando esta Aplicación!\n¡Haz clic en obtener para recibirlo ahora!</string>
+    <string name="vgoodhtmlmessage">Ve aquí a tu premio</string>
+    <string name="vgoodchoosedialog">Elige una opción</string>
+    <string name="vgoodgetcoupondialog">Consigue el coupon</string>
+    <string name="vgoodsendgiftdialog">Da a un amigo</string>
+    <string name="vgooddetaildialog">Mas informaciones</string>
     
     <!-- MESSAGES -->
     <string name="messages">Mensajes</string>
@@ -163,4 +183,11 @@
 	<string name="VGOOD_CONVERSION">Premio comprado</string>
 	<string name="WEEKLY_PAYMENT">...</string>
 	<string name="ACHIEVEMENT_UNLOCKED">Objectivo alcanzado</string>
+	
+	<!-- ACHIEVEMENTS -->
+    <string name="achievement">Conquistas</string>
+  	<string name="achievementdesc">Ve tu conquistas</string>
+  	<string name="achievementempty">No hay conquistas en esta Aplicación</string>
+  	<string name="achievementsunlocked">Has alcanzado las siguientes conquistas:\u0020</string>
+  	<string name="achievementunlocked">Has alcanzado las siguiente conquistas:\u0020</string>
 </resources>

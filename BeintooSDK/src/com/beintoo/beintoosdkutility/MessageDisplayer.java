@@ -72,7 +72,8 @@ public class MessageDisplayer{
 		
 		
 			mHandler = new Handler();
-			mHandler.postDelayed(mRunnable, getDelay(tw.length()));
+			int delay = getDelay(tw.length());
+			mHandler.postDelayed(mRunnable, delay);
 		}catch (Exception e){}
 	}
 	
@@ -86,25 +87,41 @@ public class MessageDisplayer{
 	    }
 	 };
 	
-	 private static int getDelay(int lenght){
-		 if(wM.getDefaultDisplay().getWidth() < wM.getDefaultDisplay().getHeight())
-			 if(lenght < 30)
-				 return 2000;
-			 else if(lenght >=30 && lenght <60)
-				 return 5000;
-			 else if(lenght >=60)
-				 return 8000;
-			 else 
-				 return 1000;
+	 private static int getDelay(Integer lenght){
+		 if(wM.getDefaultDisplay().getWidth() < wM.getDefaultDisplay().getHeight())			 
+			 if(lenght < 40)
+				 return 3000;
+			 else if(lenght >=40 && lenght < 60)
+				 return 6000;
+			 else if(lenght >=60 && lenght < 80)
+				 return 11000;
+			 else if(lenght >=80 && lenght < 100)
+				 return 16000;
+			 else if(lenght >=100 && lenght < 120)
+				 return 21000;
+			 else if(lenght >=120 && lenght < 140)
+				 return 26000;
+			 else if(lenght >=140 && lenght < 160)
+				 return 31000;
+			 else if(lenght >=160 && lenght < 180)
+				 return 36000;
+			 else
+				 return 41000; 
 		 else
 			 if(lenght < 60)
-				 return 2000;
-			 else if(lenght >=60 && lenght <120)
-				 return 5000;
-			 else if(lenght >=120)
-				 return 8000;
+				 return 3000;
+			 else if(lenght >=60 && lenght <80)
+				 return 6000;
+			 else if(lenght >=80 && lenght <100)
+				 return 11000;
+			 else if(lenght >=100 && lenght <120)
+				 return 16000;
+			 else if(lenght >=120 && lenght <140)
+				 return 21000;
+			 else if(lenght >=140 && lenght <160)
+				 return 26000;
 			 else 
-				 return 1000;
+				 return 31000;
 	 }
 	 
 	@SuppressWarnings("unused")
