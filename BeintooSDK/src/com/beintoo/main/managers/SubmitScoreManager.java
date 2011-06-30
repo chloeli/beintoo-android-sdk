@@ -136,7 +136,7 @@ public class SubmitScoreManager {
 							}else{
 								result = player.submitScore(p.getGuid(), codeID, null, lastScore, balance, null, null, null, null);
 							}
-						}catch(ApiCallException e){listener.onBeintooError(e);}	
+						}catch(ApiCallException e){ if(listener!=null) listener.onBeintooError(e); }	
 						
 						if(result == null){ // SAVE THE SCORE LOCALLY
 							LocalScores.saveLocalScore(ctx,lastScore,codeID);
