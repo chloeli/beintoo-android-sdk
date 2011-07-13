@@ -127,9 +127,9 @@ public class tryBeintoo extends Dialog {
 		  public void handleMessage(Message msg) {
 			  switch (msg.what) {
 	            case GO_REG:
-	            	UserLogin userLogin = new UserLogin(getContext());
-	            	Beintoo.currentDialog = userLogin;
-	            	userLogin.show();
+	            	UserRegistration userReg = new UserRegistration(getContext());
+	            	Beintoo.currentDialog = userReg;
+	            	userReg.show();
 	            break;
 	            case USER_SEL:
 					UserSelection userSelection = new UserSelection(getContext());      

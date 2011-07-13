@@ -15,11 +15,17 @@
  ******************************************************************************/
 package com.beintoo.wrappers;
 
+import java.util.List;
+import java.util.Map;
+
 public class App {
 	String name;
+	String developerName;
     String imageSmallUrl;
     String imageUrl;
-    
+    List<Contest> contests;
+    Map<String, String> download_url;
+
     public App(){}
 
 	public String getName() {
@@ -28,6 +34,14 @@ public class App {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDeveloperName() {
+		return developerName;
+	}
+
+	public void setDeveloperName(String developerName) {
+		this.developerName = developerName;
 	}
 
 	public String getImageSmallUrl() {
@@ -45,6 +59,23 @@ public class App {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
+
+	public List<Contest> getContests() {
+		return contests;
+	}
+
+	public void setContests(List<Contest> contests) {
+		this.contests = contests;
+	}
+
+	public Map<String, String> getDownload_url() {
+		return download_url;
+	}
+
+	public void setDownload_url(Map<String, String> download_url) {
+		this.download_url = download_url;
+	}
+
 	
 	
 }

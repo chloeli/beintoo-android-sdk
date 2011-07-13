@@ -22,6 +22,7 @@ import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooAchievements;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BAchievementListener;
 import com.beintoo.wrappers.Player;
@@ -43,7 +44,8 @@ public class AchievementManager {
 	
 	public void submitAchievementScore(final String achievement, final Float percentage, final Float value, 
 			final boolean showNotification, final int gravity, final BAchievementListener listener){
-		new Thread(new Runnable(){     					
+		SerialExecutor executor = SerialExecutor.getInstance();	
+		executor.execute(new Runnable(){     					
     		public void run(){	
     			synchronized (LAST_OPERATION){
 					try {
@@ -102,7 +104,7 @@ public class AchievementManager {
 									message.insert(0, currentContext.getString(R.string.achievementsunlocked));
 								
 								if(listener != null){
-									listener.onComplete();
+									listener.onComplete(achievements);
 									if(hasUnlocked){								
 										listener.onAchievementUnlocked(achievements);
 									}
@@ -127,6 +129,6 @@ public class AchievementManager {
 					}
 				}
     		}
-		}).start();
+		});
 	} 
 }

@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.beintoo.beintoosdkutility;
 
+import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -29,7 +30,7 @@ import android.telephony.TelephonyManager;
 public class DeviceId {
 	private final static String BUGGED_ANDROID_ID = "9774d56d682e549c";
 		
-	public static String getUniqueDeviceId(Context context){		
+	public static String getUniqueAndroidDeviceId(Context context){		
 	    final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 	    String tmDevice, tmSerial,androidId = null;
 	    try {
@@ -66,7 +67,7 @@ public class DeviceId {
             String out = number.toString(16);
             if (out.length() < lenght) {
                 char[] charArray = new char[lenght];
-                Arrays.fill(charArray, '0'); // pad with zeroes
+                Arrays.fill(charArray, '0'); 
                 out.getChars(0, out.length(), charArray, lenght - out.length());
                 out = new String(charArray);
             }
@@ -75,5 +76,39 @@ public class DeviceId {
             
         }
         return null;
+	}
+	
+	
+	public static String getUniqueDeviceId(Context context){
+				
+		SDFileManager sdf = new SDFileManager();		
+		if(!sdf.isAvailable()){
+			return null;
+		}
+		
+		String deviceID = null;
+		
+		try {
+			deviceID = sdf.ReadFile("beintoodeviceid.be");
+		}catch (FileNotFoundException fnf){
+			 
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		if(deviceID != null){
+			return deviceID;
+		}else{
+			String randomID = DeviceId.getRandomIdentifier();
+			
+			try {
+				sdf.WriteToFile("beintoodeviceid.be", randomID);
+			}catch (Exception e){
+				e.printStackTrace();
+				return null;
+			}
+			
+			return randomID;
+		}		
 	}
 }

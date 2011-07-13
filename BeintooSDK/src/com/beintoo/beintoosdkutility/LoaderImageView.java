@@ -86,9 +86,8 @@ public class LoaderImageView extends LinearLayout{
 		if(width != 0 && height != 0){
 			mImage.setAdjustViewBounds(true);
 			mImage.setMaxHeight(height);
-			mImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-			mImage.setMaxHeight(height);
 			mImage.setMaxWidth(width);
+			mImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);			
 		}
 		
 		mSpinner = new ProgressBar(mContext);
@@ -107,12 +106,23 @@ public class LoaderImageView extends LinearLayout{
 	}
 
 	public void setImageDrawable(final String imageUrl) {
+		setImageDrawable(imageUrl,0,0);
+	}
+	
+	public void setImageDrawable(final String imageUrl, final int width, final int height) {
 		mDrawable = null;
 		mSpinner.setVisibility(View.VISIBLE);
 		mImage.setVisibility(View.GONE);
 		new Thread(){
 			public void run() {
 				try {
+					if(width > 0 && height > 0){
+						mImage.setAdjustViewBounds(true);
+						mImage.setMaxHeight(height);
+						mImage.setMaxWidth(width);
+						mImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+					}
+
 					mDrawable = getDrawableFromUrl(imageUrl);
 					imageLoadedHandler.sendEmptyMessage(COMPLETE);
 				} catch (MalformedURLException e) {

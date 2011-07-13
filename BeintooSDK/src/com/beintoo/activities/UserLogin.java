@@ -18,12 +18,9 @@ package com.beintoo.activities;
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooUser;
-import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkui.BeButton;
-import com.beintoo.beintoosdkui.BeintooFacebookLogin;
 import com.beintoo.beintoosdkui.BeintooSignupBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
-import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
@@ -67,7 +64,7 @@ public class UserLogin extends Dialog{
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
 		// SETTING UP TEXTBOX GRADIENT
-		pixels = (ratio * 95);
+		pixels = (ratio * 45);
 		LinearLayout textlayout = (LinearLayout) findViewById(R.id.textlayout);
 		textlayout.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.GRAY_GRADIENT));
 		
@@ -80,83 +77,8 @@ public class UserLogin extends Dialog{
 		 *  PLAYERLOGIN WITH NO GUID THE GUID WILL BE ASSIGNED FROM THE API
 		 *  THEN CONNECT.HTML WITH THE ASSIGNE GUID
 		 */
-		
 		pixels = ratio * 50;
-		Button newUser = (Button) findViewById(R.id.newuser);
 		BeButton b = new BeButton(ctx);
-		newUser.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
-		newUser.setBackgroundDrawable(
-				b.setPressedBackg(
-			    		new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
-						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
-						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));
-		newUser.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-				new Thread(new Runnable(){      
-            		public void run(){
-            			try{ 				
-            				Gson gson = new Gson();
-							BeintooPlayer player = new BeintooPlayer();							 
-							// WE NEED A LOGIN FIRST WITH THE NEW GUID BEFORE CONNECT.HTML
-							String currentPlayer = PreferencesHandler.getString("currentPlayer", getContext());
-		    				Player loggedUser = null;
-		    				
-		    				if(currentPlayer != null)
-		    					loggedUser = gson.fromJson(currentPlayer, Player.class);
-		    				
-		    				Player newPlayer;
-		    				
-		    				DebugUtility.showLog("Logged player before new "+currentPlayer);
-		    				
-		    				if(loggedUser == null || loggedUser.getUser() != null) // GET A NEW RANDOM PLAYER
-		    					newPlayer = player.playerLogin(null,null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
-		    				else // USE THE CURRENT SAVED PLAYER 
-		    					newPlayer = player.playerLogin(null,loggedUser.getGuid(),null,DeviceId.getUniqueDeviceId(getContext()), null, null);
-		    				
-							if(newPlayer.getGuid() != null){
-								
-								String web = BeintooSdkParams.webUrl;
-								if(BeintooSdkParams.useSandbox) 
-									web = BeintooSdkParams.sandboxWebUrl;
-								
-								
-								String redirect_uri = web + "m/landing_register_ok.html";
-								String logged_uri = web + "m/landing_logged.html";
-								
-								StringBuilder sb = new StringBuilder();
-								sb.append(web);
-								sb.append("connect.html?apikey=");
-								sb.append(DeveloperConfiguration.apiKey);
-								sb.append("&guid=");
-								sb.append(newPlayer.getGuid());
-								sb.append("&display=touch&redirect_uri=");
-								sb.append(redirect_uri); 
-								sb.append("&logged_uri=");
-								sb.append(logged_uri);
-								 
-								/*String signupUrl = web+"connect.html?" +
-								"apikey="+DeveloperConfiguration.apiKey+"&guid="+newPlayer.getGuid()+"" +
-										"&display=touch&" +
-								"redirect_uri=http://static.beintoo.com/sdk/register_ok.html&logged_uri=http://static.beintoo.com/sdk/already_logged.html";
-								*/
-								String signupUrl = sb.toString();
-								
-								// DEBUG
-								DebugUtility.showLog(signupUrl);
-								
-								PreferencesHandler.saveString("openUrl", signupUrl, getContext());				
-								PreferencesHandler.saveString("guid", newPlayer.getGuid(), getContext());
-								UIhandler.sendEmptyMessage(SIGNUP_BROWSER);
-							}else{ // SHOW NETWORK ERROR
-								ErrorDisplayer.showConnectionError("Connection error.\nPlease check your Internet connection.", getContext(),null);
-							}
-            			}catch(Exception e){}	            			
-            			dialog.dismiss();
-            		} 
-				}).start();		
-			}
-        });
 		
 		Button go = (Button) findViewById(R.id.go);
 		go.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
@@ -179,12 +101,11 @@ public class UserLogin extends Dialog{
 							
 							// DEBUG
 							DebugUtility.showLog("logged: "+loggedUser.getId());
-							
+							imm.hideSoftInputFromWindow(email.getApplicationWindowToken(), 0);
+				            imm.hideSoftInputFromWindow(psw.getApplicationWindowToken(), 0);
 							// IF THE USER O PASSWORD ARE WRONG SHOW AN ERROR
 							if(loggedUser.getId() == null) {
-								// DISMISS THE KEYBOARD
-								imm.hideSoftInputFromWindow(email.getApplicationWindowToken(), 0);
-					            imm.hideSoftInputFromWindow(psw.getApplicationWindowToken(), 0);
+								// DISMISS THE KEYBOARD								
 								dialog.dismiss(); // DISMISS LOGIN DIALOG
 								ErrorDisplayer.showConnectionErrorOnThread(getContext().getString(R.string.wronglogin), getContext(),null);								
 							}else {// PLAYERLOGIN AND THEN CLOSE THE LOGIN FORM AND GO HOME
@@ -212,54 +133,12 @@ public class UserLogin extends Dialog{
             			}catch(Exception e){
             				dialog.dismiss();
             				ErrorDisplayer.showConnectionErrorOnThread(getContext().getString(R.string.wronglogin), getContext(),null);
-            			}	
-            			
+            			}	            			
             		} 
 				}).start();
 				
 			}	
-        });
-		
-		Button fblogin = (Button) findViewById(R.id.fblogin);
-		fblogin.setBackgroundDrawable(b.setPressedBg(R.drawable.facebook, R.drawable.facebook_h, R.drawable.facebook_h));
-		fblogin.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {
-				
-				String web = BeintooSdkParams.webUrl;
-				if(BeintooSdkParams.useSandbox) 
-					web = BeintooSdkParams.sandboxWebUrl;
-				
-				
-				String redirect_uri = web + "m/landing_register_ok.html";
-				String logged_uri = web+ "m/landing_welcome.html";
-				
-				StringBuilder sb = new StringBuilder();
-				sb.append(web);
-				sb.append("connect.html?signup=facebook&apikey=");
-				sb.append(DeveloperConfiguration.apiKey);
-				sb.append("&display=touch&redirect_uri=");
-				sb.append(redirect_uri);
-				sb.append("&logged_uri=");
-				sb.append(logged_uri);
-				
-				 
-				/*String loginUrl = web+"connect.html?signup=facebook&apikey="
-						+ DeveloperConfiguration.apiKey 
-						+ "&display=touch&redirect_uri=http://static.beintoo.com/sdk/register_ok.html&logged_uri=http://static.beintoo.com/sdk/fblogin.html";				
-				*/
-				String loginUrl = sb.toString();
-				
-				// DEBUG
-				DebugUtility.showLog(loginUrl);
-				
-				PreferencesHandler.saveString("openUrl", loginUrl, getContext());				
-				BeintooFacebookLogin fbLoginBrowser = new BeintooFacebookLogin(getContext());
-				fbLoginBrowser.show();
-				current.dismiss();
-			}	
-        });
-		
-		
+        });		
 	}
 	
 	Handler UIhandler = new Handler() {

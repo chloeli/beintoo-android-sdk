@@ -29,6 +29,7 @@ import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BPlayerLoginListener;
 import com.beintoo.main.Beintoo.BScoreListener;
@@ -46,7 +47,8 @@ public class PlayerManager {
 	}
 	
 	public void playerLogin(final Context ctx, final BPlayerLoginListener listener){
-		new Thread(new Runnable(){     					
+		SerialExecutor executor = SerialExecutor.getInstance();
+		executor.execute(new Runnable(){     					
     		public void run(){
     			synchronized (Beintoo.LAST_LOGIN){
 	    			try{
@@ -114,18 +116,18 @@ public class PlayerManager {
 	    			}
 	    		}    			
     		}    		
-		}).start();	
+		});	
 	}
 	
 	public void logout(Context ctx){
-		try {
-			PreferencesHandler.clearPref("currentPlayer", ctx);
+		try {			
 			PreferencesHandler.saveBool("isLogged", false, ctx);
 			Beintoo.LAST_LOGIN = new AtomicLong(0);
 			String guid = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", ctx)).getGuid();
 			String key = guid+":count";
 			PreferencesHandler.clearPref(key, ctx);
-		}catch(Exception e){}
+			PreferencesHandler.clearPref("currentPlayer", ctx);
+		}catch(Exception e){e.printStackTrace();}
 	}
 	
 	public PlayerScore getPlayerScore(final Context ctx, final String codeID){
@@ -147,7 +149,8 @@ public class PlayerManager {
 	}
 	
 	public void getPlayerScoreAsync(final Context ctx, final String codeID, final BScoreListener listener){
-		new Thread(new Runnable(){     					
+		SerialExecutor executor = SerialExecutor.getInstance();
+		executor.execute(new Runnable(){     					
     		public void run(){	
 				try {
 					PlayerScore p = null;
@@ -160,11 +163,11 @@ public class PlayerManager {
 					
 					listener.onComplete(p);
 					  
-				} catch (Exception e) {	
+				} catch (Exception e) {						
 					listener.onBeintooError(e);
 					e.printStackTrace();
 				}				
     		}
-		}).start();
+		});
 	}
 }

@@ -52,6 +52,8 @@
     <string name="friendYoursT">Ve tu amigos en Beintoo</string>
     <string name="friendFriendshipReqT">Maneja tu solicitud de amistad</string>    
     <string name="friendFindeditsearch">Busca un apodo, un nombre, o una email.</string>
+    <string name="friendRecommendT">Recomienda a un amigo</string>
+	<string name="friendRecommend">Recomienda esta Aplicación a tu amigos</string>
     <string name="friendSendReq">¿Quieres enviar a %s una solicitud de amistad?</string>
     <string name="friendReqTitle">Solicitudes de amistad</string>
     <string name="friendReqSubtitle">Haz clic en un nombre para aceptar</string>
@@ -94,6 +96,7 @@
     <string name="wronglogin">Nombre de usuario o contraseña incorrecto</string>
     <string name="earnedBalance">Tu tanteo total està de: %d</string>
     <string name="earnedScore">Has ganado %d puntos.\u0020</string>
+    <string name="earnedMultiScore">Has ganado múltiple puntos:\u0020 %s</string>
     
     <!-- BOXES -->
     <string name="boxWallet">Tu premios</string>
@@ -101,8 +104,14 @@
     <string name="boxCoupon">¡Felicitaciones! Has merecido un premio</string>
     <string name="boxCouponList">¡Felicitaciones! Elige tu premio</string>
     <string name="boxUserSel">¿Que perfil quieres utilizar?\nSelecciona o insiere nueva cuenta</string>
-    <string name="boxUserLogin">Entra en Beinto o registrate.\nSi estas registrado ya con Facebook puedes usar tu cuenta.</string>
-    
+    <string name="boxUserLogin">Entra en Beinto</string>
+    <string name="boxemail">Ingresa tu dirección de correo electrónico:</string>
+   	<string name="youremail">tu correo electrónico</string>
+   	<string name="startBeintooFun">Empieza a jugar!</string>
+   	<string name="orloginExisting">o entra con un perfil existente></string>
+   	<string name="tos">Beintoo no distribuirà tu dirección de correo electrónico y tampoco serás objectivo de correo no deseado.</string>
+   	<string name="confirmnick">Confirme su apodo</string>
+   	
     <!-- BUTTONS -->
     <string name="trynow">Emprueba Beintoo ahora</string>
     <string name="nothanks">No gracias</string>
@@ -164,7 +173,7 @@
     
     <!-- BALANCE -->
     <string name="balance">Presupuesto</string> 
-    <string name="balanceempty">Non hai ancora guadagnato e speso beDollars</string>
+    <string name="balanceempty">BeDollars no han ganado y gastado</string>
     <string name="BADGE_WIN">Victoria Badge</string>
 	<string name="CHALLENGE_ACCEPT">Desafìo Acceptado</string>
 	<string name="CHALLENGE_INVITE">Invitación a desafìò</string>
@@ -190,4 +199,7 @@
   	<string name="achievementempty">No hay conquistas en esta Aplicación</string>
   	<string name="achievementsunlocked">Has alcanzado las siguientes conquistas:\u0020</string>
   	<string name="achievementunlocked">Has alcanzado las siguiente conquistas:\u0020</string>
+  	<string name="blockedbyplur">Bloqueada por los siguientes conquistas</string>
+	<string name="blockedbysing">Bloqueada por los siguientes conquista</string>
+	<string name="onapp">de aplicación: \u0020</string>
 </resources>

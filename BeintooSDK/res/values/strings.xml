@@ -52,6 +52,8 @@
     <string name="friendYoursT">View your Beintoo friends</string>
     <string name="friendFriendshipReqT">Manage your friendship requests</string>    
     <string name="friendFindeditsearch">Search a nickname, name or mail</string>
+    <string name="friendRecommendT">Recommend to a friend</string>    
+    <string name="friendRecommend">Recommend this app to your friends</string>
     <string name="friendSendReq">Send %s a friend request?</string>
     <string name="friendReqTitle">Friend requests</string>
     <string name="friendReqSubtitle">Click on name to accept</string>
@@ -92,6 +94,7 @@
     <string name="wronglogin">Wrong username or password</string>
     <string name="earnedBalance">Your balance is: %d</string>
     <string name="earnedScore">You earned %d points.\u0020</string>
+    <string name="earnedMultiScore">You earned multiple points:\u0020 %s</string>
     
     <!-- BOXES -->
     <string name="boxWallet">Here\'s your wallet of great rewards</string>
@@ -99,7 +102,14 @@
     <string name="boxCoupon">Congratulations! You deserve a reward</string>
     <string name="boxCouponList">Congratulations! Choose your reward</string>
     <string name="boxUserSel">Which profile do you want to use?\nSelect one or use another account</string>
-    <string name="boxUserLogin">Login on Beintoo\nor use your Facebook account</string>
+    <string name="boxUserLogin">Login on Beintoo</string>
+    <string name="boxemail">Enter your email address:</string>
+    <string name="youremail">Your email</string>
+    <string name="startBeintooFun">Start having fun!</string>
+    <string name="orloginExisting">Or login with an existing account ></string>
+    <string name="tos">Beintoo will not distribute your email or spam you. Your email is sent via secure connection.</string>	
+    <string name="confirmnick">Confirm your nickname</string>
+    
     <!-- BUTTONS -->
     <string name="trynow">Try Beintoo Now</string>
     <string name="nothanks">No, thanks</string>
@@ -188,4 +198,7 @@
     <string name="achievementempty">There are no achievements for this app</string>
     <string name="achievementsunlocked">You have unlocked the following achievements:\u0020</string>
     <string name="achievementunlocked">You have unlocked the following achievement:\u0020</string>
+    <string name="blockedbyplur">Blocked by the following achievements</string>
+	<string name="blockedbysing">Blocked by the following achievement</string>
+	<string name="onapp">on app:\u0020</string>
 </resources>

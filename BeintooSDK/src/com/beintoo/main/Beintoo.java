@@ -17,6 +17,7 @@ package com.beintoo.main;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 
@@ -326,6 +327,29 @@ public class Beintoo{
 	}	
 	
 	
+	/**
+	 * Submit multiple user score, check the user location and then call submitScoreMultipleHelper wich make the api call on a thread
+	 * 
+	 * @param ctx the current Context
+	 * @param scores the scores to submit
+	 * @param showNotification if true it will show a notification to the user when receive a submit score 
+	 * @param BSubmitScoreListener callback interface 
+	 */	
+	public static void submitScoreMultiple(final Context ctx, Map<String,Integer> scores, final boolean showNotification, int gravity, final BSubmitScoreListener listener){
+		currentContext = ctx;
+		
+		SubmitScoreManager ssm = new SubmitScoreManager();
+		ssm.submitScoreMultiple(ctx, scores, showNotification, gravity, listener);
+	}
+	
+	public static void submitScoreMultiple(final Context ctx, Map<String,Integer> scores, final boolean showNotification){
+		currentContext = ctx;
+		
+		SubmitScoreManager ssm = new SubmitScoreManager();
+		ssm.submitScoreMultiple(ctx, scores, showNotification, Gravity.BOTTOM, null);
+	}
+	
+	
 	/** 
 	 * Get the current player score
 	 * 
@@ -496,7 +520,7 @@ public class Beintoo{
 	  *  Listener for submitAchievementScore callback
 	  */
 	 public static interface BAchievementListener {
-		 public void onComplete();
+		 public void onComplete(List<PlayerAchievement> a);
 		 public void onAchievementUnlocked(List<PlayerAchievement> a);
 		 public void onBeintooError(Exception e);
 	 }

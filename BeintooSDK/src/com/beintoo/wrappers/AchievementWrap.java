@@ -15,7 +15,10 @@
  ******************************************************************************/
 package com.beintoo.wrappers;
 
+import java.util.List;
+
 public class AchievementWrap {
+	
 	String id;
     String name;
     String description;
@@ -23,6 +26,8 @@ public class AchievementWrap {
     App app;
     Double bedollars;
     Boolean isSecret;
+    List<AchievementWrap> blockedBy;
+    List<AchievementWrap> blocks;
     
 	public String getId() {
 		return id;
@@ -65,5 +70,17 @@ public class AchievementWrap {
 	}
 	public void setIsSecret(Boolean isSecret) {
 		this.isSecret = isSecret;
+	}
+	public List<AchievementWrap> getBlockedBy() {
+		return blockedBy;
+	}
+	public void setBlockedBy(List<AchievementWrap> blockedBy) {
+		this.blockedBy = blockedBy;
+	}
+	public List<AchievementWrap> getBlocks() {
+		return blocks;
+	}
+	public void setBlocks(List<AchievementWrap> blocks) {
+		this.blocks = blocks;
 	}
 }

@@ -123,7 +123,7 @@ public class UserSelection extends Dialog implements OnClickListener{
 	        
 	    newplayer.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
-				UserLogin userLogin = new UserLogin(getContext());
+				UserRegistration userLogin = new UserRegistration(getContext());
 				userLogin.show();	
 				Beintoo.currentDialog = current;
 			}

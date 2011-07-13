@@ -17,24 +17,18 @@ package com.beintoo.main.managers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.atomic.AtomicLong;
 
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-
-import android.os.Looper;
 
 import android.widget.LinearLayout;
 
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.JSONconverter;
-import com.beintoo.beintoosdkutility.LocationManagerUtils;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BEligibleVgoodListener;
 import com.beintoo.main.Beintoo.BGetVgoodListener;
@@ -60,46 +54,28 @@ public class GetVgoodManager {
 			
 			if(currentPlayer.getGuid() == null) return;
 
-			final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
-	    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
-	    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-	    		new Thread(new Runnable(){     					
-		    		public void run(){
-		    			try{	
-				    		Looper.prepare();
-				    		final Timer t = new Timer();
-							final LocationListener locationListener = new LocationListener() {
-							    public void onLocationChanged(Location location) {
-							    	locationManager.removeUpdates(this);
-							    	t.cancel();
-							    	final Location l = location;							    					    				
-		    						// GET A VGOOD WITH COORDINATES
-							    	getVgoodHelper(codeID, isMultiple,container,notificationType,l,currentPlayer, listener);
-							    	LocationMManager.saveLocationHelper (ctx, location); 					    	
-		    				    	Looper.myLooper().quit(); //QUIT THE THREAD
-							    }
-								public void onProviderDisabled(String provider) {}
-				
-								public void onProviderEnabled(String provider) {}
-				
-								public void onStatusChanged(String provider,int status, Bundle extras) {}
-		    				}; 
-							locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener); //NETWORK_PROVIDER
-							LocationMManager.timeoutLocationManager(locationManager, locationListener, Looper.myLooper(),t); // START A TIMEOUT TIMER
-							Looper.loop();
-		    			}catch(Exception e){e.printStackTrace();}	
-		    		}		
-	    		}).start();
-	    	}else {
-	    		new Thread(new Runnable(){     					
-		    		public void run(){
-		    			try{			 
-		            		// GET A VGOOD WITHOUT COORDINATES
-		    				getVgoodHelper(codeID, isMultiple,container,notificationType,null,currentPlayer, listener);
-		    			}catch(Exception e){e.printStackTrace();}
-		    		}
-				}).start();			
-	    	}
+			final SerialExecutor executor = SerialExecutor.getInstance();	
+    		executor.execute(new Runnable(){     					
+	    		public void run(){
+	    			try{			    				
+	    				Long currentTime = System.currentTimeMillis();
+	    				Location pLoc = LocationMManager.getSavedPlayerLocation(ctx);
+	    	        	if(pLoc != null){
+	    	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
+	    	        			// GET A VGOOD WITH COORDINATES
+						    	getVgoodHelper(codeID, isMultiple,container,notificationType,pLoc,currentPlayer, listener);
+	    	        		}else {
+	    	        			// GET A VGOOD WITHOUT COORDINATES
+			    				getVgoodHelper(codeID, isMultiple,container,notificationType,null,currentPlayer, listener);
+			    				LocationMManager.savePlayerLocation(ctx);
+	    	        		}
+	    	        	}else{
+	    	        		getVgoodHelper(codeID, isMultiple,container,notificationType,null,currentPlayer, listener);
+		    				LocationMManager.savePlayerLocation(ctx);
+	    	        	}
+	    			}catch(Exception e){e.printStackTrace();}
+	    		}
+    		});
 		}catch (Exception e){
 			e.printStackTrace();
 		} 
@@ -208,16 +184,16 @@ public class GetVgoodManager {
 					}else{
 						if(listener != null)
 							listener.onError();
-					}
-			}catch (Exception ex){ if(listener!= null) listener.onError(); }
+					}					 
+				}catch (Exception ex){ if(listener!= null) listener.onError(); }
 			}
 		}	
 		
 	}
 	
 	public void isEligibleForVgood(final Context ctx, final BEligibleVgoodListener el){
-		
-    		new Thread(new Runnable(){     					
+		SerialExecutor executor = SerialExecutor.getInstance();	
+		executor.execute(new Runnable(){     					
 	    		public void run(){    			   
     				synchronized (LAST_OPERATION_ELIGIBLE){
     					try {
@@ -246,59 +222,28 @@ public class GetVgoodManager {
 	    						checkVgoodEligibility(msg, p,el);
 	    					}
 	    				}else{ // NO LOCATION AVAILABLE
-	    					final LocationManager locationManager = (LocationManager) currentContext.getSystemService(Context.LOCATION_SERVICE);
-	    			    	if(LocationManagerUtils.isProviderSupported("network", locationManager) &&
-	    			    			locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){	    			    		
-	    			    		Looper.prepare();
-	    			    		final Timer t = new Timer();
-	    			    		final LocationListener locationListener = new LocationListener() {
-	    			    			public void onLocationChanged(Location location) {
-	    			    				locationManager.removeUpdates(this);
-	    			    				t.cancel();
-	    			    				com.beintoo.wrappers.Message msg = null;
-	    			    				try {
-	    			    					msg = vgooddispatcher.isEligibleForVgood(p.getGuid(), null, Double.toString(location.getLatitude()), 
-				    						Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()));
-	    			    					
-	    			    					checkVgoodEligibility(msg, p,el);
-	    			    				}catch(ApiCallException e){
-	    			    					msg = new com.beintoo.wrappers.Message();
-	    		    						msg.setMessage(e.getError());
-	    		    						msg.setMessageID(e.getId());
-	    		    						checkVgoodEligibility(msg, p,el);
-	    			    				}
-	    			    				Looper.myLooper().quit();
-	    			    			} 
-	    			    			public void onProviderDisabled(String provider) {}
-			
-	    			    			public void onProviderEnabled(String provider) {}
-			
-	    			    			public void onStatusChanged(String provider,int status, Bundle extras) {}
-	    			    		};   
-	    			    		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.myLooper());
-	    			    		LocationMManager.timeoutLocationManager(locationManager, locationListener, Looper.myLooper(),t); // START A TIMEOUT TIMER
-	    			    		Looper.loop();
-	    			    	}else{ // LOCATION NOT AVAILABLE
-	    			    		com.beintoo.wrappers.Message msg = null;
-	    			    		try {
-	    			    			msg = vgooddispatcher.isEligibleForVgood(p.getGuid(), null, null, 
-			    						null, null);
-	    			    			checkVgoodEligibility(msg, p,el);
-	    			    		}catch (ApiCallException e){
-	    			    			msg = new com.beintoo.wrappers.Message();
-		    						msg.setMessage(e.getError());
-		    						msg.setMessageID(e.getId());
-		    						checkVgoodEligibility(msg, p,el);
-	    			    		} 
-	    			    	}	
-	    				}
+    			    		com.beintoo.wrappers.Message msg = null;
+    			    		try {
+    			    			msg = vgooddispatcher.isEligibleForVgood(p.getGuid(), null, null, 
+		    						null, null);
+    			    			checkVgoodEligibility(msg, p,el);
+    			    			
+    			    			LocationMManager.savePlayerLocation(ctx);
+    			    		}catch (ApiCallException e){
+    			    			msg = new com.beintoo.wrappers.Message();
+	    						msg.setMessage(e.getError());
+	    						msg.setMessageID(e.getId());
+	    						checkVgoodEligibility(msg, p,el);
+    			    		} 
+    			    	}	
+    				
 	    				
 	    				LAST_OPERATION_ELIGIBLE.set(System.currentTimeMillis());
 	    				
 	    			}catch(Exception e){e.printStackTrace();el.onError();}
     				}
 	    		}
-			}).start();		    		
+			});		    		
 	}
 	
 	private void checkVgoodEligibility(com.beintoo.wrappers.Message msg, Player p, BEligibleVgoodListener el){

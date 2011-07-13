@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.List;
 
+import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.beintoosdkutility.PostParams;
@@ -358,14 +359,30 @@ public class BeintooUser {
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @return a user wrapper
 	 */
-	public User setUser(String guid, String email, String nickname, String password, String name, String address, String country, Integer gender, Boolean sendGreetingsEmail, String imageurl, String codeID){
-		String apiUrl = apiPreUrl+"user/set";
+	public User setOrUpdateUser(String action, String guid, String userExt, String email, String nickname, String password, String name, String address, String country, Integer gender, Boolean sendGreetingsEmail, String imageurl, String codeID){
+		
+		String apiUrl;
+		if(action.equals("set"))
+			apiUrl = apiPreUrl+"user/set";
+		else if(action.equals("update"))
+			apiUrl = apiPreUrl+"user/update";
+		else
+			throw new ApiCallException();
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
-		header.getValue().add(DeveloperConfiguration.apiKey);		
-		header.getKey().add("guid");
-		header.getValue().add(guid);
+		header.getValue().add(DeveloperConfiguration.apiKey);	
+		
+		if(guid != null){
+			header.getKey().add("guid");
+			header.getValue().add(guid);
+		}
+		
+		if(userExt != null){
+			header.getKey().add("userExt");
+			header.getValue().add(userExt);
+		}
+		
 		if(codeID != null) {
 			header.getKey().add("guid");
 			header.getValue().add(guid);

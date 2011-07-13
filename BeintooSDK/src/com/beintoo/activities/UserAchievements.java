@@ -28,6 +28,7 @@ import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.wrappers.AchievementWrap;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerAchievement;
 
@@ -37,6 +38,8 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -155,6 +158,15 @@ public class UserAchievements extends Dialog implements OnClickListener{
 			    		new BDrawableGradient(0,(int)(ratio * 70),BDrawableGradient.GRAY_GRADIENT),
 						new BDrawableGradient(0,(int)(ratio * 70),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int)(ratio * 70),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			
+			row.setOnClickListener(new View.OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					DetailsPopup dp = new DetailsPopup(current.getContext(), v.getId());
+					dp.show();
+				}
+				
+			});
 	
     	}	 
 	    
@@ -247,8 +259,6 @@ public class UserAchievements extends Dialog implements OnClickListener{
 		  if(unlocked.equals("UNLOCKED"))
 			  row.addView(end,new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT,TableRow.LayoutParams.FILL_PARENT)); 
 		  
-		  //row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT,TableRow.LayoutParams.WRAP_CONTENT));
-		  
 		  
 		  return row;
 	} 
@@ -262,6 +272,87 @@ public class UserAchievements extends Dialog implements OnClickListener{
 			  spacer.setBackgroundColor(Color.WHITE);
 		  
 		  return spacer;
+	}
+	
+	private class DetailsPopup extends Dialog {
+
+		public DetailsPopup(Context context, Integer selectedRow) {
+			super(context);
+			
+			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			setContentView(R.layout.achivementdesc);
+			
+			try {
+				PlayerAchievement pa = pachivement.get(selectedRow);
+				LoaderImageView currentAppPict = (LoaderImageView) findViewById(R.id.apppict);
+				TextView appname = (TextView) findViewById(R.id.appname);
+				TextView appdesc = (TextView) findViewById(R.id.appdesc);
+				TableLayout tv = (TableLayout) findViewById(R.id.table);
+				
+				currentAppPict.setImageDrawable(pa.getAchievement().getImageURL(),(int)(ratio * 60),(int)(ratio *60));
+				currentAppPict.setPadding(0, 0, (int)(ratio *10), 0);
+				
+				appname.setText(pa.getAchievement().getName());
+				appdesc.setText(pa.getAchievement().getDescription());
+				
+				List<AchievementWrap> blockers = pa.getAchievement().getBlockedBy();
+				
+				if(blockers == null){ 
+					findViewById(R.id.blockedby).setVisibility(View.GONE);
+				}else{
+					for(int i = 0; i < blockers.size(); i++){
+						TableRow row = new TableRow(context);		
+						row.setPadding(0, (int)(ratio *10), 0, (int)(ratio *10));
+						row.setGravity(Gravity.CENTER_VERTICAL);
+												
+						TextView name = new TextView(context);
+						TextView desc = new TextView(context);
+						final LoaderImageView image = 
+							new LoaderImageView(getContext(),blockers.get(i).getImageURL(),(int)(ratio * 60),(int)(ratio *60));
+						image.setPadding(0, 0, (int)(ratio *10), 0);
+						
+						name.setText(blockers.get(i).getName());
+						name.setTextColor(Color.parseColor("#545859"));
+						
+						StringBuilder achDesc = new StringBuilder(blockers.get(i).getDescription());
+						if(blockers.get(i).getApp()!=null){
+							achDesc.append("<br />");
+							achDesc.append(context.getString(R.string.onapp));
+							achDesc.append("<a href=\"");
+							
+							if(blockers.get(i).getApp().getDownload_url().get("ANDROID") != null)
+								achDesc.append(blockers.get(i).getApp().getDownload_url().get("ANDROID"));
+							else if(blockers.get(i).getApp().getDownload_url().get("WEB") != null)
+								achDesc.append(blockers.get(i).getApp().getDownload_url().get("WEB"));
+							
+							achDesc.append("\">");
+							achDesc.append(blockers.get(i).getApp().getName());
+							achDesc.append("</a>");
+							
+							if(blockers.get(i).getApp().getDownload_url().get("WEB") != null)
+								desc.setMovementMethod(LinkMovementMethod.getInstance());
+							else if(blockers.get(i).getApp().getDownload_url().get("WEB") != null)
+								desc.setMovementMethod(LinkMovementMethod.getInstance());
+							
+							desc.setText(Html.fromHtml(achDesc.toString()));							
+						}else						
+							desc.setText(achDesc.toString());
+						
+						desc.setTextColor(Color.parseColor("#545859"));
+						
+						LinearLayout center = new LinearLayout(row.getContext());
+						center.setOrientation(LinearLayout.VERTICAL);
+						center.addView(name);
+						center.addView(desc);
+						
+						row.addView(image);
+						row.addView(center);
+						tv.addView(row);
+					}
+				}
+			}catch(Exception e){ e.printStackTrace(); }				
+		}
+		
 	}
 	
 	Handler UIhandler = new Handler() {

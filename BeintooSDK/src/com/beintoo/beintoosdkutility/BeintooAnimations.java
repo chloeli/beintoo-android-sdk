@@ -20,25 +20,25 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
 public class BeintooAnimations {
-	public static Animation inFromRightAnimation() {
+	public static Animation inFromRightAnimation(int duration) {
 
 		Animation inFromRight = new TranslateAnimation(
 				Animation.RELATIVE_TO_PARENT, +1.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f);
-		inFromRight.setDuration(350);
+		inFromRight.setDuration(duration);
 		inFromRight.setInterpolator(new AccelerateInterpolator());
 		return inFromRight;
 	}
 
-	public static Animation outToLeftAnimation() {
+	public static Animation outToLeftAnimation(int duration) {
 		Animation outtoLeft = new TranslateAnimation(
 				Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, -1.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f);
-		outtoLeft.setDuration(350);
+		outtoLeft.setDuration(duration);
 		outtoLeft.setInterpolator(new AccelerateInterpolator());
 		return outtoLeft;
 	}

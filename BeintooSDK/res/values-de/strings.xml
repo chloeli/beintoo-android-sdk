@@ -52,6 +52,8 @@
     <string name="friendYoursT">Schau deine Freunde auf Beintoo</string>
     <string name="friendFriendshipReqT">Verwalte deine Freundschaftsanfragen</string>    
     <string name="friendFindeditsearch">Suche einen Nutzername, einen Namen oder eine E-mail</string>
+    <string name="friendRecommendT">Empfehle es an einen Freund</string>
+	<string name="friendRecommend">Empfehle dieses App zu deinen Freunden</string>
     <string name="friendSendReq">Willst du %s eine anfrange schicken?</string>
     <string name="friendReqTitle">Freundschaftsanfragen</string>
     <string name="friendReqSubtitle">Klicke auf dem Namen falls zu akzeptieren</string>
@@ -90,6 +92,7 @@
     <string name="wronglogin">Falscher Nutzername oder Passwort</string>
     <string name="earnedBalance">Dein Bilanz ist:%d</string>
     <string name="earnedScore">Du verdienst %d Punkte.\u0020</string>
+    <string name="earnedMultiScore">Du verdienst multi Punkte:\u0020 %s</string>
     
     <!-- BOXES -->
     <string name="boxWallet">Hier ist deine Brieftasche mit Belohnungen</string>
@@ -97,7 +100,15 @@
     <string name="boxCoupon">Glückwünsche! Du verdienst eine Belohnung</string>
     <string name="boxCouponList">Glückwünsche! Wähle dein Belohnungen</string>
     <string name="boxUserSel">Welches Profil möchtest du verwenden?\nWähle ein Profil oder verwende ein anderes Konto.</string>
-    <string name="boxUserLogin">Anmelde dich auf Beintoo\noder verwende deine Facebook-Konto</string>
+    <string name="boxUserLogin">Anmelde dich auf Beintoo</string>
+    <string name="boxemail">Gib deine E-Mail Adresse:</string>
+  	<string name="youremail">E-Mail Addresse</string>
+  	<string name="startBeintooFun">Start Spaß!</string>
+   	<string name="orloginExisting">oder mit einem bestehenden Account einloggen></string>
+   	<string name="tos">Beintoo wird nicht deine E-Mail verteilen oder spam.Deine E-Mail wird über eine sichere Verbindung gesendet.</string>
+    <string name="confirmnick">Bestätigen Sie Ihre Spitznamen</string>
+    
+    
     <!-- BUTTONS -->
     <string name="trynow">Versuche Beintoo jetzt.</string>
     <string name="nothanks">Nein, danke</string>
@@ -185,4 +196,7 @@
    <string name="achievementempty">Es gibt keine Erfolge für diese App.</string>
    <string name="achievementunlocked">Du hast diesen Erfolg geöffnet:</string>
    <string name="achievementsunlocked">Du hast diese Erfolge geöffnet:</string>
+   <string name="blockedbyplur">Blockiert durch folgende Erfolge</string>
+   <string name="blockedbysing">Blockiert durch die folgenden Erfolge</string>
+   <string name="onapp">auf app:\u0020</string>
 </resources>

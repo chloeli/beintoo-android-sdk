@@ -15,6 +15,10 @@
  ******************************************************************************/
 package com.beintoo.main.managers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.beintoo.R;
@@ -22,6 +26,7 @@ import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BGetVgoodListener;
 import com.beintoo.main.Beintoo.BSubmitScoreListener;
@@ -39,7 +44,7 @@ import android.widget.LinearLayout;
 public class SubmitScoreManager {
 	
 	private static AtomicLong LAST_OPERATION = new AtomicLong(0);
-	private long OPERATION_TIMEOUT = 5000;
+	private long OPERATION_TIMEOUT = 2000;
 	
 	public void submitScoreWithVgoodCheck (final Context ctx, int score, int threshold, String codeID, boolean isMultiple,
 			LinearLayout container, int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener){
@@ -82,9 +87,11 @@ public class SubmitScoreManager {
 	        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,pLoc, gravity, listener);
 	        		}else {
 	        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity, listener);
+	        			LocationMManager.savePlayerLocation(ctx);
 	        		}
 	        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
 	        		submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity, listener);
+	        		LocationMManager.savePlayerLocation(ctx);
 	        	}	
 			}catch(Exception e){ 
 				e.printStackTrace(); 
@@ -104,12 +111,12 @@ public class SubmitScoreManager {
 	 */
 	private void submitScoreHelper (final Context ctx, final int lastScore, final Integer balance, final String codeID, 
 			final boolean showNotification,final Location location, final int gravity, final BSubmitScoreListener listener){
-			
-		new Thread(new Runnable(){     					
+		
+		SerialExecutor executor = SerialExecutor.getInstance();	
+		executor.execute(new Runnable(){     					
     		public void run(){	
     			synchronized (LAST_OPERATION){
 					try {
-						
 						if(System.currentTimeMillis() < LAST_OPERATION.get() + OPERATION_TIMEOUT)
 							return;
 						
@@ -136,7 +143,7 @@ public class SubmitScoreManager {
 							}else{
 								result = player.submitScore(p.getGuid(), codeID, null, lastScore, balance, null, null, null, null);
 							}
-						}catch(ApiCallException e){ if(listener!=null) listener.onBeintooError(e); }	
+						}catch(ApiCallException e){ if(listener != null) listener.onBeintooError(e); }	
 						
 						if(result == null){ // SAVE THE SCORE LOCALLY
 							LocalScores.saveLocalScore(ctx,lastScore,codeID);
@@ -146,13 +153,14 @@ public class SubmitScoreManager {
 								try{
 									String jsonScore = PreferencesHandler.getString("localScores", ctx); 
 									PreferencesHandler.clearPref("localScores", ctx);
-									player.submitSavedScores(p.getGuid(), null, null, jsonScore, null, null, null, null);
-								}catch(Exception e){}
+									player.submitJsonScores(p.getGuid(), null, null, jsonScore, null, null, null, null);
+								}catch(Exception e){e.printStackTrace();}
 							}
 						}
+						
 						if(showNotification)
 							Beintoo.UIhandler.sendMessage(msg);
-					
+
 						if(listener != null)
 							listener.onComplete();
 						
@@ -164,6 +172,122 @@ public class SubmitScoreManager {
 					}
     			}
     		}	
-    	}).start();				
+    	});				
+	}
+	
+	
+	public void submitScoreMultiple(final Context ctx, Map<String,Integer> scores, final boolean showNotification, int gravity, final BSubmitScoreListener listener){
+		String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
+		final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
+		if(p != null){			    			
+			try{
+				Long currentTime = System.currentTimeMillis();
+				Location pLoc = LocationMManager.getSavedPlayerLocation(ctx);
+	        	if(pLoc != null){
+	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
+	        			submitScoreMultipleHelper(ctx,scores,showNotification,pLoc, gravity, listener);
+	        		}else {
+	        			submitScoreMultipleHelper(ctx,scores,showNotification,null, gravity, listener);
+	        			LocationMManager.savePlayerLocation(ctx);
+	        		}
+	        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
+	        		submitScoreMultipleHelper(ctx,scores,showNotification,null, gravity, listener);
+	        		LocationMManager.savePlayerLocation(ctx);
+	        	}	
+			}catch(Exception e){ 
+				e.printStackTrace(); 
+			}		    			
+		}
+	}
+	
+	/**
+	 * Submit multiple contest player score and save the score in case of submit error. Then send it in the next submit score
+	 * 
+	 * @param ctx
+	 * @param scores
+	 * @param showNotification
+	 * @param location
+	 * @param gravity
+	 * @param listener
+	 */
+	private void submitScoreMultipleHelper (final Context ctx, final Map<String,Integer> scores, 
+			final boolean showNotification,final Location location, final int gravity, final BSubmitScoreListener listener){
+		
+		SerialExecutor executor = SerialExecutor.getInstance();	
+		executor.execute(new Runnable(){     					
+    		public void run(){	
+    			synchronized (LAST_OPERATION){
+					try {
+						if(System.currentTimeMillis() < LAST_OPERATION.get() + OPERATION_TIMEOUT)
+							return;
+						
+						List<LocalScores> jsonScoresArray = new ArrayList<LocalScores>();
+						StringBuilder scoresString = new StringBuilder("");
+						for (Entry<String, Integer> entry : scores.entrySet()) {
+						     scoresString.append(entry.getValue().toString());
+						     scoresString.append(",");
+						     
+						     LocalScores ls = new LocalScores();
+						     ls.setCodeID(entry.getKey());
+						     ls.setScore(entry.getValue());
+						     
+						     jsonScoresArray.add(ls);
+						}	
+						scoresString.deleteCharAt(scoresString.length()-1);
+		    			
+						final Message msg = new Message();
+						Bundle b = new Bundle(); 
+						b.putString("Message", String.format(ctx.getString(R.string.earnedMultiScore), scoresString.toString()));
+						 
+						b.putInt("Gravity", gravity);
+						 
+						msg.setData(b);
+						msg.what = Beintoo.SUBMITSCORE_POPUP;
+						
+						String jsonScores = new Gson().toJson(jsonScoresArray);						
+						final BeintooPlayer player = new BeintooPlayer();
+						String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
+						final Player p = JSONconverter.playerJsonToObject(jsonPlayer);
+						com.beintoo.wrappers.Message result = null;
+						try {
+							if(location != null){
+								result = player.submitJsonScores(p.getGuid(), null, null, jsonScores, Double.toString(location.getLatitude()), 
+										Double.toString(location.getLongitude()), Double.toString(location.getAccuracy()), null);														
+							}else{
+								result = player.submitJsonScores(p.getGuid(), null, null, jsonScores, null, 
+										null, null, null);
+							}
+						}catch(ApiCallException e){ if(listener != null) listener.onBeintooError(e); }	
+						
+						if(result == null){ // SAVE THE SCORE LOCALLY
+							for (Entry<String, Integer> entry : scores.entrySet()) {
+								LocalScores.saveLocalScore(ctx,entry.getValue(),entry.getKey().toString());		
+							}
+						}else{		
+							// THERE ARE SOME SCORES TO SUBMIT
+							if(PreferencesHandler.getString("localScores", ctx) != null){
+								try{
+									String jsonScore = PreferencesHandler.getString("localScores", ctx); 
+									PreferencesHandler.clearPref("localScores", ctx);
+									player.submitJsonScores(p.getGuid(), null, null, jsonScore, null, null, null, null);
+								}catch(Exception e){e.printStackTrace();}
+							}
+						}
+						
+						if(showNotification)
+							Beintoo.UIhandler.sendMessage(msg);
+
+						if(listener != null)
+							listener.onComplete();
+						
+						LAST_OPERATION.set(System.currentTimeMillis());
+						
+					}catch (Exception e){e.printStackTrace(); 
+						if(listener != null)
+							listener.onBeintooError(e);
+					}
+    			}
+    		}	
+    	});				
 	}
 }

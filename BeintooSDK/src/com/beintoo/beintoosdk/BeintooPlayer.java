@@ -236,7 +236,7 @@ public class BeintooPlayer {
 	 * @param language
 	 * @return a json message with the status
 	 */
-	public Message submitSavedScores (String guid, String codeID, String deviceUUID, String jsonScores,
+	public Message submitJsonScores (String guid, String codeID, String deviceUUID, String jsonScores,
 			String latitude, String longitude, String radius, String language) {
 		
 			String apiUrl = apiPreUrl+"player/submitscore/";
@@ -266,17 +266,13 @@ public class BeintooPlayer {
 			post.getValue().add(jsonScores);
 			
 			BeintooConnection conn = new BeintooConnection();
-			try {
-				String json = conn.httpRequest(apiUrl, header, post,true);
-				Gson gson = new Gson();
-				Message msg = new Message();
-				msg = gson.fromJson(json, Message.class);
-				return msg;
-			}catch (Exception e){
-				Message msg = new Message();
-				msg.setMessage("ERROR");
-				return msg;
-			}
+			
+			String json = conn.httpRequest(apiUrl, header, post,true);
+			Gson gson = new Gson();
+			Message msg = new Message();
+			msg = gson.fromJson(json, Message.class);
+			
+			return msg;			
 	}
 	
 	

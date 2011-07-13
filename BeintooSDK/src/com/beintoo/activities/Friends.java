@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import com.beintoo.R;
 
 import com.beintoo.beintoosdk.BeintooUser;
+import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.JSONconverter;
@@ -69,7 +70,7 @@ public class Friends extends Dialog implements OnClickListener{
 	public static final int SHOW_EMPTY = 5;
 	public static final int LOAD_TABLE = 6;
 	public static final int SHOW_MESSAGE = 7;
-	
+	public static final int OPEN_RTAF = 8;
 	
 	private int whichSection;
 	
@@ -319,7 +320,7 @@ public class Friends extends Dialog implements OnClickListener{
 		final ArrayList<View> rowList = new ArrayList<View>();
 		
 		
-		for(int i = 0; i < 3;i++){
+		for(int i = 0; i < 4;i++){
 	    	ImageView icon = new ImageView(getContext());
 	    	String section = "";
 	    	String description = "";
@@ -335,6 +336,10 @@ public class Friends extends Dialog implements OnClickListener{
 	    		icon.setImageResource(R.drawable.friendreq);
 	    		section = current.getContext().getString(R.string.friendReqTitle);
 	    		description = current.getContext().getString(R.string.friendFriendshipReqT);
+	    	}else if(i == 3){
+	    		icon.setImageResource(R.drawable.rtaf);
+	    		section = current.getContext().getString(R.string.friendRecommendT);
+	    		description = current.getContext().getString(R.string.friendRecommend);
 	    	}
 	    	
 			TableRow row = createRowFriendList(icon, section,description, getContext());
@@ -544,6 +549,8 @@ public class Friends extends Dialog implements OnClickListener{
 			}else if(v.getId() == 2){
 				Friends friend = new Friends(getContext(), null, Friends.FRIENDSHIP_REQUESTS, R.style.ThemeBeintoo);
 				friend.show();
+			}else if(v.getId() == 3){
+				UIhandler.sendEmptyMessage(OPEN_RTAF);
 			}
 		}else if(whichSection == FRIENDSHIP_REQUESTS){
 			showFriendShipDialog(friends[v.getId()].getId(),v);
@@ -567,6 +574,15 @@ public class Friends extends Dialog implements OnClickListener{
 				  table.addView(t);
 			  }else if(msg.what == SHOW_MESSAGE){
 				  MessageDisplayer.showMessage(getContext(), msg.getData().getString("message"), Gravity.BOTTOM);
+			  }else if(msg.what == OPEN_RTAF){
+				  Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
+				  StringBuilder url = new StringBuilder("http://sdk-mobile.beintoo.com/rtaf/?apikey=");
+				  url.append(DeveloperConfiguration.apiKey);
+				  url.append("&user_ext=");
+				  url.append(p.getUser().getId());
+				  url.append("#main");
+				  SmartWebUi swu = new SmartWebUi(current.getContext(), url.toString());
+				  swu.show();				    
 			  }		  
 				  
 			  super.handleMessage(msg);

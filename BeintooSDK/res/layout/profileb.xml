@@ -61,42 +61,48 @@
 				android:padding="5dip">
 				<LinearLayout android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/a"
-					android:orientation="vertical" android:gravity="center" android:layout_marginLeft="5dip">
-					<ImageButton android:id="@+id/friendsbt" android:src="@drawable/friends"
-						android:background="@null" android:layout_height="wrap_content"
-						android:layout_width="wrap_content" android:paddingRight="4dip" android:paddingLeft="4dip"/>
+					android:orientation="vertical" android:gravity="center"
+					android:layout_marginLeft="5dip">
+					<ImageButton android:id="@+id/friendsbt"
+						android:background="@drawable/button_rollover" android:src="@drawable/friends"
+						android:paddingBottom="0dip" android:paddingTop="0dip"
+						android:layout_height="wrap_content" android:layout_width="wrap_content"
+						android:paddingRight="4dip" android:paddingLeft="4dip" />
 					<TextView android:id="@+id/friends" android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:text="@string/friends"
-						android:textColor="#FFFFFF" android:textSize="12dip"/>
+						android:textColor="#FFFFFF" android:textSize="12dip" />
 				</LinearLayout>
 				<LinearLayout android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/a"
 					android:orientation="vertical" android:gravity="center">
 					<ImageButton android:id="@+id/balancebt" android:src="@drawable/balance"
-						android:background="@null" android:layout_height="wrap_content"
-						android:layout_width="wrap_content" android:paddingRight="10dip"
-						android:paddingLeft="10dip" />
+						android:layout_height="wrap_content" android:layout_width="wrap_content"
+						android:paddingRight="10dip" android:paddingBottom="0dip"
+						android:paddingTop="0dip" android:paddingLeft="10dip"
+						android:background="@drawable/button_rollover" />
 					<TextView android:id="@+id/balance" android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:text="@string/balance"
-						android:textColor="#FFFFFF" android:textSize="12dip"/>
+						android:textColor="#FFFFFF" android:textSize="12dip" />
 				</LinearLayout>
 				<LinearLayout android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/a"
 					android:orientation="vertical" android:gravity="center">
-				<ImageButton android:id="@+id/messagesbt" android:src="@drawable/bubblemsg"
-					android:background="@null" android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:paddingRight="4dip" android:paddingLeft="4dip"/>
+					<ImageButton android:id="@+id/messagesbt" android:src="@drawable/bubblemsg"
+						android:paddingBottom="0dip" android:paddingTop="0dip"
+						android:background="@drawable/button_rollover"
+						android:layout_height="wrap_content" android:layout_width="wrap_content"
+						android:paddingRight="4dip" android:paddingLeft="4dip" />
 					<TextView android:id="@+id/messages" android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:text="@string/messages"
-						android:textColor="#FFFFFF" android:textSize="12dip"/>
+						android:textColor="#FFFFFF" android:textSize="12dip" />
 				</LinearLayout>
 				<LinearLayout android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/a"
 					android:orientation="vertical" android:gravity="center">
-					<TextView android:id="@+id/msgunread" android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:text="0"
-						android:textColor="#FFFFFF" android:textSize="12dip"/>
-				</LinearLayout>		
+					<TextView android:id="@+id/msgunread"
+						android:layout_width="wrap_content" android:layout_height="wrap_content"
+						android:text="0" android:textColor="#FFFFFF" android:textSize="12dip" />
+				</LinearLayout>
 			</LinearLayout>
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="1dip" android:background="#8F9193"
@@ -118,8 +124,9 @@
 			android:orientation="vertical" android:id="@+id/convll"
 			android:layout_height="wrap_content" android:gravity="center"
 			android:layout_marginTop="0dip" android:layout_marginBottom="10dip">
-			<Button android:id="@+id/logout" android:textColor="#FFFFFF" android:layout_width="294dip"
-				android:layout_height="50dip" android:textSize="18dip" android:text="@string/logout">
+			<Button android:id="@+id/logout" android:textColor="#FFFFFF"
+				android:layout_width="294dip" android:layout_height="50dip"
+				android:textSize="18dip" android:text="@string/logout">
 			</Button>
 		</LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"

@@ -164,58 +164,59 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 	}
 	
 	public void loadContestTable(){
-		
-		TableLayout table = (TableLayout) findViewById(R.id.tablecontest);
-		table.setColumnStretchable(1, true);
-		table.removeAllViews();
-		
-		BeButton b = new BeButton(getContext());
-		
-		final ArrayList<View> rowList = new ArrayList<View>();
-		Iterator<?> it = leader.entrySet().iterator();
-		int count = 0;
-	    while (it.hasNext()) {
-	    	@SuppressWarnings("unchecked")
-			Map.Entry<String, ArrayList<EntryCouplePlayer>> pairs = (Map.Entry<String, ArrayList<EntryCouplePlayer>>) it.next();
-	    	List<EntryCouplePlayer> arr = pairs.getValue();	
-	    	
-	    	if(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().isPublic() == true){
-		    	TableRow row = createRow(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().getName(), getContext());
+		try {
+			TableLayout table = (TableLayout) findViewById(R.id.tablecontest);
+			table.setColumnStretchable(1, true);
+			table.removeAllViews();
+			
+			BeButton b = new BeButton(getContext());
+			
+			final ArrayList<View> rowList = new ArrayList<View>();
+			Iterator<?> it = leader.entrySet().iterator();
+			int count = 0;
+		    while (it.hasNext()) {
+		    	@SuppressWarnings("unchecked")
+				Map.Entry<String, ArrayList<EntryCouplePlayer>> pairs = (Map.Entry<String, ArrayList<EntryCouplePlayer>>) it.next();
+		    	List<EntryCouplePlayer> arr = pairs.getValue();	
 		    	
-		    	if(count % 2 == 0)
-		    		row.setBackgroundDrawable(b.setPressedBackg(
-				    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
-							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
-							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-				else
-					row.setBackgroundDrawable(b.setPressedBackg(
-				    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.GRAY_GRADIENT),
-							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
-							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-				
-		    	TableLayout.LayoutParams tableRowParams=
-	    		  new TableLayout.LayoutParams
-	    		  (TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
-	    		row.setLayoutParams(tableRowParams);
-		    	row.setId(count);
-				rowList.add(row);
-				View spacer = createSpacer(getContext(),1,1);
-				spacer.setId(-100);
-				rowList.add(spacer);
-				View spacer2 = createSpacer(getContext(),2,1);
-				spacer2.setId(-100);
-				rowList.add(spacer2);
-		    	count++;	
-	    	}
-	    }
-	    
-	    for (View row : rowList) {
-		      row.setPadding(0, 0, 0, 0);	      
-		      //row.setBackgroundColor(Color.argb(200, 51, 51, 51));
-		      if(row.getId() != -100) // IF IS NOT A SPACER IT'S CLICKABLE
-		    	  row.setOnClickListener(this);
-		      table.addView(row);
-		}
+		    	if(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().isPublic() == true){
+			    	TableRow row = createRow(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().getName(), getContext());
+			    	
+			    	if(count % 2 == 0)
+			    		row.setBackgroundDrawable(b.setPressedBackg(
+					    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+								new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+								new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+					else
+						row.setBackgroundDrawable(b.setPressedBackg(
+					    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.GRAY_GRADIENT),
+								new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+								new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+					
+			    	TableLayout.LayoutParams tableRowParams=
+		    		  new TableLayout.LayoutParams
+		    		  (TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
+		    		row.setLayoutParams(tableRowParams);
+			    	row.setId(count);
+					rowList.add(row);
+					View spacer = createSpacer(getContext(),1,1);
+					spacer.setId(-100);
+					rowList.add(spacer);
+					View spacer2 = createSpacer(getContext(),2,1);
+					spacer2.setId(-100);
+					rowList.add(spacer2);
+			    	count++;	
+		    	}
+		    }
+		    
+		    for (View row : rowList) {
+			      row.setPadding(0, 0, 0, 0);	      
+			      //row.setBackgroundColor(Color.argb(200, 51, 51, 51));
+			      if(row.getId() != -100) // IF IS NOT A SPACER IT'S CLICKABLE
+			    	  row.setOnClickListener(this);
+			      table.addView(row);
+			}
+		}catch(Exception e){e.printStackTrace();}
 	}
 	
 	public TableRow createRow(String txt, Context activity) {

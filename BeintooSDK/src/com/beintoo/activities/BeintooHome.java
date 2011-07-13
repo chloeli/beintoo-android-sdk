@@ -123,6 +123,14 @@ public class BeintooHome extends Dialog {
 				TextView unreadtxt = (TextView) findViewById(R.id.unmessage);
 				unread.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.LIGHT_GRAY_GRADIENT));
 				unreadtxt.setText(String.format(ctx.getString(R.string.messagenotification), unreadcount));
+				
+				unread.setOnClickListener(new View.OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						MessagesList ml = new MessagesList(getContext());
+				        ml.show();	
+					}					
+				});
 			}
 			
 			// CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
@@ -261,11 +269,10 @@ public class BeintooHome extends Dialog {
 				  Beintoo.currentDialog = userProfile;
 				  userProfile.show();
 			  }else if(msg.what == OPEN_LEADERBOARD){
-				  
 				  LeaderBoardContest leaderboard = new LeaderBoardContest(getContext());
 				  Beintoo.currentDialog = leaderboard;
 				  leaderboard.show();
-			  }else if(msg.what == OPEN_WALLET){			  
+			  }else if(msg.what == OPEN_WALLET){	
 				  Wallet wallet = new Wallet(getContext());
 				  Beintoo.currentDialog = wallet;
 				  wallet.show();

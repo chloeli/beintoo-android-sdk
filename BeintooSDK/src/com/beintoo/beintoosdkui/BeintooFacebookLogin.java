@@ -18,7 +18,6 @@ package com.beintoo.beintoosdkui;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -39,6 +38,7 @@ import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -51,7 +51,7 @@ public class BeintooFacebookLogin extends Dialog {
 	final Dialog current;
 	private static final int GO_HOME = 1;
 	
-	public BeintooFacebookLogin(Context ctx) {
+	public BeintooFacebookLogin(Context ctx, String openUrl) {
 		super(ctx, R.style.ThemeBeintoo);		
 		current = this;
 		setContentView(R.layout.browser);
@@ -75,16 +75,6 @@ public class BeintooFacebookLogin extends Dialog {
 		WebSettings ws = webview.getSettings();
 		ws.setJavaScriptEnabled(true);
 
-		Button aloggedbt = new Button(getContext());
-		
-		if (!isGinger()) {
-			webview.addJavascriptInterface(aloggedbt, "aloggedbt");
-			aloggedbt.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					startBeintooHome();
-				}
-			});
-		}
 		//webview.addJavascriptInterface(aloggedbt, "aloggedbt");
 
 		Button close = (Button) findViewById(R.id.close);
@@ -101,15 +91,8 @@ public class BeintooFacebookLogin extends Dialog {
 				ProgressBar p = (ProgressBar) findViewById(R.id.progress);				
 				p.setProgress(progress);
 			}
-			
-			public void onConsoleMessage (String message, int lineNumber, String sourceID){
-				if(isGinger()){ // IF IS GINGER INTERCEPT THE JS ERROR AND START BEINTOO
-					if(message.contains("aloggedbt"))
-						startBeintooHome();
-				}
-			}
-			
 		});
+		
 		webview.setWebViewClient(new WebViewClient() {
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
@@ -126,17 +109,17 @@ public class BeintooFacebookLogin extends Dialog {
 				ProgressBar p = (ProgressBar) findViewById(R.id.progress);
 				p.setVisibility(LinearLayout.VISIBLE);
 			}
+
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				if(url.equals("http://www.beintoo.com/m/fbloginok")){
+					startBeintooHome();
+					return true;
+				}					
+				return super.shouldOverrideUrlLoading(view, url);
+			}			
 		});
 		webview.setInitialScale(1);
-		webview.loadUrl(getUrlOpenUrl());
-	}
-
-	private String getUrlOpenUrl() {
-		String openUrl = PreferencesHandler.getString("openUrl", getContext());
-		if (openUrl != null) {
-			return openUrl;
-		}
-		return "";
+		webview.loadUrl(openUrl);
 	}
 
 	/*public void clearCache() {
@@ -168,6 +151,7 @@ public class BeintooFacebookLogin extends Dialog {
 					
 					// PARSE THE LOGGED_URI TO GET THE USEREXT
 					android.net.Uri uri = android.net.Uri.parse(webview.getUrl());
+					DebugUtility.showLog("LOGGED URL: "+uri.toString());
 					Player newPlayer = player.playerLogin(uri.getQueryParameter("userext"),null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
 					
 					// SET THAT THE PLAYER IS LOGGED IN BEINTOO
@@ -186,19 +170,6 @@ public class BeintooFacebookLogin extends Dialog {
 			}
 		});
 		t.start();
-	}
-	
-	private boolean isGinger (){
-		/*
-		 * Check if is the buggish 2.3 
-		 */
-		try {
-			if ((Build.VERSION.RELEASE).contains("2.3")) {
-				return true;
-			}
-		} catch (Exception e) {}
-		
-		return false;
 	}
 	
 	private void clearAllCookies (){
