@@ -113,16 +113,15 @@ public class LoaderImageView extends LinearLayout{
 		mDrawable = null;
 		mSpinner.setVisibility(View.VISIBLE);
 		mImage.setVisibility(View.GONE);
+		if(width > 0 && height > 0){
+			mImage.setAdjustViewBounds(true);
+			mImage.setMaxHeight(height);
+			mImage.setMaxWidth(width);
+			mImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+		}
 		new Thread(){
 			public void run() {
 				try {
-					if(width > 0 && height > 0){
-						mImage.setAdjustViewBounds(true);
-						mImage.setMaxHeight(height);
-						mImage.setMaxWidth(width);
-						mImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-					}
-
 					mDrawable = getDrawableFromUrl(imageUrl);
 					imageLoadedHandler.sendEmptyMessage(COMPLETE);
 				} catch (MalformedURLException e) {
