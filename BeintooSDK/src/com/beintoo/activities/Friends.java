@@ -490,7 +490,7 @@ public class Friends extends Dialog implements OnClickListener{
 		alert.show(); 
 	}
 	 
-	private void friendshipThread(final String userExtTo, final String action){		
+	public void friendshipThread(final String userExtTo, final String action){		
 		new Thread(new Runnable(){      
     		public void run(){
     			try{  

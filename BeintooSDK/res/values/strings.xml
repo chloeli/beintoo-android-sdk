@@ -35,8 +35,12 @@
     <string name="challSend">Would you like to send a challenge? Bet 10 BeDollars, to win 25.</string>
     <string name="challTip">click on a single user to send a challenge</string>
     
+    <!-- LEADERBOARD -->
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Score:\u0020</string>
+    <string name="leadSendChall">Send challenge</string>
+    <string name="leadViewProfile">View profile</string>
+    <string name="leadAddFriend">Add as friend</string>    
     
     <!-- FRIENDS -->
     <string name="friendSel">Select a friend</string>
@@ -109,6 +113,8 @@
     <string name="orloginExisting">Or login with an existing account ></string>
     <string name="tos">Beintoo will not distribute your email or spam you. Your email is sent via secure connection.</string>	
     <string name="confirmnick">Confirm your nickname</string>
+    <string name="invalidemail">Please provide a valid email address</string>
+    <string name="invalidnickname">The minimum length of the nickname is 3 characters</string>
     
     <!-- BUTTONS -->
     <string name="trynow">Try Beintoo Now</string>

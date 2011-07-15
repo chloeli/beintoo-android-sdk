@@ -37,7 +37,10 @@
     
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Partitur:\u0020</string>
-    
+    <string name="leadSendChall">Senden Herausforderung</string>
+	<string name="leadViewProfile">Profil ansehen</string>
+	<string name="leadAddFriend">Als Fraund hinzufügen</string>
+	
     <!-- FRIENDS -->
     <string name="friendSel">Wähle einen Freund</string>
     <string name="friendsTitle">Deine Freunde</string>
@@ -107,7 +110,8 @@
    	<string name="orloginExisting">oder mit einem bestehenden Account einloggen></string>
    	<string name="tos">Beintoo wird nicht deine E-Mail verteilen oder spam.Deine E-Mail wird über eine sichere Verbindung gesendet.</string>
     <string name="confirmnick">Bestätigen Sie Ihre Spitznamen</string>
-    
+    <string name="invalidemail">Bitte geben Sie eine gültige E-Mail-Adresse</string>
+	<string name="invalidnickname">Die Mindestlänge der Spitzname ist 3 Zeichen</string>
     
     <!-- BUTTONS -->
     <string name="trynow">Versuche Beintoo jetzt.</string>

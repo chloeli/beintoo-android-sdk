@@ -59,6 +59,7 @@ public class UserRegistration extends Dialog{
 	private static final int SIGNUP_BROWSER = 2;
 	private static final int NEXT_STEP = 3;
 	private static final int MAIL_ERROR = 4;
+	private static final int NICKNAME_ERROR = 5;
 	private ViewSwitcher vs;
 	private String nickname;
 	private String email;
@@ -171,7 +172,16 @@ public class UserRegistration extends Dialog{
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
 				new Thread(new Runnable(){      
             		public void run(){
-            			try{ 				
+            			try{ 				    
+            				Boolean isValidNickname = true;
+            				if(nicknameText.getText().length() < 2){
+            					isValidNickname = false;
+            					UIhandler.sendEmptyMessage(NICKNAME_ERROR);
+            					dialog.dismiss();
+            				}
+            				
+            				if(!isValidNickname) return;
+            				
             				BeintooPlayer bp = new BeintooPlayer();
             				if(!nicknameText.getText().toString().equals(nickname)){
 	            				BeintooUser bu = new BeintooUser();
@@ -249,11 +259,22 @@ public class UserRegistration extends Dialog{
 
 	private void showEmailError(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(current.getContext());
-		builder.setMessage("Please insert a valid email address")
+		builder.setMessage(current.getContext().getString(R.string.invalidemail))
 	       .setCancelable(false)
 	       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
 	                
+	           }
+	       }).create().show();
+	}
+	
+	private void showNicknameError(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(current.getContext());
+		builder.setMessage(current.getContext().getString(R.string.invalidnickname))
+	       .setCancelable(false)
+	       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	    
 	           }
 	       }).create().show();
 	}
@@ -279,6 +300,8 @@ public class UserRegistration extends Dialog{
 					  fbandlogin.setVisibility(View.GONE);
 				  }else if(msg.what == MAIL_ERROR){
 					  showEmailError();
+				  }else if(msg.what == NICKNAME_ERROR){
+					  showNicknameError();
 				  }
 			  }catch(Exception e){
 				  e.printStackTrace();

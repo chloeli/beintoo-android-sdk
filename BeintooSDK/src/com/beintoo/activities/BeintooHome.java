@@ -121,9 +121,11 @@ public class BeintooHome extends Dialog {
 				white.setVisibility(LinearLayout.GONE);
 			}else{
 				TextView unreadtxt = (TextView) findViewById(R.id.unmessage);
-				unread.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.LIGHT_GRAY_GRADIENT));
 				unreadtxt.setText(String.format(ctx.getString(R.string.messagenotification), unreadcount));
-				
+				unread.setBackgroundDrawable(b.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 				unread.setOnClickListener(new View.OnClickListener(){
 					@Override
 					public void onClick(View v) {

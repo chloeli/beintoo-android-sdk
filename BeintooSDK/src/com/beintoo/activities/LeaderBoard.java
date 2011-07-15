@@ -282,21 +282,49 @@ public class LeaderBoard extends Dialog implements OnClickListener{
 	
 	// CALLED WHEN A ROW IS CLICKED
 	public void onClick(final View v) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		builder.setMessage(getContext().getString(R.string.challSend))
-		       .setCancelable(false)
-		       .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {		 
-		        	   Player p = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", v.getContext()), Player.class);		       			
-		       			sendChallenge(p.getUser().getId(),
-		       				usersExts.get(v.getId()),"INVITE", v.getId());  
-		           }
-		       })
-		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		        	   
-		           }
-		       });
+		showOptionAlert(v.getId());
+	}
+	
+	public void showOptionAlert(final int row){
+		
+		final CharSequence[] items = {current.getContext().getString(R.string.leadSendChall), 
+				current.getContext().getString(R.string.leadViewProfile), current.getContext().getString(R.string.leadAddFriend)};
+		AlertDialog.Builder builder = new AlertDialog.Builder(current.getContext());
+		builder.setTitle(current.getContext().getString(R.string.vgoodchoosedialog));
+		builder.setItems(items, new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int item) {
+		    	final Player p = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", current.getContext()), Player.class);
+		        if(item == 0){ 
+		        	try {
+		        		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		        		builder.setMessage(getContext().getString(R.string.challSend))
+		        		       .setCancelable(false)
+		        		       .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
+		        		           public void onClick(DialogInterface dialog, int id) {		 		        		        	   		       			
+		        		       			sendChallenge(p.getUser().getId(),usersExts.get(row),"INVITE", row);  
+		        		           }
+		        		       })
+		        		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+		        		           public void onClick(DialogInterface dialog, int id) {
+		        		        	   
+		        		           }
+		        		       });
+		        		AlertDialog alert = builder.create();
+		        		alert.show();
+		        	}catch(Exception e){e.printStackTrace();}
+		        }else if(item == 1){ 
+		        	try {
+		        		UserProfile userProfile = new UserProfile(getContext(),usersExts.get(row));
+		    			userProfile.show();
+		        	}catch(Exception e){e.printStackTrace();}
+		        }else if(item == 2){ 
+		        	try {
+		        		Friends f = new Friends(current.getContext(),current,0,0);
+		        		f.friendshipThread(usersExts.get(row), "invite");
+		        	}catch(Exception e){e.printStackTrace();}		        	
+		        }
+		    }
+		});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}

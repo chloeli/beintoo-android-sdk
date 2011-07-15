@@ -343,10 +343,7 @@ public class Beintoo{
 	}
 	
 	public static void submitScoreMultiple(final Context ctx, Map<String,Integer> scores, final boolean showNotification){
-		currentContext = ctx;
-		
-		SubmitScoreManager ssm = new SubmitScoreManager();
-		ssm.submitScoreMultiple(ctx, scores, showNotification, Gravity.BOTTOM, null);
+		submitScoreMultiple(ctx, scores, showNotification, Gravity.BOTTOM, null);
 	}
 	
 	
@@ -358,6 +355,8 @@ public class Beintoo{
 	 * @return
 	 */
 	public static PlayerScore getPlayerScore(final Context ctx, final String codeID){
+		currentContext = ctx;
+		
 		PlayerManager pm = new PlayerManager(ctx);
 		return pm.getPlayerScore(ctx, codeID);
 	}
@@ -374,6 +373,8 @@ public class Beintoo{
 	 * @return
 	 */ 
 	public static void getPlayerScoreAsync(final Context ctx, final String codeID, final BScoreListener listener){
+		currentContext = ctx;
+		
 		PlayerManager pm = new PlayerManager(ctx);
 		pm.getPlayerScoreAsync(ctx, codeID, listener);
 	}
@@ -389,9 +390,14 @@ public class Beintoo{
 	 */
 	public static void submitAchievementScore(Context ctx, final String achievement, final Float percentage, final Float value, 
 			final boolean showNotification, final int gravity, final BAchievementListener listener){
+		currentContext = ctx;
 		AchievementManager am = new AchievementManager(ctx);
 		am.submitAchievementScore(achievement, percentage, value, showNotification, gravity, listener);		
-	} 
+	}
+	
+	public static void submitAchievementScore(Context ctx, final String achievement, final Float percentage, final Float value){
+		submitAchievementScore(ctx,achievement, percentage, value, true, Gravity.BOTTOM, null);		
+	}
 	
 	/**
 	 * Se which features to use in your app

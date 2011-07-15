@@ -37,7 +37,10 @@
     
     <string name="leadTitle">Clasificaciòn</string>
     <string name="leadScore">Tanteo:\u0020</string>
-    
+    <string name="leadSendChall">Enviar desafío</string>
+	<string name="leadViewProfile">Ver perfil</string>
+	<string name="leadAddFriend">Añadir como amigo</string>
+	
     <!-- FRIENDS -->
     <string name="friendsTitle">Tu amìgos</string>
     <string name="friendSel">Selectiona un amigo</string>
@@ -111,7 +114,9 @@
    	<string name="orloginExisting">o entra con un perfil existente></string>
    	<string name="tos">Beintoo no distribuirà tu dirección de correo electrónico y tampoco serás objectivo de correo no deseado.</string>
    	<string name="confirmnick">Confirme su apodo</string>
-   	
+   	<string name="invalidemail">Por favor ingrese su dirección de correo electrónico válida</string>
+	<string name="invalidnickname">La longitud mínima del apodo es de 3 caracteres</string>
+
     <!-- BUTTONS -->
     <string name="trynow">Emprueba Beintoo ahora</string>
     <string name="nothanks">No gracias</string>
