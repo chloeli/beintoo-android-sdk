@@ -46,57 +46,65 @@ public class SubmitScoreManager {
 	private static AtomicLong LAST_OPERATION = new AtomicLong(0);
 	private long OPERATION_TIMEOUT = 2000;
 	
-	public void submitScoreWithVgoodCheck (final Context ctx, int score, int threshold, String codeID, boolean isMultiple,
-			LinearLayout container, int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener){
-		
-		try{
-			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
-			String key;
-			if(codeID != null)
-				key = currentPlayer.getGuid()+":count:"+codeID;
-			else
-				key = currentPlayer.getGuid()+":count";
-			
-			int currentTempScore = PreferencesHandler.getInt(key, ctx);
-			currentTempScore+=score;
-					
-			if(currentTempScore >= threshold) { // THE USER REACHED THE DEVELOPER TRESHOLD SEND VGOOD AND SAVE THE REST
-				PreferencesHandler.saveInt(key, currentTempScore-threshold, ctx);
-				submitScore(ctx, score, codeID, true, Gravity.BOTTOM, slistener);
+	public void submitScoreWithVgoodCheck (final Context ctx, final int score, final int threshold, final String codeID, final boolean isMultiple,
+			final LinearLayout container, final int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener){
+		new Thread(new Runnable(){     					
+    		public void run(){
+    			try {
 				
-				GetVgoodManager gvm = new GetVgoodManager(ctx);
-				gvm.GetVgood(ctx, codeID, isMultiple,container,notificationType, glistener);
-			}else{
-				PreferencesHandler.saveInt(key, currentTempScore, ctx);
-				submitScore(ctx, score, codeID, true, Gravity.BOTTOM, slistener);				
-			}
-			
-		}catch(Exception e){e.printStackTrace(); if(slistener != null) slistener.onBeintooError(e);} 
-		
+					Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
+					String key;
+					if(codeID != null)
+						key = currentPlayer.getGuid()+":count:"+codeID;
+					else
+						key = currentPlayer.getGuid()+":count";
+					
+					int currentTempScore = PreferencesHandler.getInt(key, ctx);
+					currentTempScore+=score;
+							
+					if(currentTempScore >= threshold) { // THE USER REACHED THE DEVELOPER TRESHOLD SEND VGOOD AND SAVE THE REST
+						PreferencesHandler.saveInt(key, currentTempScore-threshold, ctx);
+						submitScore(ctx, score, codeID, true, Gravity.BOTTOM, slistener);
+						
+						GetVgoodManager gvm = new GetVgoodManager(ctx);
+						gvm.GetVgood(ctx, codeID, isMultiple,container,notificationType, glistener);
+					}else{
+						PreferencesHandler.saveInt(key, currentTempScore, ctx);
+						submitScore(ctx, score, codeID, true, Gravity.BOTTOM, slistener);				
+					}
+					
+				}catch(Exception e){e.printStackTrace(); if(slistener != null) slistener.onBeintooError(e);} 
+    		}
+		}).start();
 	}
 	
-	public void submitScore(final Context ctx, final int lastScore, final String codeID, final boolean showNotification, int gravity, final BSubmitScoreListener listener){
-		String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-		final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
-		if(p != null){			    			
-			try{
-				Long currentTime = System.currentTimeMillis();
-				Location pLoc = LocationMManager.getSavedPlayerLocation(ctx);
-	        	if(pLoc != null){
-	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
-	        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,pLoc, gravity, listener);
-	        		}else {
-	        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity, listener);
-	        			LocationMManager.savePlayerLocation(ctx);
-	        		}
-	        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
-	        		submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity, listener);
-	        		LocationMManager.savePlayerLocation(ctx);
-	        	}	
-			}catch(Exception e){ 
-				e.printStackTrace(); 
-			}		    			
-		}
+	public void submitScore(final Context ctx, final int lastScore, final String codeID, final boolean showNotification, final int gravity, final BSubmitScoreListener listener){
+		new Thread(new Runnable(){     					
+    		public void run(){
+    			try {
+					String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
+					final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
+					if(p != null){			    			
+						
+							Long currentTime = System.currentTimeMillis();
+							Location pLoc = LocationMManager.getSavedPlayerLocation(ctx);
+				        	if(pLoc != null){
+				        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
+				        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,pLoc, gravity, listener);
+				        		}else {
+				        			submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity, listener);
+				        			LocationMManager.savePlayerLocation(ctx);
+				        		}
+				        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
+				        		submitScoreHelper(ctx,lastScore,null,codeID,showNotification,null, gravity, listener);
+				        		LocationMManager.savePlayerLocation(ctx);
+				        	}	
+					}
+    			}catch(Exception e){ 
+					e.printStackTrace(); 
+				}	
+			}
+		}).start();
 	}
 	
 	/**
@@ -176,28 +184,36 @@ public class SubmitScoreManager {
 	}
 	
 	
-	public void submitScoreMultiple(final Context ctx, Map<String,Integer> scores, final boolean showNotification, int gravity, final BSubmitScoreListener listener){
-		String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-		final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
-		if(p != null){			    			
-			try{
-				Long currentTime = System.currentTimeMillis();
-				Location pLoc = LocationMManager.getSavedPlayerLocation(ctx);
-	        	if(pLoc != null){
-	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
-	        			submitScoreMultipleHelper(ctx,scores,showNotification,pLoc, gravity, listener);
-	        		}else {
-	        			submitScoreMultipleHelper(ctx,scores,showNotification,null, gravity, listener);
-	        			LocationMManager.savePlayerLocation(ctx);
-	        		}
-	        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
-	        		submitScoreMultipleHelper(ctx,scores,showNotification,null, gravity, listener);
-	        		LocationMManager.savePlayerLocation(ctx);
-	        	}	
-			}catch(Exception e){ 
-				e.printStackTrace(); 
-			}		    			
-		}
+	public void submitScoreMultiple(final Context ctx, final Map<String,Integer> scores, final boolean showNotification, final int gravity, final BSubmitScoreListener listener){
+		
+		new Thread(new Runnable(){     					
+    		public void run(){
+    			try {
+					String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
+					final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
+					if(p != null){			    			
+						
+							Long currentTime = System.currentTimeMillis();
+							Location pLoc = LocationMManager.getSavedPlayerLocation(ctx);
+				        	if(pLoc != null){
+				        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
+				        			submitScoreMultipleHelper(ctx,scores,showNotification,pLoc, gravity, listener);
+				        		}else {
+				        			submitScoreMultipleHelper(ctx,scores,showNotification,null, gravity, listener);
+				        			LocationMManager.savePlayerLocation(ctx);
+				        		}
+				        	}else { // LOCATION IS DISABLED OR FIRST TIME EXECUTION
+				        		submitScoreMultipleHelper(ctx,scores,showNotification,null, gravity, listener);
+				        		LocationMManager.savePlayerLocation(ctx);
+				        	}						    			
+					}
+    			}catch(Exception e){ 
+					e.printStackTrace(); 
+				}
+    		}	
+    	
+    	}).start();
+		
 	}
 	
 	/**
