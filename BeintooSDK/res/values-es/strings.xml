@@ -207,4 +207,8 @@
   	<string name="blockedbyplur">Bloqueada por los siguientes conquistas</string>
 	<string name="blockedbysing">Bloqueada por los siguientes conquista</string>
 	<string name="onapp">de aplicación: \u0020</string>
+	
+	<!-- CUSTOM -->
+	<string name="sponsor"><Data><![CDATA[ Juega duro: <b><br />&nbsp;&nbsp;gana tu<br />&nbsp;&nbsp;descuentos<br />&nbsp;&nbsp;exclusivos!</b> ]]> </Data></string>
+	<string name="sponsortitle">Regìstrate a Beintoo y obtén grandes descuentos en tu ciudades como recompensa por tu resultados en los juegos.</string>	
 </resources>

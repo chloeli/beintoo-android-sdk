@@ -111,7 +111,7 @@
     <string name="boxemail">Insérez votre adresse email:</string>
    	<string name="youremail">Votre email:</string>
    	<string name="startBeintooFun">Commencer à jouer!</string>
-   	<string name="orloginExisting">ou accédez avec un profil déjà existant></string>
+   	<string name="orloginExisting">ou accédez avec un profil déjà existant ></string>
    	<string name="tos">Beintoo ne diffusera pas votre email ni vous serez objet de spam. Votre email passe à travers une connexion sûre.</string>
    	<string name="confirmnick">Confirmer votre pseudo</string>
    	<string name="invalidemail">S\'il vous plaît fournir une adresse email valide</string>
@@ -207,4 +207,9 @@
   	<string name="blockedbyplur">Bloqué par les achèvements suivantes</string>
 	<string name="blockedbysing">Bloqué par la achèvement suivante</string>
 	<string name="onapp">sur app:\u0020</string>
+	
+	
+	<!-- CUSTOM -->
+	<string name="sponsor"><Data><![CDATA[ Jouez le jeu: <b><br />&nbsp;&nbsp;gagnez vos<br />&nbsp;&nbsp;offres exclusives!</b> ]]> </Data></string>
+	<string name="sponsortitle">Enregistrez-vous à Beintoo et obtenez de nombreuses réductions dans votre ville comme prix pour vos résultats dans les jeux.</string>
 </resources>

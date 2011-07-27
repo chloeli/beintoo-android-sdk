@@ -73,7 +73,7 @@ public class DeviceId {
             }
             return out;
         } catch (Exception ex) {
-            
+           ex.printStackTrace();
         }
         return null;
 	}
@@ -91,7 +91,7 @@ public class DeviceId {
 		try {
 			deviceID = sdf.ReadFile("beintoodeviceid.be");
 		}catch (FileNotFoundException fnf){
-			 
+			 fnf.printStackTrace();
 		}catch (Exception e){
 			e.printStackTrace();
 		}

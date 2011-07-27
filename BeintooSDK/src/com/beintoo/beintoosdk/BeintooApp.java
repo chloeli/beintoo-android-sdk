@@ -19,10 +19,13 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
+import android.net.Uri;
+
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.wrappers.EntryCouplePlayer;
+import com.beintoo.wrappers.LeaderboardContainer;
 import com.google.beintoogson.Gson;
 import com.google.beintoogson.reflect.TypeToken;
 
@@ -166,6 +169,55 @@ public class BeintooApp {
 	 */
 	public void topScoreByUserExt(String userExt){
 		topScoreByUserExt(null,0,userExt);
+	}
+	
+	/**
+	 * Returns the leaderboard for the current app and the position of the current user 
+	 * 
+	 * @param userExt
+	 * @param codeID
+	 * @param start
+	 * @param rows
+	 * @return
+	 */
+	public Map<String, LeaderboardContainer> getLeaderboard(String userExt, String kind, String codeID, Integer start, Integer rows){
+		
+		Uri.Builder apiUrl = Uri.parse(apiPreUrl+"app/leaderboard/").buildUpon();
+		
+		if(rows != null && start != null){
+			apiUrl.appendQueryParameter("start", start.toString());
+			apiUrl.appendQueryParameter("rows", rows.toString());
+		}
+		
+		if(kind != null){
+			apiUrl.appendQueryParameter("kind", kind);
+		}
+		
+		//Set the auth request header
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);		
+		
+		if(userExt != null){
+			header.getKey().add("userExt");
+			header.getValue().add(userExt);
+		}
+		
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl.build().toString(), header, null);
+		
+		Gson gson = new Gson();
+		
+        Type mapType = new TypeToken<Map<String, LeaderboardContainer>>() {
+        }.getType();
+        Map<String, LeaderboardContainer> leaders = gson.fromJson(json,mapType);
+		
+        return leaders;
 	}
 	
 	/**

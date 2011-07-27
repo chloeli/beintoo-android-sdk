@@ -104,7 +104,7 @@ public class UserAchievements extends Dialog implements OnClickListener{
     					UIhandler.sendEmptyMessage(LOAD_DATA);
     				else 
     					UIhandler.sendEmptyMessage(EMPTY_TABLE);
-    			}catch (Exception e){
+    			}catch (Exception e){ 
     				e.printStackTrace();
     				UIhandler.sendEmptyMessage(CONNECTION_ERROR);
     				ErrorDisplayer.showConnectionErrorOnThread(ErrorDisplayer.CONN_ERROR, getContext(), e);    				
@@ -289,7 +289,7 @@ public class UserAchievements extends Dialog implements OnClickListener{
 				TextView appdesc = (TextView) findViewById(R.id.appdesc);
 				TableLayout tv = (TableLayout) findViewById(R.id.table);
 				
-				currentAppPict.setImageDrawable(pa.getAchievement().getImageURL(),(int)(ratio * 60),(int)(ratio *60));
+				currentAppPict.setImageDrawable(pa.getAchievement().getImageURL(),(int)(ratio * 60),(int)(ratio *60), true);
 				currentAppPict.setPadding(0, 0, (int)(ratio *10), 0);
 				
 				appname.setText(pa.getAchievement().getName());

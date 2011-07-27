@@ -42,7 +42,7 @@ public class AchievementManager {
 		currentContext = ctx;
 	}
 	
-	public void submitAchievementScore(final String achievement, final Float percentage, final Float value, 
+	public void submitAchievementScore(final String achievement, final Float percentage, final Float value, final Boolean increment,
 			final boolean showNotification, final int gravity, final BAchievementListener listener){
 		SerialExecutor executor = SerialExecutor.getInstance();	
 		executor.execute(new Runnable(){     					
@@ -78,7 +78,7 @@ public class AchievementManager {
 							 
 							// IF THE ACHIEVEMENT WAS NOT PREVIOUS UNLOCKED UNLOCK IT
 							if(!previousUnlocked){
-								List<PlayerAchievement> achievements = ba.submitPlayerAchievement(p.getGuid(), achievement, percentage, value);
+								List<PlayerAchievement> achievements = ba.submitPlayerAchievement(p.getGuid(), achievement, percentage, value, increment);
 								StringBuilder message = new StringBuilder("");
 								boolean hasUnlocked = false;
 								int count = 0;

@@ -97,7 +97,7 @@ public class BeintooAchievements {
 	 * @param value (optional) number of objectives conquered
 	 * @return a PlayerAchievement object
 	 */
-	public List<PlayerAchievement> submitPlayerAchievement(String guid, String achievement, Float percentage, Float value){
+	public List<PlayerAchievement> submitPlayerAchievement(String guid, String achievement, Float percentage, Float value, Boolean increment){
 		String apiUrl = apiPreUrl+"achievement/"+achievement;
 				
 		HeaderParams header = new HeaderParams();
@@ -116,6 +116,11 @@ public class BeintooAchievements {
 		if(value != null){
 			post.getKey().add("value");
 			post.getValue().add(Float.toString(value));	
+		}
+		
+		if(increment == true){
+			post.getKey().add("increment");
+			post.getValue().add(increment.toString());	
 		}
 		
 		BeintooConnection conn = new BeintooConnection();

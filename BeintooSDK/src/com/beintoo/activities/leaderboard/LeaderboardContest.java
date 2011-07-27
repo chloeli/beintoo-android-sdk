@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.beintoo.activities;
+package com.beintoo.activities.leaderboard;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import android.app.Dialog;
@@ -47,16 +46,17 @@ import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
-import com.beintoo.wrappers.EntryCouplePlayer;
+import com.beintoo.wrappers.LeaderboardContainer;
 import com.beintoo.wrappers.Player;
 
-public class LeaderBoardContest extends Dialog implements OnClickListener{
-	Dialog current;
-	Context currentContext;
-	final double ratio;
-	Map<String, List<EntryCouplePlayer>> leader;
-	
-	public LeaderBoardContest(Context ctx) {
+public class LeaderboardContest extends Dialog implements OnClickListener{
+	private Dialog current;
+	private Context currentContext;
+	private final double ratio;
+	private Map<String, LeaderboardContainer> leader;
+	private Player player = null;
+	private String kind = null;
+	public LeaderboardContest(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);
 		setContentView(R.layout.contestselection);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
@@ -74,6 +74,9 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 
+		try {
+			player = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
+		}catch (Exception e){e.printStackTrace();}
 		
 		try {			
 			showLoading();
@@ -100,8 +103,11 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 					new Thread(new Runnable(){      
 	            		public void run(){
 	            			try{ 
-								BeintooApp app = new BeintooApp();							
-								leader = app.topScore(null, 0);
+								BeintooApp app = new BeintooApp();
+								String userExt = null;
+								if(player != null && player.getUser() != null)
+									userExt = player.getUser().getId();
+								leader = app.getLeaderboard(userExt, null, null, 0, 50);
 								UIhandler.sendEmptyMessage(0);
 	            			}catch (Exception e){
 	            				e.printStackTrace();
@@ -130,9 +136,12 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 					new Thread(new Runnable(){      
 	            		public void run(){
 	            			try{ 
-								BeintooApp app = new BeintooApp();				
-								Player player = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
-								leader = app.topScoreByUserExt(null, 0, player.getUser().getId());							
+								BeintooApp app = new BeintooApp();												
+								String userExt = null;
+								kind = "FRIENDS";
+								if(player != null && player.getUser() != null)
+									userExt = player.getUser().getId();
+								leader = app.getLeaderboard(userExt, kind, null, 0, 20);							
 								UIhandler.sendEmptyMessage(0); 
 	            			}catch (Exception e){
 	            				e.printStackTrace();
@@ -153,7 +162,10 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
     		public void run(){
     			try{ 
     				BeintooApp app = new BeintooApp();							
-    				leader = app.topScore(null, 0);					
+    				String userExt = null;
+					if(player != null && player.getUser() != null)
+						userExt = player.getUser().getId();
+					leader = app.getLeaderboard(userExt, null, null, 0, 20);					
 					UIhandler.sendEmptyMessage(0);
     			}catch (Exception e){
     				manageConnectionException();
@@ -175,38 +187,35 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 			Iterator<?> it = leader.entrySet().iterator();
 			int count = 0;
 		    while (it.hasNext()) {
-		    	@SuppressWarnings("unchecked")
-				Map.Entry<String, ArrayList<EntryCouplePlayer>> pairs = (Map.Entry<String, ArrayList<EntryCouplePlayer>>) it.next();
-		    	List<EntryCouplePlayer> arr = pairs.getValue();	
-		    	
-		    	if(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().isPublic() == true){
-			    	TableRow row = createRow(arr.get(0).getEntry().getPlayerScore().get(pairs.getKey()).getContest().getName(), getContext());
-			    	
-			    	if(count % 2 == 0)
-			    		row.setBackgroundDrawable(b.setPressedBackg(
-					    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
-								new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
-								new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-					else
-						row.setBackgroundDrawable(b.setPressedBackg(
-					    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.GRAY_GRADIENT),
-								new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
-								new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-					
-			    	TableLayout.LayoutParams tableRowParams=
-		    		  new TableLayout.LayoutParams
-		    		  (TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
-		    		row.setLayoutParams(tableRowParams);
-			    	row.setId(count);
-					rowList.add(row);
-					View spacer = createSpacer(getContext(),1,1);
-					spacer.setId(-100);
-					rowList.add(spacer);
-					View spacer2 = createSpacer(getContext(),2,1);
-					spacer2.setId(-100);
-					rowList.add(spacer2);
-			    	count++;	
-		    	}
+				@SuppressWarnings("unchecked")
+				Map.Entry<String, LeaderboardContainer> pairs = (Map.Entry<String, LeaderboardContainer>) it.next();		    	
+		    	LeaderboardContainer arr = pairs.getValue();			    	
+		    	TableRow row = createRow(arr.getContest().getName(),getContext());
+		    	if(count % 2 == 0)
+		    		row.setBackgroundDrawable(b.setPressedBackg(
+				    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+				else
+					row.setBackgroundDrawable(b.setPressedBackg(
+				    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.GRAY_GRADIENT),
+							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+				
+		    	TableLayout.LayoutParams tableRowParams=
+	    		  new TableLayout.LayoutParams
+	    		  (TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
+	    		row.setLayoutParams(tableRowParams);
+		    	row.setId(count);
+				rowList.add(row);
+				View spacer = createSpacer(getContext(),1,1);
+				spacer.setId(-100);
+				rowList.add(spacer);
+				View spacer2 = createSpacer(getContext(),2,1);
+				spacer2.setId(-100);
+				rowList.add(spacer2);
+		    	count++;	
+	    	
 		    }
 		    
 		    for (View row : rowList) {
@@ -304,7 +313,7 @@ public class LeaderBoardContest extends Dialog implements OnClickListener{
 			  if(msg.what == 0)
 				  loadContestTable();
 			  else if(msg.what == 1){
-				  LeaderBoard leaderboard = new LeaderBoard(currentContext,leader);
+				  Leaderboard leaderboard = new Leaderboard(currentContext,leader, kind);
 				  leaderboard.show();
 			  }else if(msg.what == 3){
 				  TableLayout table = (TableLayout) findViewById(R.id.tablecontest);

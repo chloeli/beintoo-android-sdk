@@ -203,4 +203,8 @@
    <string name="blockedbyplur">Blockiert durch folgende Erfolge</string>
    <string name="blockedbysing">Blockiert durch die folgenden Erfolge</string>
    <string name="onapp">auf app:\u0020</string>
+   
+   <!-- CUSTOM -->
+   <string name="sponsor"><Data><![CDATA[ Play hard: <b>win<br />&nbsp;&nbsp;your exclusive<br />&nbsp;&nbsp;real deal!</b> ]]> </Data></string>
+   <string name="sponsortitle">Registrieren Sie sich auf Beintoo und erhalten Sie einen Rabatt in Ihrer Stadt als Belohnung für Ihre Spiele Errungenschaften.</string>
 </resources>

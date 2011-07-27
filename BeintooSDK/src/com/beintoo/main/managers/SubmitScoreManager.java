@@ -185,7 +185,6 @@ public class SubmitScoreManager {
 	
 	
 	public void submitScoreMultiple(final Context ctx, final Map<String,Integer> scores, final boolean showNotification, final int gravity, final BSubmitScoreListener listener){
-		
 		new Thread(new Runnable(){     					
     		public void run(){
     			try {

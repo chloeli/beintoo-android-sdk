@@ -207,4 +207,10 @@
     <string name="blockedbyplur">Blocked by the following achievements</string>
 	<string name="blockedbysing">Blocked by the following achievement</string>
 	<string name="onapp">on app:\u0020</string>
+	
+	
+	<!-- CUSTOM -->
+	<string name="sponsor"><Data><![CDATA[ Play hard: <b>win<br />&nbsp;&nbsp;your exclusive<br />&nbsp;&nbsp;real deal!</b> ]]> </Data></string>
+	<string name="sponsortitle">Register to Beintoo and get great discounts in your city as rewards for your games achievements.</string>
+	
 </resources>

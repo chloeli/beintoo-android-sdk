@@ -207,4 +207,8 @@
 	<string name="blockedbyplur">Bloccato dai seguenti achievements</string>
 	<string name="blockedbysing">Bloccato dal seguente achievement</string>
 	<string name="onapp">sull\'app:\u0020</string>
+	
+	<!-- CUSTOM -->
+	<string name="sponsor"><Data><![CDATA[ Partecipa: <b><br />&nbsp;&nbsp;vinci sconti<br />&nbsp;&nbsp;esclusivi!</b> ]]> </Data></string>
+	<string name="sponsortitle">Registrati a Beintoo per ottenere vantaggiosi sconti nella tua città per i tuoi punteggi nei giochi.</string>
 </resources>

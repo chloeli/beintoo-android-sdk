@@ -54,7 +54,7 @@
                 <!-- android:imeOptions="actionDone"  -->
 			<EditText android:layout_width="fill_parent" 
 				android:gravity="top" android:id="@+id/edittext"
-				android:focusable="true" android:focusableInTouchMode="true" android:layout_margin="1dip" android:layout_height="130dip"></EditText>
+				android:focusable="true" android:focusableInTouchMode="true" android:layout_margin="1dip" android:layout_height="130dip" android:maxLength="1024"></EditText>
 		</LinearLayout>
 
 		<LinearLayout android:layout_width="fill_parent"

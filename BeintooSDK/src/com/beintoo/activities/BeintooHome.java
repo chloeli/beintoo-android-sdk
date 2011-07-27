@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import com.beintoo.R;
+import com.beintoo.activities.leaderboard.LeaderboardContest;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -51,6 +52,7 @@ public class BeintooHome extends Dialog {
 	
 	User u;
 	Dialog current;
+	
 	public BeintooHome(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.homeb);
@@ -58,7 +60,6 @@ public class BeintooHome extends Dialog {
 		
 		current = this;
 		Beintoo.homeDialog = current;
-		
 		// GETTING DENSITY PIXELS RATIO
 		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
 		// SET UP LAYOUTS
@@ -271,7 +272,7 @@ public class BeintooHome extends Dialog {
 				  Beintoo.currentDialog = userProfile;
 				  userProfile.show();
 			  }else if(msg.what == OPEN_LEADERBOARD){
-				  LeaderBoardContest leaderboard = new LeaderBoardContest(getContext());
+				  LeaderboardContest leaderboard = new LeaderboardContest(getContext());
 				  Beintoo.currentDialog = leaderboard;
 				  leaderboard.show();
 			  }else if(msg.what == OPEN_WALLET){	

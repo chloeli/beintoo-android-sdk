@@ -31,6 +31,7 @@ public class BDrawableGradient extends Drawable{
 	final public static int HIGH_GRAY_GRADIENT = 4;
 	final public static int BLU_BUTTON_GRADIENT = 5;
 	final public static int BLU_ROLL_BUTTON_GRADIENT = 6;
+	final public static int GRAY_ROLL_BUTTON_GRADIENT = 7;
 	
 	int whichGradient;
 	int width;
@@ -52,7 +53,9 @@ public class BDrawableGradient extends Drawable{
 		else if(whichGradient == BLU_BUTTON_GRADIENT) // THE BLU BUTTON
 			beintooButtonGradient(height,canvas);
 		else if(whichGradient == BLU_ROLL_BUTTON_GRADIENT) // THE BLU ROLLOVER BUTTON
-			beintooButtonGradientRollover(height,canvas);		
+			beintooButtonGradientRollover(height,canvas);	
+		else if(whichGradient == GRAY_ROLL_BUTTON_GRADIENT) // THE GRAY ROLLOVER BUTTON
+			beintooButtonGrayGradientRollover(height,canvas);
 	}
 
 	@Override
@@ -112,6 +115,13 @@ public class BDrawableGradient extends Drawable{
 	public Canvas beintooButtonGradientRollover(int h, Canvas canvas){
 		Paint p = new Paint();
 		p.setColor(Color.parseColor("#324C68"));
+		canvas.drawPaint(p);
+	    return canvas;
+	}
+	
+	public Canvas beintooButtonGrayGradientRollover(int h, Canvas canvas){
+		Paint p = new Paint();
+		p.setColor(Color.parseColor("#6D84A2"));
 		canvas.drawPaint(p);
 	    return canvas;
 	}

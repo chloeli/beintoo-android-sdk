@@ -49,15 +49,14 @@ public class GetVgoodManager {
 	}
 	
 	public void GetVgood(final Context ctx, final String codeID, final boolean isMultiple, final LinearLayout container, final int notificationType, final BGetVgoodListener listener){
-		try {
-			final Player currentPlayer = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));
-			
-			if(currentPlayer.getGuid() == null) return;
-
+		try {			
 			final SerialExecutor executor = SerialExecutor.getInstance();	
     		executor.execute(new Runnable(){     					
 	    		public void run(){
-	    			try{			    				
+	    			try{			
+	    				final Player currentPlayer = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));	    				
+	    				if(currentPlayer.getGuid() == null) return;
+	    				
 	    				Long currentTime = System.currentTimeMillis();
 	    				Location pLoc = LocationMManager.getSavedPlayerLocation(ctx);
 	    	        	if(pLoc != null){

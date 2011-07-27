@@ -27,12 +27,12 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
@@ -63,9 +63,18 @@ public class LoaderImageView extends LinearLayout{
 		}
 	}
 	
+	public LoaderImageView(final Context context, boolean only) {
+		super(context);
+	}
+	
 	public LoaderImageView(final Context context, final String imageUrl) {
 		super(context);
 		instantiate(context, imageUrl);	
+	}
+	
+	public LoaderImageView(final Context context) {
+		super(context);
+		instantiate(context, null);	
 	}
 	
 	public LoaderImageView(final Context context, final String imageUrl, int width, int height) {
@@ -83,15 +92,15 @@ public class LoaderImageView extends LinearLayout{
 		mImage = new ImageView(mContext);
 		mImage.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		
+		mSpinner = new ProgressBar(mContext);
+		mSpinner.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		
 		if(width != 0 && height != 0){
 			mImage.setAdjustViewBounds(true);
 			mImage.setMaxHeight(height);
 			mImage.setMaxWidth(width);
 			mImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);			
 		}
-		
-		mSpinner = new ProgressBar(mContext);
-		mSpinner.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			
 		mSpinner.setIndeterminate(true);
 		mSpinner.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));
@@ -106,28 +115,38 @@ public class LoaderImageView extends LinearLayout{
 	}
 
 	public void setImageDrawable(final String imageUrl) {
-		setImageDrawable(imageUrl,0,0);
+		setImageDrawable(imageUrl,0,0,false);
 	}
 	
-	public void setImageDrawable(final String imageUrl, final int width, final int height) {
-		mDrawable = null;
+	public void setImageDrawable(final String imageUrl, final int width, final int height, final boolean scale) {
+		mDrawable = null;		
 		mSpinner.setVisibility(View.VISIBLE);
 		mImage.setVisibility(View.GONE);
-		if(width > 0 && height > 0){
+		
+		if(scale){
 			mImage.setAdjustViewBounds(true);
 			mImage.setMaxHeight(height);
 			mImage.setMaxWidth(width);
-			mImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+			mImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);	
+			mSpinner.setLayoutParams(new LayoutParams(width/2, height/2));
 		}
+		
 		new Thread(){
 			public void run() {
 				try {
 					mDrawable = getDrawableFromUrl(imageUrl);
+					if(scale){
+						try {
+							Bitmap bmImg = ((BitmapDrawable)mDrawable).getBitmap();
+				            Bitmap resizedbitmap = resize(bmImg, width,height);				            
+							mDrawable = new BitmapDrawable(resizedbitmap);
+						}catch(Exception e){e.printStackTrace();}
+					}
 					imageLoadedHandler.sendEmptyMessage(COMPLETE);
 				} catch (MalformedURLException e) {
 					imageLoadedHandler.sendEmptyMessage(FAILED);
 					e.printStackTrace();
-				} catch (IOException e) {
+				} catch (IOException e) {					
 					imageLoadedHandler.sendEmptyMessage(FAILED);
 					e.printStackTrace();
 				}
@@ -190,20 +209,8 @@ public class LoaderImageView extends LinearLayout{
         return output;
     }
 	
-	@SuppressWarnings("unused")
-	private static Bitmap resize (Bitmap b){
-		int width = b.getWidth();
-        int height = b.getHeight();
-     
-        int newWidth = 150;
-        int newHeight = 150;   
-        float scaleWidth = (float) newWidth / width;
-        float scaleHeight = (float) newHeight / height;
-
-        Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        Bitmap resizedBitmap = Bitmap.createBitmap(b, 0, 0,width, height, matrix, true);
+	private Bitmap resize (Bitmap b, int newWidth, int newHeight){
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(b, newWidth, newHeight, true);
         return resizedBitmap;
 	}
 	

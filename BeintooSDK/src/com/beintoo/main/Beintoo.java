@@ -389,15 +389,28 @@ public class Beintoo{
 	 * @param gravity position of the notification
 	 */
 	public static void submitAchievementScore(Context ctx, final String achievement, final Float percentage, final Float value, 
-			final boolean showNotification, final int gravity, final BAchievementListener listener){
+			boolean increment, final boolean showNotification, final int gravity, final BAchievementListener listener){
 		currentContext = ctx;
 		AchievementManager am = new AchievementManager(ctx);
-		am.submitAchievementScore(achievement, percentage, value, showNotification, gravity, listener);		
+		am.submitAchievementScore(achievement, percentage, value, increment, showNotification, gravity, listener);		
 	}
 	
 	public static void submitAchievementScore(Context ctx, final String achievement, final Float percentage, final Float value){
-		submitAchievementScore(ctx,achievement, percentage, value, true, Gravity.BOTTOM, null);		
+		submitAchievementScore(ctx, achievement, percentage, value, true, true, Gravity.BOTTOM, null);
 	}
+	
+	public static void submitAchievementScore(Context ctx, final String achievement, final Float percentage, final Float value,final BAchievementListener listener){
+		submitAchievementScore(ctx, achievement, percentage, value, true, true, Gravity.BOTTOM, listener);
+	}
+	
+	public static void setAchievementScore(Context ctx, final String achievement, final Float percentage, final Float value){
+		submitAchievementScore(ctx, achievement, percentage, value, false, true, Gravity.BOTTOM, null);
+	}
+	
+	public static void setAchievementScore(Context ctx, final String achievement, final Float percentage, final Float value,final BAchievementListener listener){
+		submitAchievementScore(ctx, achievement, percentage, value, false, true, Gravity.BOTTOM, listener);
+	}
+	
 	
 	/**
 	 * Se which features to use in your app

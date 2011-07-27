@@ -30,6 +30,7 @@ import com.google.beintoogson.Gson;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
@@ -41,9 +42,21 @@ import android.widget.LinearLayout;
 public class tryBeintoo extends Dialog {
 	private static final int GO_REG = 1;
 	private static final int USER_SEL = 2;
+	private boolean isLandscape = false;
 	public tryBeintoo(Context ctx) {
-		super(ctx, R.style.ThemeBeintooOn);		
-		setContentView(R.layout.trybeintoo);
+		super(ctx, R.style.ThemeBeintooOn);	
+		
+		if(ctx.getApplicationContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+			setContentView(R.layout.trybeintooland);	
+			isLandscape = true;
+        }else if(ctx.getApplicationContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+        	setContentView(R.layout.trybeintoo);
+        }else if(ctx.getApplicationContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_SQUARE){
+        	setContentView(R.layout.trybeintoo);
+        }else if(ctx.getApplicationContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_UNDEFINED) {
+        	setContentView(R.layout.trybeintoo);
+        }
+		
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		final Dialog current = this;
@@ -109,11 +122,11 @@ public class tryBeintoo extends Dialog {
 	    
 	    
 	    Button nothanksbt = (Button) findViewById(R.id.nothanksbt);
-	    pixels = ratio * 50;
+	    pixels = ratio  * ((isLandscape) ?  70 : 50);
 	    nothanksbt.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
-	    nothanksbt.setBackgroundDrawable(b.setPressedBackg(new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
-				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
-				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));		
+	    nothanksbt.setBackgroundDrawable(b.setPressedBackg(new BDrawableGradient(0,(int) pixels,BDrawableGradient.BAR_GRADIENT),
+				new BDrawableGradient(0,(int) pixels,BDrawableGradient.GRAY_ROLL_BUTTON_GRADIENT),
+				new BDrawableGradient(0,(int) pixels,BDrawableGradient.GRAY_ROLL_BUTTON_GRADIENT)));		
 	    nothanksbt.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {  
 				current.dismiss();
