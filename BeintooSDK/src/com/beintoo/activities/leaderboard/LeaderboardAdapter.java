@@ -77,7 +77,10 @@ public class LeaderboardAdapter extends ArrayAdapter<Leaders> {
 				holder.position.setText(leader.position);
 				
 				holder.image.setTag(leader.imageUrl);
-				imageManager.displayImage(leader.imageUrl, currentContext, holder.image);
+				
+				try {
+					imageManager.displayImage(leader.imageUrl, currentContext, holder.image);
+				}catch (Exception e){}
 				
 				LinearLayout positionView = (LinearLayout) v.findViewById(R.id.post);			
 				setPositionBackground(positionView);

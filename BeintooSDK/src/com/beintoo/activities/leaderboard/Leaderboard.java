@@ -92,7 +92,8 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		 
         listView = (ListView) findViewById(R.id.listView);
         listView.setVisibility(LinearLayout.GONE);
-
+        listView.setCacheColorHint(0);
+        
 		LinearLayout content = (LinearLayout) findViewById(R.id.goodcontent);
         content.addView(progressLoading());       
 		
@@ -297,8 +298,11 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		
 		LinearLayout a = (LinearLayout)header1.findViewById(R.id.item);
 		a.addView(imageView,0);
-		imageManager.displayImage(currentUser.imageUrl, currentContext, imageView);
-				
+		
+		try {
+			imageManager.displayImage(currentUser.imageUrl, currentContext, imageView);
+		}catch(Exception e){ }
+		
 		LinearLayout positionView = (LinearLayout) header1.findViewById(R.id.post);
 		positionView.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT));
 		header1.findViewById(R.id.item).setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.LIGHT_GRAY_GRADIENT));

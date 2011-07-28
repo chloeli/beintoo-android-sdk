@@ -24,54 +24,59 @@ public class ImageManager {
 	
 	public ImageManager(Context context) {
 		imageLoaderThread.setPriority(Thread.NORM_PRIORITY-1);
-
-		String sdState = android.os.Environment.getExternalStorageState();
-		if (sdState.equals(android.os.Environment.MEDIA_MOUNTED)) {
-			File sdDir = android.os.Environment.getExternalStorageDirectory();		
-			cacheDir = new File(sdDir,".beintoo/cache");
-		}
-		else
-			cacheDir = context.getCacheDir();
-		
-		if(!cacheDir.exists())
-			cacheDir.mkdirs();
-		
-		// CHECK IF CACHE IS TOO OLD
-		if(System.currentTimeMillis() > cacheDir.lastModified() + 86400000){ // 24 hours
-			deleteFiles(cacheDir);
-		}
+		try{
+			String sdState = android.os.Environment.getExternalStorageState();
+			if (sdState.equals(android.os.Environment.MEDIA_MOUNTED)) {
+				File sdDir = android.os.Environment.getExternalStorageDirectory();		
+				cacheDir = new File(sdDir,".beintoo/cache");
+			}
+			else
+				cacheDir = context.getCacheDir();
+			
+			if(!cacheDir.exists())
+				cacheDir.mkdirs();
+			
+			// CHECK IF CACHE IS TOO OLD
+			if(System.currentTimeMillis() > cacheDir.lastModified() + 86400000){ // 24 hours
+				deleteFiles(cacheDir);
+			}
+		}catch(Exception e){ }
 	}
 	   
 	public void displayImage(String url, Context context, ImageView imageView) {
-		if(imageMap.containsKey(url)){
-			imageView.setImageBitmap(imageMap.get(url));
-		}else {
-			queueImage(url, context, imageView);
-			imageView.setImageResource(R.drawable.nopict);			
-		}
+		try {
+			if(imageMap.containsKey(url)){
+				imageView.setImageBitmap(imageMap.get(url));
+			}else {
+				queueImage(url, context, imageView);
+				imageView.setImageResource(R.drawable.nopict);			
+			}
+		}catch(Exception e){}
 	}
 
 	private void queueImage(String url, Context context, ImageView imageView) {
-		imageQueue.Clean(imageView);
-		ImageRef p=new ImageRef(url, imageView);
-
-		synchronized(imageQueue.imageRefs) {
-			imageQueue.imageRefs.push(p);
-			imageQueue.imageRefs.notifyAll();
-		}
-
-		if(imageLoaderThread.getState() == Thread.State.NEW)
-			imageLoaderThread.start();
+		try {
+			imageQueue.Clean(imageView);
+			ImageRef p=new ImageRef(url, imageView);
+	
+			synchronized(imageQueue.imageRefs) {
+				imageQueue.imageRefs.push(p);
+				imageQueue.imageRefs.notifyAll();
+			}
+	
+			if(imageLoaderThread.getState() == Thread.State.NEW)
+				imageLoaderThread.start();
+		}catch(Exception e){ } 
 	}
 
 	private Bitmap getBitmap(String url) {
-		String filename = String.valueOf(url.hashCode());
-		File f = new File(cacheDir, filename);
-
-		Bitmap bitmap = BitmapFactory.decodeFile(f.getPath());
-		if(bitmap != null) return bitmap;
-
 		try {
+			String filename = String.valueOf(url.hashCode());
+			File f = new File(cacheDir, filename);
+
+			Bitmap bitmap = BitmapFactory.decodeFile(f.getPath());
+			if(bitmap != null) return bitmap;
+
 			bitmap = BitmapFactory.decodeStream(new URL(url).openConnection().getInputStream());
 			writeFile(bitmap, f);
 			
@@ -88,7 +93,7 @@ public class ImageManager {
 			out = new FileOutputStream(f);
 			bmp.compress(Bitmap.CompressFormat.PNG, 80, out);
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 		finally { 
 			try { if (out != null ) out.close(); }
@@ -107,16 +112,17 @@ public class ImageManager {
 	}
 	
 	private class ImageQueue {
-		private Stack<ImageRef> imageRefs = 
-			new Stack<ImageRef>();
+		
+		private Stack<ImageRef> imageRefs = new Stack<ImageRef>();
 
 		public void Clean(ImageView view) {
-			
-			for(int i = 0 ;i < imageRefs.size();) {
-				if(imageRefs.get(i).imageView == view)
-					imageRefs.remove(i);
-				else ++i;
-			}
+			try {
+				for(int i = 0 ;i < imageRefs.size();) {
+					if(imageRefs.get(i).imageView == view)
+						imageRefs.remove(i);
+					else ++i;
+				}
+			}catch (Exception e){}
 		}
 	}
 	
@@ -177,12 +183,14 @@ public class ImageManager {
 	}
 	
 	private void deleteFiles(File dir){
-		if (dir.isDirectory()) {
-	        String[] children = dir.list();
-	        for (int i = 0; i < children.length; i++) {
-	            new File(dir, children[i]).delete();
-	        }
-	    }
+		try{
+			if (dir.isDirectory()) {
+		        String[] children = dir.list();
+		        for (int i = 0; i < children.length; i++) {
+		            new File(dir, children[i]).delete();
+		        }
+		    }
+		}catch(Exception e){}
 	}
 	
 	Handler UIhandler = new Handler(){};
