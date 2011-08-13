@@ -9,7 +9,7 @@ Setup your environment
 1. Pull the repository from GitHub:
 
     git clone git://github.com/Beintoo/beintoo-android-sdk.git
-
+ 
 2. If you have not already done so, signup for an apikey follow the (http://www.beintoo.com/business/signup.html) and then follow setup istructions (http://www.beintoo.com/business/sdk_android.html) [Android SDK Getting Started Guide]. You will need the device emulator and debugging tools.
 
 3. The Beintoo Android SDK works fine in any Android development environment. To build in Eclipse:
