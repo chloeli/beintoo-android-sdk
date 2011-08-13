@@ -17,7 +17,17 @@ package com.beintoo.beintoosdkutility;
 
 
 import java.io.IOException;
+import java.io.InputStream;
+
 import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 
 import com.beintoo.R;
@@ -174,8 +184,19 @@ public class LoaderImageView extends LinearLayout{
 	});
 
 	private static Drawable getDrawableFromUrl(final String url) throws IOException, MalformedURLException {
-		try{						
-			return Drawable.createFromStream(((java.io.InputStream)new java.net.URL(url).getContent()), "name");			
+		try{			
+			HttpGet httpRequest = new HttpGet(new URL(url).toURI());
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpResponse response = (HttpResponse) httpClient.execute(httpRequest);
+			HttpEntity entity = response.getEntity();
+			BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity); 
+			final long contentLength = bufHttpEntity.getContentLength();
+			if (contentLength >= 0) {
+			    InputStream is = bufHttpEntity.getContent();			    
+			    return Drawable.createFromStream(is, "name");
+			} else {
+			    return null;
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}

@@ -76,10 +76,15 @@ public class LeaderboardAdapter extends ArrayAdapter<Leaders> {
 				}
 				holder.position.setText(leader.position);
 				
-				holder.image.setTag(leader.imageUrl);
 				
 				try {
-					imageManager.displayImage(leader.imageUrl, currentContext, holder.image);
+					if(leader.imageUrl != null){
+						holder.image.setTag(leader.imageUrl);
+						imageManager.displayImage(leader.imageUrl, currentContext, holder.image);
+					}else{
+						holder.image.setVisibility(View.GONE);
+						v.findViewById(R.id.item).setPadding((int)(ratio * 5), (int)(ratio * 5), 0, (int)(ratio * 5));
+					}
 				}catch (Exception e){}
 				
 				LinearLayout positionView = (LinearLayout) v.findViewById(R.id.post);			

@@ -33,13 +33,14 @@
     <string name="challSent" xml:space="preserve">Desafìo enviado a\u0020</string>
     <string name="challAccept">Aceptas este Desafìo para\u0020</string>
     <string name="challSend">¿Quieres enviar un desafìo?\nAposta 10 Bedollars, puedes ganar 25.</string>
-    <string name="challTip">Haz clic en un usuario para enviar un desafìo.</string>
+    <string name="challTip">Haz clic en un usuario para interactuar</string>
     
-    <string name="leadTitle">Clasificaciòn</string>
+	<string name="leadTitle">Clasificaciòn</string>
     <string name="leadScore">Tanteo:\u0020</string>
     <string name="leadSendChall">Enviar desafío</string>
 	<string name="leadViewProfile">Ver perfil</string>
 	<string name="leadAddFriend">Añadir como amigo</string>
+	<string name="leadshowfriendsonly">Ver solo los amigos</string>
 	
     <!-- FRIENDS -->
     <string name="friendsTitle">Tu amìgos</string>
@@ -122,6 +123,7 @@
     <string name="nothanks">No gracias</string>
     <string name="anotheraccount">Usa una otra cuenta</string>
     <string name="all">Todos</string>
+    <string name="people">Personas</string>
     <string name="friends">Amigos</string>
     <string name="pending">Pendiente</string>
     <string name="ongoing">En curso</string>
@@ -208,6 +210,35 @@
 	<string name="blockedbysing">Bloqueada por los siguientes conquista</string>
 	<string name="onapp">de aplicación: \u0020</string>
 	
+	<!--  ALLIANCES -->
+	<string name="alliance">Clan</string>
+	<string name="alliances">Clanes</string>
+	<string name="alliancemaintip">Crea tu clan o busca uno</string>
+	<string name="alliancemaincreate">Crea clan</string>
+	<string name="alliancemaincreatebottom">Crea tu clan</string>
+	<string name="alliancemainyours">Tu clan</string>
+	<string name="alliancemainyoursbottom">Ve los detalles de tu clan</string>
+	<string name="alliancemainlist">Lista de clanes</string>
+	<string name="alliancemainlistbottom">Ver lista de los clanes</string>
+	<string name="alliancemaintextfooter">Los clanes son un grupo de usuarios que deciden agruparse y colaborar juntos contra otros clanes a fin de ganar más premios y más Bedollars</string>
+	<string name="alliancecreateeditext">Insertar nombre de tu clan</string>
+	<string name="allianceviewmembers">Miembros del clan</string>
+	<string name="allianceviewpending">Solicitudes pendientes</string>
+	<string name="alliancesendreq">Solicitud para entrar</string>
+	<string name="alliancedetails">Detalles</string>
+	<string name="alliancependingtip">Haz clic en el usuario para aceptar o rechazar</string>
+	<string name="alliancependindialog">Quieres admitir %s en tu clan?</string>
+	<string name="alliancependingaccepted">%s ha sido admitido</string>
+	<string name="alliancependingrefused">%s ha sido rechazado</string>
+	<string name="alliancerequestdialog">¿Quieres solicitar la entrada en el clan %s?</string>
+	<string name="alliancerequestsent">Solicitud enviada</string>
+	<string name="allianceleave">Dejar el clan</string>
+	<string name="alliancesearch">Busca a un clan</string>
+	<string name="alliancemembers">Miembros:\u0020</string>
+	<string name="allianceadmin">Admin:\u0020</string>
+	<string name="allianceaccept">Aceptar</string>
+	<string name="alliancerefuse">Rechazar</string>
+		
 	<!-- CUSTOM -->
 	<string name="sponsor"><Data><![CDATA[ Juega duro: <b><br />&nbsp;&nbsp;gana tu<br />&nbsp;&nbsp;descuentos<br />&nbsp;&nbsp;exclusivos!</b> ]]> </Data></string>
 	<string name="sponsortitle">Regìstrate a Beintoo y obtén grandes descuentos en tu ciudades como recompensa por tu resultados en los juegos.</string>	

@@ -10,6 +10,10 @@ public class Alliance {
     List<User> users;
     User admin;
     
+    public Alliance(){
+    	
+    }
+    
 	public String getId() {
 		return id;
 	}

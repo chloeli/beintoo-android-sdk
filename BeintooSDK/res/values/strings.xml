@@ -33,14 +33,19 @@
     <string name="challSent">Challenge sent to\u0020</string>
     <string name="challAccept">Do you want to accept this challenge for\u0020</string>
     <string name="challSend">Would you like to send a challenge? Bet 10 BeDollars, to win 25.</string>
-    <string name="challTip">click on a single user to send a challenge</string>
+    <string name="challTip">click on a user to interact</string>
     
+    
+	
+	
+	
     <!-- LEADERBOARD -->
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Score:\u0020</string>
     <string name="leadSendChall">Send challenge</string>
     <string name="leadViewProfile">View profile</string>
     <string name="leadAddFriend">Add as friend</string>    
+    <string name="leadshowfriendsonly">View friends only</string>
     
     <!-- FRIENDS -->
     <string name="friendSel">Select a friend</string>
@@ -118,9 +123,9 @@
     
     <!-- BUTTONS -->
     <string name="trynow">Try Beintoo Now</string>
-    <string name="nothanks">No, thanks</string>
+    <string name="nothanks">No, thanks</string>    
     <string name="anotheraccount">Use another account</string>
-    <string name="all">All</string>
+    <string name="people">People</string>
     <string name="friends">Friends</string>
     <string name="pending">Pending</string>
     <string name="ongoing">Ongoing</string>
@@ -208,6 +213,34 @@
 	<string name="blockedbysing">Blocked by the following achievement</string>
 	<string name="onapp">on app:\u0020</string>
 	
+	<!--  ALLIANCES -->
+	<string name="alliance">Alliance</string>
+	<string name="alliances">Alliances</string>
+	<string name="alliancemaintip">Set up your alliance or look for one</string>
+	<string name="alliancemaincreate">Set up alliance</string>
+	<string name="alliancemaincreatebottom">Set up your alliance</string>
+	<string name="alliancemainyours">Your alliance</string>
+	<string name="alliancemainyoursbottom">View details of your alliance</string>
+	<string name="alliancemainlist">Alliances list</string>
+	<string name="alliancemainlistbottom">View alliances list</string>
+	<string name="alliancemaintextfooter">The alliances are a group of users who decide to team up together and collaborate against other alliances in order to win more prizes and more Bedollars</string>
+	<string name="alliancecreateeditext">Enter name of your alliance</string>
+	<string name="allianceviewmembers">Alliance members</string>
+	<string name="allianceviewpending">Pending requests</string>
+	<string name="alliancesendreq">Ask to join</string>
+	<string name="alliancedetails">Details</string>
+	<string name="alliancependingtip">Click on user to accept or refuse</string>
+	<string name="alliancependindialog">Want to admit %s in your alliance?</string>
+	<string name="alliancependingaccepted">%s has been admitted in your alliance</string>
+	<string name="alliancependingrefused">%s has been refused in your alliance</string>
+	<string name="alliancerequestdialog">Do you want to apply to enter the alliance %s?</string>
+	<string name="alliancerequestsent">Request sent</string>
+	<string name="allianceleave">Leave the alliance</string>
+	<string name="alliancesearch">Search an alliance</string>
+	<string name="alliancemembers">Members:\u0020</string>
+	<string name="allianceadmin">Admin:\u0020</string>
+	<string name="allianceaccept">Accept</string>
+	<string name="alliancerefuse">Refuse</string>
 	
 	<!-- CUSTOM -->
 	<string name="sponsor"><Data><![CDATA[ Play hard: <b>win<br />&nbsp;&nbsp;your exclusive<br />&nbsp;&nbsp;real deal!</b> ]]> </Data></string>

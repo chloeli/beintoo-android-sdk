@@ -32,15 +32,18 @@
     <string name="challChallenge">Herausforderung</string>
     <string name="challSent">Herausforderung an\u0020 gesendet</string>
     <string name="challAccept">Möchtest du akzeptieren diese Herausforderung zu\u0020 annehmen?</string>
-    <string name="challSend">Möchtest du eine Herausforderung schicken? Wette 10 BeDollars um 25 Bedollars gewinnen.</string>
-    <string name="challTip">klicke auf einen Benutzere</string>
+    <string name="challSend">Möchtest du eine Herausforderung schicken? Wette 10 BeDollars um 25 Bedollars gewinnen.</string>   
+	<string name="challTip">Klicke auf einen Benutzer zu interagieren</string>
+	
+   
     
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Partitur:\u0020</string>
     <string name="leadSendChall">Senden Herausforderung</string>
 	<string name="leadViewProfile">Profil ansehen</string>
 	<string name="leadAddFriend">Als Fraund hinzufügen</string>
-	
+	<string name="leadshowfriendsonly">Blick nur Freunden</string>
+	 
     <!-- FRIENDS -->
     <string name="friendSel">Wähle einen Freund</string>
     <string name="friendsTitle">Deine Freunde</string>
@@ -118,6 +121,7 @@
     <string name="nothanks">Nein, danke</string>
     <string name="anotheraccount">Verwende ein anderes Konto</string>
     <string name="all">Alle</string>
+    <string name="people">Menschen</string>
     <string name="friends">Freunde</string>
     <string name="pending">Anhängig</string>
     <string name="ongoing">Laufenden</string>
@@ -204,6 +208,35 @@
    <string name="blockedbysing">Blockiert durch die folgenden Erfolge</string>
    <string name="onapp">auf app:\u0020</string>
    
+   <!--  ALLIANCES -->
+	<string name="alliance">Allianz</string>
+	<string name="alliances">Allianzen</string>
+	<string name="alliancemaintip">Erstelle deine Allianz oder suche für ein</string>
+	<string name="alliancemaincreate">Allianz erstellen</string>
+	<string name="alliancemaincreatebottom">Erstelle deine Allianz</string>
+	<string name="alliancemainyours">Deine Allianz</string>
+	<string name="alliancemainyoursbottom">Details zu deiner Allianz</string>
+	<string name="alliancemainlist">Allianzen Liste</string>
+	<string name="alliancemainlistbottom">Blick Allianzen Liste</string>
+	<string name="alliancemaintextfooter">Die Allianzen sind eine Gruppe von Benutzern, die Mannschaft zusammen und arbeiten gegen andere Allianzen, um mehr Preise und mehr Bedollars gewinnen entschieden</string>
+	<string name="alliancecreateeditext">Gib den Namen deiner Allianz</string>
+	<string name="allianceviewmembers">Mitglieder der Allianz</string>
+	<string name="allianceviewpending">Ausstehenden Anforderungen</string>
+	<string name="alliancesendreq">Fragen zu ferbinden</string>
+	<string name="alliancedetails">Details</string>
+	<string name="alliancependingtip">Klicke auf Benutzer zu akzeptieren oder abzulehnen</string>
+	<string name="alliancependindialog">Möchstest du %s in daine Allianz zugeben?</string>
+	<string name="alliancependingaccepted">%s hat in deiner Allianz aufgenommen worden</string>
+	<string name="alliancependingrefused">%s hat in deiner Allianz abgelehnt worden</string>
+	<string name="alliancerequestdialog">Willst du gelten für die Allianz %s geben?</string>
+	<string name="alliancerequestsent">Anfrage gesendet</string>
+	<string name="allianceleave">Verlasse die Allianz</string>
+	<string name="alliancesearch">Suche eine Allianz</string>
+	<string name="alliancemembers">Mitglieder:\u0020</string>
+	<string name="allianceadmin">Admin:\u0020</string>
+	<string name="allianceaccept">Annehmen</string>
+	<string name="alliancerefuse">Ablehnen</string>
+	
    <!-- CUSTOM -->
    <string name="sponsor"><Data><![CDATA[ Play hard: <b>win<br />&nbsp;&nbsp;your exclusive<br />&nbsp;&nbsp;real deal!</b> ]]> </Data></string>
    <string name="sponsortitle">Registrieren Sie sich auf Beintoo und erhalten Sie einen Rabatt in Ihrer Stadt als Belohnung für Ihre Spiele Errungenschaften.</string>

@@ -30,6 +30,7 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -39,6 +40,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.beintoo.R;
+import com.beintoo.beintoosdk.BeintooAlliances;
 import com.beintoo.beintoosdk.BeintooApp;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
@@ -76,7 +78,7 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 
 		try {
 			player = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
-		}catch (Exception e){e.printStackTrace();}
+		}catch (Exception e){ e.printStackTrace(); }
 		
 		try {			
 			showLoading();
@@ -86,59 +88,113 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 		final BeButton b = new BeButton(ctx);
 		Button general = (Button) findViewById(R.id.generaleader);
 		
-		if(Beintoo.isLogged(ctx)){
-			//general.setWidth(ctx.getApplicationContext().getResources().getDisplayMetrics().widthPixels/2);		
-			general.setBackgroundDrawable(b.setPressedBackg(
-					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
-					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
-					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
-			general.setOnClickListener(new Button.OnClickListener(){
-				public void onClick(View v) {
-					resetButtons();
-					v.setBackgroundDrawable(b.setPressedBackg(
-							new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
-							new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
-							new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
-					showLoading();
-					new Thread(new Runnable(){      
-	            		public void run(){
-	            			try{ 
-								BeintooApp app = new BeintooApp();
-								String userExt = null;
-								if(player != null && player.getUser() != null)
-									userExt = player.getUser().getId();
-								leader = app.getLeaderboard(userExt, null, null, 0, 50);
-								UIhandler.sendEmptyMessage(0);
-	            			}catch (Exception e){
-	            				e.printStackTrace();
-	            				manageConnectionException();
-	            			}
-	            		}
-					}).start();
+		general.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
+		general.setOnClickListener(new Button.OnClickListener(){
+			public void onClick(View v) {
+				if(Beintoo.isLogged(currentContext)){
+					// FRIEND FILTER
+					final ImageButton friends = (ImageButton) findViewById(R.id.onlyfriends);
+					findViewById(R.id.onlyf).setVisibility(LinearLayout.VISIBLE);
+					friends.setImageResource(R.drawable.noselected);
+					friends.setTag("notselected");
 				}
-	        });
-			
-			Button friends = (Button) findViewById(R.id.friendsleader);
-			//friends.setWidth(ctx.getApplicationContext().getResources().getDisplayMetrics().widthPixels/2);
+				resetButtons();
+				v.setBackgroundDrawable(b.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
+				showLoading();
+				new Thread(new Runnable(){      
+            		public void run(){
+            			try{ 
+							BeintooApp app = new BeintooApp();
+							String userExt = null;
+							kind = null;
+							if(player != null && player.getUser() != null)
+								userExt = player.getUser().getId();
+							leader = app.getLeaderboard(userExt, null, null, 0, 20);
+							UIhandler.sendEmptyMessage(0);
+            			}catch (Exception e){
+            				e.printStackTrace();
+            				manageConnectionException();
+            			}
+            		}
+				}).start();
+			}
+        });
+		
+		Button alliances = (Button) findViewById(R.id.friendsleader);
+		alliances.setBackgroundDrawable(b.setPressedBackg(
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+				new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+		alliances.setOnClickListener(new Button.OnClickListener(){
+			public void onClick(View v) {					
+				// FRIEND FILTER
+				findViewById(R.id.onlyf).setVisibility(LinearLayout.GONE);
+				resetButtons();
+				v.setBackgroundDrawable(b.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
+				
+				showLoading();
+				new Thread(new Runnable(){      
+            		public void run(){
+            			try{ 
+            				BeintooAlliances ba = new BeintooAlliances();
+            				String allianceExtId = null;
+            				if(player != null && player.getAlliance() != null)
+            					allianceExtId = player.getAlliance().getId();
+            				leader = ba.getLeaderboard(allianceExtId, null, null, 0, 20, null);
+            				kind = "ALLIANCES";
+            				UIhandler.sendEmptyMessage(0);
+							/*BeintooApp app = new BeintooApp();												
+							String userExt = null;
+							kind = "FRIENDS";
+							if(player != null && player.getUser() != null)
+								userExt = player.getUser().getId();
+							leader = app.getLeaderboard(userExt, kind, null, 0, 20);							
+							UIhandler.sendEmptyMessage(0); */ 
+            			}catch (Exception e){
+            				e.printStackTrace();
+            				manageConnectionException();
+            			}
+            		}
+				}).start();
+			}
+        });
+		
+		if(Beintoo.isLogged(ctx)){				
+			findViewById(R.id.onlyf).setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+			final ImageButton friends = (ImageButton) findViewById(R.id.onlyfriends);
 			friends.setBackgroundDrawable(b.setPressedBackg(
 					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-			friends.setOnClickListener(new Button.OnClickListener(){
+			friends.setOnClickListener(new ImageButton.OnClickListener(){
 				public void onClick(View v) {
-					resetButtons();
-					v.setBackgroundDrawable(b.setPressedBackg(
-							new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
-							new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
-							new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
 					
+					if(v.getTag().equals("notselected")){
+						friends.setImageResource(R.drawable.selected);
+						v.setTag("selected");
+						kind = "FRIENDS";
+					}else if(v.getTag().equals("selected")){
+						friends.setImageResource(R.drawable.noselected);
+						v.setTag("notselected");
+						kind = null;
+					}
+					  
 					showLoading();
 					new Thread(new Runnable(){      
 	            		public void run(){
 	            			try{ 
 								BeintooApp app = new BeintooApp();												
 								String userExt = null;
-								kind = "FRIENDS";
+								
 								if(player != null && player.getUser() != null)
 									userExt = player.getUser().getId();
 								leader = app.getLeaderboard(userExt, kind, null, 0, 20);							
@@ -152,8 +208,9 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 				}
 	        });
 		}else { // IF THE USER IS NOT LOGGED HIDE ALL AND FRIENDS BUTTONS
-			LinearLayout buttons = (LinearLayout) findViewById(R.id.buttonsll);
-			buttons.setVisibility(LinearLayout.GONE);
+			//findViewById(R.id.buttonsll).setVisibility(View.GONE);
+			findViewById(R.id.onlyf).setVisibility(View.GONE);
+			//findViewById(R.id.spacer).setVisibility(View.GONE);
 		}
 	}
 	

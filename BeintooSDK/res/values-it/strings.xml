@@ -33,14 +33,16 @@
     <string name="challSent" xml:space="preserve">Sfida inviata a\u0020</string>
     <string name="challAccept">Vuoi accettare questa sfida al costo di\u0020</string>
     <string name="challSend">Vuoi inviare una sfida?\nPunta 10 BeDollars, ne potrai vincere 25.</string>
-    <string name="challTip">clicca su un utente per inviargli una sfida</string>
-    
+    <string name="challTip">clicca su un utente per interagire</string>
+	<string name="people">Persone</string>
+	
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Punteggio:\u0020</string>
     <string name="leadSendChall">Invia sfida</string>
 	<string name="leadViewProfile">Vedi profilo</string>
 	<string name="leadAddFriend">Aggiungi agli amici</string>
-
+	<string name="leadshowfriendsonly">Visualizza solo amici</string>
+	
     <!-- FRIENDS -->
     <string name="friendsTitle">I tuoi amici</string>
     <string name="friendSel">Seleziona un amico</string>
@@ -208,6 +210,35 @@
 	<string name="blockedbysing">Bloccato dal seguente achievement</string>
 	<string name="onapp">sull\'app:\u0020</string>
 	
+	<!--  ALLIANCES -->
+	<string name="alliance">Alleanza</string>
+	<string name="alliances">Alleanze</string>
+	<string name="alliancemaintip">Crea la tua alleanza o cercane una</string>
+	<string name="alliancemaincreate">Crea alleanza</string>
+	<string name="alliancemaincreatebottom">Crea la tua alleanza</string>
+	<string name="alliancemainyours">La tua alleanza</string>
+	<string name="alliancemainyoursbottom">Visualizza i dettagli della tua alleanza</string>
+	<string name="alliancemainlist">Elenco alleanze</string>
+	<string name="alliancemainlistbottom">Visualizza l\'elenco alleanze</string>
+	<string name="alliancemaintextfooter">Le alleanze sono formate da un gruppo di giocatori che decidono di fare squadra e collaborare contro altre alleanze per vincere ancora più premi e Bedollars.</string>
+	<string name="alliancecreateeditext">Inserisci il nome dell\'alleanza</string>
+	<string name="allianceviewmembers">Membri dell\'alleanza</string>
+	<string name="allianceviewpending">Richieste in attesa</string>
+	<string name="alliancesendreq">Richiedi di entrare</string>
+	<string name="alliancedetails">Dettagli</string>
+	<string name="alliancependingtip">Clicca su un utente per accettare o rifiutare</string>
+	<string name="alliancependindialog">Vuoi accettare %s nella tua alleanza?</string>
+	<string name="alliancependingaccepted">%s è stato accettato nella tua alleanza</string>
+	<string name="alliancependingrefused">%s è stato rifiutato dalla tua alleanza</string>
+	<string name="alliancerequestdialog">Vuoi fare richiesta per entrare nell\'alleanza %s?</string>
+	<string name="alliancerequestsent">Richiesta inviata</string>
+	<string name="allianceleave">Lascia l\'alleanza</string>
+	<string name="alliancesearch">Cerca un\'alleanza</string>
+	<string name="alliancemembers">Membri:\u0020</string>
+	<string name="allianceadmin">Admin:\u0020</string>
+	<string name="allianceaccept">Accetta</string>
+	<string name="alliancerefuse">Rifiuta</string>
+		
 	<!-- CUSTOM -->
 	<string name="sponsor"><Data><![CDATA[ Partecipa: <b><br />&nbsp;&nbsp;vinci sconti<br />&nbsp;&nbsp;esclusivi!</b> ]]> </Data></string>
 	<string name="sponsortitle">Registrati a Beintoo per ottenere vantaggiosi sconti nella tua città per i tuoi punteggi nei giochi.</string>

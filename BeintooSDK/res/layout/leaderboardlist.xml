@@ -24,9 +24,12 @@
 			android:textColor="#787A77"></TextView>
 	</LinearLayout>
 	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="1dip" android:background="#8F9193" android:id="@+id/grayline"></LinearLayout>
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline"></LinearLayout>
+		android:layout_height="wrap_content" android:id="@+id/spacer">
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="1dip" android:background="#8F9193" android:id="@+id/grayline"></LinearLayout>
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline"></LinearLayout>
+	</LinearLayout>
 	<LinearLayout android:layout_width="fill_parent"
 		android:orientation="vertical" android:id="@+id/goodcontent"
 		android:layout_height="wrap_content" android:layout_weight="1">

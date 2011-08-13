@@ -9,6 +9,8 @@ import java.util.Map;
 import com.beintoo.R;
 import com.beintoo.activities.Friends;
 import com.beintoo.activities.UserProfile;
+import com.beintoo.activities.alliances.UserAlliance;
+import com.beintoo.beintoosdk.BeintooAlliances;
 import com.beintoo.beintoosdk.BeintooApp;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkutility.ApiCallException;
@@ -102,6 +104,11 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		if(!Beintoo.isLogged(context)) // IF THE USER IS NOT LOGGED HIDE TIPS FOR CHALLENGE
 			tip.setVisibility(LinearLayout.GONE);
 		
+		if(leader_kind != null && leader_kind.equals("ALLIANCES")){
+			findViewById(R.id.tip).setVisibility(View.GONE);
+			findViewById(R.id.spacer).setVisibility(View.GONE);
+		}
+		
 		imageManager = new ImageManager(currentContext);
 		
 		usersExts = new ArrayList<String>();
@@ -114,7 +121,6 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	}
 	
 	private Runnable r = new Runnable(){
-
 		@Override
 		public void run() {
 			try {
@@ -162,22 +168,38 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		    		codeID = pairs.getKey();
 		    		 
 		    		// ADD THE CURRENT USER
-		    		if(arr.getCurrentUser() != null){
+		    		if(arr.getCurrentUser().getUser() != null){
 		    			currentUser = new Leaders(arr.getCurrentUser().getUser().getUsersmallimg(),
 		    					arr.getCurrentUser().getUser().getNickname(), arr.getCurrentUser().getScore().toString(),
+			    				feed,arr.getCurrentUser().getPos().toString(), true);
+		    		}else if(arr.getCurrentUser().getAlliance() != null){
+		    			currentUser = new Leaders(null,
+		    					arr.getCurrentUser().getAlliance().getName(), arr.getCurrentUser().getScore().toString(),
 			    				feed,arr.getCurrentUser().getPos().toString(), true);
 		    		}
 		    		
 		    		// ADD THE LEADERBOARD USERS
 			    	for(int i = 0; i<arr.getLeaderboard().size(); i++){
-			    		Leaders l = new Leaders(arr.getLeaderboard().get(i).getUser().getUsersmallimg(),
-			    				arr.getLeaderboard().get(i).getUser().getNickname(), arr.getLeaderboard().get(i).getScore().toString(),
-			    				feed,arr.getLeaderboard().get(i).getPos().toString(), false);
-			    		lead.add(l);
+			    		if(leader_kind == null || leader_kind.equals("FRIENDS")){
+			    			Leaders l = new Leaders(arr.getLeaderboard().get(i).getUser().getUsersmallimg(),
+				    				arr.getLeaderboard().get(i).getUser().getNickname(), arr.getLeaderboard().get(i).getScore().toString(),
+				    				feed,arr.getLeaderboard().get(i).getPos().toString(), false);
+				    		lead.add(l);
+			    		}else if(leader_kind.equals("ALLIANCES")){
+			    			Leaders l = new Leaders(null,
+				    				arr.getLeaderboard().get(i).getAlliance().getName(), arr.getLeaderboard().get(i).getScore().toString(),
+				    				feed,arr.getLeaderboard().get(i).getPos().toString(), false);
+				    		lead.add(l);			    			
+			    		}
 			    		
 			    		// ADD THE USER EXT TO THE USERS ARRAY
-						usersExts.add(arr.getLeaderboard().get(i).getUser().getId());
-						usersNicks.add(arr.getLeaderboard().get(i).getUser().getNickname());
+			    		if(leader_kind == null || leader_kind.equals("FRIENDS")){
+			    			usersExts.add(arr.getLeaderboard().get(i).getUser().getId());
+							usersNicks.add(arr.getLeaderboard().get(i).getUser().getNickname());
+			    		}else if(leader_kind.equals("ALLIANCES")){
+			    			// ADD THE ALLIANCE ID TO THIS ARRAY AND USE IT IN THE ON ITEM CLICK
+			    			usersExts.add(arr.getLeaderboard().get(i).getAlliance().getId());
+			    		}
 			    	}
 		    	}
 		    	
@@ -195,12 +217,22 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		new Thread(new Runnable(){      
     		public void run(){
     			try{       		
-    				BeintooApp app = new BeintooApp();
-    				String userExt = null;
-    				if(player != null && player.getUser() != null)
-    					userExt = player.getUser().getId();
-    				Map<String, LeaderboardContainer> moreleaders = app.getLeaderboard(userExt, leader_kind, codeID, currentPageRows*MAX_REQ_ROWS, MAX_REQ_ROWS);
-    				if(moreleaders.size() > 0){
+    				Map<String, LeaderboardContainer> moreleaders = null;
+    				if(leader_kind == null || leader_kind.equals("FRIENDS")){
+    					BeintooApp app = new BeintooApp();
+    					String userExt = null;
+        				if(player != null && player.getUser() != null)
+        					userExt = player.getUser().getId();        				
+    					moreleaders = app.getLeaderboard(userExt, leader_kind, codeID, currentPageRows*MAX_REQ_ROWS, MAX_REQ_ROWS);
+    				}else if(leader_kind.equals("ALLIANCES")){
+    					BeintooAlliances ba = new BeintooAlliances();
+    					String allianceExtId = null;
+        				if(player != null && player.getAlliance() != null)
+        					allianceExtId = player.getAlliance().getId();    					
+    					moreleaders = ba.getLeaderboard(allianceExtId, null, null, currentPageRows*MAX_REQ_ROWS, MAX_REQ_ROWS, null);
+    				}
+    				
+    				if(moreleaders != null && moreleaders.size() > 0){
     					loadMore(moreleaders);
     					UIHandler.post(new Runnable(){
     						@Override
@@ -210,6 +242,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
     					}}); 
     				}else{
     					hasReachedEnd = true;
+    					System.out.println("vuoto");
     					UIHandler.post(new Runnable(){
     						@Override
     						public void run() {
@@ -236,14 +269,26 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	    		codeID = pairs.getKey();
 	    		// ADD THE LEADERBOARD USERS
 	    		for(int i = 0; i<arr.getLeaderboard().size(); i++){
-	    			Leaders l = new Leaders(arr.getLeaderboard().get(i).getUser().getUsersmallimg(),
-		    				arr.getLeaderboard().get(i).getUser().getNickname(), arr.getLeaderboard().get(i).getScore().toString(),
-		    				feed,arr.getLeaderboard().get(i).getPos().toString(), false);
-	    			leaderslist.add(l);
-		    		
-					// ADD THE USER EXT TO THE USERS ARRAY
-					usersExts.add(arr.getLeaderboard().get(i).getUser().getId());
-					usersNicks.add(arr.getLeaderboard().get(i).getUser().getNickname());
+	    			if(leader_kind == null || leader_kind.equals("FRIENDS")){
+	    				Leaders l = new Leaders(arr.getLeaderboard().get(i).getUser().getUsersmallimg(),
+			    				arr.getLeaderboard().get(i).getUser().getNickname(), arr.getLeaderboard().get(i).getScore().toString(),
+			    				feed,arr.getLeaderboard().get(i).getPos().toString(), false);
+		    			leaderslist.add(l);
+		    		}else if(leader_kind.equals("ALLIANCES")){
+		    			Leaders l = new Leaders(null,
+			    				arr.getLeaderboard().get(i).getAlliance().getName(), arr.getLeaderboard().get(i).getScore().toString(),
+			    				feed,arr.getLeaderboard().get(i).getPos().toString(), false);
+			    		leaderslist.add(l);		    			
+		    		}
+	    			
+					// ADD THE USER EXT TO THE USERS ARRAY	    			
+	    			if(leader_kind == null || leader_kind.equals("FRIENDS")){		    		
+	    				usersExts.add(arr.getLeaderboard().get(i).getUser().getId());
+						usersNicks.add(arr.getLeaderboard().get(i).getUser().getNickname());
+	    			}else if(leader_kind.equals("ALLIANCES")){
+		    			// ADD THE ALLIANCE ID TO THIS ARRAY AND USE IT IN THE ON ITEM CLICK
+		    			usersExts.add(arr.getLeaderboard().get(i).getAlliance().getId());
+		    		}
 		    	}	 	
 		    	count++;
 		    }
@@ -254,20 +299,29 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	}
 	
 	@Override
-	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-		if(listView.getHeaderViewsCount() > 0)
-			position--;
+	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {			
 		try {
-			if(player != null && player.getUser() != null){
-				if(!player.getUser().getId().equals(usersExts.get(position))){			    						
-					showOptionAlert(position);
+			if(leader_kind == null || leader_kind.equals("FRIENDS")){
+				if(listView.getHeaderViewsCount() > 0)
+					position--;
+				try {
+					if(player != null && player.getUser() != null){
+						if(!player.getUser().getId().equals(usersExts.get(position))){			    						
+							showOptionAlert(position);
+						}
+					}
+				}catch(Exception e){
+					e.printStackTrace();
 				}
+			}else if(leader_kind.equals("ALLIANCES")){
+				UserAlliance ua = new UserAlliance(currentContext, UserAlliance.SHOW_ALLIANCE, usersExts.get(position-1));
+				ua.show();
 			}
-		}catch(Exception e){
+		}catch (Exception e){
 			e.printStackTrace();
 		}
 	}
-	 
+	
 	private View setCurrentUserRow(){
 		View header1 = getLayoutInflater().inflate(R.layout.leaderboarditem, null, false);
 		
@@ -288,19 +342,22 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		
 		header1.findViewById(R.id.image).setVisibility(LinearLayout.GONE);
 		header1.findViewById(R.id.whiteline).setVisibility(LinearLayout.GONE);
-		ImageView imageView = new ImageView(currentContext);
-		imageView.setTag(currentUser.imageUrl);
-		int size = (int) (50 * currentContext.getResources().getDisplayMetrics().density + 0.5f);
-		imageView.setMaxHeight(size);
-		imageView.setMaxWidth(size);
-		imageView.setMinimumHeight(size);
-		imageView.setMinimumWidth(size);
-		
-		LinearLayout a = (LinearLayout)header1.findViewById(R.id.item);
-		a.addView(imageView,0);
-		
 		try {
-			imageManager.displayImage(currentUser.imageUrl, currentContext, imageView);
+			if(currentUser.imageUrl != null){
+				ImageView imageView = new ImageView(currentContext);
+				imageView.setTag(currentUser.imageUrl);
+				int size = (int) (50 * currentContext.getResources().getDisplayMetrics().density + 0.5f);
+				imageView.setMaxHeight(size);
+				imageView.setMaxWidth(size);
+				imageView.setMinimumHeight(size);
+				imageView.setMinimumWidth(size);
+				imageManager.displayImage(currentUser.imageUrl, currentContext, imageView);
+				
+				LinearLayout a = (LinearLayout)header1.findViewById(R.id.item);
+				a.addView(imageView,0);
+			}else{
+				header1.findViewById(R.id.item).setPadding((int)(ratio * 5), (int)(ratio * 5), 0, (int)(ratio * 5));
+			}
 		}catch(Exception e){ }
 		
 		LinearLayout positionView = (LinearLayout) header1.findViewById(R.id.post);
@@ -371,7 +428,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		        		       			sendChallenge(p.getUser().getId(),usersExts.get(row),"INVITE", row);  
 		        		           }
 		        		       })
-		        		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+		        		       .setNegativeButton(getContext().getString(R.string.no), new DialogInterface.OnClickListener() {
 		        		           public void onClick(DialogInterface dialog, int id) {
 		        		        	   
 		        		           }

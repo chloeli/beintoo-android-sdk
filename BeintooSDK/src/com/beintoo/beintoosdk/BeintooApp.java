@@ -233,8 +233,6 @@ public class BeintooApp {
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
 		
-		
-		
 		PostParams post = new PostParams();
 		
 		post.getKey().add("sdk");

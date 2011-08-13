@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.beintoo.R;
+import com.beintoo.activities.alliances.UserAlliance;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
@@ -156,6 +157,22 @@ public class UserProfile extends Dialog {
 			}
 		});
 		
+		ImageButton balancebt = (ImageButton) findViewById(R.id.balancebt);
+		balancebt.setOnClickListener(new ImageButton.OnClickListener(){
+			public void onClick(View v) {
+				UserBalance ub = new UserBalance(getContext());
+		        ub.show();											
+			} 
+		});
+		
+		ImageButton alliancebt = (ImageButton) findViewById(R.id.alliancebt);
+		alliancebt.setOnClickListener(new ImageButton.OnClickListener(){
+			public void onClick(View v) {
+				UserAlliance ua = new UserAlliance(getContext(),UserAlliance.ENTRY_VIEW);
+		        ua.show();											
+			} 
+		});
+				
 		ImageButton messages = (ImageButton) findViewById(R.id.messagesbt);
 		messages.setOnClickListener(new ImageButton.OnClickListener(){
 			public void onClick(View v) {
@@ -164,14 +181,6 @@ public class UserProfile extends Dialog {
 			}
 		});
 		
-		ImageButton balancebt = (ImageButton) findViewById(R.id.balancebt);
-		balancebt.setOnClickListener(new ImageButton.OnClickListener(){
-			public void onClick(View v) {
-				UserBalance ub = new UserBalance(getContext());
-		        ub.show();											
-			} 
-		});
-				
 		try {
 			TextView unread = (TextView) findViewById(R.id.msgunread);
 			unread.setText(Integer.toString(currentPlayer.getUser().getUnreadMessages()));			

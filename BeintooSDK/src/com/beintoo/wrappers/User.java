@@ -33,7 +33,11 @@ public class User {
 	Integer messages;
     Integer unreadMessages;
     Integer pendingFriendRequest;
-
+    
+    public User() {
+    	
+    }
+    
 	public String getId() {
 		return id;
 	}
@@ -169,7 +173,4 @@ public class User {
 	public void setPendingFriendRequest(Integer pendingFriendRequest) {
 		this.pendingFriendRequest = pendingFriendRequest;
 	}
-	
-	
-
 }

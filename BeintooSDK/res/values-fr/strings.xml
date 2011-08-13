@@ -33,14 +33,15 @@
     <string name="challSent" xml:space="preserve">Défi envoyé à\u0020</string>
     <string name="challAccept">Voulez-vous accepter ce défi au coût de\u0020</string>
     <string name="challSend">Voulez-vous envoyer un défi?\nPariez 10 BeDollars, vous pourriez en gagner 25.</string>
-    <string name="challTip">cliquez sur un ami pour le défier</string>
+    <string name="challTip">cliquez sur un utilisateur pour intéragir</string>
     
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Score:\u0020</string>
     <string name="leadSendChall">Défier</string>
 	<string name="leadViewProfile">Voir profil</string>
 	<string name="leadAddFriend">Ajouter à mes amis</string>
-
+	<string name="leadshowfriendsonly">Voir amis seulement</string>
+    
     <!-- FRIENDS -->
     <string name="friendsTitle">Vos amis</string>
     <string name="friendSel">Sélectionnez un ami</string>
@@ -122,6 +123,7 @@
     <string name="nothanks">Non merci</string>
     <string name="anotheraccount">Utiliser un autre profil</string>
     <string name="all">Tous</string>
+    <string name="people">Personnes</string>
     <string name="friends">Amis</string>
     <string name="pending">En attente</string>
     <string name="ongoing">En cours</string>
@@ -208,6 +210,34 @@
 	<string name="blockedbysing">Bloqué par la achèvement suivante</string>
 	<string name="onapp">sur app:\u0020</string>
 	
+	<!--  ALLIANCES -->
+	<string name="alliance">Clan</string>
+	<string name="alliances">Clans</string>
+	<string name="alliancemaintip">Créez votre clan ou cherchez-en un</string>
+	<string name="alliancemaincreate">Créer clan</string>
+	<string name="alliancemaincreatebottom">Créer votre clan</string>
+	<string name="alliancemainyours">Votre clan</string>
+	<string name="alliancemainyoursbottom">Voir détails de votre clan</string>
+	<string name="alliancemainlist">Liste des clans</string>
+	<string name="alliancemainlistbottom">Voir la liste des clans</string>
+	<string name="alliancemaintextfooter">Les clans sont un groupe de joueurs qui décident de faire équipe et collaborer contre d\'autres clans pour gagner encore plus de prix et de Bedollars</string>
+	<string name="alliancecreateeditext">Insérez le nom de votre clan</string>
+	<string name="allianceviewmembers">Membres du clan</string>
+	<string name="allianceviewpending">Demandes en attente</string>
+	<string name="alliancesendreq">Demandez de faire partie</string>
+	<string name="alliancedetails">Détails</string>
+	<string name="alliancependingtip">Cliquez sur un joueur pour accepter ou refuser</string>
+	<string name="alliancependindialog">Voulez-vous accepter %s dans votre clan?</string>
+	<string name="alliancependingaccepted">%s a été accepté dans votre clan</string>
+	<string name="alliancependingrefused">%s a été refusé dans votre clan</string>
+	<string name="alliancerequestdialog">Voulez-vous demander à entrer dans le clan %s?</string>
+	<string name="alliancerequestsent">Demande envoyée</string>
+	<string name="allianceleave">Quitter le clan</string>
+	<string name="alliancesearch">Chercher un clan</string>
+	<string name="alliancemembers">Membres:\u0020</string>
+	<string name="allianceadmin">Admin:\u0020</string>
+	<string name="allianceaccept">Accepter</string>
+	<string name="alliancerefuse">Refuser</string>
 	
 	<!-- CUSTOM -->
 	<string name="sponsor"><Data><![CDATA[ Jouez le jeu: <b><br />&nbsp;&nbsp;gagnez vos<br />&nbsp;&nbsp;offres exclusives!</b> ]]> </Data></string>

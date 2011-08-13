@@ -24,8 +24,12 @@ public class Player {
 	    User user;
 	    Float rank;
 	    Map<String, PlayerScore> playerScore;
-		
-//	    public Player(){}
+	    Alliance alliance;
+	    boolean isAllianceAdmin;
+	    
+	    public Player(){
+	    	
+	    }
 	    
 	    public String getGuid() {
 			return guid;
@@ -64,5 +68,19 @@ public class Player {
 			this.playerScore = playerScore;
 		}
 	    
-	    
+		public Alliance getAlliance() {
+			return alliance;
+		}
+
+		public void setAlliance(Alliance alliance) {
+			this.alliance = alliance;
+		}
+
+		public boolean isAllianceAdmin() {
+			return isAllianceAdmin;
+		}
+
+		public void setAllianceAdmin(boolean isAllianceAdmin) {
+			this.isAllianceAdmin = isAllianceAdmin;
+		}
 }	
