@@ -198,15 +198,29 @@
 	<string name="WEEKLY_PAYMENT">Wöchentliches Gehalt</string>
 	<string name="ACHIEVEMENT_UNLOCKED">Achievement entriegelt</string>
    
-   <!-- ACHIEVEMENTS --> 
-   <string name="achievement">Erfolge</string>
-   <string name="achievementdesc">Sieh deine Erfolge</string>
-   <string name="achievementempty">Es gibt keine Erfolge für diese App.</string>
-   <string name="achievementunlocked">Du hast diesen Erfolg geöffnet:</string>
-   <string name="achievementsunlocked">Du hast diese Erfolge geöffnet:</string>
-   <string name="blockedbyplur">Blockiert durch folgende Erfolge</string>
-   <string name="blockedbysing">Blockiert durch die folgenden Erfolge</string>
-   <string name="onapp">auf app:\u0020</string>
+   	<!-- ACHIEVEMENTS --> 
+   	<string name="achievement">Erfolge</string>
+   	<string name="achievementdesc">Sieh deine Erfolge</string>
+   	<string name="achievementempty">Es gibt keine Erfolge für diese App.</string>
+   
+   	<string name="achievementsunlocked">Du hast diese Erfolge geöffnet:</string>
+   	<string name="blockedbyplur">Blockiert durch folgende Erfolge</string>
+   	<string name="blockedbysing">Blockiert durch die folgenden Erfolge</string>
+   	<string name="onapp">auf app:\u0020</string>
+   
+   	<string name="achievementunlocked">ENTRIEGELT!</string>
+	<string name="achievementmission">Um deine Mission zu erfüllen und deine Belohnung gewinnen, spiele jetzt auf\u0020</string>
+	<string name="missionwelcome">Willkommen bei Ihrer\u0020</string>
+	<string name="missionstatus">Status deiner \u0020</string>
+	<string name="missionwelcomeweek">MISSION DER WOCHE!</string>
+	<string name="missionachieve">ERREICHE DEINE MISSION UND <Data><![CDATA[<font color="#abc237">VERDIENE DIESE ECHTE BELOHNUNG</font>]]> </Data></string>
+	<string name="missionlater">Später</string>
+	<string name="missionjoin">JETZT SPIELEN</string>
+	<string name="missiondownload">Herunterladen jetzt</string>
+	<string name="missionaccomplished">MISSION ERFULLT!</string>
+	<string name="missionreward">ERHALT DEINE BELOHNUNG!</string>
+	<string name="missionredeem">Erlösen!</string>
+	<string name="missionachieveonly">ERREICHE DEINE MISSION</string>
    
    <!--  ALLIANCES -->
 	<string name="alliance">Allianz</string>
@@ -236,6 +250,7 @@
 	<string name="allianceadmin">Admin:\u0020</string>
 	<string name="allianceaccept">Annehmen</string>
 	<string name="alliancerefuse">Ablehnen</string>
+	<string name="allianceinvalid">Die Mindestlänge der name ist 3 Zeichen</string>
 	
    <!-- CUSTOM -->
    <string name="sponsor"><Data><![CDATA[ Play hard: <b>win<br />&nbsp;&nbsp;your exclusive<br />&nbsp;&nbsp;real deal!</b> ]]> </Data></string>

@@ -37,8 +37,6 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -72,8 +70,6 @@ public class BeintooSignupBrowser extends Dialog {
 		
 		webview.getSettings().setJavaScriptEnabled(true);
 
-		clearAllCookies();
-	    
 		WebSettings ws = webview.getSettings();
 		ws.setJavaScriptEnabled(true);
 
@@ -152,25 +148,6 @@ public class BeintooSignupBrowser extends Dialog {
 		return "";
 	}
 
-	/*public void clearCache() {
-		File dir = getCacheDir();
-		
-		if (dir != null && dir.isDirectory()) {
-			try {
-				File[] children = dir.listFiles();
-				if (children.length > 0) {
-					for (int i = 0; i < children.length; i++) {
-						File[] temp = children[i].listFiles();
-						for (int x = 0; x < temp.length; x++) {
-							temp[x].delete();
-						}
-					}
-				}
-			} catch (Exception e) {
-			}
-		}
-	}*/
-	
 	private void goBeintooHome () {
 		final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", "Login...",true);
 		/* Do a playerLogin to setup the DeviceUUID and the GUID */
@@ -224,21 +201,6 @@ public class BeintooSignupBrowser extends Dialog {
 		} catch (Exception e) {}
 		
 		return false;
-	}
-	
-	private void clearAllCookies (){
-		//clearCache();
-		//deleteDatabase("webview.db");
-	    //deleteDatabase("webviewCache.db");
-	    webview.clearCache(true);
-	    webview.clearHistory();
-	    CookieSyncManager cookieSyncMngr =
-            CookieSyncManager.createInstance(getContext());
-	    cookieSyncMngr.startSync();
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.removeAllCookie();        
-	    cookieManager.removeSessionCookie();
-	    cookieSyncMngr.stopSync();	    
 	}
 	
 	Handler UIhandler = new Handler() {

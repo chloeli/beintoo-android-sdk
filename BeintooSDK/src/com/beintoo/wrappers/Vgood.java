@@ -33,6 +33,7 @@ public class Vgood {
     private boolean isBanner;
     private String contentType;
     private String content;
+    private String rewardText;
     
 	public String getGetRealURL() {
 		return getRealURL;
@@ -123,5 +124,11 @@ public class Vgood {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public void setRewardText(String rewardText) {
+		this.rewardText = rewardText;
+	}
+	public String getRewardText() {
+		return rewardText;
 	}
 }

@@ -204,11 +204,24 @@
     <string name="achievement">Achievements</string>
   	<string name="achievementdesc">Vedi i tuoi achievements</string>
   	<string name="achievementempty">Non hai ancora achievements su questa App</string>
-	<string name="achievementsunlocked">Hai sbloccato i seguenti achievements:\u0020</string>
-	<string name="achievementunlocked">Hai sbloccato il seguente achievement:\u0020</string>
+	<string name="achievementsunlocked">Hai sbloccato i seguenti achievements:\u0020</string>	
 	<string name="blockedbyplur">Bloccato dai seguenti achievements</string>
 	<string name="blockedbysing">Bloccato dal seguente achievement</string>
 	<string name="onapp">sull\'app:\u0020</string>
+	
+	<string name="achievementunlocked">SBLOCCATO!</string>
+	<string name="achievementmission">Per completare la missione e vincere il premio gioca ora su\u0020</string>
+	<string name="missionwelcome">Benvenuto alla tua \u0020</string>
+	<string name="missionstatus">Stato della tua \u0020</string>
+	<string name="missionwelcomeweek">MISSIONE DELLA SETTIMANA!</string>
+	<string name="missionachieve">COMPLETA LA MISSIONE E <Data><![CDATA[<font color="#abc237">GUADAGNATI IL PREMIO</font>]]> </Data></string>
+	<string name="missionlater">Più tardi</string>
+	<string name="missionjoin">GIOCA ORA</string>
+	<string name="missiondownload">Scarica ora</string>
+	<string name="missionaccomplished">MISSION COMPLETATA!</string>
+	<string name="missionreward">OTTIENI ORA IL TUO PREMIO!</string>
+	<string name="missionredeem">Riscuoti!</string>
+	<string name="missionachieveonly">COMPLETA LA MISSIONEw</string>
 	
 	<!--  ALLIANCES -->
 	<string name="alliance">Alleanza</string>
@@ -238,6 +251,7 @@
 	<string name="allianceadmin">Admin:\u0020</string>
 	<string name="allianceaccept">Accetta</string>
 	<string name="alliancerefuse">Rifiuta</string>
+	<string name="allianceinvalid">La lunghezza minima del nome é di 3 caratteri</string>
 		
 	<!-- CUSTOM -->
 	<string name="sponsor"><Data><![CDATA[ Partecipa: <b><br />&nbsp;&nbsp;vinci sconti<br />&nbsp;&nbsp;esclusivi!</b> ]]> </Data></string>

@@ -18,11 +18,16 @@ package com.beintoo.beintoosdk;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import android.net.Uri;
+
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.wrappers.AchievementWrap;
+import com.beintoo.wrappers.Message;
+import com.beintoo.wrappers.Mission;
 import com.beintoo.wrappers.PlayerAchievement;
+import com.beintoo.wrappers.PlayerAchievementContainer;
 import com.google.beintoogson.Gson;
 import com.google.beintoogson.reflect.TypeToken;
 
@@ -97,7 +102,7 @@ public class BeintooAchievements {
 	 * @param value (optional) number of objectives conquered
 	 * @return a PlayerAchievement object
 	 */
-	public List<PlayerAchievement> submitPlayerAchievement(String guid, String achievement, Float percentage, Float value, Boolean increment){
+	public PlayerAchievementContainer submitPlayerAchievement(String guid, String deviceUUID, String achievement, Float percentage, Float value, Boolean increment){
 		String apiUrl = apiPreUrl+"achievement/"+achievement;
 				
 		HeaderParams header = new HeaderParams();
@@ -105,6 +110,8 @@ public class BeintooAchievements {
 		header.getValue().add(DeveloperConfiguration.apiKey);
 		header.getKey().add("guid");
 		header.getValue().add(guid);
+		header.getKey().add("deviceUUID");
+		header.getValue().add(deviceUUID);
 		
 		PostParams post = new PostParams();
 		
@@ -128,10 +135,78 @@ public class BeintooAchievements {
 		
 		Gson gson = new Gson();
 		
-		Type mapType = new TypeToken<List<PlayerAchievement>>() {
-        }.getType();
-        List<PlayerAchievement> achievements = gson.fromJson(json,mapType);
+        PlayerAchievementContainer achievements = gson.fromJson(json,PlayerAchievementContainer.class);
 		
         return achievements;
 	}
+	
+	public Mission getMission(String deviceUUID, String latitude, String longitude, String radius){
+		Uri.Builder apiUrl = Uri.parse(apiPreUrl+"mission/").buildUpon();
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		header.getKey().add("deviceUUID");
+		header.getValue().add(deviceUUID);
+		
+		if(latitude != null && longitude != null){
+			apiUrl.appendQueryParameter("latitude", latitude);
+			apiUrl.appendQueryParameter("longitude", longitude);
+		}
+		
+		if(radius != null)
+			apiUrl.appendQueryParameter("radius", radius);
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl.toString(), header, null, false);
+		 
+		Gson gson = new Gson();
+		
+        Mission m = gson.fromJson(json,Mission.class);
+        
+        return m;
+	}
+	
+	public Message refuseMission(String guid, String deviceUUID){
+		String apiUrl = apiPreUrl+"mission/refuse";
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		header.getKey().add("guid");
+		header.getValue().add(guid);
+		header.getKey().add("deviceUUID");
+		header.getValue().add(deviceUUID);
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null, false);
+		
+		Gson gson = new Gson();
+		
+        Message m = gson.fromJson(json,Message.class);
+        
+        return m;
+	}
+	
+	public Message hideMission(String guid, String deviceUUID){
+		String apiUrl = apiPreUrl+"mission/hide";
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		header.getKey().add("guid");
+		header.getValue().add(guid);
+		header.getKey().add("deviceUUID");
+		header.getValue().add(deviceUUID);
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null, false);
+		
+		Gson gson = new Gson();
+		
+        Message m = gson.fromJson(json,Message.class);
+        
+        return m;
+	}
+	
 }

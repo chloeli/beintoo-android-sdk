@@ -38,6 +38,9 @@
 					<TextView android:id="@+id/nickname" android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:text="Nickname"
 						android:textColor="#000000" />
+					<TextView android:layout_width="wrap_content"
+						android:layout_height="wrap_content" android:text="Alliance"
+						android:id="@+id/alliance" android:textColor="#878485"></TextView>
 					<TextView android:id="@+id/level" android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:text="Level"
 						android:textColor="#878485" />
@@ -57,28 +60,26 @@
 				android:id="@+id/whiteline"></LinearLayout>
 			<LinearLayout android:layout_width="fill_parent"
 				android:id="@+id/toolbar" android:orientation="horizontal"
-				android:gravity="center_vertical" android:layout_height="60dip"
-				android:padding="5dip">
+				android:gravity="center_vertical" android:layout_height="60dip">
 				<LinearLayout android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/a"
 					android:orientation="vertical" android:gravity="center"
-					android:layout_marginLeft="5dip">
+					android:layout_weight="1">
 					<ImageButton android:id="@+id/friendsbt"
 						android:background="@drawable/button_rollover" android:src="@drawable/friends"
 						android:paddingBottom="0dip" android:paddingTop="0dip"
-						android:layout_height="wrap_content" android:layout_width="wrap_content"
-						android:paddingRight="4dip" android:paddingLeft="4dip" />
+						android:layout_height="wrap_content" android:layout_width="wrap_content" />
 					<TextView android:id="@+id/friends" android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:text="@string/friends"
 						android:textColor="#FFFFFF" android:textSize="12dip" />
 				</LinearLayout>
 				<LinearLayout android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/a"
-					android:orientation="vertical" android:gravity="center">
+					android:orientation="vertical" android:gravity="center"
+					android:layout_weight="1">
 					<ImageButton android:id="@+id/balancebt" android:src="@drawable/balance"
 						android:layout_height="wrap_content" android:layout_width="wrap_content"
-						android:paddingRight="10dip" android:paddingBottom="0dip"
-						android:paddingTop="0dip" android:paddingLeft="10dip"
+						android:paddingBottom="0dip" android:paddingTop="0dip"
 						android:background="@drawable/button_rollover" />
 					<TextView android:id="@+id/balance" android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:text="@string/balance"
@@ -86,35 +87,41 @@
 				</LinearLayout>
 				<LinearLayout android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/a"
-					android:orientation="vertical" android:gravity="center">
+					android:orientation="vertical" android:gravity="center"
+					android:layout_weight="1">
 					<ImageButton android:id="@+id/alliancebt" android:src="@drawable/alliance"
 						android:paddingBottom="0dip" android:paddingTop="0dip"
 						android:background="@drawable/button_rollover"
-						android:layout_height="wrap_content" android:layout_width="wrap_content"
-						android:paddingRight="4dip" android:paddingLeft="4dip" />
+						android:layout_height="wrap_content" android:layout_width="wrap_content" />
 					<TextView android:id="@+id/alli" android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:text="@string/alliance"
 						android:textColor="#FFFFFF" android:textSize="12dip" />
-				</LinearLayout>	
-				<LinearLayout android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:id="@+id/a"
-					android:orientation="vertical" android:gravity="center">
-					<ImageButton android:id="@+id/messagesbt" android:src="@drawable/bubblemsg"
-						android:paddingBottom="0dip" android:paddingTop="0dip"
-						android:background="@drawable/button_rollover"
-						android:layout_height="wrap_content" android:layout_width="wrap_content"
-						android:paddingRight="4dip" android:paddingLeft="4dip" />
-					<TextView android:id="@+id/messages" android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:text="@string/messages"
-						android:textColor="#FFFFFF" android:textSize="12dip" />
 				</LinearLayout>
+
 				<LinearLayout android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/a"
-					android:orientation="vertical" android:gravity="center">
-					<TextView android:id="@+id/msgunread"
-						android:layout_width="wrap_content" android:layout_height="wrap_content"
-						android:text="0" android:textColor="#FFFFFF" android:textSize="12dip" />
-				</LinearLayout>							
+					android:orientation="horizontal" android:gravity="center"
+					android:layout_weight="1">
+					<LinearLayout android:layout_width="wrap_content"
+						android:layout_height="wrap_content" android:id="@+id/a"
+						android:orientation="vertical" android:gravity="center">
+						<ImageButton android:id="@+id/messagesbt" android:src="@drawable/bubblemsg"
+							android:paddingBottom="0dip" android:paddingTop="0dip"
+							android:background="@drawable/button_rollover"
+							android:layout_height="wrap_content" android:layout_width="wrap_content" />
+						<TextView android:id="@+id/messages"
+							android:layout_width="wrap_content" android:layout_height="wrap_content"
+							android:text="@string/messages" android:textColor="#FFFFFF"
+							android:textSize="12dip" />
+					</LinearLayout>
+					<LinearLayout android:layout_width="wrap_content"
+						android:layout_height="wrap_content" android:id="@+id/a"
+						android:orientation="vertical" android:gravity="center">
+						<TextView android:id="@+id/msgunread"
+							android:layout_width="wrap_content" android:layout_height="wrap_content"
+							android:text="0" android:textColor="#FFFFFF" android:textSize="12dip" />
+					</LinearLayout>
+				</LinearLayout>
 			</LinearLayout>
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="1dip" android:background="#8F9193"

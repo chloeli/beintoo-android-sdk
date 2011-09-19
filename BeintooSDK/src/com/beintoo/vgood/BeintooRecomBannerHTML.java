@@ -71,6 +71,8 @@ public class BeintooRecomBannerHTML{
 			
 			webview = new WebView(ctx);
 			webview.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			webview.getSettings().setJavaScriptEnabled(true);
+			webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 			
 			top.addView(webview);
 			

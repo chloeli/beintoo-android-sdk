@@ -55,6 +55,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 
@@ -163,8 +165,8 @@ public class Beintoo{
 				currentDialog = tryBe;
 				tryBe.show();
 			}
-		}catch (Exception e ){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , ctx,e); logout(ctx);}
-	}
+		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR, ctx, e); logout(ctx);}
+	} 
 	
 	/**
 	 * Show a dialog with the try Beintoo message. The dialog is shown interval of days passed in daysInterval
@@ -268,6 +270,12 @@ public class Beintoo{
 	public static void logout(Context ctx){
 		PlayerManager pm = new PlayerManager(ctx);
 		pm.logout(ctx);
+		CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(ctx);
+	    cookieSyncMngr.startSync();
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookie();        
+	    cookieManager.removeSessionCookie();
+	    cookieSyncMngr.stopSync();	 
 	}
 	
 	/**
@@ -412,6 +420,16 @@ public class Beintoo{
 	}
 	
 	
+	public static void getMission(Context ctx, BMissionListener listener){
+		currentContext = ctx;
+		AchievementManager am = new AchievementManager(ctx);
+		am.getMission(listener);		
+	}
+	
+	public static void getMission(Context ctx){
+		getMission(ctx, null);
+	}
+	
 	/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
@@ -519,6 +537,17 @@ public class Beintoo{
 		 public void onError();
 	}
 	
+	/**
+	  * Listener for isEligible callback 
+	  */
+	 public static interface BEligibleVgoodListener {
+		 public void onComplete(com.beintoo.wrappers.Message msg, Player p);
+		 public void vgoodAvailable(Player p);
+		 public void isOverQuota(Player p);
+		 public void nothingToDispatch(Player p);
+		 public void onError();
+	 }
+	
 	/** 
 	 *  Listener for submitScore callback
 	 */	
@@ -539,19 +568,17 @@ public class Beintoo{
 	  *  Listener for submitAchievementScore callback
 	  */
 	 public static interface BAchievementListener {
-		 public void onComplete(List<PlayerAchievement> a);
-		 public void onAchievementUnlocked(List<PlayerAchievement> a);
+		 public void onComplete(List<PlayerAchievement> collection);
+		 public void onAchievementUnlocked(List<PlayerAchievement> collection);
 		 public void onBeintooError(Exception e);
 	 }
 	 
-	 /**
-	  * Listener for isEligible callback 
+	 /** 
+	  *  Listener for Mission dialog callback
 	  */
-	 public static interface BEligibleVgoodListener {
-		 public void onComplete(com.beintoo.wrappers.Message msg, Player p);
-		 public void vgoodAvailable(Player p);
-		 public void isOverQuota(Player p);
-		 public void nothingToDispatch(Player p);
-		 public void onError();
+	 public static interface BMissionListener {
+		 public void onComplete();
+		 public void onError(Exception e);
 	 }
+	 
 }

@@ -19,18 +19,24 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.beintoo.R;
+import com.beintoo.activities.mission.MissionAchievementMessage;
+import com.beintoo.activities.mission.MissionDialog;
 import com.beintoo.beintoosdk.BeintooAchievements;
+import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.beintoosdkutility.SerialExecutor;
-import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BAchievementListener;
+import com.beintoo.main.Beintoo.BMissionListener;
+import com.beintoo.wrappers.Mission;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerAchievement;
+import com.beintoo.wrappers.PlayerAchievementContainer;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
-import android.os.Message;
+import android.os.Handler;
 
 public class AchievementManager {
 	
@@ -53,14 +59,14 @@ public class AchievementManager {
 						if(System.currentTimeMillis() < LAST_OPERATION.get() + OPERATION_TIMEOUT)
 							return;
 						
-						Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
+						final Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
 						BeintooAchievements ba = new BeintooAchievements();
 						
 						boolean localUnlocked = PreferencesHandler.getBool("achievements"+p.getGuid(), achievement, currentContext);
+						String deviceUUID = null;
 						
 						// IF THE USER HAS ALREADY UNLOCKED THIS ACHIEVEMENT ON THIS DEVICE DON'T DO ANYTHING
 						if(!localUnlocked){
-							
 							// IF THE USER DOESN'T UNLOCKED THE ACHIEVEMENT ON THIS DEVICE 
 							// CHECK IF THE ACHIEVEMENT WAS PREVIOUS UNLOCKED ON ANOTHER DEVICE
 							List<PlayerAchievement> prevachievements = ba.getPlayerAchievements(p.getGuid());
@@ -78,47 +84,88 @@ public class AchievementManager {
 							 
 							// IF THE ACHIEVEMENT WAS NOT PREVIOUS UNLOCKED UNLOCK IT
 							if(!previousUnlocked){
-								List<PlayerAchievement> achievements = ba.submitPlayerAchievement(p.getGuid(), achievement, percentage, value, increment);
+								deviceUUID = DeviceId.getUniqueDeviceId(currentContext);
+								PlayerAchievementContainer achievements = ba.submitPlayerAchievement(p.getGuid(), 
+										deviceUUID, achievement, percentage, value, increment);
 								StringBuilder message = new StringBuilder("");
+								StringBuilder achivementsName = new StringBuilder("");
 								boolean hasUnlocked = false;
+								boolean isMissionCompleted = false;
+								
+								Mission completedMission = null;
 								int count = 0;
-								for(PlayerAchievement pa : achievements){
+								
+								if(achievements.getMission() != null){
+									isMissionCompleted = achievements.getMission().getStatus().equals("OVER") ? true : false;
+									completedMission = achievements.getMission();
+								}
+								
+								for(PlayerAchievement pa : achievements.getPlayerAchievements()){
 									if(pa.getStatus().equals("UNLOCKED")){ 
 										hasUnlocked = true; 
-										message.append(pa.getAchievement().getName());
-										message.append(",");
 										
+										// CHECK IF IT'S A MISSION ACHIEVEMENT
+										if(achievements.getMission() != null){										
+											achivementsName.append(pa.getAchievement().getName());
+											achivementsName.append(" ");
+											message.append(currentContext.getString(R.string.achievementmission));
+											
+											boolean appTargetFound = false;
+											for(PlayerAchievement psearch : achievements.getMission().getSponsoredAchievements()){
+												if(psearch.getAchievement().getId().equals(achievement)){
+													if(achievements.getMission().getPlayerAchievements().get(0).getAchievement().getApp() != null){
+														message.append(achievements.getMission().getPlayerAchievements().get(0).getAchievement().getApp().getName());
+														appTargetFound = true;
+													}
+													break;
+												}												
+											}
+											
+											if(achievements.getMission().getSponsoredAchievements().size() > 0)
+												if(!appTargetFound && achievements.getMission().getSponsoredAchievements().get(0).getAchievement().getApp() != null) 
+													message.append(achievements.getMission().getSponsoredAchievements().get(0).getAchievement().getApp().getName());
+											
+										}else{											
+											achivementsName.append(pa.getAchievement().getName());
+											achivementsName.append(" ");
+										}
+											
 										// SAVE LOCALLY
 										PreferencesHandler.saveBool("achievements"+p.getGuid(), pa.getAchievement().getId(), true, currentContext);
-										
+
 										count++;
 									} 
 								}		
-									
-								if(message.length() > 0)
-									message.replace(message.length()-1, message.length(), "");
-								
-								if(count == 1)
-									message.insert(0, currentContext.getString(R.string.achievementunlocked));
-								else if(count >1)
-									message.insert(0, currentContext.getString(R.string.achievementsunlocked));
+
+								if(!isMissionCompleted && hasUnlocked && showNotification){
+									final Bundle msg = new Bundle();
+									msg.putString("name", achivementsName.toString());
+									msg.putString("message", message.toString());
+									UIHandler.post(new Runnable(){
+										@Override
+										public void run() {
+											MissionAchievementMessage.showMessage(currentContext, msg, gravity);											
+										}										
+									});
+								}else if(isMissionCompleted){
+									// OPEN THE MISSION COMPLETED DIALOG
+									final Mission mm = completedMission;
+									final String devID = deviceUUID;
+									UIHandler.post(new Runnable(){
+										@Override
+										public void run() {
+											MissionDialog m = new MissionDialog(currentContext, mm, MissionDialog.MISSION_COMPLETED, p, devID);
+											m.show();											
+										}										
+									});
+								}
 								
 								if(listener != null){
-									listener.onComplete(achievements);
+									listener.onComplete(achievements.getPlayerAchievements());
 									if(hasUnlocked){								
-										listener.onAchievementUnlocked(achievements);
+										listener.onAchievementUnlocked(achievements.getPlayerAchievements());
 									}
-								}
-								
-								if(hasUnlocked && showNotification){
-									Message msg = new Message();
-									Bundle b = new Bundle();						
-									b.putString("Message", message.toString()); 						
-									b.putInt("Gravity", gravity);						
-									msg.setData(b);
-									msg.what = Beintoo.SUBMITSCORE_POPUP;
-									Beintoo.UIhandler.sendMessage(msg);
-								}
+								}	
 							}
 						}
 						
@@ -131,4 +178,65 @@ public class AchievementManager {
     		}
 		});
 	} 
+	
+	public void getMission(final BMissionListener listener){
+		SerialExecutor executor = SerialExecutor.getInstance();	
+		executor.execute(new Runnable(){     					
+    		public void run(){	
+    			synchronized (LAST_OPERATION){
+					try {						
+						if(System.currentTimeMillis() < LAST_OPERATION.get() + OPERATION_TIMEOUT)
+							return;
+						
+						final long lastShow = PreferencesHandler.getLong("lastmission", currentContext);						
+						if(System.currentTimeMillis() < lastShow + 86400000) // 24 HOURS
+							return;
+						
+						final String deviceUUID = DeviceId.getUniqueDeviceId(currentContext);
+						final Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
+						
+						Long currentTime = System.currentTimeMillis();
+	    				Location pLoc = LocationMManager.getSavedPlayerLocation(currentContext);
+	    				Mission m = null;
+	    				
+	    				BeintooAchievements ba = new BeintooAchievements();
+	    	        	if(pLoc != null){
+	    	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
+	    	        			// GET A MISSION WITH COORDINATES
+	    	        			m = ba.getMission(deviceUUID, Double.toString(pLoc.getLatitude()), 
+	    	        					Double.toString(pLoc.getLongitude()), Double.toString(pLoc.getAccuracy()));
+	    	        		}else {
+	    	        			// GET A MISSION WITHOUT COORDINATES
+	    	        			m = ba.getMission(deviceUUID, null, null, null);
+			    				LocationMManager.savePlayerLocation(currentContext);
+	    	        		}
+	    	        	}else{
+	    	        		m = ba.getMission(deviceUUID, null, null, null);
+		    				LocationMManager.savePlayerLocation(currentContext);
+	    	        	}
+	    	        	
+	    	        	final Mission mission = m;
+						UIHandler.post(new Runnable(){
+							@Override
+							public void run() {
+								if(mission.getId() != null){
+									MissionDialog md = new MissionDialog(currentContext, mission, MissionDialog.MISSION_STATUS, p, deviceUUID);
+									md.show();
+								}
+							}							 
+						});	
+						
+						PreferencesHandler.saveLong("lastmission", System.currentTimeMillis(), currentContext);
+						
+						if(listener != null) listener.onComplete();
+					}catch(Exception e){
+						if(listener != null) listener.onError(e);
+						e.printStackTrace();						
+					}
+    			}
+    		}
+		});
+	}
+	
+	Handler UIHandler = new Handler();
 }

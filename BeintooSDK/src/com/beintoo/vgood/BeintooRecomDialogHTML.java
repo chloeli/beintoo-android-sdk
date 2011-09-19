@@ -15,8 +15,6 @@
  ******************************************************************************/
 package com.beintoo.vgood;
 
-
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,7 +28,6 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 
@@ -64,7 +61,6 @@ public class BeintooRecomDialogHTML extends Dialog implements OnClickListener{
 		gvl = listener;
 		
 		try {
-			
 			LinearLayout main = new LinearLayout(context);
 			LinearLayout.LayoutParams mainparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
 			main.setPadding(toDip(5), 0, toDip(5), 0);		
@@ -113,10 +109,15 @@ public class BeintooRecomDialogHTML extends Dialog implements OnClickListener{
 			no.setPadding(0,toDip(-3),0,0);
 			no.setTextColor(Color.WHITE);
 			
-			// INFO CLICK
+			// INFO CLICK			
 			TextView info = new TextView(ctx);
-			info.setText(ctx.getString(R.string.vgoodhtmlmessage));
-
+			
+			String message = vgood.getVgoods().get(0).getRewardText();
+			if(message != null)
+				info.setText(message);
+			else
+				info.setText(ctx.getString(R.string.vgoodhtmlmessage));
+			
 			// ADD ALL TO TOPROW
 			infoclose.addView(info);
 			buttonlayout.addView(no);
@@ -124,11 +125,14 @@ public class BeintooRecomDialogHTML extends Dialog implements OnClickListener{
 			
 			// ADD TOPROW TO MAIN LAYOUT
 			top.addView(infoclose);
-			
+			 
 			webview = new WebView(ctx);
-			webview.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-			top.addView(webview);
+			webview.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+			webview.setBackgroundColor(0);
+			webview.getSettings().setJavaScriptEnabled(true);
+			webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 			
+			top.addView(webview);	
 			main.addView(bg,mainparams);
 			
 			this.setContentView(main);			
@@ -140,7 +144,6 @@ public class BeintooRecomDialogHTML extends Dialog implements OnClickListener{
 		new Thread(new Runnable(){     					
 			public void run(){ 
 				try{
-					
 					webview.setVerticalScrollBarEnabled(false);
 					webview.setHorizontalScrollBarEnabled(false);
 					webview.setFocusableInTouchMode(false);
@@ -148,13 +151,15 @@ public class BeintooRecomDialogHTML extends Dialog implements OnClickListener{
 					webview.setWebViewClient(new WebViewClient() {
 						public void onReceivedError(WebView view, int errorCode,
 								String description, String failingUrl) {
+							
 						}
 						
 						public void onPageFinished(WebView view, String url){
 							UIhandler.sendEmptyMessage(SHOW_DIALOG);
 						}
 						
-						public void onPageStarted(WebView view, String url, Bitmap favicon) {				
+						public void onPageStarted(WebView view, String url, Bitmap favicon) {	
+							
 						}
 						
 					    public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -164,12 +169,14 @@ public class BeintooRecomDialogHTML extends Dialog implements OnClickListener{
 					        return true;
 					    }
 					});
+					
 					webview.setOnTouchListener(new View.OnTouchListener() {						
 					    public boolean onTouch(View v, MotionEvent event) {
 					      return (event.getAction() == MotionEvent.ACTION_MOVE);
 					    }
 					});
-					webview.loadData(vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "utf-8");					
+					
+					webview.loadData("<div align=\"center\">"+vgood.getVgoods().get(0).getContent()+"</div>", vgood.getVgoods().get(0).getContentType(), "UTF-8");
 				}catch (Exception e){e.printStackTrace();}
 			} 
 		}).start();

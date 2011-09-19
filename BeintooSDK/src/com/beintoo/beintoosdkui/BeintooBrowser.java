@@ -65,15 +65,12 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 			
 		webview.getSettings().setJavaScriptEnabled(true);
 		
-		 // ADD ZOOM CONTROLS
-		 final FrameLayout.LayoutParams ZOOM_PARAMS =new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
+		// ADD ZOOM CONTROLS
+		final FrameLayout.LayoutParams ZOOM_PARAMS =new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
 				 																	ViewGroup.LayoutParams.WRAP_CONTENT,
 				 																	Gravity.BOTTOM);
-		 final View zoom = webview.getZoomControls();
-		 webview.addView(zoom, ZOOM_PARAMS);
-		
-		// CLEAR ALL PREVIOUS COOKIES BEFORE LOGIN
-		clearAllCookies();
+		final View zoom = webview.getZoomControls();
+		webview.addView(zoom, ZOOM_PARAMS);
 		
 		WebSettings ws = webview.getSettings();
 		ws.setJavaScriptEnabled(true);
@@ -91,10 +88,8 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 				super.onGeolocationPermissionsShowPrompt(origin, callback);
 				callback.invoke(origin, true, false);
 			}
-			
-			
-			
-		}); 
+		});
+		
 		webview.setWebViewClient(new WebViewClient() {
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
@@ -179,9 +174,10 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 		}
 	}*/
 
-	private void clearAllCookies (){ // NOW NOT USED
+	@SuppressWarnings("unused")
+	private void clearAllCookies (){
 	    webview.clearCache(true);
-	    webview.clearHistory();
+	    webview.clearHistory(); 
 	    CookieSyncManager cookieSyncMngr =
             CookieSyncManager.createInstance(getContext());
 	    cookieSyncMngr.startSync();

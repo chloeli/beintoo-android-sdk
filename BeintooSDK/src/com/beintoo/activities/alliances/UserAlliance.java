@@ -134,26 +134,42 @@ public class UserAlliance extends Dialog{
 					public void run() {
 						try {
 							EditText nameBox = (EditText) txtbox.findViewById(R.id.editText);
-							String name = nameBox.getText().toString();
-							Gson gson = new Gson();
-							Player player = gson.fromJson(PreferencesHandler.getString("currentPlayer", getContext()), Player.class);
-							BeintooAlliances ba = new BeintooAlliances();
-							Alliance alliance = ba.createAlliance(player.getUser().getId(), name, null);
-							if(alliance != null){
-								player.setAlliance(alliance);
-								PreferencesHandler.saveString("currentPlayer", gson.toJson(player), currentContext);
+							String name = nameBox.getText().toString().trim();
+							if(name.length() > 2 && name.length() > 0){
+								Gson gson = new Gson();
+								Player player = gson.fromJson(PreferencesHandler.getString("currentPlayer", getContext()), Player.class);
+								BeintooAlliances ba = new BeintooAlliances();
+								Alliance alliance = ba.createAlliance(player.getUser().getId(), name, null);
+								if(alliance != null){
+									player.setAlliance(alliance);
+									PreferencesHandler.saveString("currentPlayer", gson.toJson(player), currentContext);
+									UIHandler.post(new Runnable(){
+										@Override
+										public void run() {										
+											UserAlliance ua = new UserAlliance(currentContext, UserAlliance.SHOW_ALLIANCE);
+											ua.previous = current;
+											ua.show();
+											current.dismiss();
+											previous.dismiss();
+										}								
+									});
+								}
+								dialog.dismiss();
+							}else{
+								dialog.dismiss();
 								UIHandler.post(new Runnable(){
 									@Override
-									public void run() {										
-										UserAlliance ua = new UserAlliance(currentContext, UserAlliance.SHOW_ALLIANCE);
-										ua.previous = current;
-										ua.show();
-										current.dismiss();
-										previous.dismiss();
-									}								
-								});
+									public void run() {		
+										AlertDialog alertDialog = new AlertDialog.Builder(current.getContext()).create();
+									    alertDialog.setMessage(current.getContext().getString(R.string.allianceinvalid));
+									    alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
+									      public void onClick(DialogInterface dialog, int which) {
+									    } }); 
+									    alertDialog.show();
+									}
+									
+								});								
 							}
-							dialog.dismiss();
 						}catch (Exception e){ 
 							dialog.dismiss();
 							e.printStackTrace(); 

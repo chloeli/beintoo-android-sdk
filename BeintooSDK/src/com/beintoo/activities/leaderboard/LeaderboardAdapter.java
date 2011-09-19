@@ -37,6 +37,7 @@ public class LeaderboardAdapter extends ArrayAdapter<Leaders> {
 	
 	public static class ViewHolder{
 		public TextView nickname;
+		public TextView alliance;
 		public TextView score;
 		public TextView position;
 		public ImageView image;
@@ -54,6 +55,8 @@ public class LeaderboardAdapter extends ArrayAdapter<Leaders> {
 				v = vi.inflate(R.layout.leaderboarditem, null);
 				holder = new ViewHolder();
 				holder.nickname = (TextView) v.findViewById(R.id.nickname);
+				holder.alliance = (TextView) v.findViewById(R.id.alliance);
+				holder.alliance.setVisibility(View.GONE);
 				holder.score = (TextView) v.findViewById(R.id.score);
 				holder.position = (TextView) v.findViewById(R.id.position);
 				holder.image = (ImageView) v.findViewById(R.id.image);

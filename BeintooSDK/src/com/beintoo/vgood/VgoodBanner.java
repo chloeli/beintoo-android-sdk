@@ -97,7 +97,11 @@ public class VgoodBanner implements OnClickListener {
 					v.getVgoods().get(0).getImageUrl(), toDip(70), toDip(70));
 			image.setPadding(0, 0, toDip(10), 0);
 			TextView text = new TextView(context);
-			text.setText(context.getString(R.string.vgoodmessagebanner));
+			String message = vgood.getVgoods().get(0).getRewardText();
+			if(message != null)
+				text.setText(message);
+			else
+				text.setText(context.getString(R.string.vgoodmessagebanner));
 			text.setTextColor(Color.WHITE);
 			text.setTypeface(Typeface.DEFAULT_BOLD, Typeface.BOLD);
 			top.addView(image);

@@ -73,7 +73,7 @@ public class BeintooConnection {
 			url = new URL(apiurl);
 			
 			System.setProperty("http.keepAlive", "false");
-
+			
 			postUrlConnection = (HttpsURLConnection) url.openConnection();
 			postUrlConnection.setUseCaches(false);
 			postUrlConnection.setDoOutput(true);

@@ -83,7 +83,11 @@ public class VgoodAcceptDialog extends Dialog implements OnClickListener{
 			final LoaderImageView image = new LoaderImageView(getContext(), vgood.getVgoods().get(0).getImageUrl(),toDip(100),toDip(100));
 			image.setPadding(0, 0, toDip(10), 0);
 			TextView text = new TextView (context);
-			text.setText(context.getString(R.string.vgoodmessagealert));
+			String message = vgood.getVgoods().get(0).getRewardText();
+			if(message != null)
+				text.setText(message);
+			else
+				text.setText(context.getString(R.string.vgoodmessagealert));
 			text.setTextColor(Color.WHITE);
 			top.addView(image);
 			top.addView(text);

@@ -117,7 +117,11 @@ public class BeintooRecomDialog extends Dialog implements OnClickListener{
 			
 			// INFO CLICK
 			TextView info = new TextView(ctx);
-			info.setText("Click on the banner below");
+			String message = vgood.getVgoods().get(0).getRewardText();
+			if(message != null)
+				info.setText(message);
+			else
+				info.setText(ctx.getString(R.string.vgoodhtmlmessage));
 
 			// ADD ALL TO TOPROW
 			infoclose.addView(info);

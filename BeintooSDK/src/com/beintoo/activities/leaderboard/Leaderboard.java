@@ -168,11 +168,11 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		    		codeID = pairs.getKey();
 		    		 
 		    		// ADD THE CURRENT USER
-		    		if(arr.getCurrentUser().getUser() != null){
+		    		if(arr.getCurrentUser() != null && arr.getCurrentUser().getUser() != null){
 		    			currentUser = new Leaders(arr.getCurrentUser().getUser().getUsersmallimg(),
 		    					arr.getCurrentUser().getUser().getNickname(), arr.getCurrentUser().getScore().toString(),
 			    				feed,arr.getCurrentUser().getPos().toString(), true);
-		    		}else if(arr.getCurrentUser().getAlliance() != null){
+		    		}else if(arr.getCurrentUser() != null && arr.getCurrentUser().getAlliance() != null){
 		    			currentUser = new Leaders(null,
 		    					arr.getCurrentUser().getAlliance().getName(), arr.getCurrentUser().getScore().toString(),
 			    				feed,arr.getCurrentUser().getPos().toString(), true);
@@ -182,7 +182,8 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 			    	for(int i = 0; i<arr.getLeaderboard().size(); i++){
 			    		if(leader_kind == null || leader_kind.equals("FRIENDS")){
 			    			Leaders l = new Leaders(arr.getLeaderboard().get(i).getUser().getUsersmallimg(),
-				    				arr.getLeaderboard().get(i).getUser().getNickname(), arr.getLeaderboard().get(i).getScore().toString(),
+				    				arr.getLeaderboard().get(i).getUser().getNickname(),
+				    				arr.getLeaderboard().get(i).getScore().toString(),
 				    				feed,arr.getLeaderboard().get(i).getPos().toString(), false);
 				    		lead.add(l);
 			    		}else if(leader_kind.equals("ALLIANCES")){
@@ -269,7 +270,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	    		codeID = pairs.getKey();
 	    		// ADD THE LEADERBOARD USERS
 	    		for(int i = 0; i<arr.getLeaderboard().size(); i++){
-	    			if(leader_kind == null || leader_kind.equals("FRIENDS")){
+	    			if(leader_kind == null || leader_kind.equals("FRIENDS")){	    				
 	    				Leaders l = new Leaders(arr.getLeaderboard().get(i).getUser().getUsersmallimg(),
 			    				arr.getLeaderboard().get(i).getUser().getNickname(), arr.getLeaderboard().get(i).getScore().toString(),
 			    				feed,arr.getLeaderboard().get(i).getPos().toString(), false);
@@ -324,6 +325,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	
 	private View setCurrentUserRow(){
 		View header1 = getLayoutInflater().inflate(R.layout.leaderboarditem, null, false);
+		header1.findViewById(R.id.alliance).setVisibility(View.GONE); // alliance in user not implemented now
 		
 		TextView p = (TextView) header1.findViewById(R.id.position);
 		p.setTextColor(Color.WHITE);

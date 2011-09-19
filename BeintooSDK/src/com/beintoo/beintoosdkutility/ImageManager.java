@@ -36,10 +36,6 @@ public class ImageManager {
 			if(!cacheDir.exists())
 				cacheDir.mkdirs();
 			
-			// CHECK IF CACHE IS TOO OLD
-			if(System.currentTimeMillis() > cacheDir.lastModified() + 86400000){ // 24 hours
-				deleteFiles(cacheDir);
-			}
 		}catch(Exception e){ }
 	}
 	   
@@ -73,7 +69,15 @@ public class ImageManager {
 		try {
 			String filename = String.valueOf(url.hashCode());
 			File f = new File(cacheDir, filename);
-
+			
+			try{
+				// CHECK IF CACHE IS TOO OLD
+				if(f!=null){
+					if(System.currentTimeMillis() > f.lastModified() + 86400000) // 24 HOURS
+						f.delete();
+				}
+			}catch(Exception e){}
+			
 			Bitmap bitmap = BitmapFactory.decodeFile(f.getPath());
 			if(bitmap != null) return bitmap;
 
@@ -182,6 +186,7 @@ public class ImageManager {
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private void deleteFiles(File dir){
 		try{
 			if (dir.isDirectory()) {

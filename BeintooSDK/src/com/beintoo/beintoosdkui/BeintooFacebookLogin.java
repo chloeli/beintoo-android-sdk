@@ -22,8 +22,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -68,9 +66,6 @@ public class BeintooFacebookLogin extends Dialog {
 		
 		
 		webview.getSettings().setJavaScriptEnabled(true);
-		
-		// CLEAR ALL PREVIOUS COOKIES BEFORE LOGIN
-		clearAllCookies();
 		
 		WebSettings ws = webview.getSettings();
 		ws.setJavaScriptEnabled(true);
@@ -172,21 +167,6 @@ public class BeintooFacebookLogin extends Dialog {
 		t.start();
 	}
 	
-	private void clearAllCookies (){
-		//clearCache();
-		//deleteDatabase("webview.db");
-	    //deleteDatabase("webviewCache.db");
-	    webview.clearCache(true);
-	    webview.clearHistory();
-	    CookieSyncManager cookieSyncMngr =
-            CookieSyncManager.createInstance(getContext());
-	    cookieSyncMngr.startSync();
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.removeAllCookie();        
-	    cookieManager.removeSessionCookie();
-	    cookieSyncMngr.stopSync();	    
-	}
-	
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {			  
@@ -201,8 +181,4 @@ public class BeintooFacebookLogin extends Dialog {
 			  super.handleMessage(msg);
 		  }
 	};
-	
-	
-	
-	
 }

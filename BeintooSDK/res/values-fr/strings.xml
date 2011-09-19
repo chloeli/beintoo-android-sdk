@@ -205,10 +205,23 @@
   	<string name="achievementdesc">Voir vos achèvements</string>
   	<string name="achievementempty">Vous n\'avez encore aucun achèvement pour cette Appli</string>
   	<string name="achievementsunlocked">Vous avez atteint les achèvements suivants:\u0020</string>
-  	<string name="achievementunlocked">Vous avez atteint les achèvement suivants:\u0020</string>
   	<string name="blockedbyplur">Bloqué par les achèvements suivantes</string>
 	<string name="blockedbysing">Bloqué par la achèvement suivante</string>
 	<string name="onapp">sur app:\u0020</string>
+	
+	<string name="achievementunlocked">ATTEINT!</string>
+	<string name="achievementmission">Pour accomplir votre mission et gagner votre prix, jouez maintenant sur\u0020</string>
+	<string name="missionwelcome">Bienvenue à votre \u0020</string>
+	<string name="missionstatus">Statut de votre \u0020</string>
+	<string name="missionwelcomeweek">MISSION DE LA SEMAINE!</string>
+	<string name="missionachieve">COMPLÉTEZ VOTRE MISSION POUR <Data><![CDATA[<font color="#abc237">OBTENIR UN VRAI PRIX</font>]]> </Data></string>
+	<string name="missionlater">Plus tard</string>
+	<string name="missionjoin">JOUER MAINTENANT</string>
+	<string name="missiondownload">Télécharger maintenant</string>
+	<string name="missionaccomplished">MISSION ACCOMPLIE!</string>
+	<string name="missionreward">DÉCROCHEZ VOTRE PRIX!</string>
+	<string name="missionredeem">Obtenir!</string>
+	<string name="missionachieveonly">COMPLÉTEZ VOTRE MISSION</string>
 	
 	<!--  ALLIANCES -->
 	<string name="alliance">Clan</string>
@@ -238,6 +251,7 @@
 	<string name="allianceadmin">Admin:\u0020</string>
 	<string name="allianceaccept">Accepter</string>
 	<string name="alliancerefuse">Refuser</string>
+	<string name="allianceinvalid">La longueur minimale du nom est de 3 caractères</string>
 	
 	<!-- CUSTOM -->
 	<string name="sponsor"><Data><![CDATA[ Jouez le jeu: <b><br />&nbsp;&nbsp;gagnez vos<br />&nbsp;&nbsp;offres exclusives!</b> ]]> </Data></string>

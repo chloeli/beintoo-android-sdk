@@ -238,12 +238,18 @@ public class UserProfile extends Dialog {
 		// SETTING UP TEXTVIEWS AND PROFILE IMAGE
 		LoaderImageView profilepict = (LoaderImageView) findViewById(R.id.profilepict);		
 		TextView nickname = (TextView) findViewById(R.id.nickname);
+		TextView alliance = (TextView) findViewById(R.id.alliance);
 		TextView level = (TextView) findViewById(R.id.level);
 		TextView dollars = (TextView) findViewById(R.id.bedollars);
 		TextView bescore = (TextView) findViewById(R.id.salary);
 		LinearLayout contestsContainer = (LinearLayout) findViewById(R.id.contests);
 		profilepict.setImageDrawable(currentPlayer.getUser().getUserimg());
 		nickname.setText(currentPlayer.getUser().getNickname());
+		if(currentPlayer.getAlliance() != null){
+			alliance.setText(currentPlayer.getAlliance().getName());
+		}else{
+			alliance.setVisibility(View.GONE);
+		}			
 		level.setText(getContext().getString(R.string.profileLevel)+fromIntToLevel(currentPlayer.getUser().getLevel()));
 		dollars.setText("Bedollars: "+currentPlayer.getUser().getBedollars());
 		bescore.setText("Bescore: "+currentPlayer.getUser().getBescore());
