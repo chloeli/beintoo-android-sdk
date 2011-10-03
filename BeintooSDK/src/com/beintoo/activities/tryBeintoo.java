@@ -34,21 +34,30 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class tryBeintoo extends Dialog {
 	private static final int GO_REG = 1;
 	private static final int USER_SEL = 2;
 	private boolean isLandscape = false;
 	public tryBeintoo(Context ctx) {
-		super(ctx, R.style.ThemeBeintooOn);	
+		super(ctx, R.style.ThemeBeintooOn);		
+		final Dialog current = this;
+		
+		// BUTTONS HEIGHT USED FOR GRADIENT COLOR
+		int nothanksButtonHeight = 35;
+		int trynowButtonHeight = 64;
 		
 		if(ctx.getApplicationContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
 			setContentView(R.layout.trybeintooland);	
 			isLandscape = true;
+			nothanksButtonHeight = 70;
+        	trynowButtonHeight = 70;
         }else if(ctx.getApplicationContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
         	setContentView(R.layout.trybeintoo);
         }else if(ctx.getApplicationContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_SQUARE){
@@ -56,12 +65,26 @@ public class tryBeintoo extends Dialog {
         }else if(ctx.getApplicationContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_UNDEFINED) {
         	setContentView(R.layout.trybeintoo);
         }
-		
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-		final Dialog current = this;
 		
+		Button trynowbt = (Button) findViewById(R.id.trybt);
+		Button nothanksbt = (Button) findViewById(R.id.nothanksbt);
 		
+		// SETUP REWARD TEMPLATE
+		if(Beintoo.TRY_BEINTOO_TEMPLATE == Beintoo.TRY_BEINTOO_REWARD){
+			findViewById(R.id.default_template).setVisibility(View.GONE);
+			findViewById(R.id.reward_template).setVisibility(View.VISIBLE);
+			TextView sponsor = (TextView) findViewById(R.id.textSponsor);
+			sponsor.setText(Html.fromHtml(ctx.getResources().getString(R.string.sponsor)));
+			trynowbt = (Button) findViewById(R.id.trybtrew);
+			nothanksbt = (Button) findViewById(R.id.nothanksbtrew);
+			if(isLandscape){
+				nothanksButtonHeight = 40;
+				trynowButtonHeight = 40;
+			}
+		}
+	
 		// GETTING DENSITY PIXELS RATIO
 		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);		
 				
@@ -74,15 +97,14 @@ public class tryBeintoo extends Dialog {
 		LinearLayout textlayout = (LinearLayout) findViewById(R.id.textlayout);
 		textlayout.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.GRAY_GRADIENT));
 		
-		pixels = ratio * 70;
+		pixels = ratio * trynowButtonHeight;
 		
-		BeButton b = new BeButton(ctx);
-		Button bt = (Button) findViewById(R.id.trybt);
-		bt.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
-		bt.setBackgroundDrawable(b.setPressedBackg(new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
+		BeButton b = new BeButton(ctx);		
+		trynowbt.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+		trynowbt.setBackgroundDrawable(b.setPressedBackg(new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
 				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
 				new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));		
-	    bt.setOnClickListener(new Button.OnClickListener(){
+		trynowbt.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {				
 				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loadingBeintoo),true);
 				final BeintooUser usr = new BeintooUser(); 
@@ -119,10 +141,8 @@ public class tryBeintoo extends Dialog {
         		t.start();
 			}
         });
-	    
-	    
-	    Button nothanksbt = (Button) findViewById(R.id.nothanksbt);
-	    pixels = ratio  * ((isLandscape) ?  70 : 50);
+	    	    
+	    pixels = ratio  * nothanksButtonHeight;
 	    nothanksbt.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
 	    nothanksbt.setBackgroundDrawable(b.setPressedBackg(new BDrawableGradient(0,(int) pixels,BDrawableGradient.BAR_GRADIENT),
 				new BDrawableGradient(0,(int) pixels,BDrawableGradient.GRAY_ROLL_BUTTON_GRADIENT),

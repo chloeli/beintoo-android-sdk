@@ -98,8 +98,13 @@ public class Beintoo{
 	public static String FEATURE_WALLET = "wallet";
 	public static String FEATURE_CHALLENGES = "challenges";
 	public static String FEATURE_ACHIEVEMENTS = "achievements";
+	public static String FEATURE_FORUMS = "forums";
 	
 	public static boolean OPEN_DASHBOARD_AFTER_LOGIN = true;
+	
+	public static int TRY_BEINTOO_DEFAULT = 0;
+	public static int TRY_BEINTOO_REWARD = 1;
+	public static int TRY_BEINTOO_TEMPLATE = TRY_BEINTOO_DEFAULT;
 	
 	public static String userAgent = null;
 	
@@ -110,6 +115,11 @@ public class Beintoo{
 	 */
 	public static void setApiKey(String apikey){
 		DeveloperConfiguration.apiKey = apikey;
+	}
+	
+	public static void setTryBeintooTemplate(int template){
+		if(template == TRY_BEINTOO_DEFAULT || template == TRY_BEINTOO_REWARD)
+			TRY_BEINTOO_TEMPLATE = template;
 	}
 	
 	/** 
@@ -419,15 +429,25 @@ public class Beintoo{
 		submitAchievementScore(ctx, achievement, percentage, value, false, true, Gravity.BOTTOM, listener);
 	}
 	
-	
-	public static void getMission(Context ctx, BMissionListener listener){
+	/**
+	 * Shows new/current mission to the user
+	 * 
+	 * @param ctx current Context
+	 * @param alwaysShow if true the popup is show at every call, if false is show every 24 hours
+	 * @param listener callback listener
+	 */
+	public static void getMission(Context ctx, boolean alwaysShow, BMissionListener listener){
 		currentContext = ctx;
 		AchievementManager am = new AchievementManager(ctx);
-		am.getMission(listener);		
+		am.getMission(listener, alwaysShow);		
+	}
+	
+	public static void getMission(Context ctx, boolean alwaysShow){
+		getMission(ctx, alwaysShow, null);
 	}
 	
 	public static void getMission(Context ctx){
-		getMission(ctx, null);
+		getMission(ctx, false, null);
 	}
 	
 	/**

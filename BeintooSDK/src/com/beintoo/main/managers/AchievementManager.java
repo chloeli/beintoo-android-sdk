@@ -179,7 +179,7 @@ public class AchievementManager {
 		});
 	} 
 	
-	public void getMission(final BMissionListener listener){
+	public void getMission(final BMissionListener listener, final boolean alwaysShow){
 		SerialExecutor executor = SerialExecutor.getInstance();	
 		executor.execute(new Runnable(){     					
     		public void run(){	
@@ -189,7 +189,7 @@ public class AchievementManager {
 							return;
 						
 						final long lastShow = PreferencesHandler.getLong("lastmission", currentContext);						
-						if(System.currentTimeMillis() < lastShow + 86400000) // 24 HOURS
+						if(System.currentTimeMillis() < lastShow + 86400000  && !alwaysShow) //24 HOURS
 							return;
 						
 						final String deviceUUID = DeviceId.getUniqueDeviceId(currentContext);

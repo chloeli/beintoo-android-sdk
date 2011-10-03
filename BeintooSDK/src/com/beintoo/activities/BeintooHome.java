@@ -21,6 +21,7 @@ import java.util.HashSet;
 
 import com.beintoo.R;
 import com.beintoo.activities.leaderboard.LeaderboardContest;
+import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -49,9 +50,11 @@ public class BeintooHome extends Dialog {
 	private final int OPEN_CHALLENGE = 4;
 	private final int UPDATE_UNREAD_MSG = 5;
 	private final int OPEN_ACHIEVEMENTS = 6;
-	
-	User u;
-	Dialog current;
+	private final int OPEN_FORUM = 7;
+	private BeButton button;
+	private User u;
+	private Dialog current;
+	private double ratio;	
 	
 	public BeintooHome(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
@@ -61,15 +64,14 @@ public class BeintooHome extends Dialog {
 		current = this;
 		Beintoo.homeDialog = current;
 		// GETTING DENSITY PIXELS RATIO
-		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
+		ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
 		// SET UP LAYOUTS
 		double pixels = ratio * 47;
 		LinearLayout beintooBar = (LinearLayout) findViewById(R.id.beintoobar);
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
-		
-		
-		// SETTING UP ROWS GRADIENT
-		
+			
+		// SETTING UP GRADIENTS		
+		button = new BeButton(ctx);
 		RelativeLayout welcome = (RelativeLayout) findViewById(R.id.welcome);
 		welcome.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*30),BDrawableGradient.GRAY_GRADIENT));
 		
@@ -78,32 +80,14 @@ public class BeintooHome extends Dialog {
 		TableRow row3 = (TableRow) findViewById(R.id.thirdRow);
 		TableRow row4 = (TableRow) findViewById(R.id.fourthRow);
 		TableRow row5 = (TableRow) findViewById(R.id.fifthRow);
-		
-		BeButton b = new BeButton(getContext());
-		row1.setBackgroundDrawable(b.setPressedBackg(
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.GRAY_GRADIENT),
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-		
-		row2.setBackgroundDrawable(b.setPressedBackg(
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.LIGHT_GRAY_GRADIENT),
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-		
-		row3.setBackgroundDrawable(b.setPressedBackg(
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.GRAY_GRADIENT),
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-		
-		row4.setBackgroundDrawable(b.setPressedBackg(
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.LIGHT_GRAY_GRADIENT),
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-		
-		row5.setBackgroundDrawable(b.setPressedBackg(
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.LIGHT_GRAY_GRADIENT),
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
-				new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+		TableRow row6 = (TableRow) findViewById(R.id.sixthRow);
+				
+		setRowBg(row1,0);
+		setRowBg(row2,1);
+		setRowBg(row3,2);
+		setRowBg(row4,3);
+		setRowBg(row5,4);
+		setRowBg(row6,5);
 		
 		try {
 			u = getCurrentUser();
@@ -122,8 +106,8 @@ public class BeintooHome extends Dialog {
 				white.setVisibility(LinearLayout.GONE);
 			}else{
 				TextView unreadtxt = (TextView) findViewById(R.id.unmessage);
-				unreadtxt.setText(String.format(ctx.getString(R.string.messagenotification), unreadcount));
-				unread.setBackgroundDrawable(b.setPressedBackg(
+				unreadtxt.setText(String.format(ctx.getString(R.string.messagenotification), unreadcount));				
+				unread.setBackgroundDrawable(button.setPressedBackg(
 						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.HIGH_GRAY_GRADIENT)));
@@ -136,8 +120,7 @@ public class BeintooHome extends Dialog {
 				});
 			}
 			
-			// CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
-			setFeatureToUse();
+			
 		}catch (Exception e){e.printStackTrace();}
 		
 		// PROFILE	
@@ -184,6 +167,22 @@ public class BeintooHome extends Dialog {
 				}
 			});
 		}
+		
+		// Tips&forum
+		if(row6 != null){			    
+			row6.setOnClickListener(new TableRow.OnClickListener(){
+				public void onClick(View v) {								
+	            	UIhandler.sendEmptyMessage(OPEN_FORUM);								            	
+				}
+			});
+		}
+		
+		try {
+			// CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
+			setFeatureToUse();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	public void setFeatureToUse(){
@@ -195,31 +194,70 @@ public class BeintooHome extends Dialog {
 			/*
 			 * REMOVE FEATURES THAT ARE NOT IN THE features ARRAY SETTED BY THE DEVELOPER
 			 */
+			int count = 0;
 			if(!f.contains("profile")){
 				tl.removeView((LinearLayout)findViewById(R.id.firstWhiteline));
 				tl.removeView((LinearLayout)findViewById(R.id.firstGrayline));
-				tl.removeView((TableRow) findViewById(R.id.firstRow));
+				tl.removeView((TableRow) findViewById(R.id.firstRow));				
+			}else{
+				setRowBg((TableRow) findViewById(R.id.firstRow), count);
+				count++;
 			}
 			if(!f.contains("wallet")){
 				tl.removeView((LinearLayout)findViewById(R.id.secondWhiteline));
 				tl.removeView((LinearLayout)findViewById(R.id.secondGrayline));
-				tl.removeView((TableRow) findViewById(R.id.secondRow));
+				tl.removeView((TableRow) findViewById(R.id.secondRow));				
+			}else{
+				setRowBg((TableRow) findViewById(R.id.secondRow), count);
+				count++;
 			}
 			if(!f.contains("leaderboard")){
 				tl.removeView((LinearLayout)findViewById(R.id.thirdWhiteline));
 				tl.removeView((LinearLayout)findViewById(R.id.thirdGrayline));
-				tl.removeView((TableRow) findViewById(R.id.thirdRow));
+				tl.removeView((TableRow) findViewById(R.id.thirdRow));				
+			}else{
+				setRowBg((TableRow) findViewById(R.id.thirdRow), count);
+				count++;
 			}
 			if(!f.contains("challenges")){
 				tl.removeView((LinearLayout)findViewById(R.id.fourthWhiteline));
 				tl.removeView((LinearLayout)findViewById(R.id.fourthGrayline));
-				tl.removeView((TableRow) findViewById(R.id.fourthRow));
-			}	
+				tl.removeView((TableRow) findViewById(R.id.fourthRow));				
+			}else{
+				setRowBg((TableRow) findViewById(R.id.fourthRow), count);
+				count++;
+			}
 			if(!f.contains("achievements")){
 				tl.removeView((LinearLayout)findViewById(R.id.fifthWhiteline));
 				tl.removeView((LinearLayout)findViewById(R.id.fifthGrayline));
-				tl.removeView((TableRow) findViewById(R.id.fifthRow));
+				tl.removeView((TableRow) findViewById(R.id.fifthRow));				
+			}else{
+				setRowBg((TableRow) findViewById(R.id.fifthRow), count);
+				count++;
 			}
+			if(!f.contains("forums")){
+				tl.removeView((LinearLayout)findViewById(R.id.sixthWhiteline));
+				tl.removeView((LinearLayout)findViewById(R.id.sixthGrayline));
+				tl.removeView((TableRow) findViewById(R.id.sixthRow));				
+			}else{
+				setRowBg((TableRow) findViewById(R.id.sixthRow), count);
+				count++;
+			}
+		}
+	}
+		
+	public void setRowBg(TableRow row, int pos){	
+		if(row != null){			
+			if(pos % 2 == 0)
+				row.setBackgroundDrawable(button.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			else	
+				row.setBackgroundDrawable(button.setPressedBackg(
+						new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int) (ratio*80),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 		}
 	}
 	
@@ -290,8 +328,17 @@ public class BeintooHome extends Dialog {
 				  UserAchievements achievements = new UserAchievements(getContext());
 				  Beintoo.currentDialog = achievements;
 				  achievements.show();
+			  }else if(msg.what == OPEN_FORUM){		
+				  StringBuilder sb = new StringBuilder("http://appsforum.beintoo.com/?apikey=");
+			      sb.append(DeveloperConfiguration.apiKey);
+			      sb.append("&userExt=");
+			      sb.append(u.getId());
+			      sb.append("#main"); 
+				  Forums f = new Forums(getContext(),sb.toString());				  
+				  Beintoo.currentDialog = f;
+				  f.show();
 			  }
-			  
+			  			  
 			  super.handleMessage(msg);
 		  }
 	};

@@ -146,6 +146,8 @@
     <string name="walletdesc">gestisci i tuoi premi virtuali</string>
     <string name="challenges">Sfide</string>
     <string name="challengesdesc">gestisci le tue sfide</string>
+    <string name="forum">Suggerimenti&amp;Forum</string>
+    <string name="forumdesc">esprimi opinioni e consigli</string>
     
     <!-- VGOOD DIALOG -->
     <string name="vgoodmessagealert">Hai vinto un premio da Beintoo utilizzando questa app!\nClicca su ottieni per riceverlo ora</string>

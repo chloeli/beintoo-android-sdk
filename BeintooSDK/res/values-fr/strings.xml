@@ -146,6 +146,8 @@
     <string name="walletdesc">gérez vos prix virtuels</string>
     <string name="challenges">Défis</string>
     <string name="challengesdesc">gérez vos défis</string>
+    <string name="forum">Conseils et forum</string>
+    <string name="forumdesc">donnez vos opinions e vos conseils</string>
     
     <!-- VGOOD DIALOG -->
     <string name="vgoodmessagealert">Vous avez gagné un prix en utilisant cette Appli!\nCliquez sur obtenir pour l\'avoir tout de suite</string>

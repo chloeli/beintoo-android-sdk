@@ -145,6 +145,8 @@
     <string name="walletdesc">manage your virtual goods</string>
     <string name="challenges">Challenges</string>
     <string name="challengesdesc">manage your challenges</string>
+    <string name="forum">Tips&amp;Forum</string>
+    <string name="forumdesc">join discussions and feedbacks</string>
     
     <!-- VGOOD DIALOG -->
     <string name="vgoodmessagealert">Hey! You won a Beintoo reward by using this app!\nTap redeem and get it</string>

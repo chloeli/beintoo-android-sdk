@@ -145,6 +145,8 @@
     <string name="walletdesc">Verwahlte deine Virtuelle Preise</string>
     <string name="challenges">Herausforderunge</string>
     <string name="challengesdesc">Verwahlte deine Virtuelle Preise</string>
+    <string name="forum">Tipps Und Forum</string>
+    <string name="forumdesc">diskutiere und gib deine Vorschlage</string>
     
     <!-- VGOOD DIALOG -->
     <string name="vgoodmessagealert">Hey!Mit der Benutzung dieser App, du hast ein Beintoo Preis gewonnen !\n Klicke um dein Preis zu erlösen.</string>

@@ -146,6 +146,8 @@
     <string name="walletdesc">Maneja tu premios</string>
     <string name="challenges">Desafìos</string>
     <string name="challengesdesc">Maneja tu desafìos</string>
+    <string name="forum">Consejos y Forum</string>
+    <string name="forumdesc">da tu opinones y tu consejos</string>
     
     <!-- VGOOD DIALOG -->
     <string name="vgoodmessagealert">¡Has ganado un premio untilizando esta Aplicación!\n¡Haz clic en obtener para recibirlo ahora!</string>

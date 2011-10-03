@@ -18,28 +18,90 @@
 			android:id="@+id/maincontainer" android:orientation="vertical"
 			android:layout_height="wrap_content" android:gravity="center"
 			android:background="#dddddd">
+
+			<!-- DEFAULT TEMPLATE -->
 			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="1dip" android:background="#FFFFFF"
-				android:id="@+id/whiteline"></LinearLayout>
-			<LinearLayout android:layout_width="fill_parent"
-				android:id="@+id/textlayout" android:layout_height="90dip"
-				android:padding="15dip">
-				<TextView android:id="@+id/textView1" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:text="@string/tryBe"
-					android:typeface="sans" android:textSize="16dip" android:textColor="#333133"></TextView>
+				android:orientation="vertical" android:id="@+id/default_template"
+				android:layout_height="wrap_content" android:gravity="center">
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#FFFFFF"
+					android:id="@+id/whiteline"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:id="@+id/textlayout" android:layout_height="90dip"
+					android:padding="15dip">
+					<TextView android:id="@+id/textView1"
+						android:layout_width="wrap_content" android:layout_height="wrap_content"
+						android:text="@string/tryBe" android:typeface="sans"
+						android:textSize="16dip" android:textColor="#333133"></TextView>
+				</LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout>
+				<Button android:layout_centerHorizontal="true" android:id="@+id/trybt"
+					android:text="@string/trynow" android:textColor="#FFFFFF"
+					android:textSize="18dip" android:layout_width="294dip"
+					android:layout_height="70dip" android:layout_marginBottom="8dip"
+					android:layout_marginTop="50dip"></Button>
+				<Button android:layout_centerHorizontal="true" android:id="@+id/nothanksbt"
+					android:text="@string/nothanks" android:textColor="#FFFFFF"
+					android:textSize="15dip" android:layout_width="294dip"
+					android:layout_height="50dip"></Button>
 			</LinearLayout>
-			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="1dip" android:background="#8F9193"
-				android:id="@+id/grayline"></LinearLayout>
-			<Button android:layout_centerHorizontal="true" android:id="@+id/trybt"
-				android:text="@string/trynow"
-				android:textColor="#FFFFFF" android:textSize="18dip"
-				android:layout_width="294dip" android:layout_height="70dip"
-				android:layout_marginBottom="8dip" android:layout_marginTop="50dip"></Button>
-			<Button android:layout_centerHorizontal="true" android:id="@+id/nothanksbt"
-				android:text="@string/nothanks" android:textColor="#FFFFFF"
-				android:textSize="15dip" android:layout_width="294dip"
-				android:layout_height="50dip"></Button>
+			<!-- END DEFAULT TEMPLATE -->
+
+			<!-- REWARD TEMPLATE -->
+			<LinearLayout android:layout_width="wrap_content"
+				android:orientation="vertical" android:id="@+id/reward_template"
+				android:layout_height="wrap_content" android:visibility="gone">
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#FFFFFF"
+					android:id="@+id/whiteline"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:id="@+id/textlayout" android:layout_height="82dip"
+					android:gravity="center">
+					<TextView android:id="@+id/textView1"
+						android:layout_width="wrap_content" android:layout_height="wrap_content"
+						android:text="@string/sponsortitle" android:typeface="sans"
+						android:textSize="16dip" android:textColor="#333133"
+						android:gravity="center"></TextView>
+				</LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:background="#FFFFFF"
+					android:id="@+id/customcontainer" android:gravity="right">
+					<LinearLayout android:layout_width="wrap_content"
+						android:background="#FFFFFF" android:id="@+id/text"
+						android:layout_weight="1" android:gravity="center"
+						android:layout_height="fill_parent" android:paddingLeft="7dip">
+						<TextView android:id="@+id/textSponsor" android:textSize="14dip"
+							android:layout_width="wrap_content" android:layout_height="wrap_content"
+							android:text="@string/sponsor" android:textColor="#2E4467"></TextView>
+					</LinearLayout>
+					<ImageView android:layout_width="wrap_content"
+						android:id="@+id/imageView1" android:layout_height="137dip"
+						android:src="@drawable/rewards" android:layout_gravity="right"
+						android:adjustViewBounds="true" android:maxWidth="186dip" android:scaleType="matrix"></ImageView>
+				</LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:orientation="vertical" android:layout_height="wrap_content"
+					android:gravity="center" android:layout_marginTop="5dip">
+					<Button android:id="@+id/trybtrew" android:text="@string/trynow"
+						android:textColor="#FFFFFF" android:textSize="18dip"
+						android:layout_width="296dip" android:layout_height="64dip"
+						android:padding="0dip" android:layout_marginTop="15dip"></Button>
+					<Button android:layout_centerHorizontal="true" android:id="@+id/nothanksbtrew"
+						android:text="@string/nothanks" android:textColor="#FFFFFF"
+						android:textSize="15dip" android:layout_width="296dp"
+						android:layout_height="35dp" android:layout_marginTop="10dip"
+						android:padding="0dip"></Button>
+				</LinearLayout>
+			</LinearLayout>
+			<!-- END REWARD TEMPLATE -->
 		</LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="fill_parent" android:id="@+id/maincontainer"
