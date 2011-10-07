@@ -29,8 +29,7 @@ public class CustomFonts {
 				if (sdState.equals(android.os.Environment.MEDIA_MOUNTED))
 					fontFile = new File(android.os.Environment.getExternalStorageDirectory(),".beintoo/fonts/"+fontName);
 				else
-					fontFile = new File(context.getCacheDir(),".beintoo/fonts/"+fontName);
-					
+					fontFile = new File(context.getCacheDir(),".beintoo/fonts/"+fontName);					
 			}
 			
 			Typeface font = Typeface.createFromFile(fontFile); 

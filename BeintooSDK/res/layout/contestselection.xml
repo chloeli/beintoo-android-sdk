@@ -47,7 +47,7 @@
 				android:id="@+id/onlyf" android:layout_width="fill_parent"
 				android:orientation="vertical" android:gravity="center_vertical">
 				<LinearLayout android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:gravity="center_vertical">
+					android:layout_width="fill_parent" android:gravity="center_vertical" android:id="@+id/friendsonly">
 					<ImageButton android:textColor="#545859"
 						android:layout_height="wrap_content" android:layout_width="wrap_content"
 						android:layout_marginRight="5dip" android:background="@drawable/noselected"

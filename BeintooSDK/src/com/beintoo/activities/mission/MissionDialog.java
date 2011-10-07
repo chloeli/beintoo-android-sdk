@@ -70,7 +70,7 @@ public class MissionDialog extends Dialog implements OnClickListener{
 				if(m.getVgood() == null){
 					findViewById(R.id.red).setVisibility(View.VISIBLE);
 					TextView red = (TextView) findViewById(R.id.redtw);				
-					red.setText(Html.fromHtml("ACHIEVE YOUR MISSION"));
+					red.setText(Html.fromHtml(currentContext.getString(R.string.missionachieveonly)));
 				}
 			}else if(!m.isNew() && m.getStatus().equals("OVER")){ // MISSION ACCOMPLISHED
 				textView1.setText(currentContext.getString(R.string.missionaccomplished));

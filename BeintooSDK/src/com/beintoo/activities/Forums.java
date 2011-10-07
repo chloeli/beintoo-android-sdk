@@ -40,7 +40,7 @@ public class Forums extends Dialog {
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		TextView title = (TextView)findViewById(R.id.dialogTitle);
-		title.setText("Tips&Forums");
+		title.setText(ctx.getString(R.string.forum));
 		
 		webview = (WebView) findViewById(R.id.webview);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);

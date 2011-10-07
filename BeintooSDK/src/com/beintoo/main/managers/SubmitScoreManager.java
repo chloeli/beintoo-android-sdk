@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdkutility.ApiCallException;
-import com.beintoo.beintoosdkutility.JSONconverter;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
@@ -50,9 +50,8 @@ public class SubmitScoreManager {
 			final LinearLayout container, final int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener){
 		new Thread(new Runnable(){     					
     		public void run(){
-    			try {
-				
-					Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
+    			try {				
+					Player currentPlayer = Current.getCurrentPlayer(ctx);
 					String key;
 					if(codeID != null)
 						key = currentPlayer.getGuid()+":count:"+codeID;
@@ -67,7 +66,7 @@ public class SubmitScoreManager {
 						submitScore(ctx, score, codeID, true, Gravity.BOTTOM, slistener);
 						
 						GetVgoodManager gvm = new GetVgoodManager(ctx);
-						gvm.GetVgood(ctx, codeID, isMultiple,container,notificationType, glistener);
+						gvm.GetVgood(codeID, isMultiple,container,notificationType, glistener);
 					}else{
 						PreferencesHandler.saveInt(key, currentTempScore, ctx);
 						submitScore(ctx, score, codeID, true, Gravity.BOTTOM, slistener);				
@@ -81,9 +80,8 @@ public class SubmitScoreManager {
 	public void submitScore(final Context ctx, final int lastScore, final String codeID, final boolean showNotification, final int gravity, final BSubmitScoreListener listener){
 		new Thread(new Runnable(){     					
     		public void run(){
-    			try {
-					String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-					final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
+    			try {					
+					final Player p = Current.getCurrentPlayer(ctx);		
 					if(p != null){			    			
 						
 							Long currentTime = System.currentTimeMillis();
@@ -140,9 +138,8 @@ public class SubmitScoreManager {
 						msg.setData(b);
 						msg.what = Beintoo.SUBMITSCORE_POPUP;
 															
-						final BeintooPlayer player = new BeintooPlayer();
-						String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-						final Player p = JSONconverter.playerJsonToObject(jsonPlayer);
+						final BeintooPlayer player = new BeintooPlayer();						
+						final Player p = Current.getCurrentPlayer(ctx);
 						com.beintoo.wrappers.Message result = null;
 						try {
 							if(location != null){
@@ -188,8 +185,7 @@ public class SubmitScoreManager {
 		new Thread(new Runnable(){     					
     		public void run(){
     			try {
-					String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-					final Player p = JSONconverter.playerJsonToObject(jsonPlayer);		
+					final Player p = Current.getCurrentPlayer(ctx);		
 					if(p != null){			    			
 						
 							Long currentTime = System.currentTimeMillis();
@@ -260,9 +256,8 @@ public class SubmitScoreManager {
 						msg.what = Beintoo.SUBMITSCORE_POPUP;
 						
 						String jsonScores = new Gson().toJson(jsonScoresArray);						
-						final BeintooPlayer player = new BeintooPlayer();
-						String jsonPlayer = PreferencesHandler.getString("currentPlayer", ctx);
-						final Player p = JSONconverter.playerJsonToObject(jsonPlayer);
+						final BeintooPlayer player = new BeintooPlayer();						
+						final Player p = Current.getCurrentPlayer(ctx);
 						com.beintoo.wrappers.Message result = null;
 						try {
 							if(location != null){

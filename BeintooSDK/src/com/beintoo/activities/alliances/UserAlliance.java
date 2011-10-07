@@ -480,9 +480,9 @@ public class UserAlliance extends Dialog{
 						    bt.setOnClickListener(new Button.OnClickListener(){
 								@Override
 								public void onClick(View v) {
-									for(int i = 0; i < listitem.size(); i ++){
-										System.out.println(listitem.get(i).isChecked);
-									}
+									/*for(int i = 0; i < listitem.size(); i ++){
+										
+									}*/
 									
 								}														    
 						    });

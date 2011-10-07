@@ -26,8 +26,7 @@ import android.widget.LinearLayout;
 
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkutility.ApiCallException;
-import com.beintoo.beintoosdkutility.JSONconverter;
-import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BEligibleVgoodListener;
@@ -37,28 +36,27 @@ import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
 
 public class GetVgoodManager {
-	
-	private static Context currentContext;
-	
 	private static AtomicLong LAST_OPERATION = new AtomicLong(0);
 	private static AtomicLong LAST_OPERATION_ELIGIBLE = new AtomicLong(0);
 	private long OPERATION_TIMEOUT = 5000;
+	
+	private Context currentContext;
 	
 	public GetVgoodManager (Context ctx) {
 		currentContext = ctx;		
 	}
 	
-	public void GetVgood(final Context ctx, final String codeID, final boolean isMultiple, final LinearLayout container, final int notificationType, final BGetVgoodListener listener){
+	public void GetVgood(final String codeID, final boolean isMultiple, final LinearLayout container, final int notificationType, final BGetVgoodListener listener){
 		try {			
 			final SerialExecutor executor = SerialExecutor.getInstance();	
     		executor.execute(new Runnable(){     					
 	    		public void run(){
 	    			try{			
-	    				final Player currentPlayer = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));	    				
+	    				final Player currentPlayer = Current.getCurrentPlayer(currentContext);	    				
 	    				if(currentPlayer.getGuid() == null) return;
 	    				
 	    				Long currentTime = System.currentTimeMillis();
-	    				Location pLoc = LocationMManager.getSavedPlayerLocation(ctx);
+	    				Location pLoc = LocationMManager.getSavedPlayerLocation(currentContext);
 	    	        	if(pLoc != null){
 	    	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
 	    	        			// GET A VGOOD WITH COORDINATES
@@ -66,11 +64,11 @@ public class GetVgoodManager {
 	    	        		}else {
 	    	        			// GET A VGOOD WITHOUT COORDINATES
 			    				getVgoodHelper(codeID, isMultiple,container,notificationType,null,currentPlayer, listener);
-			    				LocationMManager.savePlayerLocation(ctx);
+			    				LocationMManager.savePlayerLocation(currentContext);
 	    	        		}
 	    	        	}else{
 	    	        		getVgoodHelper(codeID, isMultiple,container,notificationType,null,currentPlayer, listener);
-		    				LocationMManager.savePlayerLocation(ctx);
+		    				LocationMManager.savePlayerLocation(currentContext);
 	    	        	}
 	    			}catch(Exception e){e.printStackTrace();}
 	    		}
@@ -200,7 +198,7 @@ public class GetVgoodManager {
 						if(System.currentTimeMillis() < LAST_OPERATION_ELIGIBLE.get() + OPERATION_TIMEOUT)
 							return;
 						
-						final Player p = JSONconverter.playerJsonToObject((PreferencesHandler.getString("currentPlayer", currentContext)));
+						final Player p = Current.getCurrentPlayer(ctx);
 	    				final BeintooVgood vgooddispatcher = new BeintooVgood();
 	    				
 	    				if(p.getGuid() == null) return;

@@ -27,6 +27,7 @@ import com.beintoo.activities.tryBeintoo;
 import com.beintoo.activities.tryDialog;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.MessageDisplayer;
@@ -47,7 +48,6 @@ import com.beintoo.wrappers.PlayerAchievement;
 import com.beintoo.wrappers.PlayerScore;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
-import com.google.beintoogson.Gson;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -132,13 +132,12 @@ public class Beintoo{
 		currentContext = ctx;
 		OPEN_DASHBOARD_AFTER_LOGIN = goToDashboard;
 		
-		try{
-			final Gson gson = new Gson();
+		try{			
 			boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
-			String savedPlayer = PreferencesHandler.getString("currentPlayer", ctx);
+			String savedPlayer = Current.getCurrentPlayerJson(ctx);
 			final Player currentPlayer;
 			if(savedPlayer != null){
-				currentPlayer = gson.fromJson(savedPlayer, Player.class);
+				currentPlayer = Current.getCurrentPlayer(ctx);
 			}else currentPlayer = null;
 			
 			// AVOID BAD LOGIN
@@ -151,12 +150,12 @@ public class Beintoo{
             			try{   	
 							BeintooPlayer player = new BeintooPlayer();
 							// DEBUG
-							DebugUtility.showLog("current saved player: "+PreferencesHandler.getString("currentPlayer", ctx));											
+							DebugUtility.showLog("current saved player: "+Current.getCurrentPlayerJson(ctx));											
  
 							// LOGIN TO BEINTOO							
 							Player newPlayer = player.getPlayer(currentPlayer.getGuid());
-							if(newPlayer.getUser().getId() != null){				
-								PreferencesHandler.saveString("currentPlayer", gson.toJson(newPlayer), ctx);
+							if(newPlayer.getUser().getId() != null){												
+								Current.setCurrentPlayer(ctx, newPlayer);
 								// GO HOME
 								UIhandler.sendEmptyMessage(GO_HOME);
 							}							
@@ -211,7 +210,7 @@ public class Beintoo{
 		currentContext = ctx;			
 		gvl = listener;
 		GetVgoodManager gvm = new GetVgoodManager(ctx);
-		gvm.GetVgood(ctx, codeID, isMultiple, container, notificationType, listener);		
+		gvm.GetVgood(codeID, isMultiple, container, notificationType, listener);		
 	}
 	
 	public static void GetVgood(final Context ctx) {
@@ -261,7 +260,7 @@ public class Beintoo{
 	 */
 	public static boolean isLogged(Context ctx){
 		try {
-			Player currentPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
+			Player currentPlayer = Current.getCurrentPlayer(ctx);
 			boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
 			if(currentPlayer != null && isLogged)
 				return true;

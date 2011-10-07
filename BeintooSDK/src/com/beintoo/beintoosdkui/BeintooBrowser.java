@@ -18,6 +18,7 @@ package com.beintoo.beintoosdkui;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -40,7 +41,7 @@ import android.widget.Toast;
 import com.beintoo.R;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DebugUtility;
-import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.main.managers.LocationMManager;
 
 
 public class BeintooBrowser extends Dialog implements android.webkit.GeolocationPermissions.Callback{
@@ -142,9 +143,10 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 	
 	private String getSavedPlayerLocationParams(){
 		try {
-			Double latitude = Double.parseDouble(PreferencesHandler.getString("playerLatitude", current.getContext()));
-			Double longitude = Double.parseDouble(PreferencesHandler.getString("playerLongitude", current.getContext()));
-			Float accuracy = Float.parseFloat(PreferencesHandler.getString("playerAccuracy", current.getContext()));
+			Location loc = LocationMManager.getSavedPlayerLocation(getContext());
+			Double latitude = loc.getLatitude();
+			Double longitude = loc.getLongitude();
+			Float accuracy = loc.getAccuracy();
 
 			String params = "&lat="+latitude+"&lng="+longitude+"&acc="+accuracy;
 			

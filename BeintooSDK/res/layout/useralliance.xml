@@ -21,8 +21,8 @@
 		android:visibility="gone">
 		<EditText android:layout_height="wrap_content"
 			android:layout_width="fill_parent" android:id="@+id/editText"
-			android:hint="Inserisci il nome dell'alleanza" android:layout_margin="5dip"
-			android:singleLine="true" android:lines="1"></EditText>
+			android:layout_margin="5dip"
+			android:singleLine="true" android:lines="1" android:hint="@string/alliancecreateeditext"></EditText>
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="1dip" android:background="#8F9193" android:id="@+id/grayline"
 			android:layout_marginTop="3dip"></LinearLayout>

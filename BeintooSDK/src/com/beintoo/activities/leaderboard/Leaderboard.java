@@ -58,6 +58,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	
 	private String codeID; // THE CODE ID OF THE SELECTED CONTEST
 	private String leader_kind;
+	private int selectedContest;
 	
 	private ImageManager imageManager;
 	private ListView listView;
@@ -75,14 +76,15 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	private boolean hasReachedEnd = false;
 	
 	
-	public Leaderboard(Context context, Map<String, LeaderboardContainer> l, String kind) {
+	public Leaderboard(Context context, Map<String, LeaderboardContainer> l, String kind, int selectedContest) {
 		super(context, R.style.ThemeBeintoo);
 		setContentView(R.layout.leaderboardlist);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
-		current = this;
-		currentContext = context;
-		leaders = l;
-		leader_kind = kind;
+		this.current = this;
+		this.currentContext = context;
+		this.leaders = l;
+		this.leader_kind = kind;
+		this.selectedContest = selectedContest;
 		
 		// GETTING DENSITY PIXELS RATIO
 		ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);	
@@ -148,10 +150,8 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		final ArrayList<Leaders> lead = new ArrayList<Leaders>();
 		
 		try {
-			player = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", getContext()), Player.class);
-			
-			Iterator<?> it = leaders.entrySet().iterator();		
-			int selectedContest = Integer.parseInt(PreferencesHandler.getString("selectedContest", currentContext));
+			player = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", getContext()), Player.class);			
+			Iterator<?> it = leaders.entrySet().iterator();					
 			// SET TITLE
 			TextView contestName = (TextView)findViewById(R.id.dialogTitle);
 	
@@ -242,8 +242,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
     							adapter.notifyDataSetChanged();							
     					}}); 
     				}else{
-    					hasReachedEnd = true;
-    					System.out.println("vuoto");
+    					hasReachedEnd = true;    					
     					UIHandler.post(new Runnable(){
     						@Override
     						public void run() {
@@ -363,6 +362,11 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		}catch(Exception e){ }
 		
 		LinearLayout positionView = (LinearLayout) header1.findViewById(R.id.post);
+		positionView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,(int)(ratio * 35)));
+		positionView.setPadding((int)(ratio * 5), 0, (int)(ratio * 5), 0);
+		positionView.setMinimumHeight((int)(ratio * 35));
+		positionView.setMinimumWidth((int)(ratio * 35));
+	
 		positionView.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT));
 		header1.findViewById(R.id.item).setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.LIGHT_GRAY_GRADIENT));
 

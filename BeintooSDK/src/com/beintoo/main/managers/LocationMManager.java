@@ -69,19 +69,27 @@ public class LocationMManager {
 	}
 	
 	public static void saveLocationHelper (Context ctx, Location location){
-		PreferencesHandler.saveString("playerLatitude",Double.toString(location.getLatitude()), ctx);
-    	PreferencesHandler.saveString("playerLongitude", Double.toString(location.getLongitude()), ctx);
-    	PreferencesHandler.saveString("playerAccuracy", Float.toString(location.getAccuracy()), ctx);
-    	PreferencesHandler.saveString("playerLastTimeLocation", Long.toString(location.getTime()), ctx);    	
+		PreferencesHandler.saveString("playerlocation","playerLatitude",Double.toString(location.getLatitude()), ctx);
+    	PreferencesHandler.saveString("playerlocation","playerLongitude", Double.toString(location.getLongitude()), ctx);
+    	PreferencesHandler.saveString("playerlocation","playerAccuracy", Float.toString(location.getAccuracy()), ctx);
+    	PreferencesHandler.saveString("playerlocation","playerLastTimeLocation", Long.toString(location.getTime()), ctx);
+		
     	DebugUtility.showLog("SAVED PLAYER LOCATION: "+location);
+	}
+	
+	public static void clearLocationHelper (Context ctx){
+		PreferencesHandler.clearPref("playerlocation","playerLatitude", ctx);
+		PreferencesHandler.clearPref("playerlocation","playerLongitude", ctx);
+		PreferencesHandler.clearPref("playerlocation","playerAccuracy", ctx);
+		PreferencesHandler.clearPref("playerlocation","playerLastTimeLocation", ctx);
 	}
 	
 	public static Location getSavedPlayerLocation(Context ctx){
 		try {
-			Double latitude = Double.parseDouble(PreferencesHandler.getString("playerLatitude", ctx));
-			Double longitude = Double.parseDouble(PreferencesHandler.getString("playerLongitude", ctx));
-			Float accuracy = Float.parseFloat(PreferencesHandler.getString("playerAccuracy", ctx));
-			Long lastTimeLocation = Long.parseLong(PreferencesHandler.getString("playerLastTimeLocation", ctx));
+			Double latitude = Double.parseDouble(PreferencesHandler.getString("playerlocation","playerLatitude", ctx));
+			Double longitude = Double.parseDouble(PreferencesHandler.getString("playerlocation","playerLongitude", ctx));
+			Float accuracy = Float.parseFloat(PreferencesHandler.getString("playerlocation","playerAccuracy", ctx));
+			Long lastTimeLocation = Long.parseLong(PreferencesHandler.getString("playerlocation","playerLastTimeLocation", ctx));
 			
 			Location pLoc = new Location("network");
 			pLoc.setLatitude(latitude);

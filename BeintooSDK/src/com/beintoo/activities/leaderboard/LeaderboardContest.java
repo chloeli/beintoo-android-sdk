@@ -58,6 +58,8 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 	private Map<String, LeaderboardContainer> leader;
 	private Player player = null;
 	private String kind = null;
+	private int selectedContest;
+	
 	public LeaderboardContest(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);
 		setContentView(R.layout.contestselection);
@@ -170,21 +172,21 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 		
 		if(Beintoo.isLogged(ctx)){				
 			findViewById(R.id.onlyf).setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));
-			final ImageButton friends = (ImageButton) findViewById(R.id.onlyfriends);
-			friends.setBackgroundDrawable(b.setPressedBackg(
+			final LinearLayout friendsbutton = (LinearLayout) findViewById(R.id.friendsonly);			
+			friendsbutton.setBackgroundDrawable(b.setPressedBackg(
 					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-			friends.setOnClickListener(new ImageButton.OnClickListener(){
+			friendsbutton.setOnClickListener(new ImageButton.OnClickListener(){
 				public void onClick(View v) {
-					
-					if(v.getTag().equals("notselected")){
+					final ImageButton friends = (ImageButton) findViewById(R.id.onlyfriends);
+					if(friends.getTag().equals("notselected")){
 						friends.setImageResource(R.drawable.selected);
-						v.setTag("selected");
+						friends.setTag("selected");
 						kind = "FRIENDS";
-					}else if(v.getTag().equals("selected")){
+					}else if(friends.getTag().equals("selected")){
 						friends.setImageResource(R.drawable.noselected);
-						v.setTag("notselected");
+						friends.setTag("notselected");
 						kind = null;
 					}
 					  
@@ -339,9 +341,8 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 	}
 	
 	// CALLED WHEN THE USER SELECT A CONTEST
-	public void onClick(View v) {
-		final int selectedRow = v.getId();
-		PreferencesHandler.saveString("selectedContest", ""+selectedRow, currentContext);
+	public void onClick(View v) {	
+		selectedContest = v.getId();
     	UIhandler.sendEmptyMessage(1);    				
 	}
 	
@@ -370,7 +371,7 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 			  if(msg.what == 0)
 				  loadContestTable();
 			  else if(msg.what == 1){
-				  Leaderboard leaderboard = new Leaderboard(currentContext,leader, kind);
+				  Leaderboard leaderboard = new Leaderboard(currentContext,leader, kind, selectedContest);
 				  leaderboard.show();
 			  }else if(msg.what == 3){
 				  TableLayout table = (TableLayout) findViewById(R.id.tablecontest);

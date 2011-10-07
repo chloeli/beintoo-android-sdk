@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+	<string name="challStatus">状态：</string>
+	<string name="challStart">开始日期：</string>
+	<string name="challEnd">结束日期：</string> 
+	<string name="challWinner">赢家：</string> 
+	<string name="challPrize">奖金：</string> 
+	<string name="challNoPending">您没有未处理的挑战请求</string> 
+	<string name="challFromTo">您对\u0020的挑战</string> 
+	<string name="challFrom">\u0020</string> 
+	<string name="challYou">\u0020对您的挑战</string> 
+	<string name="challRefused">拒绝挑战</string> 
+	<string name="challAccepted">接受挑战</string> 
+	<string name="challNoPendingC">您没有未处理的挑战</string> 
+	<string name="challNoAccepted">您没有已接受的挑战</string> 
+	<string name="challNoEnded">您没有已结束的挑战</string> 
+	<string name="challChallenge">挑战</string> 
+	<string name="challSent">挑战发送至\u0020</string> 
+	<string name="challAccept">您愿意接收\u0020的挑战吗</string> 
+	<string name="challSend">您想发送挑战吗？下注 10 BeDollar，赢回 25。</string> 
+	<string name="challTip">点击另一个用户开始互动</string> 
+	
+	<!-- LEADERBOARD --> 
+	<string name="leadTitle">排名榜</string> 
+	<string name="leadScore">得分:\u0020</string> 
+	<string name="leadSendChall">发送挑战</string> 
+	<string name="leadViewProfile">查看档案</string> 
+	<string name="leadAddFriend">添加为好友</string> 
+	<string name="leadshowfriendsonly">仅查看好友</string> 
+	
+	<!-- FRIENDS --> 
+	<string name="friendSel">选择好友</string> 
+	<string name="friendsTitle">您的好友</string> 
+	<string name="friendsNo">您没有好友</string> 
+	<string name="friendSure">确定把这张优惠券作为礼品送给\u0020</string> 
+	<string name="friendSent">礼品送给\u0020</string> 
+	<string name="friendLoading">加载好友……</string> 
+	<string name="friendTitle">好友</string> 
+	<string name="friendFind">查找好友</string> 
+	<string name="friendFindT">查找 Beintoo 社区的玩家</string> 
+	<string name="friendYours">您的好友</string> 
+	<string name="friendYoursT">查看您的 Beintoo 好友</string> 
+	<string name="friendFriendshipReqT">管理好友的请求</string> 
+	<string name="friendFindeditsearch">查找昵称、姓名或邮箱</string> 
+	<string name="friendRecommendT">推荐给好友</string> 
+	<string name="friendRecommend">把这游戏推荐给好友</string> 
+	<string name="friendSendReq">向 %s 发送好友请求？</string> 
+	<string name="friendReqTitle">好友请求</string> 
+	<string name="friendReqSubtitle">点击姓名接受</string> 
+	<string name="friendReqEmpty">您没有好友请求</string> 
+	<string name="friendReqAccept">您接受好友请求吗？</string> 
+	<string name="friendNotfound">未发现</string> 
+	<string name="friendReqSent">好友请求已发送</string> 
+	<string name="friendReqAcc">好友请求已接受</string> 
+	<string name="friendReqIgn">好友请求已拒绝</string> 
+	<string name="homeWelcome" xml:space="preserve">欢迎回到\u0020</string> 
+	<string name="profileScore">您的得分</string> 
+	<string name="profileLevel">等级：\u0020</string> 
+	<string name="profileTotalScore">总分：\u0020</string> 
+	<string name="profileBestScore">最高分：\u0020</string> 
+	<string name="profileLastScore">上次得分：\u0020</string> 
+	<string name="profileNoScores">您在这游戏中没有得分</string> 
+	<string name="profileDetach">从设备中删除帐号</string> 
+	<string name="profileOf">%s 档案</string> 
+	<string name="password">密码</string> 
+	<string name="logout">注销</string> 
+	<string name="vgoodWhoAlso">购买此物品的其他玩家</string> 
+	<string name="vgoodEnd">结束日期：</string> 
+	<string name="walletNoGoods">您没有虚拟物品</string> 
+	<string name="walletConverted">赎回物品</string> 
+	<string name="walletNotConverted">等待赎回</string> 
+	<string name="tryBe">Beintoo 让您对游戏的热情转换为实际的物品奖励。\免费而且超级简单！</string> 
+	<string name="pressBt">按下面的按钮，开始试用 Beintoo</string> 
+	
+	<!-- ERROR DISPLAYER AND TOAST MESSAGES --> 
+	<string name="connectionError">连接错误。\n请检查您的网络连接。</string> 
+	<string name="loadingBeintoo">加载 Beintoo……</string> 
+	<string name="loading">加载……</string> 
+	<string name="login">登录……</string> 
+	<string name="wronglogin">用户名或密码错误</string> 
+	<string name="earnedBalance">您的余额为：%d</string> 
+	<string name="earnedScore">您赚得 %d 分。\u0020</string> 
+	<string name="earnedMultiScore">您赚得多项分数：\u0020 %s</string> 
+	
+	<!-- BOXES --> 
+	<string name="boxWallet">您的奖励钱包</string> 
+	<string name="boxChallenge">您的挑战\n获胜的时刻到了</string> 
+	<string name="boxCoupon">祝贺您！您获奖当之无愧</string> 
+	<string name="boxCouponList">祝贺您！选择奖金</string> 
+	<string name="boxUserSel">选择您想要使用的档案？\n选择一个帐号，或者使用另一个帐号</string> 
+	<string name="boxUserLogin">登录 Beintoo</string> 
+	<string name="boxemail">输入您的电邮地址：</string> 
+	<string name="youremail">您的电邮地址</string> 
+	<string name="startBeintooFun">开始游戏！</string> 
+	<string name="orloginExisting">或者使用现有的帐号登录></string> 
+	<string name="tos">Beintoo 我们绝不会滥用您的电邮地址，也不会给您发送垃圾邮件。您的电子邮件通过安全连接发送。</string> 
+	<string name="confirmnick">确认您的昵称</string> 
+	<string name="invalidemail">请提供有效的电邮地址</string> 
+	<string name="invalidnickname">昵称的最短长度为 3 个字符</string> 
+	
+	<!-- BUTTONS --> 
+	<string name="trynow">立即试用 Beintoo</string> 
+	<string name="nothanks">不用了，谢谢</string> 
+	<string name="anotheraccount">使用另一个帐号</string> 
+	<string name="people">玩家</string> 
+	<string name="friends">好友</string> 
+	<string name="pending">等待处理</string> 
+	<string name="ongoing">正在进行</string> 
+	<string name="ended">已结束</string> 
+	<string name="getcoupon">拿取优惠券</string> 
+	<string name="sendasgift">作为礼品发送</string> 
+	<string name="loginbt">登录</string> 
+	<string name="newuser">新建用户</string> 
+	
+	<!-- OTHERS --> 
+	<string name="no">否</string> 
+	<string name="yes">是</string> 
+	<string name="cancel">取消</string> 
+	
+	<!-- HOME -->  
+	<string name="profile">档案</string> 
+	<string name="profiledesc">查看总分</string> 
+	<string name="leaderboard">排名榜</string> 
+	<string name="leaderboarddesc">查看您的现有记录</string> 
+	<string name="wallet">钱包</string> 
+	<string name="walletdesc">管理虚拟物品</string> 
+	<string name="challenges">挑战</string> 
+	<string name="challengesdesc">管理挑战</string> 
+	<string name="forum">技巧和论坛</string>
+    <string name="forumdesc">参加讨论和反馈</string>
+	
+	<!-- VGOOD DIALOG --> 
+	<string name="vgoodmessagealert">嗨!通过玩此游戏您赢得了 Beintoo 奖金！\n按下赎回键，取得奖金</string> 
+	<string name="vgoodmessagepositive">赎回</string> 
+	<string name="vgoodrecommpositive">查看更多</string> 
+	<string name="vgoodmessagenegative">稍后</string> 
+	<string name="vgoodmessagebanner">嗨!通过玩此游戏您赢得了 Beintoo 奖金！\n按此键并赎回</string> 
+	<string name="vgoodhtmlmessage">在此查看已取得的奖金</string> 
+	<string name="vgoodchoosedialog">请选一个选项</string> 
+	<string name="vgoodgetcoupondialog">取得优惠券</string> 
+	<string name="vgoodsendgiftdialog">作为礼品发送</string> 
+	<string name="vgooddetaildialog">更多详情</string> 
+	<!-- MESSAGES --> 
+	<string name="messages">消息</string> 
+	<string name="messagesnewmsg">新消息</string> 
+	 <string name="messagefrom">来自：</string>
+	 <string name="messagedate">日期：</string>
+	<string name="messagereply">回答</string> 
+	<string name="messagedelete">删除</string> 
+	<string name="messagedeleting">删除中...</string> 
+	<string name="messageaskdelete">您确定要删除此项消息？</string> 
+	<string name="messagesending">发送中...</string> 
+	<string name="messagesend">发送消息</string> 
+	<string name="messageselect">请选择一位好友并编写消息</string> 
+	<string name="messageto">发送至：</string> 
+	<string name="messagetext">消息：</string> 
+	<string name="messageempty">您尚未收到消息</string> 
+	<string name="messageloadmore">加载以前的消息</string> 
+	<string name="messagesent">消息发送到\u0020</string> 
+	<string name="messagenotification">您有 %d 条未读消息</string> 
+	
+	<!-- BALANCE --> 
+	<string name="balance">余额</string> 
+	<string name="balanceempty">您没有 BeDollars 交易</string> 
+	<string name="BADGE_WIN">赢得奖章</string> 
+	<string name="CHALLENGE_ACCEPT">接受挑战</string> 
+	<string name="CHALLENGE_INVITE">邀请挑战</string> 
+	<string name="CHALLENGE_WiN">赢得挑战</string> 
+	<string name="COMMENT">注释</string> 
+	<string name="CONTEST_WIN">赢得竞赛</string> 
+	<string name="CREATE_USER">创建用户</string> 
+	<string name="FRIEND_ADDED">添加好友</string> 
+	<string name="FRIEND_INVITE">邀请好友</string> 
+	<string name="LEADERBOARD_IMPROVE">赢家排行榜改善记录</string> 
+	<string name="MARKETPLACE_BUY">市场采购</string> 
+	<string name="MARKETPLACE_SELL">市场销售</string> 
+	<string name="SEND_BEDOLLAR_METHOD">软件设定</string> 
+	<string name="SHARE">共享</string> 
+	<string name="SUBMIT_SCORE">送交分数</string> 
+	<string name="VGOOD_CONVERSION">兑换 VGood</string> 
+	<string name="WEEKLY_PAYMENT">每周所得</string> 
+	<string name="ACHIEVEMENT_UNLOCKED">解锁战绩</string> 
+	
+	<!-- ACHIEVEMENTS --> 
+	<string name="achievement">战绩</string> 
+	<string name="achievementdesc">查看您的战绩</string> 
+	<string name="achievementempty">本次游戏没有战绩</string> 
+	<string name="achievementsunlocked">以下战绩已解锁：\u0020</string> 
+	<string name="blockedbyplur">以下战绩已冻结</string> 
+	<string name="blockedbysing">本游戏中以下战绩已冻结</string> 
+	<string name="onapp">：\u0020</string> 
+	<string name="achievementunlocked">解锁！</string> 
+	<string name="achievementmission">完成任务并赢得奖金，请立即在\u0020上开始游戏</string> 
+	<string name="missionwelcome">欢迎来到您的\u0020</string> 
+	<string name="missionstatus">您的\u0020状态</string> 
+	<string name="missionwelcomeweek">本周任务！</string> 
+	<string name="missionachieve">完成任务并且<Data><![CDATA[<font color="#abc237">赢得真正的奖金</font>]]></Data></string>
+	<string name="missionlater">稍后</string> 
+	<string name="missionjoin">现在加入</string> 
+	<string name="missiondownload">现在下载</string> 
+	<string name="missionaccomplished">任务完成！</string> 
+	<string name="missionreward">现在领取奖金！</string> 
+	<string name="missionredeem">赎回！</string> 
+	<string name="missionachieveonly">完成任务</string> 
+	
+	<!-- ALLIANCES --> 
+	<string name="alliance">组队</string> 
+	<string name="alliances">组队</string> 
+	<string name="alliancemaintip">设置或查找您的组队</string> 
+	<string name="alliancemaincreate">设置组队</string> 
+	<string name="alliancemaincreatebottom">设置您的组队</string> 
+	<string name="alliancemainyours">您的组队</string> 
+	<string name="alliancemainyoursbottom">查找组队详情</string> 
+	<string name="alliancemainlist">组队列表</string> 
+	<string name="alliancemainlistbottom">查看组队列表</string> 
+	<string name="alliancemaintextfooter">为了赢得更多的奖金和 BeDollar，愿意结队并与其他队友合作的一组玩家被称为组队。</string> 
+	<string name="alliancecreateeditext">输入组队的名称</string> 
+	<string name="allianceviewmembers">组队成员</string> 
+	<string name="allianceviewpending">等待组队的请求</string> 
+	<string name="alliancesendreq">请求加入</string> 
+	<string name="alliancedetails">详情</string> 
+	<string name="alliancependingtip">点击该用户接受或拒绝</string> 
+	<string name="alliancependindialog">同意接纳 %s 加入您的组队吗？</string> 
+	<string name="alliancependingaccepted">您已接受 %s 加入您的组队</string> 
+	<string name="alliancependingrefused">您已拒绝 %s 加入您的组队</string> 
+	<string name="alliancerequestdialog">您想申请加入 %s 组队吗？</string> 
+	<string name="alliancerequestsent">请求已发送</string> 
+	<string name="allianceleave">脱离组队</string> 
+	<string name="alliancesearch">查找组队</string> 
+	<string name="alliancemembers">成员：\u0020</string> 
+	<string name="allianceadmin">管理员：\u0020</string> 
+	<string name="allianceaccept">接受</string> 
+	<string name="alliancerefuse">拒绝</string> 
+	<string name="allianceinvalid">名称的最短长度为 3 个字符</string> 
+	
+	<!-- CUSTOM --> 
+	<string name="sponsor"><Data><![CDATA[尽情游戏：<b>赢取<br />&nbsp;&nbsp;独家<br />&nbsp;&nbsp;真实交易！</b>]]></Data></string>
+	<string name="sponsortitle">注册到 Beintoo，您将会在当地得到惊人的折扣作为对游戏战绩的奖励。</string> 
+</resources>

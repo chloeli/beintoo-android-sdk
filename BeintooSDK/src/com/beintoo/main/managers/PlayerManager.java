@@ -25,9 +25,9 @@ import android.view.Gravity;
 
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooPlayer;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.DeviceId;
-import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
@@ -35,7 +35,6 @@ import com.beintoo.main.Beintoo.BPlayerLoginListener;
 import com.beintoo.main.Beintoo.BScoreListener;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerScore;
-import com.google.beintoogson.Gson;
 
 public class PlayerManager {
 	
@@ -51,12 +50,11 @@ public class PlayerManager {
 		executor.execute(new Runnable(){     					
     		public void run(){
     			synchronized (Beintoo.LAST_LOGIN){
-	    			try{
-	    				Gson gson = new Gson();
-	    				String currentPlayer = PreferencesHandler.getString("currentPlayer", ctx);
+	    			try{	    				
+	    				String currentPlayer = Current.getCurrentPlayerJson(ctx); //PreferencesHandler.getString("currentPlayer", ctx);
 	    				Player loggedUser = null;
 	    				if(currentPlayer != null)
-	    					loggedUser = gson.fromJson(currentPlayer, Player.class);
+	    					loggedUser = Current.getCurrentPlayer(ctx);//gson.fromJson(currentPlayer, Player.class);
 	    				
 	    				BeintooPlayer player = new BeintooPlayer();
 	    				Player loginPlayer; 
@@ -81,8 +79,9 @@ public class PlayerManager {
 		    				} 
 		    				
 		    				if(loginPlayer.getGuid()!= null){
-		    					PreferencesHandler.saveString("currentPlayer", gson.toJson(loginPlayer), ctx);
-		        				DebugUtility.showLog("After playerLogin "+gson.toJson(loginPlayer));        				
+		    					//PreferencesHandler.saveString("currentPlayer", gson.toJson(loginPlayer), ctx);
+		    					Current.setCurrentPlayer(ctx, loginPlayer);
+		        				DebugUtility.showLog("After playerLogin "+Current.getCurrentPlayerJson(ctx));        				
 		    				}  
 	    				}else {
 	    					loginPlayer = loggedUser;    					
@@ -123,7 +122,7 @@ public class PlayerManager {
 		try {			
 			PreferencesHandler.saveBool("isLogged", false, ctx);
 			Beintoo.LAST_LOGIN = new AtomicLong(0);
-			String guid = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", ctx)).getGuid();
+			String guid = Current.getCurrentPlayer(ctx).getGuid();//JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", ctx)).getGuid();
 			String key = guid+":count";
 			PreferencesHandler.clearPref(key, ctx);
 			PreferencesHandler.clearPref("currentPlayer", ctx);
@@ -134,7 +133,7 @@ public class PlayerManager {
 		try {
 			PlayerScore p = null;
 			BeintooPlayer player = new BeintooPlayer();
-			String guid = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", ctx)).getGuid();
+			String guid = Current.getCurrentPlayer(ctx).getGuid();//JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", ctx)).getGuid();
 			if(codeID != null)
 				p = player.getScoreForContest(guid, codeID);
 			else
@@ -155,7 +154,7 @@ public class PlayerManager {
 				try {
 					PlayerScore p = null;
 					BeintooPlayer player = new BeintooPlayer();
-					String guid = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", ctx)).getGuid();
+					String guid = Current.getCurrentPlayer(ctx).getGuid();//JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", ctx)).getGuid();
 					if(codeID != null)
 						p = player.getScoreForContest(guid, codeID);
 					else

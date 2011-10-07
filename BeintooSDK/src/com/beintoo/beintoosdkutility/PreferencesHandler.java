@@ -26,8 +26,20 @@ public class PreferencesHandler {
 	    editor.commit();
 	}
 	
+	public static void saveString (String file, String key, String value, Context ctx){
+		SharedPreferences settings = ctx.getSharedPreferences(file, 0);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putString(key,value);
+	    editor.commit();
+	}
+	
 	public static String getString (String key, Context ctx){
 		SharedPreferences settings = ctx.getSharedPreferences(key, 0);
+		return settings.getString(key,null);		
+	}
+	
+	public static String getString (String file, String key, Context ctx){
+		SharedPreferences settings = ctx.getSharedPreferences(file, 0);
 		return settings.getString(key,null);		
 	}
 	
@@ -81,6 +93,13 @@ public class PreferencesHandler {
 	
 	public static void clearPref (String key, Context ctx){
 		SharedPreferences settings = ctx.getSharedPreferences(key, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.remove(key);
+		editor.commit();
+	}
+	
+	public static void clearPref (String file, String key, Context ctx){
+		SharedPreferences settings = ctx.getSharedPreferences(file, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.remove(key);
 		editor.commit();

@@ -22,8 +22,8 @@ import com.beintoo.R;
 import com.beintoo.activities.mission.MissionAchievementMessage;
 import com.beintoo.activities.mission.MissionDialog;
 import com.beintoo.beintoosdk.BeintooAchievements;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DeviceId;
-import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo.BAchievementListener;
@@ -57,9 +57,8 @@ public class AchievementManager {
 					try {
 						
 						if(System.currentTimeMillis() < LAST_OPERATION.get() + OPERATION_TIMEOUT)
-							return;
-						
-						final Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
+							return;						
+						final Player p = Current.getCurrentPlayer(currentContext);
 						BeintooAchievements ba = new BeintooAchievements();
 						
 						boolean localUnlocked = PreferencesHandler.getBool("achievements"+p.getGuid(), achievement, currentContext);
@@ -193,7 +192,7 @@ public class AchievementManager {
 							return;
 						
 						final String deviceUUID = DeviceId.getUniqueDeviceId(currentContext);
-						final Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", currentContext));
+						final Player p = Current.getCurrentPlayer(currentContext);
 						
 						Long currentTime = System.currentTimeMillis();
 	    				Location pLoc = LocationMManager.getSavedPlayerLocation(currentContext);
