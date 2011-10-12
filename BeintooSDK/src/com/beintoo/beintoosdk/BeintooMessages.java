@@ -33,7 +33,7 @@ public class BeintooMessages {
 	String apiPreUrl = null;
 	
 	public BeintooMessages() {
-		if(!BeintooSdkParams.useSandbox)
+		if(!BeintooSdkParams.internalSandbox)
 			apiPreUrl = BeintooSdkParams.apiUrl;
 		else
 			apiPreUrl = BeintooSdkParams.sandboxUrl;

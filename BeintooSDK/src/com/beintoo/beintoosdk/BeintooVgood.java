@@ -28,7 +28,7 @@ public class BeintooVgood {
 	String apiPreUrl = null;
 	
 	public BeintooVgood() {
-		if(!BeintooSdkParams.useSandbox)
+		if(!BeintooSdkParams.internalSandbox)
 			apiPreUrl = BeintooSdkParams.apiUrl;
 		else
 			apiPreUrl = BeintooSdkParams.sandboxUrl;

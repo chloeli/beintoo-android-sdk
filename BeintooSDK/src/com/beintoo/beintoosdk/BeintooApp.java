@@ -24,6 +24,7 @@ import android.net.Uri;
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
+import com.beintoo.wrappers.Contest;
 import com.beintoo.wrappers.EntryCouplePlayer;
 import com.beintoo.wrappers.LeaderboardContainer;
 import com.google.beintoogson.Gson;
@@ -33,7 +34,7 @@ public class BeintooApp {
 	String apiPreUrl = null;
 	
 	public BeintooApp() {
-		if(!BeintooSdkParams.useSandbox)
+		if(!BeintooSdkParams.internalSandbox)
 			apiPreUrl = BeintooSdkParams.apiUrl;
 		else
 			apiPreUrl = BeintooSdkParams.sandboxUrl;
@@ -218,6 +219,48 @@ public class BeintooApp {
         Map<String, LeaderboardContainer> leaders = gson.fromJson(json,mapType);
 		
         return leaders;
+	}
+	
+	/**
+	 * Returns the contests for the current app
+	 * 
+	 * @param codeID the contest id
+	 * @param onlypublic if true retunrs only public contests
+	 * @param userExt the userExt of the current user, if provided returns only the contests of its friends
+	 * @return a list of contests
+	 */
+	public List<Contest> getContests(String codeID, boolean onlypublic, String userExt){
+		String apiUrl = apiPreUrl+"app/contest/show/";
+		if(onlypublic == false)
+			apiUrl = apiUrl+"?onlyPublic=false";
+		
+		//Set the auth request header
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		if(userExt != null){
+			header.getKey().add("userExt");
+			header.getValue().add(userExt);			
+		}
+		
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		
+		Gson gson = new Gson();
+		
+        Type mapType = new TypeToken<List<Contest>>() {}.getType();
+        List<Contest> contests = gson.fromJson(json,mapType);
+		
+        return contests;
+	}
+	
+	public List<Contest> getContests(){
+		return getContests(null, true, null);
 	}
 	
 	/**

@@ -16,8 +16,7 @@
 package com.beintoo.activities.leaderboard;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -40,7 +39,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.beintoo.R;
-import com.beintoo.beintoosdk.BeintooAlliances;
 import com.beintoo.beintoosdk.BeintooApp;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
@@ -48,17 +46,17 @@ import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
-import com.beintoo.wrappers.LeaderboardContainer;
+import com.beintoo.wrappers.Contest;
 import com.beintoo.wrappers.Player;
 
 public class LeaderboardContest extends Dialog implements OnClickListener{
 	private Dialog current;
 	private Context currentContext;
 	private final double ratio;
-	private Map<String, LeaderboardContainer> leader;
+	private List<Contest> contests;
 	private Player player = null;
 	private String kind = null;
-	private int selectedContest;
+	private String selectedContest;
 	
 	public LeaderboardContest(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);
@@ -112,12 +110,9 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
-							BeintooApp app = new BeintooApp();
-							String userExt = null;
+							BeintooApp app = new BeintooApp();							
 							kind = null;
-							if(player != null && player.getUser() != null)
-								userExt = player.getUser().getId();
-							leader = app.getLeaderboard(userExt, null, null, 0, 20);
+							contests = app.getContests(null, true, null);
 							UIhandler.sendEmptyMessage(0);
             			}catch (Exception e){
             				e.printStackTrace();
@@ -147,20 +142,10 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 				new Thread(new Runnable(){      
             		public void run(){
             			try{ 
-            				BeintooAlliances ba = new BeintooAlliances();
-            				String allianceExtId = null;
-            				if(player != null && player.getAlliance() != null)
-            					allianceExtId = player.getAlliance().getId();
-            				leader = ba.getLeaderboard(allianceExtId, null, null, 0, 20, null);
+            				BeintooApp app = new BeintooApp();
+            				contests = app.getContests(null, true, null);
             				kind = "ALLIANCES";
-            				UIhandler.sendEmptyMessage(0);
-							/*BeintooApp app = new BeintooApp();												
-							String userExt = null;
-							kind = "FRIENDS";
-							if(player != null && player.getUser() != null)
-								userExt = player.getUser().getId();
-							leader = app.getLeaderboard(userExt, kind, null, 0, 20);							
-							UIhandler.sendEmptyMessage(0); */ 
+            				UIhandler.sendEmptyMessage(0);							
             			}catch (Exception e){
             				e.printStackTrace();
             				manageConnectionException();
@@ -172,7 +157,7 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 		
 		if(Beintoo.isLogged(ctx)){				
 			findViewById(R.id.onlyf).setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));
-			final LinearLayout friendsbutton = (LinearLayout) findViewById(R.id.friendsonly);			
+			final LinearLayout friendsbutton = (LinearLayout) findViewById(R.id.friendsonly);
 			friendsbutton.setBackgroundDrawable(b.setPressedBackg(
 					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
@@ -180,10 +165,12 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 			friendsbutton.setOnClickListener(new ImageButton.OnClickListener(){
 				public void onClick(View v) {
 					final ImageButton friends = (ImageButton) findViewById(R.id.onlyfriends);
+					
 					if(friends.getTag().equals("notselected")){
 						friends.setImageResource(R.drawable.selected);
 						friends.setTag("selected");
-						kind = "FRIENDS";
+						kind = "FRIENDS";												
+						
 					}else if(friends.getTag().equals("selected")){
 						friends.setImageResource(R.drawable.noselected);
 						friends.setTag("notselected");
@@ -194,12 +181,12 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 					new Thread(new Runnable(){      
 	            		public void run(){
 	            			try{ 
-								BeintooApp app = new BeintooApp();												
+								BeintooApp app = new BeintooApp();		
 								String userExt = null;
-								
-								if(player != null && player.getUser() != null)
-									userExt = player.getUser().getId();
-								leader = app.getLeaderboard(userExt, kind, null, 0, 20);							
+								if(kind != null && kind.equals("FRIENDS"))
+									if(player != null && player.getUser() != null)
+										userExt = player.getUser().getId();
+								contests = app.getContests(null, true, userExt);							
 								UIhandler.sendEmptyMessage(0); 
 	            			}catch (Exception e){
 	            				e.printStackTrace();
@@ -220,11 +207,8 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 		new Thread(new Runnable(){      
     		public void run(){
     			try{ 
-    				BeintooApp app = new BeintooApp();							
-    				String userExt = null;
-					if(player != null && player.getUser() != null)
-						userExt = player.getUser().getId();
-					leader = app.getLeaderboard(userExt, null, null, 0, 20);					
+    				BeintooApp app = new BeintooApp();							    				
+					contests = app.getContests(null, true, null);					
 					UIhandler.sendEmptyMessage(0);
     			}catch (Exception e){
     				manageConnectionException();
@@ -243,14 +227,12 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 			BeButton b = new BeButton(getContext());
 			
 			final ArrayList<View> rowList = new ArrayList<View>();
-			Iterator<?> it = leader.entrySet().iterator();
-			int count = 0;
-		    while (it.hasNext()) {
-				@SuppressWarnings("unchecked")
-				Map.Entry<String, LeaderboardContainer> pairs = (Map.Entry<String, LeaderboardContainer>) it.next();		    	
-		    	LeaderboardContainer arr = pairs.getValue();			    	
-		    	TableRow row = createRow(arr.getContest().getName(),getContext());
-		    	if(count % 2 == 0)
+			
+			
+		    for(int i = 0; i<contests.size(); i++){
+				
+		    	TableRow row = createRow(contests.get(i).getName(),getContext());
+		    	if(i % 2 == 0)
 		    		row.setBackgroundDrawable(b.setPressedBackg(
 				    		new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 							new BDrawableGradient(0,(int)(ratio * 35),BDrawableGradient.HIGH_GRAY_GRADIENT),
@@ -265,7 +247,7 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 	    		  new TableLayout.LayoutParams
 	    		  (TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
 	    		row.setLayoutParams(tableRowParams);
-		    	row.setId(count);
+		    	row.setId(i);
 				rowList.add(row);
 				View spacer = createSpacer(getContext(),1,1);
 				spacer.setId(-100);
@@ -273,8 +255,6 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 				View spacer2 = createSpacer(getContext(),2,1);
 				spacer2.setId(-100);
 				rowList.add(spacer2);
-		    	count++;	
-	    	
 		    }
 		    
 		    for (View row : rowList) {
@@ -342,7 +322,7 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 	
 	// CALLED WHEN THE USER SELECT A CONTEST
 	public void onClick(View v) {	
-		selectedContest = v.getId();
+		selectedContest = contests.get(v.getId()).getCodeID();
     	UIhandler.sendEmptyMessage(1);    				
 	}
 	
@@ -371,7 +351,7 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 			  if(msg.what == 0)
 				  loadContestTable();
 			  else if(msg.what == 1){
-				  Leaderboard leaderboard = new Leaderboard(currentContext,leader, kind, selectedContest);
+				  Leaderboard leaderboard = new Leaderboard(currentContext, kind, selectedContest);
 				  leaderboard.show();
 			  }else if(msg.what == 3){
 				  TableLayout table = (TableLayout) findViewById(R.id.tablecontest);

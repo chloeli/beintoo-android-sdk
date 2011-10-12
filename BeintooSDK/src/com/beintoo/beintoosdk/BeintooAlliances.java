@@ -20,7 +20,7 @@ public class BeintooAlliances {
 	String apiPreUrl = null;
 
 	public BeintooAlliances() {
-		if (!BeintooSdkParams.useSandbox)
+		if (!BeintooSdkParams.internalSandbox)
 			apiPreUrl = BeintooSdkParams.apiUrl;
 		else
 			apiPreUrl = BeintooSdkParams.sandboxUrl;

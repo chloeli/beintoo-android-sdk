@@ -15,13 +15,12 @@ import com.beintoo.beintoosdk.BeintooApp;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.ImageManager;
 import com.beintoo.beintoosdkutility.MessageDisplayer;
-import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.LeaderboardContainer;
 import com.beintoo.wrappers.Player;
-import com.google.beintoogson.Gson;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -57,8 +56,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	private Map<String, LeaderboardContainer> leaders;
 	
 	private String codeID; // THE CODE ID OF THE SELECTED CONTEST
-	private String leader_kind;
-	private int selectedContest;
+	private String leader_kind;	
 	
 	private ImageManager imageManager;
 	private ListView listView;
@@ -76,15 +74,14 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	private boolean hasReachedEnd = false;
 	
 	
-	public Leaderboard(Context context, Map<String, LeaderboardContainer> l, String kind, int selectedContest) {
+	public Leaderboard(Context context, String kind, String selectedContest) {
 		super(context, R.style.ThemeBeintoo);
 		setContentView(R.layout.leaderboardlist);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
-		this.current = this;
-		this.currentContext = context;
-		this.leaders = l;
-		this.leader_kind = kind;
-		this.selectedContest = selectedContest;
+		this.current 		= this;
+		this.currentContext = context;		
+		this.leader_kind 	= kind;
+		this.codeID 		= selectedContest;
 		
 		// GETTING DENSITY PIXELS RATIO
 		ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);	
@@ -111,46 +108,71 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 			findViewById(R.id.spacer).setVisibility(View.GONE);
 		}
 		
-		imageManager = new ImageManager(currentContext);
-		
-		usersExts = new ArrayList<String>();
-		usersNicks = new ArrayList<String>();		                
+		imageManager 	= new ImageManager(currentContext);		
+		usersExts 		= new ArrayList<String>();
+		usersNicks 		= new ArrayList<String>();		                
         
 		listView.setOnItemClickListener(this);        
         listView.setOnScrollListener(this);
         
-        new Handler().postDelayed(r, 200); // GIVE THE TIME TO DISPLAY THE DIALOG UNTIL LOCK THE UI
+        this.firstLoading();
 	}
 	
-	private Runnable r = new Runnable(){
-		@Override
-		public void run() {
-			try {
-				LinearLayout content = (LinearLayout) findViewById(R.id.goodcontent);
-				leaderslist = getLeaders();
-		        content.findViewWithTag(1000).setVisibility(LinearLayout.GONE);
-				listView.setVisibility(LinearLayout.VISIBLE);
-		        
-		        // SET THE CURRENT USER
-		        if(currentUser != null){        
-		        	View header = setCurrentUserRow();
-		        	listView.addHeaderView(header, null, false);
-		        }else listView.addHeaderView(new View(currentContext), null, false); // empty view, without we can't add a footer :/
-		        
-		        
-		        adapter = new LeaderboardAdapter(currentContext, R.layout.leaderboarditem, leaderslist);
-		        listView.setAdapter(adapter);
-			}catch(Exception e){ 
-				e.printStackTrace(); 
-			}
-		}
+	private void firstLoading(){
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{        				
+    				player = Current.getCurrentPlayer(currentContext);
+    				      
+    				if(leader_kind == null || leader_kind.equals("FRIENDS")){
+    					BeintooApp app = new BeintooApp();
+    					String userExt = null;
+        				if(player != null && player.getUser() != null)
+        					userExt = player.getUser().getId(); 
+    					leaders = app.getLeaderboard(userExt, leader_kind, codeID, 0, MAX_REQ_ROWS);    					
+    				}else if(leader_kind.equals("ALLIANCES")){    					
+    					BeintooAlliances ba = new BeintooAlliances();
+    					String allianceExtId = null;
+        				if(player != null && player.getAlliance() != null)
+        					allianceExtId = player.getAlliance().getId();    					
+    					leaders = ba.getLeaderboard(allianceExtId, null, null, 0, MAX_REQ_ROWS, codeID);
+    				}
+    				
+					UIHandler.post(new Runnable(){
+						@Override
+						public void run() {
+							try {
+								LinearLayout content = (LinearLayout) findViewById(R.id.goodcontent);
+								leaderslist = getLeaders();
+						        content.findViewWithTag(1000).setVisibility(LinearLayout.GONE);
+								listView.setVisibility(LinearLayout.VISIBLE);
+						        
+						        // SET THE CURRENT USER
+								if(currentUser != null){    									
+						        	View header = setCurrentUserRow();
+						        	listView.addHeaderView(header, null, false);
+						        }else listView.addHeaderView(new View(currentContext), null, false); // empty view, without we can't add a footer :/
+						        
+						        
+						        adapter = new LeaderboardAdapter(currentContext, R.layout.leaderboarditem, leaderslist);
+						        listView.setAdapter(adapter);
+							}catch(Exception e){ 
+								e.printStackTrace(); 
+							}
+						}
+					});
+    			}catch(Exception e){
+    				e.printStackTrace();
+    			}
+    		}
+		}).start();
+		
 	};
 	
 	private ArrayList<Leaders> getLeaders (){
 		final ArrayList<Leaders> lead = new ArrayList<Leaders>();
 		
-		try {
-			player = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", getContext()), Player.class);			
+		try {					
 			Iterator<?> it = leaders.entrySet().iterator();					
 			// SET TITLE
 			TextView contestName = (TextView)findViewById(R.id.dialogTitle);
@@ -162,7 +184,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		    	@SuppressWarnings("unchecked")
 				Map.Entry<String, LeaderboardContainer> pairs = (Map.Entry<String, LeaderboardContainer>) it.next();		    	
 			    LeaderboardContainer arr = pairs.getValue();			    		
-		    	if(selectedContest == count){
+		    	//if(selectedContest == count){
 		    		contestName.setText(arr.getContest().getName());
 		    		String feed = arr.getContest().getFeed();
 		    		codeID = pairs.getKey();
@@ -205,7 +227,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		    	}
 		    	
 		    	count++;
-		    }
+		    //}
 		    
 		    return lead;
 		}catch (Exception e){
@@ -230,7 +252,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
     					String allianceExtId = null;
         				if(player != null && player.getAlliance() != null)
         					allianceExtId = player.getAlliance().getId();    					
-    					moreleaders = ba.getLeaderboard(allianceExtId, null, null, currentPageRows*MAX_REQ_ROWS, MAX_REQ_ROWS, null);
+    					moreleaders = ba.getLeaderboard(allianceExtId, null, null, currentPageRows*MAX_REQ_ROWS, MAX_REQ_ROWS, codeID);
     				}
     				
     				if(moreleaders != null && moreleaders.size() > 0){
@@ -314,8 +336,10 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 					e.printStackTrace();
 				}
 			}else if(leader_kind.equals("ALLIANCES")){
-				UserAlliance ua = new UserAlliance(currentContext, UserAlliance.SHOW_ALLIANCE, usersExts.get(position-1));
-				ua.show();
+				if(player != null && player.getUser() != null){
+					UserAlliance ua = new UserAlliance(currentContext, UserAlliance.SHOW_ALLIANCE, usersExts.get(position-1));
+					ua.show();
+				}
 			}
 		}catch (Exception e){
 			e.printStackTrace();
@@ -362,7 +386,9 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		}catch(Exception e){ }
 		
 		LinearLayout positionView = (LinearLayout) header1.findViewById(R.id.post);
-		positionView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,(int)(ratio * 35)));
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,(int)(ratio * 35));
+		params.setMargins(0, 0, (int)(ratio*10), 0);
+		positionView.setLayoutParams(params);
 		positionView.setPadding((int)(ratio * 5), 0, (int)(ratio * 5), 0);
 		positionView.setMinimumHeight((int)(ratio * 35));
 		positionView.setMinimumWidth((int)(ratio * 35));
@@ -494,12 +520,12 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		boolean isCurrentUser;
 		
 		public Leaders(String image, String name, String score, String feed,String position, boolean isCurrentUser) {
-			this.imageUrl = image;
-			this.name = name;
-			this.score = score;
-			this.feed = feed;
-			this.position = position;
-			this.isCurrentUser = isCurrentUser;
+			this.imageUrl 		= image;
+			this.name 			= name;
+			this.score 			= score;
+			this.feed 			= feed;
+			this.position 		= position;
+			this.isCurrentUser 	= isCurrentUser;
 		}
 	} 
  

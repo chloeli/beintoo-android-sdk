@@ -30,7 +30,7 @@ public class BeintooPlayer {
 	String apiPreUrl = null;
 	
 	public BeintooPlayer() {
-		if(!BeintooSdkParams.useSandbox)
+		if(!BeintooSdkParams.internalSandbox)
 			apiPreUrl = BeintooSdkParams.apiUrl;
 		else
 			apiPreUrl = BeintooSdkParams.sandboxUrl;

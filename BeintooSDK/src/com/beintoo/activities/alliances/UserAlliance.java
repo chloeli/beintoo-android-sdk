@@ -222,7 +222,7 @@ public class UserAlliance extends Dialog{
 							btb.setVisibility(View.VISIBLE);
 							BeButton b = new BeButton(currentContext);
 							
-							if(a.getAdmin().getId().equals(p.getUser().getId())){
+							if(a.getAdmin().getId().equals(p.getUser().getId())){								
 								Button pending = (Button) btb.findViewById(R.id.button1);
 								pending.setText(current.getContext().getString(R.string.allianceviewpending));
 								pending.setVisibility(View.VISIBLE);
@@ -242,7 +242,10 @@ public class UserAlliance extends Dialog{
 							
 							Button leave = (Button) btb.findViewById(R.id.button2);
 							leave.setText(current.getContext().getString(R.string.allianceleave));
-							leave.setVisibility(View.VISIBLE);
+							if(p.getAlliance() != null && a.getId().equals(p.getAlliance().getId()))
+								leave.setVisibility(View.VISIBLE);
+							else
+								leave.setVisibility(View.GONE);
 							leave.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
 							leave.setBackgroundDrawable(b.setPressedBackg(new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.BLU_BUTTON_GRADIENT),
 									new BDrawableGradient(0,(int) (ratio*50),BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),

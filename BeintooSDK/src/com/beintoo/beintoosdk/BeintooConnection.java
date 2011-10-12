@@ -81,9 +81,15 @@ public class BeintooConnection {
 			
 			header.getKey().add("X-BEINTOO-SDK-VERSION");
 			header.getValue().add(BeintooSdkParams.version);
+			if(BeintooSdkParams.useSandbox){
+				header.getKey().add("sandbox");
+				header.getValue().add("true");
+			}
 			for(int i = 0; i<header.getKey().size(); i++){
 				postUrlConnection.setRequestProperty(header.getKey().get(i),header.getValue().get(i));
 			}
+			
+			
 			
 			if(isPost){
 				postUrlConnection.setRequestMethod("POST");

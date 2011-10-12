@@ -35,7 +35,7 @@ public class BeintooUser {
 	String apiPreUrl = null;
 	
 	public BeintooUser() {
-		if(!BeintooSdkParams.useSandbox)
+		if(!BeintooSdkParams.internalSandbox)
 			apiPreUrl = BeintooSdkParams.apiUrl;
 		else
 			apiPreUrl = BeintooSdkParams.sandboxUrl;
