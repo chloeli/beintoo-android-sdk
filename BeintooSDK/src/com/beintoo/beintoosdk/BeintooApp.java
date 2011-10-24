@@ -25,7 +25,6 @@ import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.wrappers.Contest;
-import com.beintoo.wrappers.EntryCouplePlayer;
 import com.beintoo.wrappers.LeaderboardContainer;
 import com.google.beintoogson.Gson;
 import com.google.beintoogson.reflect.TypeToken;
@@ -66,112 +65,7 @@ public class BeintooApp {
 	public void topVGood(){
 		topVGood(null);
 	}
-	
-	/**
-	 * @return Returns a map with your players and the score of those.
-	 * max is set to 50, default 20
-	 * @param codeID (Optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
-	 * @param rows the maximum number of results (max is set to 50, default 20).
-	 */
-	public Map<String, List<EntryCouplePlayer>> topScore(String codeID, int rows){
-		String apiUrl;
-		if(rows != 0)
-			apiUrl = apiPreUrl+"app/topscore?rows="+rows;
-		else
-			apiUrl = apiPreUrl+"app/topscore";
 		
-		//Set the auth request header
-		HeaderParams header = new HeaderParams();
-		header.getKey().add("apikey");
-		header.getValue().add(DeveloperConfiguration.apiKey);
-		if(codeID != null){
-			header.getKey().add("codeID");
-			header.getValue().add(codeID);
-		}
-		BeintooConnection conn = new BeintooConnection();
-		String json = conn.httpRequest(apiUrl, header, null);
-		Gson gson = new Gson();
-		
-        Type mapType = new TypeToken<Map<String, List<EntryCouplePlayer>>>() {
-        }.getType();
-        Map<String, List<EntryCouplePlayer>> leaders = gson.fromJson(json,mapType);
-		
-		return leaders;
-	}
-	
-	public Map<String, List<EntryCouplePlayer>> topScore(String codeID){
-		return topScore(codeID, 0);
-	}
-	
-	public Map<String, List<EntryCouplePlayer>> topScore(int rows){
-		return topScore(null,rows);
-	}
-	
-	/**
-	 * Returns a map with your provided user and its friends and the score of those.
-	 * @param codeID (Optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
-	 * @param rows (Optional) the maximum number of results (max is set to 50, default 20).
-	 * @param userExt the unique beintoo id of registered user.
-	 */
-	public Map<String, List<EntryCouplePlayer>> topScoreByUserExt(String codeID, int rows, String userExt){
-		String apiUrl;
-		if(rows != 0)
-			apiUrl = apiPreUrl+"app/topscore/"+userExt+"?rows="+rows;
-		else
-			apiUrl = apiPreUrl+"app/topscore/"+userExt;
-		
-		//Set the auth request header
-		HeaderParams header = new HeaderParams();
-		header.getKey().add("apikey");
-		header.getValue().add(DeveloperConfiguration.apiKey);
-		if(codeID != null){
-			header.getKey().add("codeID");
-			header.getValue().add(codeID);
-		}
-		
-		BeintooConnection conn = new BeintooConnection();
-		String json = conn.httpRequest(apiUrl, header, null);
-		
-		Gson gson = new Gson();
-		
-        Type mapType = new TypeToken<Map<String, List<EntryCouplePlayer>>>() {
-        }.getType();
-        Map<String, List<EntryCouplePlayer>> leaders = gson.fromJson(json,mapType);
-		
-        return leaders;
-	}
-	/**
-	 * Returns a map with your provided user and its friends and the score of those.
-	 * Returns the default number of rows (20)
-	 * @param codeID (Optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
-	 * @param userExt the unique beintoo id of registered user.
-	 * @see #TopScoreByUserExt(String codeID, int rows, String userExt)
-	 */
-	public void topScoreByUserExt(String codeID, String userExt){
-		topScoreByUserExt(codeID, 0,userExt);
-	}
-	
-	/**
-	 * Returns a map with your provided user and its friends and the score of those.
-	 * Returns the default codeID
-	 * @param rows (Optional) the maximum number of results (max is set to 50, default 20).
-	 * @param userExt the unique beintoo id of registered user.
-	 * @see #TopScoreByUserExt(String codeID, int rows, String userExt)
-	 */
-	public void topScoreByUserExt(int rows, String userExt){
-		topScoreByUserExt(null,rows,userExt);
-	}
-	
-	/**
-	 * Returns a map with your provided user and its friends and the score of those.
-	 * Without any params, rows are default to 20 e codeID is default
-	 * @param userExt the unique beintoo id of registered user.
-	 * @see #TopScoreByUserExt(String codeID, int rows, String userExt)
-	 */
-	public void topScoreByUserExt(String userExt){
-		topScoreByUserExt(null,0,userExt);
-	}
-	
 	/**
 	 * Returns the leaderboard for the current app and the position of the current user 
 	 * 

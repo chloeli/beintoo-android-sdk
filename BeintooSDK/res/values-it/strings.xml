@@ -41,7 +41,8 @@
     <string name="leadSendChall">Invia sfida</string>
 	<string name="leadViewProfile">Vedi profilo</string>
 	<string name="leadAddFriend">Aggiungi agli amici</string>
-	<string name="leadshowfriendsonly">Visualizza solo amici</string>
+	<string name="leadshowfriendsonly">Solo amici</string>
+	<string name="leadshowclosestsonly">Da superare</string>
 	
     <!-- FRIENDS -->
     <string name="friendsTitle">I tuoi amici</string>

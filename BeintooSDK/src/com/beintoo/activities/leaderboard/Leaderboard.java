@@ -124,7 +124,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
     			try{        				
     				player = Current.getCurrentPlayer(currentContext);
     				      
-    				if(leader_kind == null || leader_kind.equals("FRIENDS")){
+    				if(leader_kind == null || leader_kind.equals("FRIENDS") || leader_kind.equals("CLOSEST")){
     					BeintooApp app = new BeintooApp();
     					String userExt = null;
         				if(player != null && player.getUser() != null)
@@ -143,8 +143,8 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 						public void run() {
 							try {
 								LinearLayout content = (LinearLayout) findViewById(R.id.goodcontent);
-								leaderslist = getLeaders();
-						        content.findViewWithTag(1000).setVisibility(LinearLayout.GONE);
+								content.findViewWithTag(1000).setVisibility(LinearLayout.GONE);
+								leaderslist = getLeaders();						        
 								listView.setVisibility(LinearLayout.VISIBLE);
 						        
 						        // SET THE CURRENT USER
@@ -153,9 +153,22 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 						        	listView.addHeaderView(header, null, false);
 						        }else listView.addHeaderView(new View(currentContext), null, false); // empty view, without we can't add a footer :/
 						        
-						        
-						        adapter = new LeaderboardAdapter(currentContext, R.layout.leaderboarditem, leaderslist);
+								adapter = new LeaderboardAdapter(currentContext, R.layout.leaderboarditem, leaderslist);
 						        listView.setAdapter(adapter);
+								
+						        // IF WE ARE IN CLOSEST SCROLL THE LISTVIEW TO THE USER POSITION
+								if(leader_kind != null && leader_kind.equals("CLOSEST")){									
+									int currentUserPos = -1;
+									for(int i = 0; i < leaderslist.size(); i++){
+										if(leaders.get(codeID) != null && leaders.get(codeID).getCurrentUser() != null && leaders.get(codeID).getLeaderboard() != null)
+											if(leaders.get(codeID).getCurrentUser().getUser().getNickname().equals(leaders.get(codeID).getLeaderboard().get(i).getUser().getNickname())){
+												currentUserPos = i;
+												break;
+											}
+									}
+									
+									listView.setSelectionFromTop(currentUserPos, (int)(ratio*140));
+								}
 							}catch(Exception e){ 
 								e.printStackTrace(); 
 							}
@@ -202,7 +215,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		    		
 		    		// ADD THE LEADERBOARD USERS
 			    	for(int i = 0; i<arr.getLeaderboard().size(); i++){
-			    		if(leader_kind == null || leader_kind.equals("FRIENDS")){
+			    		if(leader_kind == null || leader_kind.equals("FRIENDS") || leader_kind.equals("CLOSEST")){
 			    			Leaders l = new Leaders(arr.getLeaderboard().get(i).getUser().getUsersmallimg(),
 				    				arr.getLeaderboard().get(i).getUser().getNickname(),
 				    				arr.getLeaderboard().get(i).getScore().toString(),
@@ -216,7 +229,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 			    		}
 			    		
 			    		// ADD THE USER EXT TO THE USERS ARRAY
-			    		if(leader_kind == null || leader_kind.equals("FRIENDS")){
+			    		if(leader_kind == null || leader_kind.equals("FRIENDS") || leader_kind.equals("CLOSEST")){
 			    			usersExts.add(arr.getLeaderboard().get(i).getUser().getId());
 							usersNicks.add(arr.getLeaderboard().get(i).getUser().getNickname());
 			    		}else if(leader_kind.equals("ALLIANCES")){
@@ -241,7 +254,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
     		public void run(){
     			try{       		
     				Map<String, LeaderboardContainer> moreleaders = null;
-    				if(leader_kind == null || leader_kind.equals("FRIENDS")){
+    				if(leader_kind == null || leader_kind.equals("FRIENDS") || leader_kind.equals("CLOSEST")){
     					BeintooApp app = new BeintooApp();
     					String userExt = null;
         				if(player != null && player.getUser() != null)
@@ -291,7 +304,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	    		codeID = pairs.getKey();
 	    		// ADD THE LEADERBOARD USERS
 	    		for(int i = 0; i<arr.getLeaderboard().size(); i++){
-	    			if(leader_kind == null || leader_kind.equals("FRIENDS")){	    				
+	    			if(leader_kind == null || leader_kind.equals("FRIENDS") || leader_kind.equals("CLOSEST")){	    				
 	    				Leaders l = new Leaders(arr.getLeaderboard().get(i).getUser().getUsersmallimg(),
 			    				arr.getLeaderboard().get(i).getUser().getNickname(), arr.getLeaderboard().get(i).getScore().toString(),
 			    				feed,arr.getLeaderboard().get(i).getPos().toString(), false);
@@ -323,7 +336,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {			
 		try {
-			if(leader_kind == null || leader_kind.equals("FRIENDS")){
+			if(leader_kind == null || leader_kind.equals("FRIENDS") || leader_kind.equals("CLOSEST")){
 				if(listView.getHeaderViewsCount() > 0)
 					position--;
 				try {
@@ -532,6 +545,9 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)  {
 		try {
+			if(leader_kind != null && leader_kind.equals("CLOSEST"))
+				return;
+			
 			if(!isLoading && !hasReachedEnd){
 				if(firstVisibleItem != 0 && (firstVisibleItem > totalItemCount - 10)){
 					isLoading=true;

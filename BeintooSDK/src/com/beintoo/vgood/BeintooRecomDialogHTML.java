@@ -19,7 +19,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -148,26 +147,18 @@ public class BeintooRecomDialogHTML extends Dialog implements OnClickListener{
 					webview.setHorizontalScrollBarEnabled(false);
 					webview.setFocusableInTouchMode(false);
 					webview.setFocusable(false);
-					webview.setWebViewClient(new WebViewClient() {
-						public void onReceivedError(WebView view, int errorCode,
-								String description, String failingUrl) {
-							
-						}
-						
-						public void onPageFinished(WebView view, String url){
-							UIhandler.sendEmptyMessage(SHOW_DIALOG);
-						}
-						
-						public void onPageStarted(WebView view, String url, Bitmap favicon) {	
-							
-						}
-						
+											
+					webview.setWebViewClient(new WebViewClient() {						
 					    public boolean shouldOverrideUrlLoading(WebView view, String url) {
 					    	Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
 							ctx.startActivity(browserIntent);
 							UIhandler.sendEmptyMessage(HIDE_DIALOG);
 					        return true;
 					    }
+					    
+					    public void onPageFinished(WebView view, String url){
+							UIhandler.sendEmptyMessage(SHOW_DIALOG);
+						}
 					});
 					
 					webview.setOnTouchListener(new View.OnTouchListener() {						
@@ -176,7 +167,7 @@ public class BeintooRecomDialogHTML extends Dialog implements OnClickListener{
 					    }
 					});
 					
-					webview.loadData("<div align=\"center\">"+vgood.getVgoods().get(0).getContent()+"</div>", vgood.getVgoods().get(0).getContentType(), "UTF-8");
+					webview.loadData("<div align=\"center\">"+vgood.getVgoods().get(0).getContent()+"</div>", vgood.getVgoods().get(0).getContentType(), "UTF-8");									
 				}catch (Exception e){e.printStackTrace();}
 			} 
 		}).start();

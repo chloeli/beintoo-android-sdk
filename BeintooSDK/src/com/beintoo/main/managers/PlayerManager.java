@@ -126,7 +126,7 @@ public class PlayerManager {
 			String key = guid+":count";
 			PreferencesHandler.clearPref(key, ctx);
 			PreferencesHandler.clearPref("currentPlayer", ctx);
-		}catch(Exception e){e.printStackTrace();}
+		}catch(Exception e){ e.printStackTrace(); }
 	}
 	
 	public PlayerScore getPlayerScore(final Context ctx, final String codeID){

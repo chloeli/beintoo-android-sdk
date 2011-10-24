@@ -27,6 +27,7 @@ import com.beintoo.beintoosdkui.BeintooSignupBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.BeintooAnimations;
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
@@ -209,9 +210,15 @@ public class UserRegistration extends Dialog{
 			public void onClick(View v) {
 				
 				String web = BeintooSdkParams.webUrl;
-				if(BeintooSdkParams.useSandbox) 
+				if(BeintooSdkParams.internalSandbox) 
 					web = BeintooSdkParams.sandboxWebUrl;
-				
+				String guid = null;
+				try {
+					Player p = Current.getCurrentPlayer(current.getContext());
+					if(p != null && p.getGuid() != null)
+						guid = p.getGuid();
+				}catch(Exception e){ }
+					 
 				
 				String redirect_uri = web + "m/landing_register_ok_no_script.html";
 				String logged_uri = web + "m/landing_welcome_no_script.html";  
@@ -224,7 +231,11 @@ public class UserRegistration extends Dialog{
 				sb.append(redirect_uri);
 				sb.append("&logged_uri=");
 				sb.append(logged_uri);
-							
+				if(guid != null){
+					sb.append("&guid=");
+					sb.append(guid);
+				}
+					
 				String loginUrl = sb.toString();		
 				
 				BeintooFacebookLogin fbLoginBrowser = new BeintooFacebookLogin(getContext(),loginUrl);

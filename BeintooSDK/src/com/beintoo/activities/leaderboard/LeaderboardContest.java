@@ -96,10 +96,14 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 			public void onClick(View v) {
 				if(Beintoo.isLogged(currentContext)){
 					// FRIEND FILTER
-					final ImageButton friends = (ImageButton) findViewById(R.id.onlyfriends);
 					findViewById(R.id.onlyf).setVisibility(LinearLayout.VISIBLE);
+					findViewById(R.id.closest).setVisibility(LinearLayout.VISIBLE);
+					ImageButton friends = (ImageButton) findViewById(R.id.onlyfriends);
+					ImageButton closestbt = (ImageButton) findViewById(R.id.closestbt);					
 					friends.setImageResource(R.drawable.noselected);
-					friends.setTag("notselected");
+					friends.setTag("notselected");					
+					closestbt.setImageResource(R.drawable.noselected);
+					closestbt.setTag("notselected");
 				}
 				resetButtons();
 				v.setBackgroundDrawable(b.setPressedBackg(
@@ -132,6 +136,7 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 			public void onClick(View v) {					
 				// FRIEND FILTER
 				findViewById(R.id.onlyf).setVisibility(LinearLayout.GONE);
+				findViewById(R.id.closest).setVisibility(LinearLayout.GONE);
 				resetButtons();
 				v.setBackgroundDrawable(b.setPressedBackg(
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
@@ -163,14 +168,17 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 			friendsbutton.setOnClickListener(new ImageButton.OnClickListener(){
-				public void onClick(View v) {
+				public void onClick(View v) {					
+					// RESET THE OTHER FILTER BUTTON
+					ImageButton closestbt = (ImageButton) findViewById(R.id.closestbt);
+					closestbt.setImageResource(R.drawable.noselected);
+					closestbt.setTag("notselected");
+
 					final ImageButton friends = (ImageButton) findViewById(R.id.onlyfriends);
-					
 					if(friends.getTag().equals("notselected")){
 						friends.setImageResource(R.drawable.selected);
 						friends.setTag("selected");
-						kind = "FRIENDS";												
-						
+						kind = "FRIENDS";																		
 					}else if(friends.getTag().equals("selected")){
 						friends.setImageResource(R.drawable.noselected);
 						friends.setTag("notselected");
@@ -196,10 +204,50 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 					}).start();
 				}
 	        });
-		}else { // IF THE USER IS NOT LOGGED HIDE ALL AND FRIENDS BUTTONS
-			//findViewById(R.id.buttonsll).setVisibility(View.GONE);
+			
+			findViewById(R.id.closest).setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+			final LinearLayout closest = (LinearLayout) findViewById(R.id.closest);
+			closest.setBackgroundDrawable(b.setPressedBackg(
+					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
+					new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			closest.setOnClickListener(new Button.OnClickListener(){
+				public void onClick(View v) {																	
+					// RESET THE OTHER FILTER BUTTON
+					ImageButton onlyfriends = (ImageButton) findViewById(R.id.onlyfriends);
+					onlyfriends.setImageResource(R.drawable.noselected);
+					onlyfriends.setTag("notselected");
+					
+					final ImageButton closestbt = (ImageButton) findViewById(R.id.closestbt);
+					if(closestbt.getTag().equals("notselected")){
+						closestbt.setImageResource(R.drawable.selected);
+						closestbt.setTag("selected");
+						kind = "CLOSEST";																		
+					}else if(closestbt.getTag().equals("selected")){
+						closestbt.setImageResource(R.drawable.noselected);
+						closestbt.setTag("notselected");
+						kind = null;
+					}
+					
+					showLoading();
+					new Thread(new Runnable(){      
+	            		public void run(){
+	            			try{ 
+	            				BeintooApp app = new BeintooApp();
+	            				contests = app.getContests(null, true, null);	            				
+	            				UIhandler.sendEmptyMessage(0);							
+	            			}catch (Exception e){
+	            				e.printStackTrace();
+	            				manageConnectionException();
+	            			}
+	            		}
+					}).start();
+				}
+	        });
+			
+		}else { // IF THE USER IS NOT LOGGED HIDE ALL, FRIENDS, CLOSEST BUTTONS
 			findViewById(R.id.onlyf).setVisibility(View.GONE);
-			//findViewById(R.id.spacer).setVisibility(View.GONE);
+			findViewById(R.id.closest).setVisibility(View.GONE);
 		}
 	}
 	
@@ -317,7 +365,7 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 		Button general = (Button) findViewById(R.id.generaleader);		
 		general.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));	
 		Button friends = (Button) findViewById(R.id.friendsleader);
-		friends.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));
+		friends.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));		
 	}
 	
 	// CALLED WHEN THE USER SELECT A CONTEST

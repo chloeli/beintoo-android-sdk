@@ -342,4 +342,102 @@ public class BeintooVgood {
 		
 		return vgood;
 	}
+	
+	/**
+	 * If guid provided returns an array with all the private vgoods earned by the player
+	 * if guid not provided returns all the private vgoods of the app 
+	 * 
+	 * @param guid player unique identifier
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return a Vgood object array
+	 */
+	public Vgood [] showPrivateVgoods(String guid, String codeID){
+		String apiUrl = null;
+		
+		apiUrl = apiPreUrl+"vgood/privatevgood/show/";
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		if(guid != null){
+			header.getKey().add("guid");
+			header.getValue().add(guid);
+		}
+		
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		Gson gson = new Gson();
+		
+		Vgood[] vgood = gson.fromJson(json, Vgood[].class);
+		
+		return vgood;		
+	}
+	
+	/**
+	 * Assign a private vgood to the player
+	 * 
+	 * @param guid player unique identifier 
+	 * @param vgoodExtId the vgood unique identifier
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return a message object
+	 */
+	public Message assignPrivateVgood(String guid, String vgoodExtId, String codeID){
+		String apiUrl = null;
+		
+		apiUrl = apiPreUrl+"vgood/privatevgood/assign/"+vgoodExtId+"/"+guid;
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		Gson gson = new Gson();
+		
+		Message msg = gson.fromJson(json, Message.class);
+		
+		return msg;		
+	}
+	
+	/**
+	 * Remove a private vgood to the player
+	 * 
+	 * @param guid player unique identifier
+	 * @param vgoodExtId the vgood unique identifier
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return a message object
+	 */
+	public Message removePrivateVgood(String guid, String vgoodExtId, String codeID){
+		String apiUrl = null;
+		
+		apiUrl = apiPreUrl+"vgood/privatevgood/remove/"+vgoodExtId+"/"+guid;
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		Gson gson = new Gson();
+		
+		Message msg = gson.fromJson(json, Message.class);
+		
+		return msg;		
+	}
 }

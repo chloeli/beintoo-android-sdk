@@ -88,7 +88,7 @@ public class LeaderboardAdapter extends ArrayAdapter<Leaders> {
 						holder.image.setVisibility(View.GONE);
 						v.findViewById(R.id.item).setPadding((int)(ratio * 5), (int)(ratio * 5), 0, (int)(ratio * 5));
 					}
-				}catch (Exception e){}
+				}catch (Exception e){ e.printStackTrace(); }
 				
 				LinearLayout positionView = (LinearLayout) v.findViewById(R.id.post);			
 				setPositionBackground(positionView);

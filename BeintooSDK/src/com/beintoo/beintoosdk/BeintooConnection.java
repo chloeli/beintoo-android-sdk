@@ -75,12 +75,11 @@ public class BeintooConnection {
 			System.setProperty("http.keepAlive", "false");
 			
 			postUrlConnection = (HttpsURLConnection) url.openConnection();
-			postUrlConnection.setUseCaches(false);
-			postUrlConnection.setDoOutput(true);
+			postUrlConnection.setUseCaches(false);			
 			postUrlConnection.setDoInput(true);
 			
 			header.getKey().add("X-BEINTOO-SDK-VERSION");
-			header.getValue().add(BeintooSdkParams.version);
+			header.getValue().add(BeintooSdkParams.version);			
 			if(BeintooSdkParams.useSandbox){
 				header.getKey().add("sandbox");
 				header.getValue().add("true");
@@ -89,9 +88,8 @@ public class BeintooConnection {
 				postUrlConnection.setRequestProperty(header.getKey().get(i),header.getValue().get(i));
 			}
 			
-			
-			
 			if(isPost){
+				postUrlConnection.setDoOutput(true);
 				postUrlConnection.setRequestMethod("POST");
 				postUrlConnection.setRequestProperty("Content-Length", "" + 
 			               Integer.toString(postParams.getBytes().length));
@@ -100,7 +98,9 @@ public class BeintooConnection {
 			      wr.writeBytes (postParams);
 			      wr.flush ();
 			      wr.close ();				
-			}			
+			}else{				
+				postUrlConnection.setRequestMethod("GET");
+			}
 			
 			postInputStream = postUrlConnection.getInputStream();
 	

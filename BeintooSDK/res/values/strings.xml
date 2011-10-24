@@ -41,7 +41,8 @@
     <string name="leadSendChall">Send challenge</string>
     <string name="leadViewProfile">View profile</string>
     <string name="leadAddFriend">Add as friend</string>    
-    <string name="leadshowfriendsonly">View friends only</string>
+    <string name="leadshowfriendsonly">Friends</string>
+    <string name="leadshowclosestsonly">To beat</string>
     
     <!-- FRIENDS -->
     <string name="friendSel">Select a friend</string>
@@ -121,7 +122,7 @@
     <string name="trynow">Try Beintoo Now</string>
     <string name="nothanks">No, thanks</string>    
     <string name="anotheraccount">Use another account</string>
-    <string name="people">People</string>
+    <string name="people">People</string>    
     <string name="friends">Friends</string>
     <string name="pending">Pending</string>
     <string name="ongoing">Ongoing</string>

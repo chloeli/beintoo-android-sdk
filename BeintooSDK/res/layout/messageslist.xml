@@ -28,26 +28,20 @@
 		</Button>
 	</LinearLayout>
 	<LinearLayout android:layout_width="fill_parent"
-		android:orientation="vertical" android:layout_height="fill_parent"
-		android:gravity="center" android:id="@+id/main">
-		<ScrollView android:id="@+id/scrollview"
-			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			android:fillViewport="true">
-			<LinearLayout android:layout_width="fill_parent"
-				android:orientation="vertical" android:layout_height="fill_parent"
-				android:gravity="center" android:id="@+id/main">
-				<TableLayout android:id="@+id/table"
-					android:layout_width="fill_parent" android:layout_height="wrap_content">
-				</TableLayout>
-				<LinearLayout android:layout_width="fill_parent"
-					android:orientation="vertical" android:layout_height="fill_parent"
-					android:gravity="bottom|center" android:id="@+id/fond">
-					<ImageView android:id="@+id/layoutbottom"
-						android:layout_width="fill_parent" android:background="@drawable/footer"
-						android:layout_height="11dip" />
-				</LinearLayout>
-			</LinearLayout>
-		</ScrollView>
+		android:orientation="vertical" android:id="@+id/goodcontent"
+		android:layout_height="wrap_content" android:layout_weight="1">
+		<ListView android:layout_height="0dip" android:id="@+id/listView"
+			android:layout_width="fill_parent" android:scrollbars="vertical"
+			android:divider="#8F9193" android:dividerHeight="1dip"
+			android:fadingEdge="none" android:drawSelectorOnTop="false"
+			android:layout_weight="1"></ListView>
+	</LinearLayout>
+	<LinearLayout android:layout_width="fill_parent"
+		android:orientation="vertical" android:gravity="bottom|center"
+		android:id="@+id/fond" android:layout_height="wrap_content">
+		<ImageView android:id="@+id/layoutbottom"
+			android:layout_width="fill_parent" android:background="@drawable/footer"
+			android:layout_height="11dip" />
 	</LinearLayout>
 </LinearLayout>
 

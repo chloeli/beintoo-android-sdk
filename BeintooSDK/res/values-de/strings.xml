@@ -34,16 +34,15 @@
     <string name="challAccept">Möchtest du akzeptieren diese Herausforderung zu\u0020 annehmen?</string>
     <string name="challSend">Möchtest du eine Herausforderung schicken? Wette 10 BeDollars um 25 Bedollars gewinnen.</string>   
 	<string name="challTip">Klicke auf einen Benutzer zu interagieren</string>
-	
-   
-    
+	    
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Partitur:\u0020</string>
     <string name="leadSendChall">Senden Herausforderung</string>
 	<string name="leadViewProfile">Profil ansehen</string>
 	<string name="leadAddFriend">Als Fraund hinzufügen</string>
-	<string name="leadshowfriendsonly">Blick nur Freunden</string>
-	 
+	<string name="leadshowfriendsonly">Freunden</string>
+	<string name="leadshowclosestsonly">Zu übertreffen</string>
+	
     <!-- FRIENDS -->
     <string name="friendSel">Wähle einen Freund</string>
     <string name="friendsTitle">Deine Freunde</string>

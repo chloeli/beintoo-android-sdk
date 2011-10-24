@@ -42,7 +42,9 @@ public class SDFileManager {
 			oos = new ObjectOutputStream(os);
 			oos.writeObject(textToWrite);
 			success = true;
-		} finally {
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
 			try {
 				if (null != oos)
 					oos.close();
@@ -64,7 +66,9 @@ public class SDFileManager {
             ois = new ObjectInputStream(fis);  
             result = (String) ois.readObject();  
             ois.close();  
-        }  
+        }catch(Exception e){
+        	e.printStackTrace();
+        }
         finally {  
             try {if (null != ois) ois.close();} catch (IOException ex) {}  
         }  

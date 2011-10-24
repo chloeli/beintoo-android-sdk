@@ -21,11 +21,10 @@ import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.LoaderImageView;
-import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.VgoodChooseOne;
-import com.google.beintoogson.Gson;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -146,9 +145,11 @@ public class VgoodAcceptDialog extends Dialog implements OnClickListener{
 				new Thread(new Runnable(){     					
 	        		public void run(){	
 	    				try {
-	    					Player loggedUser = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", ctx), Player.class);
-	    					BeintooVgood bv = new BeintooVgood();	    					
-	    					bv.acceptVgood(vgood.getVgoods().get(0).getId(), loggedUser.getUser().getId(), null);
+	    					Player loggedUser = Current.getCurrentPlayer(ctx);
+	    					if(loggedUser.getUser() != null){
+	    						BeintooVgood bv = new BeintooVgood();	    					
+	    						bv.acceptVgood(vgood.getVgoods().get(0).getId(), loggedUser.getUser().getId(), null);
+	    					}
 	    				}catch(Exception e){e.printStackTrace();}
 	        		}	
 				}).start();	

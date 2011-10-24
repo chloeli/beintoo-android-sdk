@@ -42,31 +42,76 @@
 					android:id="@+id/whiteline"></LinearLayout>
 			</LinearLayout>
 
-			<!-- FRIEND FILTER -->
+			<!-- FRIEND/CLOSEST FILTER -->
 			<LinearLayout android:layout_height="wrap_content"
-				android:id="@+id/onlyf" android:layout_width="fill_parent"
+				android:id="@+id/llin" android:layout_width="fill_parent"
 				android:orientation="vertical" android:gravity="center_vertical">
 				<LinearLayout android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:gravity="center_vertical" android:id="@+id/friendsonly">
-					<ImageButton android:textColor="#545859"
-						android:layout_height="wrap_content" android:layout_width="wrap_content"
-						android:layout_marginRight="5dip" android:background="@drawable/noselected"
-						android:id="@+id/onlyfriends" android:padding="2dip"
-						android:layout_marginLeft="6dip" android:src="@drawable/noselected"
-						android:tag="notselected" />
-					<TextView android:id="@+id/textView1"
-						android:layout_width="wrap_content" android:textColor="#545859"
-						android:layout_height="wrap_content" android:text="@string/leadshowfriendsonly"></TextView>
+					android:id="@+id/llin" android:layout_width="fill_parent"
+					android:orientation="horizontal" android:gravity="center_vertical">
+					<!-- FRIEND FILTER -->
+					<LinearLayout android:layout_height="wrap_content"
+						android:id="@+id/onlyf" android:orientation="vertical"
+						android:gravity="center_vertical" android:layout_weight="1"
+						android:layout_width="fill_parent">
+						<LinearLayout android:layout_height="wrap_content"
+							android:layout_width="fill_parent" android:gravity="center_vertical"
+							android:id="@+id/friendsonly">
+							<ImageButton android:textColor="#545859"
+								android:layout_height="wrap_content" android:layout_width="wrap_content"
+								android:layout_marginRight="5dip" android:background="@drawable/noselected"
+								android:id="@+id/onlyfriends" android:padding="2dip"
+								android:layout_marginLeft="6dip" android:src="@drawable/noselected"
+								android:tag="notselected" />
+							<TextView android:id="@+id/textView1"
+								android:layout_width="wrap_content" android:textColor="#545859"
+								android:layout_height="wrap_content" android:text="@string/leadshowfriendsonly"></TextView>
+						</LinearLayout>
+						<LinearLayout android:layout_width="fill_parent"
+							android:layout_height="0.75dip" android:background="#8F9193"
+							android:id="@+id/lgrayline"></LinearLayout>
+						<LinearLayout android:layout_width="fill_parent"
+							android:layout_height="4dip" android:background="#E2E2E2"
+							android:id="@+id/gray"></LinearLayout>
+						<LinearLayout android:layout_width="fill_parent"
+							android:layout_height="0.75dip" android:background="#8F9193"
+							android:id="@+id/lgrayline"></LinearLayout>
+					</LinearLayout>
+					<!-- END FILTER -->					
+					<!-- CLOSEST FILTER -->
+					<LinearLayout android:layout_height="wrap_content"
+						android:id="@+id/closest" android:orientation="vertical"
+						android:gravity="center_vertical" android:layout_weight="1"
+						android:layout_width="fill_parent">						
+						<LinearLayout android:layout_height="wrap_content"
+							android:layout_width="fill_parent" android:gravity="center_vertical"
+							android:id="@+id/closest">
+							<LinearLayout android:layout_width="0.75dip"
+						android:layout_height="fill_parent" android:background="#8F9193"
+						android:id="@+id/grayline"></LinearLayout>
+							<ImageButton android:textColor="#545859"
+								android:layout_height="wrap_content" android:layout_width="wrap_content"
+								android:layout_marginRight="5dip" android:background="@drawable/noselected"
+								android:id="@+id/closestbt" android:padding="2dip"
+								android:layout_marginLeft="6dip" android:src="@drawable/noselected"
+								android:tag="notselected" />
+							<TextView android:id="@+id/textView1"
+								android:layout_width="wrap_content" android:textColor="#545859"
+								android:layout_height="wrap_content" android:text="@string/leadshowclosestsonly"></TextView>
+						</LinearLayout>
+						<LinearLayout android:layout_width="fill_parent"
+							android:layout_height="0.75dip" android:background="#8F9193"
+							android:id="@+id/lgrayline"></LinearLayout>
+						<LinearLayout android:layout_width="fill_parent"
+							android:layout_height="4dip" android:background="#E2E2E2"
+							android:id="@+id/gray"></LinearLayout>
+						<LinearLayout android:layout_width="fill_parent"
+							android:layout_height="0.75dip" android:background="#8F9193"
+							android:id="@+id/lgrayline"></LinearLayout>
+					</LinearLayout>
 				</LinearLayout>
-				<LinearLayout android:layout_width="fill_parent"
-					android:layout_height="0.75dip" android:background="#8F9193"
-					android:id="@+id/grayline"></LinearLayout>
-				<LinearLayout android:layout_width="fill_parent"
-					android:layout_height="0.75dip" android:background="#FFFFFF"
-					android:id="@+id/whiteline"></LinearLayout>
+				<!-- END FILTER -->
 			</LinearLayout>
-			<!-- END FILTER -->
-
 			<TableLayout android:scrollbars="vertical"
 				android:layout_width="fill_parent" android:id="@+id/tablecontest"
 				android:layout_height="wrap_content" android:stretchColumns="0">

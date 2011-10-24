@@ -62,8 +62,7 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
 		webview = (WebView) findViewById(R.id.webview);
-		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-			
+		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);		
 		webview.getSettings().setJavaScriptEnabled(true);
 		
 		// ADD ZOOM CONTROLS

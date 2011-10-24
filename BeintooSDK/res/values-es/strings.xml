@@ -40,7 +40,8 @@
     <string name="leadSendChall">Enviar desafío</string>
 	<string name="leadViewProfile">Ver perfil</string>
 	<string name="leadAddFriend">Añadir como amigo</string>
-	<string name="leadshowfriendsonly">Ver solo los amigos</string>
+	<string name="leadshowfriendsonly">Amigos</string>
+	<string name="leadshowclosestsonly">Casi igual</string>
 	
     <!-- FRIENDS -->
     <string name="friendsTitle">Tu amìgos</string>

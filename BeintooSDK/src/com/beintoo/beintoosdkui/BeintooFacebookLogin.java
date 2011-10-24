@@ -23,7 +23,6 @@ import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -55,7 +54,6 @@ public class BeintooFacebookLogin extends Dialog {
 		setContentView(R.layout.browser);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		webview = (WebView) findViewById(R.id.webview);
-		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		
 		// GETTING DENSITY PIXELS RATIO
 		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
@@ -64,14 +62,6 @@ public class BeintooFacebookLogin extends Dialog {
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobar);		
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
-		
-		webview.getSettings().setJavaScriptEnabled(true);
-		
-		WebSettings ws = webview.getSettings();
-		ws.setJavaScriptEnabled(true);
-
-		//webview.addJavascriptInterface(aloggedbt, "aloggedbt");
-
 		Button close = (Button) findViewById(R.id.close);
 		BeButton b = new BeButton(ctx);
 		close.setBackgroundDrawable(b.setPressedBg(R.drawable.close, R.drawable.close_h, R.drawable.close_h));	    
@@ -82,6 +72,12 @@ public class BeintooFacebookLogin extends Dialog {
 		});
 		
 		webview.setWebChromeClient(new WebChromeClient() {
+			@Override
+			public void onConsoleMessage(String message, int lineNumber,
+					String sourceID) {				
+				super.onConsoleMessage(message, lineNumber, sourceID);
+			}
+
 			public void onProgressChanged(WebView view, int progress) {
 				ProgressBar p = (ProgressBar) findViewById(R.id.progress);				
 				p.setProgress(progress);
@@ -112,9 +108,12 @@ public class BeintooFacebookLogin extends Dialog {
 				}					
 				return super.shouldOverrideUrlLoading(view, url);
 			}			
-		});
-		webview.setInitialScale(1);
-		webview.loadUrl(openUrl);
+		}); 
+		
+		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+		webview.getSettings().setJavaScriptEnabled(true);		
+		webview.setInitialScale(1);		 		  
+		webview.loadUrl(openUrl); 		
 	}
 
 	/*public void clearCache() {

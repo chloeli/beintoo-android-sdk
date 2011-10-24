@@ -15,59 +15,58 @@
  ******************************************************************************/
 package com.beintoo.activities;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooMessages;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
-import com.beintoo.beintoosdkutility.JSONconverter;
-import com.beintoo.beintoosdkutility.LoaderImageView;
-import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.UsersMessage;
-import android.view.View.OnClickListener;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Html;
-import android.text.InputFilter;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemClickListener;
 
 
-public class MessagesList extends Dialog implements OnClickListener{
+public class MessagesList extends Dialog implements OnItemClickListener, OnScrollListener{
 	MessagesList current;
 	private double ratio;	
 	private List<UsersMessage> messages;
-	private int currentStartPosition = 0;
-	private int totalUserMessages = 0;
-	private int totalMessageDisplayed = 0;
-	
-	private final int FIRST_LOADING = 0;
-	private final int NEXT_LOADING = 1;
+
 	private final int CONNECTION_ERROR = 3;
 	
+	private ListView listView;	
+	private MessageListAdapter adapter;
+	
 	private Player p; 
+	
+	private final int MAX_REQ_ROWS = 10;
+	private int currentPageRows = 0;   	
+	private int currentScrollPos = 0;
+	private boolean isLoading = false;
+	private boolean hasReachedEnd = false;
+	
+	ArrayList<ListMessageItem> messagesItems;
 	
 	public MessagesList(Context context) {
 		super(context, R.style.ThemeBeintoo);
@@ -101,35 +100,113 @@ public class MessagesList extends Dialog implements OnClickListener{
 				mw.show();
 			}
 		}); 
-	     
+
+	    LinearLayout content = (LinearLayout) findViewById(R.id.goodcontent);
+        content.addView(progressLoading());      
+	    
+        messagesItems = new ArrayList<ListMessageItem>();
+        
 	    try {
-	    	p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));	    
-	    	totalUserMessages = p.getUser().getMessages();
-	    }catch (Exception e){e.printStackTrace();}
+	    	p = Current.getCurrentPlayer(getContext());	    	    	
+	    }catch (Exception e){
+	    	e.printStackTrace();
+	    }
+	    
+	    listView = (ListView) findViewById(R.id.listView);
+        listView.setVisibility(LinearLayout.GONE);
+        listView.setCacheColorHint(0);
+	    listView.setOnScrollListener(this);
+	    listView.setOnItemClickListener(this);
+	    listView.addHeaderView(new View(current.getContext()), null, false); // WITHOUT HEADER THE FOOTER IS NOT SHOWN
+	    
 	    startFirstLoading();
 	} 
 	 
-	public void startFirstLoading (){
-		try{
-			messages = new ArrayList<UsersMessage>();
-			currentStartPosition = 0;
-			totalMessageDisplayed = 0;
-			TableLayout table = (TableLayout) findViewById(R.id.table);
-			table.removeAllViews();
-			showLoading(FIRST_LOADING);
-			loadData(currentStartPosition, FIRST_LOADING);
-		}catch (Exception e){e.printStackTrace();}		
+	public void startFirstLoading (){		
+		messages = new ArrayList<UsersMessage>();				
+		loadData(currentPageRows, MAX_REQ_ROWS);						
 	}
 	
-	private void loadData (final int start, final int action) {
+	public void loadMore(){		
+		currentPageRows++;
+		loadData(currentPageRows*MAX_REQ_ROWS, MAX_REQ_ROWS);		
+	}
+	
+	public void reloadData(){
+		messagesItems 	= new ArrayList<ListMessageItem>();
+		messages 		= new ArrayList<UsersMessage>();
+		
+		listView.setVisibility(View.GONE);
+		LinearLayout content = (LinearLayout) findViewById(R.id.goodcontent);
+		content.findViewWithTag(1000).setVisibility(LinearLayout.VISIBLE); 	    		
+		
+		int numRows = MAX_REQ_ROWS;		
+		if(currentPageRows > 0)
+			numRows = (currentPageRows+1)*MAX_REQ_ROWS;
+		
+		isLoading = true;
+		loadData(0, numRows);						
+	}
+	
+	private void loadData (final int start, final int rows) {
 		new Thread(new Runnable(){      
     		public void run(){
     			try{ 
 					BeintooMessages bm = new BeintooMessages();            				
 					// GET THE CURRENT LOGGED PLAYER
-					List<UsersMessage> tmp = bm.getUserMessages(p.getUser().getId(), null,start, 10);
+					final List<UsersMessage> tmp = bm.getUserMessages(p.getUser().getId(), null, start, rows);
 					messages.addAll(tmp);	
-					UIhandler.sendEmptyMessage(action);
+			
+					if(tmp.size() == 0){
+						hasReachedEnd = true;
+					}
+										
+					for(int i = start; i < messages.size(); i++){
+						String from = null;
+						String img = null;
+						if(messages.get(i).getUserFrom() != null){
+							from = messages.get(i).getUserFrom().getNickname();
+							img = messages.get(i).getUserFrom().getUserimg();
+						}else if(messages.get(i).getApp() != null){
+							from = messages.get(i).getApp().getName();
+							img = messages.get(i).getApp().getImageUrl();
+						}
+					
+						boolean unread = false;
+						if(messages.get(i).getStatus().equals("UNREAD")) unread = true;
+						ListMessageItem item = new ListMessageItem(img, from, 
+								messages.get(i).getCreationdate(), messages.get(i).getText(), unread);
+						messagesItems.add(item); 														
+					}			
+					
+					
+					UIhandler.post(new Runnable(){
+						@Override
+						public void run() {
+							try {
+								if(start == 0){
+									adapter = new MessageListAdapter(current.getContext(), messagesItems);
+									listView.setAdapter(adapter);
+								}
+								adapter.notifyDataSetChanged();							
+								if(start == 0){
+									LinearLayout content = (LinearLayout) findViewById(R.id.goodcontent);
+									content.findViewWithTag(1000).setVisibility(LinearLayout.GONE);									
+									listView.setVisibility(LinearLayout.VISIBLE);									
+								}else{							
+									listView.removeFooterView(listView.findViewWithTag(2000));
+								}
+								
+								if(rows > MAX_REQ_ROWS){ // IF WE ARE RELOADING
+									listView.setSelection(currentScrollPos);
+								}
+								
+							}catch(Exception e){
+								e.printStackTrace();
+							}							
+						}								
+					});					
+					isLoading = false;
     			}catch (Exception e){
     				e.printStackTrace();
     				manageConnectionException ();
@@ -138,259 +215,92 @@ public class MessagesList extends Dialog implements OnClickListener{
 		}).start();
 	}
 	
-	private void loadTableRows () {
-		try{
-			TableLayout table = (TableLayout) findViewById(R.id.table);	
-			final ArrayList<View> rowList = new ArrayList<View>();
-			addSpacerLines(rowList);
-			if(messages.size() > 0){
-			    for (int i = currentStartPosition; i < messages.size(); i++){
-			    	final LoaderImageView image;
-			    	String nick;
-			    	String date;
-			    	String msgtext;
-			    	
-			    	if(messages.get(i).getUserFrom() != null){
-			    		image = new LoaderImageView(getContext(),messages.get(i).getUserFrom().getUserimg(),(int)(ratio * 65),(int)(ratio * 65));
-						nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+messages.get(i).getUserFrom().getNickname();						
-			    	}else{
-			    		image = new LoaderImageView(getContext(),messages.get(i).getApp().getImageUrl(),(int)(ratio * 65),(int)(ratio * 65));
-						nick = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+messages.get(i).getApp().getName();
-			    	}
-					
-					SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
-					curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			
-					Date msgDate = curFormater.parse(messages.get(i).getCreationdate());			
-					curFormater.setTimeZone(TimeZone.getDefault());			
-					date = "<b>"+getContext().getString(R.string.messagedate)+"</b> "+(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(msgDate));
-					
-					msgtext = messages.get(i).getText();
-					msgtext = msgtext.replaceAll("\\<.*?>","");
-					msgtext = msgtext.replaceAll("\\&.*?\\;", "");
-					
-					boolean unread = false;
-					if(messages.get(i).getStatus().equals("UNREAD")) unread = true;
-					
-		    		
-		    		TableRow row = createRow(image, nick,date,msgtext, unread, table.getContext());
-		    		    		
-					row.setId(i);
-					rowList.add(row);
-					row.setOnClickListener(this);
-					
-					BeButton b = new BeButton(getContext());
-					if(i % 2 == 0)
-			    		row.setBackgroundDrawable(b.setPressedBackg(
-					    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT),
-								new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
-								new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-					else
-						row.setBackgroundDrawable(b.setPressedBackg(
-					    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.GRAY_GRADIENT),
-								new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
-								new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-					
-					addSpacerLines(rowList);
-					
-				totalMessageDisplayed++;	
-			    }		    
-			    
-			    if(totalMessageDisplayed < totalUserMessages){
-			    	loadMore(table.getContext(),rowList);
-			    }
-			    
-			    for (View row : rowList) {		 
-				      table.addView(row);
-				}
-
-			}else {
-				TextView noMsg = new TextView(getContext());
-				noMsg.setText(getContext().getString(R.string.messageempty));
-				noMsg.setTextColor(Color.GRAY);
-				noMsg.setGravity(Gravity.CENTER);
-				noMsg.setPadding(0,(int)(ratio*50),0,0);						
-				table.addView(noMsg);
-			}
-		}catch (Exception e){e.printStackTrace();}
-	}
 	
-	
-	private TableRow createRow(View image, String name, String date, String text, boolean isUnread, Context activity) {
-		  TableRow row = new TableRow(activity);
-		  row.setGravity(Gravity.CENTER_VERTICAL);
-		  
-		  image.setPadding(15, 4, 10, 4);		  
-		  ((LinearLayout) image).setGravity(Gravity.LEFT);
-		  
-		  LinearLayout main = new LinearLayout(row.getContext());
-		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  main.setOrientation(LinearLayout.HORIZONTAL);
-		  main.setGravity(Gravity.CENTER_VERTICAL);
-		  
-		  LinearLayout fromData = new LinearLayout(row.getContext());
-		  fromData.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  fromData.setOrientation(LinearLayout.VERTICAL);
-		  fromData.setGravity(Gravity.CENTER_VERTICAL);
-		  
-		  
-		  TextView nameView = new TextView(activity);		  
-		  nameView.setText(Html.fromHtml(name));		  
-		  nameView.setPadding(0, 0, 0, 0);
-		  nameView.setTextColor(Color.parseColor("#545859"));
-		  nameView.setTextSize(14);
-		  nameView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  if(isUnread){
-			  nameView.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
-		  }
-		  
-		  TextView dateView = new TextView(activity);		
-		  dateView.setText(Html.fromHtml(date));		  
-		  dateView.setPadding(0, 0, 0, 0);
-		  dateView.setTextColor(Color.parseColor("#545859"));
-		  dateView.setTextSize(14);
-		  dateView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  if(isUnread){
-			  dateView.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
-		  }
-		  
-		  TextView textView = new TextView(activity);
-		  InputFilter[] fArray = new InputFilter[1];
-		  fArray[0] = new InputFilter.LengthFilter(32);
-		  textView.setFilters(fArray);
-		  textView.setText(text);
-		  textView.setPadding(0, 10, 0, 0);
-		  textView.setTextColor(Color.parseColor("#787A77"));
-		  textView.setTextSize(14);
-		  textView.setSingleLine(true);
-		  textView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		  if(isUnread){
-			  textView.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
-			  textView.setTextColor(Color.BLACK);
-		  }
-		  
-		  fromData.addView(nameView);
-		  fromData.addView(dateView);
-		  fromData.addView(textView);
-		 
-		  main.addView(image);
-		  main.addView(fromData);		  
-		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio * 90)));
-
-		  return row;
-	}
-	
-	private TableRow loadMore(Context context, ArrayList<View> views) {
-		TableRow row = new TableRow(context);
-		row.setGravity(Gravity.CENTER);
-		
-		TextView moreView = new TextView(context);		
-		moreView.setText(context.getString(R.string.messageloadmore));
-		moreView.setTextColor(Color.parseColor("#545859"));
-		moreView.setTextSize(14);
-		moreView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-		moreView.setGravity(Gravity.CENTER);
-		
-		row.addView(moreView,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio * 90)));
-		row.setId(-200);
-		
-		row.setOnClickListener(this);
-		views.add(row);
-		
-		addSpacerLines(views);
-		
-		return row;
-	}
-	
-	private static View createSpacer(Context activity, int color, int height) {
-		  View spacer = new View(activity);
-		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
-		  if(color == 1)
-			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
-		  else if(color == 2)
-			  spacer.setBackgroundColor(Color.WHITE);
-
-		  return spacer;
-	} 
-	
-	private void addSpacerLines (ArrayList<View> views){
-		View spacer = createSpacer(getContext(),1,1);
-		spacer.setId(-100);
-		views.add(spacer);
-		View spacer2 = createSpacer(getContext(),2,1);
-		spacer2.setId(-100);
-		views.add(spacer2);
-	}
-	
-	private void showLoading (final int which){
+	private ProgressBar progressLoading (){
 		ProgressBar pb = new ProgressBar(getContext());
 		pb.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));
-		
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-		
-		if(which == FIRST_LOADING)
-			pb.setPadding(0, (int)(100*ratio), 0, 0);
-		else
-			pb.setPadding(0, (int)(5*ratio), 0, (int)(5*ratio));
-		
-		pb.setLayoutParams(params);
-		pb.setId(5000);
-		TableLayout table = (TableLayout) findViewById(R.id.table);
-		table.setGravity(Gravity.CENTER);
-		table.addView(pb);
-	} 
-	
-	private void clearTable(){
-		TableLayout table = (TableLayout) findViewById(R.id.table);
-		table.removeAllViews();
+		TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,TableLayout.LayoutParams.WRAP_CONTENT);
+		params.setMargins(0, (int)(ratio * 100), 0, 0);
+		params.gravity = Gravity.CENTER;
+		params.height = (int)(ratio * 45);
+		params.width = (int)(ratio * 45);
+		pb.setLayoutParams(params); 
+		pb.setTag(1000);
+		return pb;
+	}
+
+	private void manageConnectionException (){
+		UIhandler.sendEmptyMessage(CONNECTION_ERROR);		
 	}
 	
-	private void removeView(View v){
-		TableLayout table = (TableLayout) findViewById(R.id.table);	
-		table.removeView(v);
-	}
-	
-	private void removeProgress (){
-		TableLayout table = (TableLayout) findViewById(R.id.table);
-		View v = table.findViewById(5000);
-		table.removeView(v);
-	}
-	
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		if(v.getId()>=0){ 
-			MessagesRead mr = new MessagesRead(v.getContext(), messages.get(v.getId()),current);
-			mr.show();
-		}else if(v.getId() == -200){ // LOAD MORE
-			removeView(v);
-			showLoading(NEXT_LOADING);			
-			currentStartPosition+=10;
-			loadData(currentStartPosition, NEXT_LOADING);
+	/* LIST VIEW DELEGATES AND METHODS */	
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)  {
+		try {			
+			currentScrollPos = firstVisibleItem;
+			if(!isLoading && !hasReachedEnd){				
+				if(firstVisibleItem != 0 && (firstVisibleItem > totalItemCount - 6)){
+					isLoading = true;					
+		            listView.addFooterView(loadingFooter());			            
+					loadMore();
+				}		
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	
-	private void manageConnectionException (){
-		UIhandler.sendEmptyMessage(CONNECTION_ERROR);		
+	private LinearLayout loadingFooter(){
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(35, 35);
+		ProgressBar pb = new ProgressBar(getContext());
+		pb.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));				
+		pb.setLayoutParams(params);	            	            
+        LinearLayout loading = new LinearLayout(current.getContext());
+        loading.addView(pb);
+        loading.setPadding(0, 10, 0, 10);
+        loading.setGravity(Gravity.CENTER);
+        loading.setTag(2000);
+        return loading;
+	}
+	
+	public class ListMessageItem {
+		String imgUrl;
+		String from;
+		String date;
+		String text;
+		boolean isUnread;
+		
+		public ListMessageItem(String imgUrl, String from, String date,
+				String text, boolean isUnread) {
+			super();
+			this.imgUrl = imgUrl;
+			this.from = from;
+			this.date = date;
+			this.text = text;
+			this.isUnread = isUnread;
+		}
 	}
 	
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {	
-			  switch(msg.what){
-				  case FIRST_LOADING:					  
-					  clearTable();
-					  loadTableRows();
-				  break;
-				  case NEXT_LOADING:
-					  loadTableRows();
-					  removeProgress();
-				  break;
-				  case CONNECTION_ERROR:
-					  TableLayout table = (TableLayout) findViewById(R.id.table);
-					  table.removeAllViews();
+			  switch(msg.what){				 
+				  case CONNECTION_ERROR:					  
 					  ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(), null);
 				  break;
 			  }
 			  super.handleMessage(msg);
 		  }
 	};
+
+	@Override
+	public void onScrollStateChanged(AbsListView arg0, int arg1) {
+		
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {		
+		MessagesRead mr = new MessagesRead(v.getContext(), messages.get(position-1), current);
+		mr.show();		
+	}
 }

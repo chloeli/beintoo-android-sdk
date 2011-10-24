@@ -40,7 +40,8 @@
     <string name="leadSendChall">Défier</string>
 	<string name="leadViewProfile">Voir profil</string>
 	<string name="leadAddFriend">Ajouter à mes amis</string>
-	<string name="leadshowfriendsonly">Voir amis seulement</string>
+	<string name="leadshowfriendsonly">Voir amis</string>
+    <string name="leadshowclosestsonly">À battre</string>
     
     <!-- FRIENDS -->
     <string name="friendsTitle">Vos amis</string>

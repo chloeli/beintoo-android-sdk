@@ -222,7 +222,7 @@ public class MessagesRead extends Dialog{
 	public void onBackPressed() {
 		super.onBackPressed();
 		if(hasModified){
-			previous.startFirstLoading();
+			previous.reloadData();
 		}
 	}
 	
@@ -230,7 +230,7 @@ public class MessagesRead extends Dialog{
 		  @Override
 		  public void handleMessage(Message msg) {
 			  current.dismiss();
-			  previous.startFirstLoading();
+			  previous.reloadData();
 		  }
 	};
 
