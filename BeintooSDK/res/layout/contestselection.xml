@@ -112,6 +112,12 @@
 				</LinearLayout>
 				<!-- END FILTER -->
 			</LinearLayout>
+			
+			<!-- SIGNUP CONTAINER FOR PLAYERS -->
+			<LinearLayout android:layout_width="fill_parent" android:orientation="vertical"
+				android:layout_height="wrap_content" android:id="@+id/signupPlayer" android:visibility="gone">			
+			</LinearLayout>
+			
 			<TableLayout android:scrollbars="vertical"
 				android:layout_width="fill_parent" android:id="@+id/tablecontest"
 				android:layout_height="wrap_content" android:stretchColumns="0">

@@ -45,7 +45,7 @@ public class PlayerManager {
 		currentContext = ctx;
 	}
 	
-	public void playerLogin(final Context ctx, final BPlayerLoginListener listener){
+	public void playerLogin(final Context ctx, final String guid, final BPlayerLoginListener listener){
 		SerialExecutor executor = SerialExecutor.getInstance();
 		executor.execute(new Runnable(){     					
     		public void run(){
@@ -67,7 +67,10 @@ public class PlayerManager {
 	    						language = Locale.getDefault().getLanguage();
 	    					}catch (Exception e){}
 	    					
-		    				if(loggedUser == null){ // FIRST EXECUTION
+	    					if(guid != null){
+	    						loginPlayer = player.playerLogin(null,guid,null,
+		        						DeviceId.getUniqueDeviceId(ctx),language, null);
+	    					}else if(loggedUser == null){ // FIRST EXECUTION
 		    					loginPlayer = player.playerLogin(null,null,null,
 		    						DeviceId.getUniqueDeviceId(ctx),language, null);
 		    				}else if(loggedUser.getUser() == null){ // A PLAYER EXISTS BUT NOT A USER

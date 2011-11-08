@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.Current;
+import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BEligibleVgoodListener;
@@ -90,12 +91,17 @@ public class GetVgoodManager {
 				final BeintooVgood vgoodHand = new BeintooVgood();
 				boolean isBanner = false;
 				if(!isMultiple) { // ASSIGN A SINGLE VGOOD TO THE PLAYER
-					if(l != null){
-						Beintoo.vgood = vgoodHand.getVgood(currentPlayer.getGuid(), codeID, Double.toString(l.getLatitude()), 
-							Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
-					}else {
-						Beintoo.vgood = vgoodHand.getVgood(currentPlayer.getGuid(), codeID, null, 
-								null,null, false);
+					if(l != null){				
+						VgoodChooseOne v = vgoodHand.getVgoodList(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
+								1, codeID, Double.toString(l.getLatitude()), 
+								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
+						if(v.getVgoods() != null && v.getVgoods().get(0) != null)
+							Beintoo.vgood = v.getVgoods().get(0);
+					}else {			
+						VgoodChooseOne v = vgoodHand.getVgoodList(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 1,
+								codeID, null, null, null, false);
+						if(v.getVgoods() != null && v.getVgoods().get(0) != null)
+							Beintoo.vgood = v.getVgoods().get(0);
 					}
 					
 			    	// ADD THE SINGLE VGOOD TO THE LIST
@@ -132,11 +138,12 @@ public class GetVgoodManager {
 			    	}
 		    	}else { // ASSIGN A LIST OF VGOOD TO THE PLAYER
 		    		if(l != null){
-		    			Beintoo.vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), codeID, Double.toString(l.getLatitude()), 
-							Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
+		    			Beintoo.vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
+		    					3, codeID, Double.toString(l.getLatitude()), 
+		    					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
 		    		}else {
-		    			Beintoo.vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), codeID, null, 
-		    					null,null, false);
+		    			Beintoo.vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
+		    					3, codeID, null, null,null, false);
 		    		}
 			    	if(Beintoo.vgoodlist != null){
 			    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE

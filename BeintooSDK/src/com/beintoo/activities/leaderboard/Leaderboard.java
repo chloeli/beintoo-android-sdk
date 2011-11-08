@@ -10,6 +10,7 @@ import com.beintoo.R;
 import com.beintoo.activities.Friends;
 import com.beintoo.activities.UserProfile;
 import com.beintoo.activities.alliances.UserAlliance;
+import com.beintoo.activities.signupnow.SignupLayouts;
 import com.beintoo.beintoosdk.BeintooAlliances;
 import com.beintoo.beintoosdk.BeintooApp;
 import com.beintoo.beintoosdk.BeintooUser;
@@ -100,8 +101,12 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		
 		LinearLayout tip = (LinearLayout) findViewById(R.id.tip);
 		tip.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*27),BDrawableGradient.LIGHT_GRAY_GRADIENT));
-		if(!Beintoo.isLogged(context)) // IF THE USER IS NOT LOGGED HIDE TIPS FOR CHALLENGE
+		if(!Beintoo.isLogged(context)){ // IF THE USER IS NOT LOGGED HIDE TIPS FOR CHALLENGE AND SHOW SIGNUP BUTTON
 			tip.setVisibility(LinearLayout.GONE);
+			LinearLayout signup = (LinearLayout) findViewById(R.id.signupPlayer);
+			signup.addView(SignupLayouts.signupRow(context, Beintoo.FEATURE_LEADERBOARD));
+			signup.setVisibility(View.VISIBLE);	
+		}
 		
 		if(leader_kind != null && leader_kind.equals("ALLIANCES")){
 			findViewById(R.id.tip).setVisibility(View.GONE);

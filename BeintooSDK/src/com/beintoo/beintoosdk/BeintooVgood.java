@@ -33,59 +33,13 @@ public class BeintooVgood {
 		else
 			apiPreUrl = BeintooSdkParams.sandboxUrl;
 	}
-
-	/**
-	 * Retrieve a vgood for the requested user
-	 * 
-	 * @param guid user guid
-	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
-	 * @param latitude
-	 * @param longitude
-	 * @param radius
-	 * @param privategood a bool to set if the vgood has to be private
-	 * @return a json object with vgood data
-	 */
-	public Vgood getVgood(String guid, String codeID,String latitude, String longitude, String radius, boolean privategood) {
-		
-		String apiUrl = apiPreUrl+"vgood/get/byguid/"+guid+"/?allowBanner=true";
-		
-		if(privategood == true) apiUrl = apiUrl + "&private=true"; else apiUrl = apiUrl + "&private=false";  
-		if(latitude != null) apiUrl = apiUrl + "&latitude="+latitude;
-		if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
-		if(radius != null) apiUrl = apiUrl + "&radius="+radius;
-		
-		HeaderParams header = new HeaderParams();
-		header.getKey().add("apikey");
-		header.getValue().add(DeveloperConfiguration.apiKey);
-		header.getKey().add("guid");
-		header.getValue().add(guid);
-		if(codeID != null){
-			header.getKey().add("codeID");
-			header.getValue().add(codeID);
-		}
-		
-		try {
-		// ADD THE USER AGENT
-			String userAgent = Beintoo.userAgent;
-			if(userAgent != null){
-				header.getKey().add("User-Agent");
-				header.getValue().add(userAgent);
-			}
-		}catch (Exception e){e.printStackTrace();}
-		
-		BeintooConnection conn = new BeintooConnection();
-		String json = conn.httpRequest(apiUrl, header, null);
-		Gson gson = new Gson();
-		Vgood vgood = new Vgood();
-		vgood = gson.fromJson(json, Vgood.class);
-		
-		return vgood;
-	}
 	
 	/**
 	 * Retrieve a vgood for the requested user
 	 * 
 	 * @param guid user guid
+	 * @param imei the device imei
+	 * @param rows how many vgood to retrieve
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @param latitude
 	 * @param longitude
@@ -93,7 +47,7 @@ public class BeintooVgood {
 	 * @param privategood a bool to set if the vgood has to be private
 	 * @return a json object with vgood data
 	 */
-	public VgoodChooseOne getVgoodList(String guid, String codeID,String latitude, String longitude, String radius, boolean privategood) {
+	public VgoodChooseOne getVgoodList(String guid, String imei, Integer rows, String codeID, String latitude, String longitude, String radius, boolean privategood) {
 		
 		String apiUrl = apiPreUrl+"vgood/byguid/"+guid+"/?allowBanner=true";
 		
@@ -101,6 +55,7 @@ public class BeintooVgood {
 		if(latitude != null) apiUrl = apiUrl + "&latitude="+latitude;
 		if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
 		if(radius != null) apiUrl = apiUrl + "&radius="+radius;
+		if(rows != null) apiUrl = apiUrl + "&rows="+rows;
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
@@ -110,6 +65,10 @@ public class BeintooVgood {
 		if(codeID != null){
 			header.getKey().add("codeID");
 			header.getValue().add(codeID);
+		}		
+		if(imei != null){
+			header.getKey().add("imei");
+			header.getValue().add(imei);
 		}
 		
 		try {
@@ -147,6 +106,40 @@ public class BeintooVgood {
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		Gson gson = new Gson();
+		
+		Vgood[] vgood = gson.fromJson(json, Vgood[].class);
+		
+		return vgood;		
+	}
+	
+	/**
+	 * Returns an array with all the vgoods earned by the player
+	 * 
+	 * @param guid player unique identifier
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @return a Vgood object array
+	 */
+	public Vgood [] showByPlayer(String guid, String codeID, boolean onlyConverted){
+		String apiUrl = null;
+		if(!onlyConverted)
+			apiUrl = apiPreUrl+"vgood/show/";
+		else
+			apiUrl = apiPreUrl+"vgood/show/?onlyConverted=true";
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		header.getKey().add("guid");
+		header.getValue().add(guid);
 		
 		if(codeID != null){
 			header.getKey().add("codeID");
@@ -234,13 +227,14 @@ public class BeintooVgood {
 	 * Accept a vgood from a user
 	 * 
 	 * @param vgoodExt the vgood id 
-	 * @param userExt the user id of the gift sender
+	 * @param userExt (optional) the user id
+	 * @param guid (optional) the player id 
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @return a Message object with the status of the sendAsAgift operation
 	 */
-	public Vgood acceptVgood (String vgoodExt, String userExt, String codeID){
+	public Vgood acceptVgood (String vgoodExt, String guid, String userExt, String codeID){
 			
-		String apiUrl = apiPreUrl+"vgood/accept/"+vgoodExt+"/"+userExt;
+		String apiUrl = apiPreUrl+"vgood/accept/"+vgoodExt;
 	
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
@@ -249,6 +243,16 @@ public class BeintooVgood {
 		if(codeID != null){
 			header.getKey().add("codeID");
 			header.getValue().add(codeID);
+		}
+		
+		if(userExt != null){
+			header.getKey().add("userExt");
+			header.getValue().add(userExt);
+		}
+		
+		if(guid != null){
+			header.getKey().add("guid");
+			header.getValue().add(guid);
 		}
 		
 		BeintooConnection conn = new BeintooConnection();

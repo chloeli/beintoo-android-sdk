@@ -119,8 +119,8 @@
     <string name="invalidnickname">The minimum length of the nickname is 3 characters</string>
     
     <!-- BUTTONS -->
-    <string name="trynow">Try Beintoo Now</string>
-    <string name="nothanks">No, thanks</string>    
+    <string name="trynow">Sign up now</string>
+    <string name="nothanks">Remind me later</string>    
     <string name="anotheraccount">Use another account</string>
     <string name="people">People</string>    
     <string name="friends">Friends</string>
@@ -259,4 +259,11 @@
 	<string name="sponsor"><Data><![CDATA[ Play hard: <b>win<br />&nbsp;&nbsp;your exclusive<br />&nbsp;&nbsp;real deal!</b> ]]> </Data></string>
 	<string name="sponsortitle">Register to Beintoo and get great discounts in your city as rewards for your games achievements.</string>
 	
+	<!-- PLAYER SIGNUP -->
+	<string name="signuphome">Have more fun, connect with players and make your winnings real!\nWelcome to the Beintoo network!</string>
+	<string name="signupnow"><data><![CDATA[SIGN UP <b>NOW</b>]]></data></string>
+	<string name="signupprofile">Create your profile, get new friends and manage your rewards!</string>
+	<string name="signupchallenge">Challenge friends, win and earn Bedollars!</string>	
+	<string name="signupleaderboard">Be in the Leaderboard and compare your score with your friends!</string>
+	<string name="signupforums">Discuss with players and give your feedbacks.</string>	
 </resources>

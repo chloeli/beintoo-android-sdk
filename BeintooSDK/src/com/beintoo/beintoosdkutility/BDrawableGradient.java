@@ -20,6 +20,8 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 
@@ -32,6 +34,8 @@ public class BDrawableGradient extends Drawable{
 	final public static int BLU_BUTTON_GRADIENT = 5;
 	final public static int BLU_ROLL_BUTTON_GRADIENT = 6;
 	final public static int GRAY_ROLL_BUTTON_GRADIENT = 7;
+	final public static int BLU_ROUNDED_BUTTON_GRADIENT = 8;
+	final public static int BLU_ROLL_ROUNDED_BUTTON_GRADIENT = 9;
 	
 	int whichGradient;
 	int width;
@@ -52,8 +56,12 @@ public class BDrawableGradient extends Drawable{
 			beintooHighGrayGradient(height,canvas);
 		else if(whichGradient == BLU_BUTTON_GRADIENT) // THE BLU BUTTON
 			beintooButtonGradient(height,canvas);
+		else if(whichGradient == BLU_ROUNDED_BUTTON_GRADIENT) // THE BLU RONDED BUTTON
+			beintooRoundedButtonGradient(height, canvas);		
 		else if(whichGradient == BLU_ROLL_BUTTON_GRADIENT) // THE BLU ROLLOVER BUTTON
 			beintooButtonGradientRollover(height,canvas);	
+		else if(whichGradient == BLU_ROLL_ROUNDED_BUTTON_GRADIENT)// THE BLU ROLLOVER ROUNDED BUTTON
+			beintooRoundedButtonGradientRollover(height,canvas);	
 		else if(whichGradient == GRAY_ROLL_BUTTON_GRADIENT) // THE GRAY ROLLOVER BUTTON
 			beintooButtonGrayGradientRollover(height,canvas);
 	}
@@ -112,10 +120,30 @@ public class BDrawableGradient extends Drawable{
 	    return canvas;
 	}
 	
+	public Canvas beintooRoundedButtonGradient(int h, Canvas canvas){
+		Paint p = new Paint();
+		int [] colors = {0xff8292A8, 0xff576B87,0xff4C627F, 0xff3C5271 };
+		float [] positions = {0.0f,0.5f,0.5f,1.0f};
+	    p.setShader(new LinearGradient(0, 0, 0, h, colors, positions,  Shader.TileMode.MIRROR));
+	    final Rect rect = new Rect(0, 0, canvas.getClipBounds().width(), canvas.getClipBounds().height());
+        final RectF rectF = new RectF(rect);                
+	    canvas.drawRoundRect(rectF, 8,8, p);
+	    return canvas;
+	}
+	
 	public Canvas beintooButtonGradientRollover(int h, Canvas canvas){
 		Paint p = new Paint();
 		p.setColor(Color.parseColor("#324C68"));
 		canvas.drawPaint(p);
+	    return canvas;
+	}
+	
+	public Canvas beintooRoundedButtonGradientRollover(int h, Canvas canvas){
+		Paint p = new Paint();
+		p.setColor(Color.parseColor("#324C68"));
+		final Rect rect = new Rect(0, 0, canvas.getClipBounds().width(), canvas.getClipBounds().height());
+        final RectF rectF = new RectF(rect);                
+	    canvas.drawRoundRect(rectF, 8,8, p);		
 	    return canvas;
 	}
 	

@@ -46,12 +46,18 @@ public class SubmitScoreManager {
 	private static AtomicLong LAST_OPERATION = new AtomicLong(0);
 	private long OPERATION_TIMEOUT = 2000;
 	
-	public void submitScoreWithVgoodCheck (final Context ctx, final int score, final int threshold, final String codeID, final boolean isMultiple,
+	public void submitScoreAndGetVgood (final Context ctx, final int score, final int threshold, final String codeID, final boolean isMultiple,
 			final LinearLayout container, final int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener){
 		new Thread(new Runnable(){     					
     		public void run(){
     			try {				
 					Player currentPlayer = Current.getCurrentPlayer(ctx);
+					int thresholdScore = threshold;
+					if(currentPlayer.getVgoodThreshold() != null && codeID != null &&
+							currentPlayer.getVgoodThreshold().get(codeID) != null){
+						thresholdScore = currentPlayer.getVgoodThreshold().get(codeID).intValue();
+					}
+					
 					String key;
 					if(codeID != null)
 						key = currentPlayer.getGuid()+":count:"+codeID;
@@ -61,8 +67,8 @@ public class SubmitScoreManager {
 					int currentTempScore = PreferencesHandler.getInt(key, ctx);
 					currentTempScore+=score;
 							
-					if(currentTempScore >= threshold) { // THE USER REACHED THE DEVELOPER TRESHOLD SEND VGOOD AND SAVE THE REST
-						PreferencesHandler.saveInt(key, currentTempScore-threshold, ctx);
+					if(currentTempScore >= thresholdScore) { // THE USER REACHED THE DEVELOPER THRESHOLD SEND VGOOD AND SAVE THE REST
+						PreferencesHandler.saveInt(key, currentTempScore-thresholdScore, ctx);
 						submitScore(ctx, score, codeID, true, Gravity.BOTTOM, slistener);
 						
 						GetVgoodManager gvm = new GetVgoodManager(ctx);

@@ -24,10 +24,9 @@ import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooAchievements;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
-import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
-import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.AchievementWrap;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerAchievement;
@@ -81,9 +80,8 @@ public class UserAchievements extends Dialog implements OnClickListener{
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));		
 		TextView titleBar = (TextView)findViewById(R.id.dialogTitle);
 		titleBar.setText(current.getContext().getString(R.string.achievement));
-
+		
 		startLoading();
-
 	}
 
 	private void startLoading(){
@@ -97,7 +95,7 @@ public class UserAchievements extends Dialog implements OnClickListener{
 		new Thread(new Runnable(){      
     		public void run(){
     			try{ 
-    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
+    				Player p = Current.getCurrentPlayer(getContext());
     				BeintooAchievements ba = new BeintooAchievements();    				
     				pachivement = ba.getPlayerAchievements(p.getGuid());	
     				if(pachivement.size() > 0)

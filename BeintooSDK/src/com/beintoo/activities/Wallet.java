@@ -22,11 +22,12 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -44,27 +45,37 @@ import android.widget.TextView;
 
 
 import com.beintoo.R;
+import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.main.Beintoo;
+
+import com.beintoo.vgood.VgoodSendToFriend;
 import com.beintoo.wrappers.Player;
+import com.beintoo.wrappers.User;
 import com.beintoo.wrappers.Vgood;
 
 public class Wallet extends Dialog implements OnClickListener{
-	static Dialog current;
-	
-	Vgood [] vgood;
-	
-	final double ratio;
-	
-	private final int OPEN_BROWSER = 1;
-	private final int LOAD_TABLE = 2;
-	private final int CONNECTION_ERROR = 3;
+	private Dialog current;		
+	private String vgoodExtId;
+	private User[] friends;
+	private Vgood [] vgood;
+	private final double ratio;
+		
+	private final int LOAD_TABLE 		= 1;
+	private final int CONNECTION_ERROR 	= 2;
+	private final int SEND_TO_FRIEND 	= 3;
+	private final int NOT_REDEEMED 		= 1;
+	private final int REDEEMED 			= 2;
+	private int currentSection 			= NOT_REDEEMED;
+	private View selectedRow;
 	
 	public Wallet(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
@@ -78,13 +89,13 @@ public class Wallet extends Dialog implements OnClickListener{
 		
 		// GETTING DENSITY PIXELS RATIO
 		ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
-		// SET UP LAYOUTS
+		
+		// Setup layouts
 		double pixels = ratio * 40;
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 		
-		
-		// SETTING UP BUTTONS
+		// Setup buttons
 		final BeButton b = new BeButton(ctx);
 		Button toConvert = (Button) findViewById(R.id.toConvertGoods);		
 		toConvert.setBackgroundDrawable(b.setPressedBackg(
@@ -94,6 +105,7 @@ public class Wallet extends Dialog implements OnClickListener{
 		toConvert.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				resetButtons();
+				currentSection = NOT_REDEEMED;
 				v.setBackgroundDrawable(b.setPressedBackg(
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
@@ -105,7 +117,7 @@ public class Wallet extends Dialog implements OnClickListener{
             				BeintooVgood newvgood = new BeintooVgood();            				
             				// GET THE CURRENT LOGGED PLAYER
             				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
-            				vgood = newvgood.showByUser(p.getUser().getId(), null, false);
+            				vgood = newvgood.showByPlayer(p.getGuid(), null, false);
             				UIhandler.sendEmptyMessage(LOAD_TABLE);
             			}catch (Exception e){
             				e.printStackTrace();
@@ -124,6 +136,7 @@ public class Wallet extends Dialog implements OnClickListener{
 		converted.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
 				resetButtons();
+				currentSection = REDEEMED;
 				v.setBackgroundDrawable(b.setPressedBackg(
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
@@ -136,7 +149,7 @@ public class Wallet extends Dialog implements OnClickListener{
             				BeintooVgood newvgood = new BeintooVgood();            				
             				// GET THE CURRENT LOGGED PLAYER
             				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
-            				vgood = newvgood.showByUser(p.getUser().getId(), null, true);
+            				vgood = newvgood.showByPlayer(p.getGuid(), null, true);
             				UIhandler.sendEmptyMessage(LOAD_TABLE);
             			}catch (Exception e){
             				e.printStackTrace();
@@ -160,7 +173,7 @@ public class Wallet extends Dialog implements OnClickListener{
     			try{ 
     				BeintooVgood bv = new BeintooVgood();
     				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
-    				vgood = bv.showByUser(p.getUser().getId(), null, false);
+    				vgood = bv.showByPlayer(p.getGuid(), null, false);
     				UIhandler.sendEmptyMessage(LOAD_TABLE);
     			}catch (Exception e){manageConnectionException();}
     		}
@@ -169,9 +182,9 @@ public class Wallet extends Dialog implements OnClickListener{
 	
 	public void loadWallet(){
 		try {			
-			if(vgood.length > 0)
+			if(vgood.length > 0){
 				prepareWallet();
-			else { // NO VGOODS SHOW A MESSAGE
+			}else { // No vgoods show a message
 				TextView noGoods = new TextView(getContext());
 				noGoods.setText(getContext().getString(R.string.walletNoGoods));
 				noGoods.setTextColor(Color.GRAY);
@@ -279,22 +292,53 @@ public class Wallet extends Dialog implements OnClickListener{
 	}
 
 	public void onClick(View v) {
-		final int selectedRow = v.getId();
-		final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-		new Thread(new Runnable(){      
-    		public void run(){
-    			try{ 
-    				Message msg = new Message();
-    				Bundle b = new Bundle();
-    				b.putInt("id", selectedRow);
-    				msg.setData(b);
-    				msg.what = OPEN_BROWSER;
-    				UIhandler.sendMessage(msg);
-    			}catch (Exception e){
-    			}
-    			dialog.dismiss();
-    		}
-		}).start();	
+		selectedRow = v;
+		if(currentSection == NOT_REDEEMED){
+			showConfirmAlert(selectedRow);	
+		}else{
+			BeintooBrowser bb = new BeintooBrowser(current.getContext(),vgood[v.getId()].getShowURL());
+			bb.show();
+		}
+	}
+	
+	private void showConfirmAlert(final View row){
+		
+		final Vgood v = vgood[row.getId()];
+		
+		final CharSequence[] items = {current.getContext().getString(R.string.vgoodgetcoupondialog), 
+				current.getContext().getString(R.string.vgoodsendgiftdialog)};
+		vgoodExtId = v.getId();
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(current.getContext());
+		builder.setTitle(current.getContext().getString(R.string.vgoodchoosedialog));
+		builder.setItems(items, new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int item) {
+		        if(item == 0){ // GET COUPON
+		        	try {
+		        		BeintooBrowser getVgood = new BeintooBrowser(current.getContext(),v.getGetRealURL());
+		        		Beintoo.currentDialog = getVgood;
+		        		getVgood.show();		        				         		
+		        	}catch(Exception e){e.printStackTrace();}
+		        }else if(item == 1){ // SEND AS A GIFT
+		        	final ProgressDialog  loading = ProgressDialog.show(getContext(), "", getContext().getString(R.string.friendLoading),true);
+		        	new Thread(new Runnable(){      
+			    		public void run(){
+			    			try{     						    				
+			    				BeintooUser u = new BeintooUser();
+			    				Player p = Current.getCurrentPlayer(current.getContext());
+			    				friends = u.getUserFriends(p.getUser().getId(), null);
+			    				UIhandler.sendEmptyMessage(SEND_TO_FRIEND);
+			    			}catch (Exception e){
+			    				e.printStackTrace();
+			    			}
+			    			loading.dismiss();
+			    		}
+					}).start();	
+		        }
+		    }
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 	
 	public void resetButtons(){
@@ -325,14 +369,17 @@ public class Wallet extends Dialog implements OnClickListener{
 	private Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {
-			  switch(msg.what){
-			  	case OPEN_BROWSER:			  	
-			  		BeintooBrowser bb = new BeintooBrowser(current.getContext(),vgood[msg.getData().getInt("id")].getShowURL());
-					bb.show();						        
-			  	break;
+			  switch(msg.what){			  	
 			  	case LOAD_TABLE:
 			  		loadWallet();
 				break;	
+			  	case SEND_TO_FRIEND:
+			  		VgoodSendToFriend f = new VgoodSendToFriend(getContext(), VgoodSendToFriend.OPEN_FRIENDS_FROM_WALLET, friends);
+					f.previous = current;
+					f.rowToRemove = selectedRow;			  		
+					f.vgoodID = vgoodExtId;
+					f.show();
+			  	break;
 			  	case CONNECTION_ERROR:
 			  		TableLayout table = (TableLayout) findViewById(R.id.table);
 					table.removeAllViews();

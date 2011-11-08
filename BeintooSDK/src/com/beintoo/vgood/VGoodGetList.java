@@ -23,6 +23,7 @@ import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -31,7 +32,6 @@ import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
-import com.google.beintoogson.Gson;
 
 
 import android.app.AlertDialog;
@@ -245,13 +245,13 @@ public class VGoodGetList extends Dialog implements OnClickListener{
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
 	    	try {
 				// ASSIGN THE VGOOD WHEN THE USER CLOSE THE DIALOG WITHOUT CHOOSING ANY VGOOD
-				final Player loggedPlayer = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", current.getContext()), Player.class);
-				if(loggedPlayer.getUser() != null){
+				final Player loggedPlayer = Current.getCurrentPlayer(current.getContext());
+				if(loggedPlayer != null){
 					new Thread(new Runnable(){     					
 		        		public void run(){	
 		    				try {
 		    					BeintooVgood bv = new BeintooVgood();	    					
-		    					bv.acceptVgood(vgoodList.getVgoods().get(0).getId(), loggedPlayer.getUser().getId(), null);
+		    					bv.acceptVgood(vgoodList.getVgoods().get(0).getId(), loggedPlayer.getGuid(), null, null);
 		    				}catch(Exception e){e.printStackTrace();}
 		        		}	
 		        	}).start();	

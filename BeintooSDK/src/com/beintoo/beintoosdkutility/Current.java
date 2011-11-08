@@ -17,8 +17,11 @@ public class Current {
 	}
 	
 	public static User getCurrentUser(Context context){
-		Player p = Current.getCurrentPlayer(context);		
-		return p.getUser();
+		Player p = Current.getCurrentPlayer(context);
+		if(p != null)
+			return p.getUser();
+		else 
+			return null;
 	}
 	
 	public static void setCurrentPlayer(Context context, Player p){

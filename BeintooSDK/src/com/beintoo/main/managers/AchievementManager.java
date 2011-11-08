@@ -26,6 +26,7 @@ import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.beintoosdkutility.SerialExecutor;
+import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BAchievementListener;
 import com.beintoo.main.Beintoo.BMissionListener;
 import com.beintoo.wrappers.Mission;
@@ -36,7 +37,6 @@ import com.beintoo.wrappers.PlayerAchievementContainer;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 
 public class AchievementManager {
 	
@@ -140,7 +140,7 @@ public class AchievementManager {
 									final Bundle msg = new Bundle();
 									msg.putString("name", achivementsName.toString());
 									msg.putString("message", message.toString());
-									UIHandler.post(new Runnable(){
+									Beintoo.UIhandler.post(new Runnable(){
 										@Override
 										public void run() {
 											MissionAchievementMessage.showMessage(currentContext, msg, gravity);											
@@ -150,7 +150,7 @@ public class AchievementManager {
 									// OPEN THE MISSION COMPLETED DIALOG
 									final Mission mm = completedMission;
 									final String devID = deviceUUID;
-									UIHandler.post(new Runnable(){
+									Beintoo.UIhandler.post(new Runnable(){
 										@Override
 										public void run() {
 											MissionDialog m = new MissionDialog(currentContext, mm, MissionDialog.MISSION_COMPLETED, p, devID);
@@ -215,10 +215,10 @@ public class AchievementManager {
 	    	        	}
 	    	        	
 	    	        	final Mission mission = m;
-						UIHandler.post(new Runnable(){
+						Beintoo.UIhandler.post(new Runnable(){
 							@Override
 							public void run() {
-								if(mission.getId() != null){
+								if(mission != null && mission.getId() != null){
 									MissionDialog md = new MissionDialog(currentContext, mission, MissionDialog.MISSION_STATUS, p, deviceUUID);
 									md.show();
 								}
@@ -236,6 +236,4 @@ public class AchievementManager {
     		}
 		});
 	}
-	
-	Handler UIHandler = new Handler();
 }

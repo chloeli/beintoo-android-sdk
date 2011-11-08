@@ -120,8 +120,8 @@
 	<string name="invalidnickname">La longueur minimale du surnom est de 3 caractères</string>
 	
     <!-- BUTTONS -->
-    <string name="trynow">Essayez Beintoo maintenant</string>
-    <string name="nothanks">Non merci</string>
+    <string name="trynow">S\'enregistrer</string>
+    <string name="nothanks">Plus tard</string>
     <string name="anotheraccount">Utiliser un autre profil</string>
     <string name="all">Tous</string>
     <string name="people">Personnes</string>
@@ -259,4 +259,12 @@
 	<!-- CUSTOM -->
 	<string name="sponsor"><Data><![CDATA[ Jouez le jeu: <b><br />&nbsp;&nbsp;gagnez vos<br />&nbsp;&nbsp;offres exclusives!</b> ]]> </Data></string>
 	<string name="sponsortitle">Enregistrez-vous à Beintoo et obtenez de nombreuses réductions dans votre ville comme prix pour vos résultats dans les jeux.</string>
+	
+	<!-- PLAYER SIGNUP -->
+	<string name="signuphome">Amusez-vous encore plus, rejoignez des millions d\'utilisateurs et rendez vos succès réels!\nBienvenue dans le réseaux Beintoo!</string>
+	<string name="signupnow"><data><![CDATA[<b>S\'enregistrer</b>]]></data></string>
+	<string name="signupprofile">Créer votre profil, rencontrer de nouveaux amis et gérez vos prix</string>
+	<string name="signupchallenge">Défiez vos amis, gagnez et encaissez des Bedollars</string>	
+	<string name="signupleaderboard">Entrer dans le classement et comparez votre score avec vos amis</string>
+	<string name="signupforums">Discutez avec les utilisateurs et donnes vos conseils</string>	    
 </resources>

@@ -13,42 +13,55 @@
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:id="@+id/maincontainer"
 		android:orientation="vertical" android:background="#dddddd">
-		<include layout="@layout/beintoobar" />
+		<include layout="@layout/beintoobar" />   
 		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline"></LinearLayout>
-		<RelativeLayout android:gravity="center_vertical"
-			android:id="@+id/welcome" android:layout_width="fill_parent"
-			android:layout_height="30dip">
-			<TextView android:layout_width="wrap_content" android:id="@+id/nickname"
-				android:gravity="center_vertical" android:layout_alignParentLeft="true"
-				android:text="@string/homeWelcome" android:textSize="14dip"
-				android:layout_height="30dip" android:textColor="#000000"
-				android:paddingLeft="10dip"></TextView>
-			<TextView android:layout_marginRight="10dip"
-				android:layout_width="wrap_content" android:id="@+id/bedollars"
-				android:gravity="center_vertical" android:layout_alignParentRight="true"
-				android:text="BeDollars" android:layout_height="30dip"
-				android:textColor="#000000"></TextView>
-		</RelativeLayout>
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="1dip" android:background="#8F9193" android:id="@+id/grayline"></LinearLayout>
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline"></LinearLayout>
-		<LinearLayout android:gravity="center_vertical"
-			android:id="@+id/messages" android:layout_width="fill_parent"
-			android:layout_height="32dip" android:orientation="vertical">
-			<TextView android:layout_width="wrap_content" android:id="@+id/unmessage"
-				android:gravity="center_vertical" android:layout_alignParentLeft="true"
-				android:textSize="14dip"
-				android:layout_height="30dip" android:textColor="#000000"
-				android:paddingLeft="10dip"></TextView>			
-		</LinearLayout>
-		<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="1dip" android:background="#8F9193"
-				android:id="@+id/graylineu"></LinearLayout>
+			android:layout_height="wrap_content" android:orientation="vertical" 
+			android:id="@+id/userinfo" android:visibility="gone">
 			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="1dip" android:background="#FFFFFF"
-				android:id="@+id/whitelineu"></LinearLayout>
+				android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline"></LinearLayout>
+			<RelativeLayout android:gravity="center_vertical"
+				android:id="@+id/welcome" android:layout_width="fill_parent"
+				android:layout_height="30dip">
+				<TextView android:layout_width="wrap_content" android:id="@+id/nickname"
+					android:gravity="center_vertical" android:layout_alignParentLeft="true"
+					android:text="@string/homeWelcome" android:textSize="14dip"
+					android:layout_height="30dip" android:textColor="#000000"
+					android:paddingLeft="10dip"></TextView>
+				<TextView android:layout_marginRight="10dip"
+					android:layout_width="wrap_content" android:id="@+id/bedollars"
+					android:gravity="center_vertical" android:layout_alignParentRight="true"
+					android:text="BeDollars" android:layout_height="30dip"
+					android:textColor="#000000"></TextView>
+			</RelativeLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="1dip" android:background="#8F9193" android:id="@+id/grayline"></LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline"></LinearLayout>
+		</LinearLayout> <!-- END USER INFO -->
+		
+		<!-- SIGNUP CONTAINER FOR PLAYERS -->
+		<LinearLayout android:layout_width="fill_parent" android:orientation="vertical"
+			android:layout_height="wrap_content" android:id="@+id/signupPlayer" android:visibility="gone">			
+		</LinearLayout>	
+		
+		<LinearLayout android:layout_width="fill_parent" android:orientation="vertical"
+			android:layout_height="wrap_content" android:id="@+id/usermsg" android:visibility="gone">
+			<LinearLayout android:gravity="center_vertical"
+				android:id="@+id/messages" android:layout_width="fill_parent"
+				android:layout_height="32dip" android:orientation="vertical">
+				<TextView android:layout_width="wrap_content" android:id="@+id/unmessage"
+					android:gravity="center_vertical" android:layout_alignParentLeft="true"
+					android:textSize="14dip"
+					android:layout_height="30dip" android:textColor="#000000"
+					android:paddingLeft="10dip"></TextView>			
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#8F9193"
+					android:id="@+id/graylineu"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#FFFFFF"
+					android:id="@+id/whitelineu"></LinearLayout>
+		</LinearLayout>	
 		<LinearLayout android:layout_width="fill_parent"
 			android:id="@+id/maincontainer" android:orientation="vertical"
 			android:gravity="center" android:layout_height="wrap_content"

@@ -30,6 +30,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -45,7 +46,7 @@ public class VgoodAcceptDialog extends Dialog implements OnClickListener{
 		this.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		ctx = context;
 		vgood = v;
-		
+
 		try {
 			LinearLayout main = new LinearLayout(context);
 			LinearLayout.LayoutParams mainparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -141,19 +142,7 @@ public class VgoodAcceptDialog extends Dialog implements OnClickListener{
 	public void onClick(View v) {
 		if(v.getId() == 0){
 			this.cancel();
-			if(vgood.getVgoods().size() > 1){ // AUTO ASSIGN A VGOOD
-				new Thread(new Runnable(){     					
-	        		public void run(){	
-	    				try {
-	    					Player loggedUser = Current.getCurrentPlayer(ctx);
-	    					if(loggedUser.getUser() != null){
-	    						BeintooVgood bv = new BeintooVgood();	    					
-	    						bv.acceptVgood(vgood.getVgoods().get(0).getId(), loggedUser.getUser().getId(), null);
-	    					}
-	    				}catch(Exception e){e.printStackTrace();}
-	        		}	
-				}).start();	
-			}
+			assignVgood();
 		}else if(v.getId() == 1){
 			if(vgood.getVgoods().size() > 1){
 				VGoodGetList getVgoodList = new VGoodGetList(ctx, vgood);
@@ -165,5 +154,30 @@ public class VgoodAcceptDialog extends Dialog implements OnClickListener{
 				m.show();
 			}
 		}	
+	}
+	
+	// Auto assign the first vgood if more than one received
+	private void assignVgood(){		
+		if(vgood.getVgoods().size() > 1){ 
+			new Thread(new Runnable(){     					
+        		public void run(){	
+    				try {
+    					Player loggedUser = Current.getCurrentPlayer(ctx);
+    					if(loggedUser != null){
+    						BeintooVgood bv = new BeintooVgood();	    					
+    						bv.acceptVgood(vgood.getVgoods().get(0).getId(), loggedUser.getGuid(), null, null);
+    					}
+    				}catch(Exception e){e.printStackTrace();}
+        		}	
+			}).start();	
+		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {	    	
+	    	assignVgood();	        
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 }

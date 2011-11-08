@@ -21,14 +21,14 @@ import java.util.HashSet;
 
 import com.beintoo.R;
 import com.beintoo.activities.leaderboard.LeaderboardContest;
+import com.beintoo.activities.signupnow.SignupLayouts;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
-import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.beintoosdkutility.Current;
+import com.beintoo.beintoosdkutility.DialogStack;
 import com.beintoo.main.Beintoo;
-import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
-import com.google.beintoogson.Gson;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -37,6 +37,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -75,22 +76,25 @@ public class BeintooHome extends Dialog {
 		RelativeLayout welcome = (RelativeLayout) findViewById(R.id.welcome);
 		welcome.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*30),BDrawableGradient.GRAY_GRADIENT));
 		
-		TableRow row1 = (TableRow) findViewById(R.id.firstRow);
-		TableRow row2 = (TableRow) findViewById(R.id.secondRow);
-		TableRow row3 = (TableRow) findViewById(R.id.thirdRow);
-		TableRow row4 = (TableRow) findViewById(R.id.fourthRow);
-		TableRow row5 = (TableRow) findViewById(R.id.fifthRow);
-		TableRow row6 = (TableRow) findViewById(R.id.sixthRow);
-				
-		setRowBg(row1,0);
-		setRowBg(row2,1);
-		setRowBg(row3,2);
-		setRowBg(row4,3);
-		setRowBg(row5,4);
-		setRowBg(row6,5);
+		u = Current.getCurrentUser(ctx);
 		
+		// SET USER ROW IF IS USER
+		if(u != null && Beintoo.isLogged(ctx))
+			showUserInfoRow();
+		else{
+			DialogStack.addToDialogStack(this);
+			LinearLayout signup = (LinearLayout) findViewById(R.id.signupPlayer);
+			signup.addView(SignupLayouts.signupRow(current.getContext(),"home"));
+			signup.setVisibility(View.VISIBLE);
+		}
+		// SET ROWS BACKGROUND, CLICKLISTENER AND CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
+		setFeatureToUse();		
+	}
+	
+	public void showUserInfoRow(){
+		findViewById(R.id.userinfo).setVisibility(View.VISIBLE);
 		try {
-			u = getCurrentUser();
+			Context context = current.getContext();			
 			// set the nickname
 			TextView nickname = (TextView) findViewById(R.id.nickname);
 			nickname.setText(u.getNickname());
@@ -98,15 +102,10 @@ public class BeintooHome extends Dialog {
 			bedollars.setText(u.getBedollars().intValue() + " BeDollars");
 			LinearLayout unread = (LinearLayout) findViewById(R.id.messages);
 			int unreadcount = u.getUnreadMessages();			
-			if(unreadcount == 0){
-				unread.setVisibility(LinearLayout.GONE);
-				LinearLayout gray = (LinearLayout) findViewById(R.id.graylineu);
-				gray.setVisibility(LinearLayout.GONE);
-				LinearLayout white = (LinearLayout) findViewById(R.id.whitelineu);
-				white.setVisibility(LinearLayout.GONE);
-			}else{
+			if(unreadcount > 0){
+				findViewById(R.id.usermsg).setVisibility(View.VISIBLE);
 				TextView unreadtxt = (TextView) findViewById(R.id.unmessage);
-				unreadtxt.setText(String.format(ctx.getString(R.string.messagenotification), unreadcount));				
+				unreadtxt.setText(String.format(context.getString(R.string.messagenotification), unreadcount));				
 				unread.setBackgroundDrawable(button.setPressedBackg(
 						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.HIGH_GRAY_GRADIENT),
@@ -119,131 +118,160 @@ public class BeintooHome extends Dialog {
 					}					
 				});
 			}
-			
-			
 		}catch (Exception e){e.printStackTrace();}
-		
-		// PROFILE	
-		if(row1 != null){			    
-			row1.setOnClickListener(new TableRow.OnClickListener(){
-				public void onClick(View v) {		
-					UIhandler.sendEmptyMessage(OPEN_PROFILE);
-				}
-			});
-		}
-		
-		// LEADERBOARD
-		if(row2 != null){			    
-			row2.setOnClickListener(new TableRow.OnClickListener(){
-				public void onClick(View v) {		
-					UIhandler.sendEmptyMessage(OPEN_LEADERBOARD);
-				}
-			});
-		}
-		
-		// WALLET
-		if(row3 != null){			    
-			row3.setOnClickListener(new TableRow.OnClickListener(){
-				public void onClick(View v) {	
-					UIhandler.sendEmptyMessage(OPEN_WALLET);
-				}
-			});
-		}
-		
-		// CHALLENGES
-		if(row4 != null){			    
-			row4.setOnClickListener(new TableRow.OnClickListener(){
-				public void onClick(View v) {								
-	            	UIhandler.sendEmptyMessage(OPEN_CHALLENGE);								            	
-				}
-			});
-		}
-		
-		// ACHIEVEMENTS
-		if(row5 != null){			    
-			row5.setOnClickListener(new TableRow.OnClickListener(){
-				public void onClick(View v) {								
-	            	UIhandler.sendEmptyMessage(OPEN_ACHIEVEMENTS);								            	
-				}
-			});
-		}
-		
-		// Tips&forum
-		if(row6 != null){			    
-			row6.setOnClickListener(new TableRow.OnClickListener(){
-				public void onClick(View v) {								
-	            	UIhandler.sendEmptyMessage(OPEN_FORUM);								            	
-				}
-			});
-		}
-		
-		try {
-			// CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
-			setFeatureToUse();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 	
 	public void setFeatureToUse(){
-		String[] features = Beintoo.usedFeatures;
-		
-		if(features != null){			
-			HashSet<String> f = new HashSet<String>(Arrays.asList(features));
-			TableLayout tl = (TableLayout)findViewById(R.id.myTableLayout);			
-			/*
-			 * REMOVE FEATURES THAT ARE NOT IN THE features ARRAY SETTED BY THE DEVELOPER
-			 */
-			int count = 0;
-			if(!f.contains("profile")){
-				tl.removeView((LinearLayout)findViewById(R.id.firstWhiteline));
-				tl.removeView((LinearLayout)findViewById(R.id.firstGrayline));
-				tl.removeView((TableRow) findViewById(R.id.firstRow));				
-			}else{
-				setRowBg((TableRow) findViewById(R.id.firstRow), count);
-				count++;
+		try {
+			TableRow row1 = (TableRow) findViewById(R.id.firstRow);
+			TableRow row2 = (TableRow) findViewById(R.id.secondRow);
+			TableRow row3 = (TableRow) findViewById(R.id.thirdRow);
+			TableRow row4 = (TableRow) findViewById(R.id.fourthRow);
+			TableRow row5 = (TableRow) findViewById(R.id.fifthRow);
+			TableRow row6 = (TableRow) findViewById(R.id.sixthRow);
+					
+			setRowBg(row1,0);
+			setRowBg(row2,1);
+			setRowBg(row3,2);
+			setRowBg(row4,3);
+			setRowBg(row5,4);
+			setRowBg(row6,5);
+			
+			// PROFILE	
+			if(row1 != null){		
+				row1.setOnClickListener(new TableRow.OnClickListener(){
+					public void onClick(View v) {		
+						UIhandler.sendEmptyMessage(OPEN_PROFILE);
+					}
+				});
 			}
-			if(!f.contains("wallet")){
-				tl.removeView((LinearLayout)findViewById(R.id.secondWhiteline));
-				tl.removeView((LinearLayout)findViewById(R.id.secondGrayline));
-				tl.removeView((TableRow) findViewById(R.id.secondRow));				
-			}else{
-				setRowBg((TableRow) findViewById(R.id.secondRow), count);
-				count++;
+			
+			// LEADERBOARD
+			if(row2 != null){			    
+				row2.setOnClickListener(new TableRow.OnClickListener(){
+					public void onClick(View v) {		
+						UIhandler.sendEmptyMessage(OPEN_LEADERBOARD);
+					}
+				});
 			}
-			if(!f.contains("leaderboard")){
-				tl.removeView((LinearLayout)findViewById(R.id.thirdWhiteline));
-				tl.removeView((LinearLayout)findViewById(R.id.thirdGrayline));
-				tl.removeView((TableRow) findViewById(R.id.thirdRow));				
-			}else{
-				setRowBg((TableRow) findViewById(R.id.thirdRow), count);
-				count++;
+			
+			// WALLET
+			if(row3 != null){			    
+				row3.setOnClickListener(new TableRow.OnClickListener(){
+					public void onClick(View v) {	
+						UIhandler.sendEmptyMessage(OPEN_WALLET);
+					}
+				});
 			}
-			if(!f.contains("challenges")){
-				tl.removeView((LinearLayout)findViewById(R.id.fourthWhiteline));
-				tl.removeView((LinearLayout)findViewById(R.id.fourthGrayline));
-				tl.removeView((TableRow) findViewById(R.id.fourthRow));				
-			}else{
-				setRowBg((TableRow) findViewById(R.id.fourthRow), count);
-				count++;
+			
+			// CHALLENGES
+			if(row4 != null){			    
+				if(u == null){		
+					AlphaAnimation animation = new AlphaAnimation(1.0f, 0.5f);
+				    animation.setDuration(1);
+				    animation.setFillEnabled(true);
+				    animation.setFillAfter(true);
+					row4.setAnimation(animation);
+				}
+				row4.setOnClickListener(new TableRow.OnClickListener(){
+					public void onClick(View v) {
+						if(u != null){
+							UIhandler.sendEmptyMessage(OPEN_CHALLENGE);
+						}else{
+							SignupLayouts.signupNowDialog(current.getContext(), Beintoo.FEATURE_CHALLENGES);
+						}
+					}
+				});
 			}
-			if(!f.contains("achievements")){
-				tl.removeView((LinearLayout)findViewById(R.id.fifthWhiteline));
-				tl.removeView((LinearLayout)findViewById(R.id.fifthGrayline));
-				tl.removeView((TableRow) findViewById(R.id.fifthRow));				
-			}else{
-				setRowBg((TableRow) findViewById(R.id.fifthRow), count);
-				count++;
+			
+			// ACHIEVEMENTS
+			if(row5 != null){			    
+				row5.setOnClickListener(new TableRow.OnClickListener(){
+					public void onClick(View v) {								
+		            	UIhandler.sendEmptyMessage(OPEN_ACHIEVEMENTS);								            	
+					}
+				});
 			}
-			if(!f.contains("forums")){
-				tl.removeView((LinearLayout)findViewById(R.id.sixthWhiteline));
-				tl.removeView((LinearLayout)findViewById(R.id.sixthGrayline));
-				tl.removeView((TableRow) findViewById(R.id.sixthRow));				
-			}else{
-				setRowBg((TableRow) findViewById(R.id.sixthRow), count);
-				count++;
+			
+			// Tips&forum
+			if(row6 != null){	
+				if(u == null){		
+					AlphaAnimation animation = new AlphaAnimation(1.0f, 0.5f);
+				    animation.setDuration(1);
+				    animation.setFillEnabled(true);
+				    animation.setFillAfter(true);
+					row6.setAnimation(animation);
+				}
+				row6.setOnClickListener(new TableRow.OnClickListener(){
+					public void onClick(View v) {	
+						if(u != null){
+							UIhandler.sendEmptyMessage(OPEN_FORUM);
+						}else{
+							SignupLayouts.signupNowDialog(current.getContext(), Beintoo.FEATURE_FORUMS);
+						}
+					}
+				});
 			}
-		}
+			
+			
+			String[] features = Beintoo.usedFeatures;		
+			if(features != null){			
+				HashSet<String> f = new HashSet<String>(Arrays.asList(features));
+				TableLayout tl = (TableLayout)findViewById(R.id.myTableLayout);			
+				/*
+				 * REMOVE FEATURES THAT ARE NOT IN THE features ARRAY SETTED BY THE DEVELOPER
+				 */
+				int count = 0;
+				if(!f.contains("profile")){
+					tl.removeView((LinearLayout)findViewById(R.id.firstWhiteline));
+					tl.removeView((LinearLayout)findViewById(R.id.firstGrayline));
+					tl.removeView((TableRow) findViewById(R.id.firstRow));				
+				}else{
+					setRowBg((TableRow) findViewById(R.id.firstRow), count);
+					count++;
+				}
+				if(!f.contains("wallet")){
+					tl.removeView((LinearLayout)findViewById(R.id.secondWhiteline));
+					tl.removeView((LinearLayout)findViewById(R.id.secondGrayline));
+					tl.removeView((TableRow) findViewById(R.id.secondRow));				
+				}else{
+					setRowBg((TableRow) findViewById(R.id.secondRow), count);
+					count++;
+				}
+				if(!f.contains("leaderboard")){
+					tl.removeView((LinearLayout)findViewById(R.id.thirdWhiteline));
+					tl.removeView((LinearLayout)findViewById(R.id.thirdGrayline));
+					tl.removeView((TableRow) findViewById(R.id.thirdRow));				
+				}else{
+					setRowBg((TableRow) findViewById(R.id.thirdRow), count);
+					count++;
+				}
+				if(!f.contains("challenges")){
+					tl.removeView((LinearLayout)findViewById(R.id.fourthWhiteline));
+					tl.removeView((LinearLayout)findViewById(R.id.fourthGrayline));
+					tl.removeView((TableRow) findViewById(R.id.fourthRow));				
+				}else{
+					setRowBg((TableRow) findViewById(R.id.fourthRow), count);
+					count++;
+				}
+				if(!f.contains("achievements")){
+					tl.removeView((LinearLayout)findViewById(R.id.fifthWhiteline));
+					tl.removeView((LinearLayout)findViewById(R.id.fifthGrayline));
+					tl.removeView((TableRow) findViewById(R.id.fifthRow));				
+				}else{
+					setRowBg((TableRow) findViewById(R.id.fifthRow), count);
+					count++;
+				}
+				if(!f.contains("forums")){
+					tl.removeView((LinearLayout)findViewById(R.id.sixthWhiteline));
+					tl.removeView((LinearLayout)findViewById(R.id.sixthGrayline));
+					tl.removeView((TableRow) findViewById(R.id.sixthRow));				
+				}else{
+					setRowBg((TableRow) findViewById(R.id.sixthRow), count);
+					count++;
+				}
+			}
+		}catch (Exception e){e.printStackTrace();}
 	}
 		
 	public void setRowBg(TableRow row, int pos){	
@@ -261,20 +289,6 @@ public class BeintooHome extends Dialog {
 		}
 	}
 	
-	/**
-	 * Returns the nickname of the current logged in player
-	 * @return
-	 */
-	public User getCurrentUser () {
-		Gson gson = new Gson();
-		try {
-			Player player = gson.fromJson(getCurrentPlayer(), Player.class);
-			return player.getUser();		
-		}catch (Exception e){e.printStackTrace();}
-		
-		return new User();		
-	}
-	
 	/*
 	 * Used in the MessageRead.java to update users unread messages
 	 */
@@ -285,13 +299,6 @@ public class BeintooHome extends Dialog {
 		msg.setData(b);
 		msg.what = UPDATE_UNREAD_MSG;
 		UIhandler.sendMessage(msg);
-	}
-	
-	/**
-	 *  Returns the current logged in Player in json
-	 */
-	public String getCurrentPlayer () {		
-		return PreferencesHandler.getString("currentPlayer", getContext());		
 	}
 	
 	/**
@@ -308,18 +315,26 @@ public class BeintooHome extends Dialog {
 			  if(msg.what == OPEN_PROFILE){
 				  UserProfile userProfile = new UserProfile(getContext());
 				  Beintoo.currentDialog = userProfile;
+				  if(Beintoo.dialogStack != null)
+					  DialogStack.addToDialogStack(userProfile);
 				  userProfile.show();
 			  }else if(msg.what == OPEN_LEADERBOARD){
 				  LeaderboardContest leaderboard = new LeaderboardContest(getContext());
 				  Beintoo.currentDialog = leaderboard;
+				  if(Beintoo.dialogStack != null)
+					  DialogStack.addToDialogStack(leaderboard);
 				  leaderboard.show();
 			  }else if(msg.what == OPEN_WALLET){	
 				  Wallet wallet = new Wallet(getContext());
 				  Beintoo.currentDialog = wallet;
+				  if(Beintoo.dialogStack != null)
+					  DialogStack.addToDialogStack(wallet);
 				  wallet.show();
 			  }else if(msg.what == OPEN_CHALLENGE){			  
 				  Challenges challenges = new Challenges(getContext());
 				  Beintoo.currentDialog = challenges;
+				  if(Beintoo.dialogStack != null)
+					  DialogStack.addToDialogStack(challenges);
 				  challenges.show();
 			  }else if(msg.what == UPDATE_UNREAD_MSG){
 				  TextView unreadtxt = (TextView) findViewById(R.id.unmessage);
@@ -327,16 +342,22 @@ public class BeintooHome extends Dialog {
 			  }else if(msg.what == OPEN_ACHIEVEMENTS){			  
 				  UserAchievements achievements = new UserAchievements(getContext());
 				  Beintoo.currentDialog = achievements;
+				  if(Beintoo.dialogStack != null)
+					  DialogStack.addToDialogStack(achievements);
 				  achievements.show();
 			  }else if(msg.what == OPEN_FORUM){		
-				  StringBuilder sb = new StringBuilder("http://appsforum.beintoo.com/?apikey=");
-			      sb.append(DeveloperConfiguration.apiKey);
-			      sb.append("&userExt=");
-			      sb.append(u.getId());
-			      sb.append("#main"); 
-				  Forums f = new Forums(getContext(),sb.toString());				  
-				  Beintoo.currentDialog = f;
-				  f.show();
+				  if(u != null){					  
+					  StringBuilder sb = new StringBuilder("http://appsforum.beintoo.com/?apikey=");
+				      sb.append(DeveloperConfiguration.apiKey);
+				      sb.append("&userExt=");
+				      sb.append(u.getId());
+				      sb.append("#main"); 
+					  Forums f = new Forums(getContext(),sb.toString());				  
+					  Beintoo.currentDialog = f;
+					  if(Beintoo.dialogStack != null)
+						  DialogStack.addToDialogStack(f);
+					  f.show();
+				  }
 			  }
 			  			  
 			  super.handleMessage(msg);

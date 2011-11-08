@@ -78,7 +78,6 @@ public class DeviceId {
         return null;
 	}
 	
-	
 	public static String getUniqueDeviceId(Context context){
 				
 		SDFileManager sdf = new SDFileManager();		
@@ -110,5 +109,17 @@ public class DeviceId {
 			
 			return randomID;
 		}		
+	}
+	
+	public static String getImei(Context context){
+		String imei = null;
+		try {
+			final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			imei = tm.getDeviceId();
+		}catch(Exception e){
+			return null;
+		}
+		
+		return imei;
 	}
 }

@@ -50,24 +50,31 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 public class VgoodSendToFriend extends Dialog implements OnClickListener{
-	protected static final int OPEN_FRIENDS_FROM_VGOOD = 1;
-	protected static final int OPEN_FRIENDS_FROM_GPS = 2;
-	Dialog current;
+	public static final int OPEN_FRIENDS_FROM_VGOOD = 1;
+	public static final int OPEN_FRIENDS_FROM_WALLET = 2;
+	public static final int OPEN_FRIENDS_FROM_GPS = 2;
+	
 	public Dialog previous;
+	public Dialog backPrevious;
 	public String vgoodID;
-	Context currentContext;
-	ArrayList<String> usersExts;
-	ArrayList<String> usersNicks;	
-	User [] friends;
-	final double ratio;
+	public View rowToRemove;
+	
+	private Dialog current;
+	private ArrayList<String> usersExts;
+	private ArrayList<String> usersNicks;	
+	private User [] friends;
+	private final double ratio;
+	private int calledFrom;
+	
+	
 	public VgoodSendToFriend(Context context, int calledFrom, User[] u) {
 		super(context);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.friendlist);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
-		current = this;
-		currentContext = context;
+		current = this;		
 		friends = u;
+		this.calledFrom = calledFrom;
 		
 		// GETTING DENSITY PIXELS RATIO
 		ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
@@ -101,7 +108,7 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 				
 		final ArrayList<View> rowList = new ArrayList<View>();
 		
-    	for(int i = 0; i<friends.length; i++){
+    	for(int i = 0; i<friends.length; i++){    		
     		//final LoaderImageView image = new LoaderImageView(getContext(), getUsersmallimg());
     		final LoaderImageView image = new LoaderImageView(getContext(),friends[i].getUserimg(),(int)(ratio * 70),(int)(ratio *70));
        		
@@ -112,7 +119,7 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 			
 			// IF WE CALLED THE DIALOG FROM SEND AS A GIFT WE NEED THE
 			// ROW CLICKABLE TO SEND THE VGOOD AS A GIFT
-			if(calledFrom == OPEN_FRIENDS_FROM_VGOOD)
+			if(calledFrom == OPEN_FRIENDS_FROM_VGOOD || calledFrom == OPEN_FRIENDS_FROM_WALLET)
 				row.setOnClickListener(this);
 			
 			View spacer = createSpacer(getContext(),1,1);
@@ -194,24 +201,38 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 		  confirmDialog(v.getId());
 	}
 	
-	public void confirmDialog (final int selected) {
+	private void confirmDialog (final int selected) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setMessage(getContext().getString(R.string.friendSure)+usersNicks.get(selected)+"?")
 		       .setCancelable(false)
 		       .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
-		        	   current.dismiss();
-		               previous.dismiss();
+		        	   current.dismiss();		
+		        	   if(backPrevious != null)
+		        		   backPrevious.dismiss();
+		        	    
+		        	   if(calledFrom == OPEN_FRIENDS_FROM_WALLET){		        		   
+			        	   try {
+				        	   TableLayout wallet = (TableLayout) previous.findViewById(R.id.table);				        	   
+				        	   wallet.removeView(rowToRemove);
+			        	   }catch(Exception e){
+			        		   e.printStackTrace();
+			        	   }
+		        	   }else{
+		        		   previous.dismiss();
+		        	   }
+		        	   
 		        	   new Thread(new Runnable(){      
 				    	public void run(){
 			    			try{     
 			    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
-			    				String userFrom = p.getUser().getId();
+			    				String userFrom = p.getUser().getId();			    				
 			    				String userTo = usersExts.get(selected);			    				
 			    				BeintooVgood sendVgood = new BeintooVgood();
 			    				com.beintoo.wrappers.Message msg = sendVgood.sendAsAGift(vgoodID, userFrom, userTo, null);
-			    				if(!msg.getKind().equals("error"))
+			    				if(!msg.getKind().equals("error")){			    								    				
 			    					UIhandler.sendEmptyMessage(selected);
+			    				}
 			    			}catch (Exception e){
 			    				e.printStackTrace();
 			    			}
@@ -235,7 +256,7 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {			  
-			  doneDialog(msg.what);
+			  doneDialog(msg.what);			  
 			  super.handleMessage(msg);
 		  }
 	};

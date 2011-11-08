@@ -26,6 +26,7 @@ import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
 import com.beintoo.wrappers.Vgood;
@@ -122,8 +123,9 @@ public class VGoodGetDialog extends Dialog{
 					alsoconverterLayout.addView(ll);
 					count++;
 					if(count == 3) break;
-				}
-				
+				}				
+			}else{
+				findViewById(R.id.whoalso).setVisibility(View.GONE);
 			}
 		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.externalReport(e);}
 		
@@ -144,40 +146,44 @@ public class VGoodGetDialog extends Dialog{
 			}
 		});
 		
-		Button sendasgift = (Button) findViewById(R.id.sendasgift);
-		sendasgift.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
-		sendasgift.setBackgroundDrawable(
-				b.setPressedBackg(
-			    		new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
-						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
-						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));
-		sendasgift.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {
-				final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.friendLoading),true);
-				new Thread(new Runnable(){      
-		    		public void run(){
-		    			try{     			
-		    				BeintooUser u = new BeintooUser();
-		    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
-		    				friends = u.getUserFriends(p.getUser().getId(), null);
-		    				UIhandler.sendEmptyMessage(1);
-		    			}catch (Exception e){
-		    				e.printStackTrace();
-		    			}
-		    			dialog.dismiss();
-		    		}
-				}).start();					
-				
-			}
-		});
-				
+		Button sendasgift = (Button) findViewById(R.id.sendasgift);	
+		if(Beintoo.isLogged(ctx)){			
+			sendasgift.setShadowLayer(0.1f, 0, -2.0f, Color.BLACK);
+			sendasgift.setBackgroundDrawable(
+					b.setPressedBackg(
+				    		new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_BUTTON_GRADIENT),
+							new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT),
+							new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));
+			sendasgift.setOnClickListener(new Button.OnClickListener(){
+				public void onClick(View v) {
+					final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.friendLoading),true);
+					new Thread(new Runnable(){      
+			    		public void run(){
+			    			try{     			
+			    				BeintooUser u = new BeintooUser();
+			    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer",getContext()));
+			    				friends = u.getUserFriends(p.getUser().getId(), null);
+			    				UIhandler.sendEmptyMessage(1);
+			    			}catch (Exception e){
+			    				e.printStackTrace();
+			    			}
+			    			dialog.dismiss();
+			    		}
+					}).start();					
+					
+				}
+			});
+		}else{
+			sendasgift.setVisibility(View.GONE);
+		}				
 	}
-	
+
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {			  
 			  VgoodSendToFriend f = new VgoodSendToFriend(getContext(),OPEN_FRIENDS_FROM_VGOOD, friends);
 			  f.previous = current;
+			  f.backPrevious = precurrent;
 			  f.vgoodID = vgoodExtId;
 			  f.show();
 			  super.handleMessage(msg);

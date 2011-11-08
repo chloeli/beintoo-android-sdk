@@ -151,9 +151,9 @@ public class VgoodBanner implements OnClickListener {
 	        		public void run(){	
 	    				try {
 	    					Player loggedUser = Current.getCurrentPlayer(ctx);
-	    					if(loggedUser.getUser() != null){
+	    					if(loggedUser != null){
 	    						BeintooVgood bv = new BeintooVgood();	    					
-	    						bv.acceptVgood(vgood.getVgoods().get(0).getId(), loggedUser.getUser().getId(), null);
+	    						bv.acceptVgood(vgood.getVgoods().get(0).getId(), loggedUser.getGuid(), null, null);
 	    					}
 	    				}catch(Exception e){e.printStackTrace();}
 	        		}	

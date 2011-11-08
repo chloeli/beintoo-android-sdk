@@ -39,9 +39,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.beintoo.R;
+import com.beintoo.activities.signupnow.SignupLayouts;
 import com.beintoo.beintoosdk.BeintooApp;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.DialogStack;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -245,9 +247,12 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 				}
 	        });
 			
-		}else { // IF THE USER IS NOT LOGGED HIDE ALL, FRIENDS, CLOSEST BUTTONS
+		}else { // IF THE USER IS NOT LOGGED HIDE ALL, FRIENDS, CLOSEST BUTTONS AND ADD SIGNUP ROW
 			findViewById(R.id.onlyf).setVisibility(View.GONE);
-			findViewById(R.id.closest).setVisibility(View.GONE);
+			findViewById(R.id.closest).setVisibility(View.GONE);			
+			LinearLayout signup = (LinearLayout) findViewById(R.id.signupPlayer);
+			signup.addView(SignupLayouts.signupRow(ctx, Beintoo.FEATURE_LEADERBOARD));
+			signup.setVisibility(View.VISIBLE);			
 		}
 	}
 	
@@ -276,7 +281,7 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 			
 			final ArrayList<View> rowList = new ArrayList<View>();
 			
-			
+			 
 		    for(int i = 0; i<contests.size(); i++){
 				
 		    	TableRow row = createRow(contests.get(i).getName(),getContext());
@@ -400,6 +405,8 @@ public class LeaderboardContest extends Dialog implements OnClickListener{
 				  loadContestTable();
 			  else if(msg.what == 1){
 				  Leaderboard leaderboard = new Leaderboard(currentContext, kind, selectedContest);
+				  if(Beintoo.dialogStack != null)
+					  DialogStack.addToDialogStack(leaderboard);
 				  leaderboard.show();
 			  }else if(msg.what == 3){
 				  TableLayout table = (TableLayout) findViewById(R.id.tablecontest);

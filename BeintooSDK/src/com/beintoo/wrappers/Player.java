@@ -26,6 +26,7 @@ public class Player {
 	    Map<String, PlayerScore> playerScore;
 	    Alliance alliance;
 	    boolean isAllianceAdmin;
+	    Map<String,Double> vgoodThreshold;
 	    
 	    public Player(){
 	    	
@@ -83,4 +84,12 @@ public class Player {
 		public void setAllianceAdmin(boolean isAllianceAdmin) {
 			this.isAllianceAdmin = isAllianceAdmin;
 		}
+
+		public Map<String, Double> getVgoodThreshold() {
+			return vgoodThreshold;
+		}
+
+		public void setVgoodThreshold(Map<String, Double> vgoodThreshold) {
+			this.vgoodThreshold = vgoodThreshold;
+		}		
 }	

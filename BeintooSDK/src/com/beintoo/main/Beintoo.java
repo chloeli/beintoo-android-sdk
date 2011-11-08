@@ -85,10 +85,9 @@ public class Beintoo{
 	public static BGetVgoodListener gvl = null;
 	private final static int TRY_DIALOG_POPUP = 5;
 	
-	
-	
 	public static Dialog currentDialog = null;
 	public static Dialog homeDialog = null;
+	public static List<Dialog> dialogStack = null;
 	
 	public static AtomicLong LAST_LOGIN = new AtomicLong(0);
 	
@@ -128,7 +127,7 @@ public class Beintoo{
 	 * 
 	 * @param ctx current Context
 	 */
-	public static void BeintooStart(final Context ctx, boolean goToDashboard){
+	public static void BeintooStart(final Context ctx, boolean forceSignup, boolean goToDashboard){
 		currentContext = ctx;
 		OPEN_DASHBOARD_AFTER_LOGIN = goToDashboard;
 		
@@ -138,44 +137,75 @@ public class Beintoo{
 			final Player currentPlayer;
 			if(savedPlayer != null){
 				currentPlayer = Current.getCurrentPlayer(ctx);
-			}else currentPlayer = null;
+			}else{
+				forceSignup = true; // if no player force the try beintoo
+				currentPlayer = null;
+			}
 			
+			final ProgressDialog  dialog = new ProgressDialog(ctx);
+			dialog.setMessage(ctx.getString(R.string.loadingBeintoo));
+			Thread t = new Thread(new Runnable(){   				
+        		public void run(){        			
+        			try{        				        				
+						BeintooPlayer player = new BeintooPlayer();
+						// DEBUG
+						DebugUtility.showLog("current saved player: "+Current.getCurrentPlayerJson(ctx));											
+
+						// LOGIN TO BEINTOO		
+						if(currentPlayer != null){
+							Player newPlayer = player.getPlayer(currentPlayer.getGuid());													
+							Current.setCurrentPlayer(ctx, newPlayer);
+							UIhandler.sendEmptyMessage(GO_HOME); // OPEN DASHBOARD
+						}else{
+							UIhandler.post(new Runnable(){
+								public void run(){ 
+									tryBeintoo tryBe = new tryBeintoo(ctx);
+									currentDialog = tryBe;
+									tryBe.show();
+								}
+							});
+						}
+        			}catch (Exception e ){
+        				dialog.dismiss();
+        				e.printStackTrace();
+        				ErrorDisplayer.showConnectionErrorOnThread(ErrorDisplayer.CONN_ERROR, ctx,e);
+        				logout(ctx);
+        			}
+        			dialog.dismiss();
+        		}
+			});
 			// AVOID BAD LOGIN
 			if(isLogged == true && (savedPlayer == null || savedPlayer == "")) logout(ctx);
-			
-			if(isLogged == true && currentPlayer.getUser() != null){
-				final ProgressDialog  dialog = ProgressDialog.show(ctx, "", ctx.getString(R.string.loadingBeintoo),true);
-				Thread t = new Thread(new Runnable(){     					
-            		public void run(){ 
-            			try{   	
-							BeintooPlayer player = new BeintooPlayer();
-							// DEBUG
-							DebugUtility.showLog("current saved player: "+Current.getCurrentPlayerJson(ctx));											
- 
-							// LOGIN TO BEINTOO							
-							Player newPlayer = player.getPlayer(currentPlayer.getGuid());
-							if(newPlayer.getUser().getId() != null){												
-								Current.setCurrentPlayer(ctx, newPlayer);
-								// GO HOME
-								UIhandler.sendEmptyMessage(GO_HOME);
-							}							
-            			}catch (Exception e ){
-            				dialog.dismiss();
-            				e.printStackTrace();
-            				ErrorDisplayer.showConnectionErrorOnThread(ErrorDisplayer.CONN_ERROR, ctx,e);
-            				logout(ctx);
-            			}
-            			dialog.dismiss();
-            		}
-				});
-				t.start();
-			}else{
-				tryBeintoo tryBe = new tryBeintoo(ctx);
-				currentDialog = tryBe;
-				tryBe.show();
+			if(forceSignup){
+				if(isLogged == true && currentPlayer.getUser() != null){
+					dialog.show();
+					t.start();				
+				}else{
+					tryBeintoo tryBe = new tryBeintoo(ctx);
+					currentDialog = tryBe;
+					tryBe.show();
+				}
+			}else{ // forceSignup == false
+				long lastDay = PreferencesHandler.getLong("lastSignupDialog", ctx);
+				long now = System.currentTimeMillis();
+				long daysIntervalMillis = 86400000 * 7; // 7 days - (20 sec 2857)   
+				long nextPopup = lastDay + daysIntervalMillis;					
+				if((lastDay == 0 || now >= nextPopup) && !isLogged){
+					tryBeintoo tryBe = new tryBeintoo(ctx);
+					currentDialog = tryBe;
+					tryBe.show();
+					PreferencesHandler.saveLong("lastSignupDialog", now, ctx);
+				}else{
+					dialog.show();
+					t.start();
+				}
 			}
 		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR, ctx, e); logout(ctx);}
 	} 
+	
+	public static void BeintooStart(final Context ctx, boolean goToDashboard){
+		Beintoo.BeintooStart(ctx, false, goToDashboard);
+	}
 	
 	/**
 	 * Show a dialog with the try Beintoo message. The dialog is shown interval of days passed in daysInterval
@@ -241,15 +271,19 @@ public class Beintoo{
 	 * Do a player login and save player data 
 	 *  
 	 * @param ctx current Context
-	 */	
-	public static void playerLogin(final Context ctx, final BPlayerLoginListener listener){
+	 */		
+	public static void playerLogin(final Context ctx, String guid, final BPlayerLoginListener listener){
 		currentContext = ctx;	
 		PlayerManager pm = new PlayerManager(ctx);
-		pm.playerLogin(ctx, listener);
+		pm.playerLogin(ctx, guid, listener);
+	}
+	
+	public static void playerLogin(final Context ctx, final BPlayerLoginListener listener){		
+		playerLogin(ctx, null, listener);
 	}
 	
 	public static void playerLogin(final Context ctx){
-		playerLogin(ctx, null);
+		playerLogin(ctx, null, null);
 	}
 	
 	/**
@@ -288,28 +322,61 @@ public class Beintoo{
 	}
 	
 	/**
+	 * @deprecated  Renamed, replaced by {@link #submitScoreAndGetVgood()} 
+	 *
 	 * Submit a score with a treshold and check if the user reach that treshold. If yes automatically assign a vgood by
 	 * calling getVGood
 	 * 
-	 * @param ctx current Context
+  	 * @param ctx current Context
 	 * @param score score to submit
 	 * @param threshold the score threshold for a new vgood
 	 */
-	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int threshold, String codeID, boolean isMultiple,
+	@Deprecated public static void submitScoreWithVgoodCheck (final Context ctx, int score, int threshold, String codeID, boolean isMultiple,
 			LinearLayout container, int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener){
 		currentContext = ctx;
 		
 		SubmitScoreManager ssm = new SubmitScoreManager();
-		ssm.submitScoreWithVgoodCheck(ctx, score, threshold, codeID, isMultiple, container, notificationType, slistener, glistener);
+		ssm.submitScoreAndGetVgood(ctx, score, threshold, codeID, isMultiple, container, notificationType, slistener, glistener);
 	}
 	
-	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int threshold){
-		submitScoreWithVgoodCheck (ctx, score, threshold,null, true, null, Beintoo.VGOOD_NOTIFICATION_ALERT, null, null);
+	/**
+	 * @deprecated  Renamed, replaced by {@link #submitScoreAndGetVgood()} 
+	 */	 
+	@Deprecated public static void submitScoreWithVgoodCheck (final Context ctx, String codeID, int score, int threshold){
+		submitScoreWithVgoodCheck (ctx, score, threshold, codeID, true, null, Beintoo.VGOOD_NOTIFICATION_ALERT, null, null);
 	}
 	
-	public static void submitScoreWithVgoodCheck (final Context ctx, int score, int threshold, boolean isMultiple,
+	/**
+	 * @deprecated  Renamed, replaced by {@link #submitScoreAndGetVgood()} 
+	 */
+	@Deprecated public static void submitScoreWithVgoodCheck (final Context ctx, int score, int threshold, boolean isMultiple,
 		LinearLayout container, int notificationType){
 		submitScoreWithVgoodCheck (ctx, score, threshold,null, isMultiple,container, notificationType, null, null);
+	}
+	
+	/*** 
+	 * Submit a score with a treshold and check if the user reach that treshold. If yes automatically assign a vgood by
+	 * calling getVGood
+	 * 
+  	 * @param ctx current Context
+	 * @param score score to submit
+	 * @param threshold the score threshold for a new vgood
+	 */	
+	public static void submitScoreAndGetVgood(final Context ctx, int score, int threshold, String codeID, boolean isMultiple,
+			LinearLayout container, int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener){
+		currentContext = ctx;
+		
+		SubmitScoreManager ssm = new SubmitScoreManager();
+		ssm.submitScoreAndGetVgood(ctx, score, threshold, codeID, isMultiple, container, notificationType, slistener, glistener);
+	}
+	
+	public static void submitScoreAndGetVgood (final Context ctx, int score, int threshold, String codeID){
+		submitScoreAndGetVgood (ctx, score, threshold, codeID, true, null, Beintoo.VGOOD_NOTIFICATION_ALERT, null, null);
+	}
+	
+	public static void submitScoreAndGetVgood (final Context ctx, int score, int threshold, String codeID, boolean isMultiple,
+		LinearLayout container, int notificationType){
+		submitScoreAndGetVgood (ctx, score, threshold,codeID, isMultiple,container, notificationType, null, null);
 	}
 	
 	/**

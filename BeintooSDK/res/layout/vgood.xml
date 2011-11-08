@@ -75,7 +75,7 @@
 					android:layout_height="0.75dip" android:background="#FFFFFF"
 					android:id="@+id/whiteline"></LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
-					android:orientation="horizontal" android:id="@+id/secondtrow"
+					android:orientation="horizontal" android:id="@+id/whoalso"
 					android:layout_height="wrap_content" android:gravity="left" android:paddingLeft="14dip">
 					<TextView android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:id="@+id/shortdesc"
@@ -86,36 +86,33 @@
 				<LinearLayout android:layout_width="fill_parent"
 					android:id="@+id/alsoconverted" android:layout_height="wrap_content"
 					android:gravity="left" android:paddingLeft="20dip"
-					android:orientation="horizontal" android:padding="20dip">
+					android:orientation="horizontal" android:padding="20dip" android:layout_weight="1">
 				</LinearLayout>
 			</LinearLayout>
 			<!-- END VGOOD CONTENT -->
-		</LinearLayout>
-		<LinearLayout android:layout_width="fill_parent"
-			android:orientation="vertical" android:id="@+id/convll"
-			android:layout_height="wrap_content" android:gravity="center"
-			android:layout_marginTop="5dip" android:layout_marginBottom="5dip">
-			<Button android:id="@+id/getcoupon"
-				android:text="@string/getcoupon" android:textColor="#FFFFFF"
-				android:textSize="16dip" android:layout_height="50dip" android:layout_width="294dip" android:padding="0dip">
-			</Button>
-		</LinearLayout>
-		<LinearLayout android:layout_width="fill_parent"
-			android:orientation="vertical" android:id="@+id/giftll"
-			android:layout_height="wrap_content" android:gravity="center"
-			android:layout_marginBottom="20dip" android:layout_marginTop="0dip">
-			<Button android:id="@+id/sendasgift"
-				android:text="@string/sendasgift"
-				android:textColor="#FFFFFF" android:textSize="16dip" android:layout_height="50dip" android:layout_width="294dip">
-			</Button>
-		</LinearLayout>
+		</LinearLayout>		
 		<LinearLayout android:layout_width="fill_parent"
 			android:orientation="vertical" android:layout_height="fill_parent"
-			android:gravity="bottom|center" android:id="@+id/fond">
+			android:gravity="bottom|center" android:id="@+id/fond" android:layout_weight="1">
+			<Button
+			    android:id="@+id/getcoupon"
+			    android:layout_width="294dip"
+			    android:layout_height="50dip"
+			    android:padding="0dip"
+			    android:text="@string/getcoupon"
+			    android:textColor="#FFFFFF"
+			    android:textSize="16dip" />
+			<Button
+			    android:id="@+id/sendasgift" android:layout_marginTop="10dip"
+			    android:layout_width="294dip"
+			    android:layout_height="50dip"
+			    android:text="@string/sendasgift"
+			    android:textColor="#FFFFFF"
+			    android:textSize="16dip"/>
+			<LinearLayout android:layout_width="fill_parent" android:id="@+id/ispacer" android:layout_height="10dip" />					
 			<ImageView android:id="@+id/layoutbottom"
 				android:layout_width="fill_parent" android:background="@drawable/footer"
 				android:layout_height="11dip" />
-
 		</LinearLayout>
 
 	</LinearLayout>
