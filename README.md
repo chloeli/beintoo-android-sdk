@@ -86,23 +86,14 @@ To do this you should call
 
 If you want to assign a single virtual good to your users you must set to false the second parameter.
 	
-Now for assign a Virtual Good to a player for example every 10 points, and notify the player with an AlertDialog and a choice of multiple virtual goods you should do something like
-	
-	PlayerScore p = Beintoo.getPlayerScore(getContext());
-	if(p != null){
- 	  if(p.getBalance % 10 == 0){ // EVERY 10 POINTS WE SEND A REWARD 
-		Beintoo.GetVgood(this, true, null, Beintoo.VGOOD_NOTIFICATION_ALERT);
-   	  }
-	}	
-	
-BeintooSDK also provide a method where the developer can pass 2 parameters, one is the score to submit and the other is a threshold. If the user reached that threshold 
-the method automatically assign a vgood.
-Here an example of submit 1 point and a threshold of 10 points. Every 10 points it will assign a virtual good.
+Now for assign a Virtual Good to a player for example every 10 points, and notify the player with an AlertDialog and a choice of multiple virtual rewards you should use this method
 
-	Beintoo.submitScoreWithVgoodCheck (context, 1, 10);
+	Beintoo.submitScoreAndGetVgood (context, 1, 10);
+
+1 is the score of the player and 10 is the threshold for receive a new virtual reward.
 
 By default this method use an AlertDialog and a multiple choice of virtual goods. If you want to specify other parameters you should call
 	
-	Beintoo.submitScoreWithVgoodCheck (final Context ctx, int score, int treshold, boolean isMultiple,
-	LinearLayout container, int notificationType)
+	Beintoo.submitScoreAndGetVgood(final Context ctx, int score, int threshold, String codeID, boolean isMultiple,
+			LinearLayout container, int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener)
 
