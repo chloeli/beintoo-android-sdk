@@ -36,6 +36,9 @@ public class BDrawableGradient extends Drawable{
 	final public static int GRAY_ROLL_BUTTON_GRADIENT = 7;
 	final public static int BLU_ROUNDED_BUTTON_GRADIENT = 8;
 	final public static int BLU_ROLL_ROUNDED_BUTTON_GRADIENT = 9;
+	final public static int NOTIFICATION_BAR_GRADIENT = 10;
+	final public static int NOTIFICATION_BAR_CIRCLE_NUMBER = 11;
+	final public static int NOTIFICATION_BAR_ALERT_CIRCLE = 12;
 	
 	int whichGradient;
 	int width;
@@ -64,6 +67,12 @@ public class BDrawableGradient extends Drawable{
 			beintooRoundedButtonGradientRollover(height,canvas);	
 		else if(whichGradient == GRAY_ROLL_BUTTON_GRADIENT) // THE GRAY ROLLOVER BUTTON
 			beintooButtonGrayGradientRollover(height,canvas);
+		else if(whichGradient == NOTIFICATION_BAR_GRADIENT) // THE NOTIFICATION BAR GRADIENT
+			beintooNotificationBarGradient(height,canvas);
+		else if(whichGradient == NOTIFICATION_BAR_CIRCLE_NUMBER) // THE NOTIFICATION BAR CIRCLE NUMBER 
+			beintooNotificationBarCircleGradient(height,canvas);
+		else if(whichGradient == NOTIFICATION_BAR_ALERT_CIRCLE) // THE NOTIFICATION BAR CIRCLE ALERT !
+			beintooNotificationAlertImageCircleGradient(height, canvas);
 	}
 
 	@Override
@@ -121,7 +130,7 @@ public class BDrawableGradient extends Drawable{
 	}
 	
 	public Canvas beintooRoundedButtonGradient(int h, Canvas canvas){
-		Paint p = new Paint();
+		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
 		int [] colors = {0xff8292A8, 0xff576B87,0xff4C627F, 0xff3C5271 };
 		float [] positions = {0.0f,0.5f,0.5f,1.0f};
 	    p.setShader(new LinearGradient(0, 0, 0, h, colors, positions,  Shader.TileMode.MIRROR));
@@ -132,7 +141,7 @@ public class BDrawableGradient extends Drawable{
 	}
 	
 	public Canvas beintooButtonGradientRollover(int h, Canvas canvas){
-		Paint p = new Paint();
+		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
 		p.setColor(Color.parseColor("#324C68"));
 		canvas.drawPaint(p);
 	    return canvas;
@@ -162,5 +171,40 @@ public class BDrawableGradient extends Drawable{
 	    canvas.drawPaint(p);
 	    return canvas;
 	}
-
+	
+	public Canvas beintooNotificationBarGradient(int h, Canvas canvas){
+		Paint p = new Paint();				
+		int [] colors = {0xffB0BCCC, 0xff6D84A2};
+		float [] positions = {0.0f,0.5f};
+	    p.setShader(new LinearGradient(0, 0, 0, h, colors, positions,  Shader.TileMode.MIRROR));	    
+	    canvas.drawPaint(p);
+	    return canvas;
+	}
+	
+	public Canvas beintooNotificationBarCircleGradient(int h, Canvas canvas){
+		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);				
+		int [] colors = {0xff798AA3, 0xff485E7D, 0xff405576, 0xff2E4466};
+		float [] positions = {0.0f, 0.5f, 0.51f, 1f};
+	    p.setShader(new LinearGradient(0, 0, 0, h, colors, positions,  Shader.TileMode.MIRROR));	    
+	    
+	    final Rect rect = new Rect(0, 0, canvas.getClipBounds().width(), canvas.getClipBounds().height());
+        final RectF rectF = new RectF(rect);                
+	    canvas.drawRoundRect(rectF, 5, 5, p);
+	     
+	    return canvas;
+	}
+	
+	public Canvas beintooNotificationAlertImageCircleGradient(int h, Canvas canvas){
+		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);				
+		int [] colors = {0xff798AA3, 0xff485E7D, 0xff405576, 0xff2E4466};
+		float [] positions = {0.0f, 0.5f, 0.51f, 1f};
+	    p.setShader(new LinearGradient(0, 0, 0, h, colors, positions,  Shader.TileMode.MIRROR));	    
+	    
+	    //final Rect rect = new Rect(0, 0, canvas.getClipBounds().width(), canvas.getClipBounds().height());
+        //final RectF rectF = new RectF(rect);                
+	    canvas.drawCircle(h/2, h/2, h/2, p);
+	     
+	    return canvas;
+	}
+	
 }

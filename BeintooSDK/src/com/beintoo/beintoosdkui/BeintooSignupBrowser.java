@@ -136,8 +136,8 @@ public class BeintooSignupBrowser extends Dialog {
 			}
 		});
 
-		webview.setInitialScale(1);
-		webview.loadUrl(getUrlOpenUrl());
+		webview.setInitialScale(100);
+		webview.loadUrl(getUrlOpenUrl());		
 	}
 
 	private String getUrlOpenUrl() {

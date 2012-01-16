@@ -189,7 +189,7 @@ public class Beintoo{
 				long lastDay = PreferencesHandler.getLong("lastSignupDialog", ctx);
 				long now = System.currentTimeMillis();
 				long daysIntervalMillis = 86400000 * 7; // 7 days - (20 sec 2857)   
-				long nextPopup = lastDay + daysIntervalMillis;					
+				long nextPopup = lastDay + daysIntervalMillis;							
 				if((lastDay == 0 || now >= nextPopup) && !isLogged){
 					tryBeintoo tryBe = new tryBeintoo(ctx);
 					currentDialog = tryBe;
@@ -251,8 +251,21 @@ public class Beintoo{
 		GetVgood(ctx, null, isMultiple, container, notificationType, null);
 	}
 	
+	/** 
+	 * Send a Banner to the user it runs in background on a thread. 
+	 * It retrieves the user location used to find a banner in nearby 
+	 */
+	public static void getAd(final Context ctx, final String codeID, final LinearLayout container, final int notificationType, final BGetVgoodListener listener){		
+		currentContext = ctx;			
+		gvl = listener;
+		GetVgoodManager gvm = new GetVgoodManager(ctx);		
+        gvm.getAd(codeID, container, notificationType, listener);
+	}
 	
-	
+	public static void getAd(final Context ctx, final String codeID, final LinearLayout container, final int notificationType){
+		getAd(ctx, codeID, container, notificationType, null);
+	}
+		
 	/**
 	 * Check if the user is eligible for a new virtual good
 	 * 
@@ -265,7 +278,6 @@ public class Beintoo{
 		GetVgoodManager gvm = new GetVgoodManager(ctx);
 		gvm.isEligibleForVgood(ctx, el);		
 	}
-	
 	
 	/**
 	 * Do a player login and save player data 
@@ -410,7 +422,6 @@ public class Beintoo{
 		submitScore(ctx, lastScore, codeID, showNotification, Gravity.BOTTOM, null);
 	}	
 	
-	
 	/**
 	 * Submit multiple user score, check the user location and then call submitScoreMultipleHelper wich make the api call on a thread
 	 * 
@@ -429,7 +440,6 @@ public class Beintoo{
 	public static void submitScoreMultiple(final Context ctx, Map<String,Integer> scores, final boolean showNotification){
 		submitScoreMultiple(ctx, scores, showNotification, Gravity.BOTTOM, null);
 	}
-	
 	
 	/** 
 	 * Get the current player score
@@ -502,13 +512,13 @@ public class Beintoo{
 	 * @param alwaysShow if true the popup is show at every call, if false is show every 24 hours
 	 * @param listener callback listener
 	 */
-	public static void getMission(Context ctx, boolean alwaysShow, BMissionListener listener){
+	public static void getMission(Context ctx, boolean alwaysShow, BMissionListener listener){		
 		currentContext = ctx;
 		AchievementManager am = new AchievementManager(ctx);
 		am.getMission(listener, alwaysShow);		
 	}
 	
-	public static void getMission(Context ctx, boolean alwaysShow){
+	public static void getMission(Context ctx, boolean alwaysShow){		
 		getMission(ctx, alwaysShow, null);
 	}
 	
@@ -589,9 +599,7 @@ public class Beintoo{
 	public static void getUA(){
 		try{
 			WebView wv = new WebView(Beintoo.currentContext);		
-			userAgent = wv.getSettings().getUserAgentString();		
-			wv.pauseTimers();		
-			wv.destroy();
+			userAgent = wv.getSettings().getUserAgentString();					
 		}catch (Exception e){e.printStackTrace();}
 	}
 	

@@ -183,7 +183,7 @@ public class AchievementManager {
 		executor.execute(new Runnable(){     					
     		public void run(){	
     			synchronized (LAST_OPERATION){
-					try {						
+					try {												
 						if(System.currentTimeMillis() < LAST_OPERATION.get() + OPERATION_TIMEOUT)
 							return;
 						

@@ -23,7 +23,9 @@ import java.util.UUID;
 
 import com.beintoo.beintoosdk.DeveloperConfiguration;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 
 
@@ -113,10 +115,13 @@ public class DeviceId {
 	
 	public static String getImei(Context context){
 		String imei = null;
-		try {
-			final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-			imei = tm.getDeviceId();
-		}catch(Exception e){
+		try {			
+			PackageManager pm = context.getPackageManager();			
+			if(PackageManager.PERMISSION_GRANTED == pm.checkPermission(Manifest.permission.READ_PHONE_STATE, context.getPackageName())){
+				final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+				imei = tm.getDeviceId();	
+			}			
+		}catch(Exception e){			
 			return null;
 		}
 		

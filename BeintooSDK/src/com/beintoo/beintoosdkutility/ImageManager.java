@@ -21,6 +21,7 @@ public class ImageManager {
 	private File cacheDir;
 	private ImageQueue imageQueue = new ImageQueue();
 	private Thread imageLoaderThread = new Thread(new ImageQueueManager());
+	private boolean debug = false;
 	
 	public ImageManager(Context context) {
 		imageLoaderThread.setPriority(Thread.NORM_PRIORITY-1);
@@ -36,18 +37,18 @@ public class ImageManager {
 			if(!cacheDir.exists())
 				cacheDir.mkdirs();
 			
-		}catch(Exception e){ }
+		}catch(Exception e){ if(debug) e.printStackTrace(); }
 	}
 	   
 	public void displayImage(String url, Context context, ImageView imageView) {
-		try {
+		try {			
 			if(imageMap.containsKey(url)){
 				imageView.setImageBitmap(imageMap.get(url));
 			}else {
+				imageView.setImageResource(R.drawable.general_image);
 				queueImage(url, context, imageView);
-				imageView.setImageResource(R.drawable.nopict);			
 			}
-		}catch(Exception e){}
+		}catch(Exception e){if(debug) e.printStackTrace();}
 	}
 
 	private void queueImage(String url, Context context, ImageView imageView) {
@@ -62,7 +63,7 @@ public class ImageManager {
 	
 			if(imageLoaderThread.getState() == Thread.State.NEW)
 				imageLoaderThread.start();
-		}catch(Exception e){ } 
+		}catch(Exception e){if(debug) e.printStackTrace();} 
 	}
 
 	private Bitmap getBitmap(String url) {
@@ -76,7 +77,7 @@ public class ImageManager {
 					if(System.currentTimeMillis() > f.lastModified() + 86400000) // 24 HOURS
 						f.delete();
 				}
-			}catch(Exception e){}
+			}catch(Exception e){if(debug) e.printStackTrace();}
 			
 			Bitmap bitmap = BitmapFactory.decodeFile(f.getPath());
 			if(bitmap != null) return bitmap;
@@ -86,6 +87,7 @@ public class ImageManager {
 			
 			return bitmap;
 		} catch (Exception ex) {
+			if(debug) ex.printStackTrace();
 			return null;
 		}
 	}
@@ -97,11 +99,11 @@ public class ImageManager {
 			out = new FileOutputStream(f);
 			bmp.compress(Bitmap.CompressFormat.PNG, 80, out);
 		} catch (Exception e) {
-			
+			if(debug) e.printStackTrace();
 		}
 		finally { 
 			try { if (out != null ) out.close(); }
-			catch(Exception ex) {} 
+			catch(Exception ex) {if(debug) ex.printStackTrace();} 
 		}
 	}
 	
@@ -126,7 +128,7 @@ public class ImageManager {
 						imageRefs.remove(i);
 					else ++i;
 				}
-			}catch (Exception e){}
+			}catch (Exception e){if(debug) e.printStackTrace();}
 		}
 	}
 	
@@ -137,7 +139,7 @@ public class ImageManager {
 				while(true) {
 					if(imageQueue.imageRefs.size() == 0) {
 						synchronized(imageQueue.imageRefs) {
-							imageQueue.imageRefs.wait();
+							imageQueue.imageRefs.wait();														
 						}
 					}
 					
@@ -154,8 +156,7 @@ public class ImageManager {
 						
 						if(tag != null && ((String)tag).equals(imageToLoad.url)) {
 							BitmapDisplayer bmpDisplayer = 
-								new BitmapDisplayer(bmp, imageToLoad.imageView);
-							
+								new BitmapDisplayer(bmp, imageToLoad.imageView);	
 							
 							UIhandler.post(bmpDisplayer);
 						}
@@ -164,7 +165,7 @@ public class ImageManager {
 					if(Thread.interrupted())
 						break;
 				}
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {if(debug) e.printStackTrace();}
 		}
 	}
 
@@ -180,9 +181,17 @@ public class ImageManager {
 		public void run() {
 			if(bitmap != null){
 				imageView.setImageBitmap(bitmap);						
-			}else{
-				imageView.setImageResource(R.drawable.nopict);
+			}else{				
+				imageView.setImageResource(R.drawable.general_image);
 			}
+		}
+	}
+	
+	public void interrupThread(){
+		try {			
+			imageLoaderThread.interrupt();
+		}catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 	
@@ -195,7 +204,7 @@ public class ImageManager {
 		            new File(dir, children[i]).delete();
 		        }
 		    }
-		}catch(Exception e){}
+		}catch(Exception e){if(debug) e.printStackTrace();}
 	}
 	
 	Handler UIhandler = new Handler(){};

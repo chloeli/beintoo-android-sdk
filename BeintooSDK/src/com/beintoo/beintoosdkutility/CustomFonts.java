@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import android.content.Context;
 import android.graphics.Typeface;
 
@@ -12,7 +13,7 @@ public class CustomFonts {
 	private final static String fontName = "markerfelt.ttf";
 	
 	public static Typeface handWriteFont(Context context){
-		try {
+		try {			
 			File fontFile = null;
 			String sdState = android.os.Environment.getExternalStorageState();
 			
@@ -31,7 +32,7 @@ public class CustomFonts {
 				else
 					fontFile = new File(context.getCacheDir(),".beintoo/fonts/"+fontName);					
 			}
-			
+			System.out.println(fontFile);
 			Typeface font = Typeface.createFromFile(fontFile); 
 			
 			return font;
@@ -41,9 +42,8 @@ public class CustomFonts {
 		}
 	}
 	
-	private static void loadRemoteFont(Context context){
-		try {
-			
+	private static void loadRemoteFont(Context context){		
+		try {			
 			String path ="http://static.beintoo.com/sdk/android/font/"+fontName;			
 		    String sdState = android.os.Environment.getExternalStorageState();
 		    File fontDir;
@@ -57,15 +57,16 @@ public class CustomFonts {
 				fontDir = new File(context.getCacheDir(),".beintoo/fonts/");
 				fontFilePath = fontDir + "/" + fontName;
 			}
-			
+					    
 			if(!fontDir.exists())
 				fontDir.mkdirs();
 		    
 		    URL u = new URL(path);
-		    HttpURLConnection c = (HttpURLConnection) u.openConnection();
+		    HttpURLConnection c = (HttpURLConnection) u.openConnection();		    
 		    c.setRequestMethod("GET");
-		    c.setDoOutput(true);
+		    c.setDoInput(true);		    
 		    c.connect();
+		    		    
 		    FileOutputStream f = new FileOutputStream(new File(fontFilePath));
 	        InputStream in = c.getInputStream();
 	        byte[] buffer = new byte[1024];
@@ -80,7 +81,7 @@ public class CustomFonts {
 		    DebugUtility.showLog("Downloaded font: "+path);
 	    } catch (Exception e) {
 	    	e.printStackTrace();
-	    } 
+	    }
 	}
 	
 	private static boolean checkIfExists(Context context){

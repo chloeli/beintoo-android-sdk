@@ -34,7 +34,9 @@ import com.beintoo.wrappers.Vgood;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -138,8 +140,13 @@ public class VGoodGetDialog extends Dialog{
 						new BDrawableGradient(0,(int) pixels,BDrawableGradient.BLU_ROLL_BUTTON_GRADIENT)));
 		getVgood.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
-				BeintooBrowser bb = new BeintooBrowser(v.getContext(),vgood.getGetRealURL());
-				bb.show();
+				if(!vgood.isOpenInBrowser()){
+					BeintooBrowser bb = new BeintooBrowser(v.getContext(),vgood.getGetRealURL());
+					bb.show();
+				}else{
+					Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(vgood.getGetRealURL()));
+					ctx.startActivity(browserIntent);
+				}
 				current.dismiss();
 				if(precurrent != null)
 					precurrent.dismiss();

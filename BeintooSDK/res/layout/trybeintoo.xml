@@ -13,7 +13,7 @@
 	<LinearLayout android:layout_width="fill_parent"
 		android:id="@+id/maincontainer" android:orientation="vertical"
 		android:background="#d6dbde" android:layout_height="wrap_content">
-		<include layout="@layout/beintoobar" />
+		<include layout="@layout/beintoobar" /> 
 		<LinearLayout android:layout_width="fill_parent"
 			android:id="@+id/maincontainer" android:orientation="vertical"
 			android:layout_height="wrap_content" android:gravity="center"
@@ -37,14 +37,24 @@
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#8F9193"
 					android:id="@+id/grayline"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:orientation="horizontal" android:layout_height="wrap_content"
+					android:gravity="center" android:layout_marginTop="15dip">	
+				<ImageView android:layout_width="wrap_content"
+						android:id="@+id/imageView1" android:layout_height="wrap_content" 
+						android:src="@drawable/try_beintoo_p"></ImageView>
+				</LinearLayout>
+				<!-- <LinearLayout android:layout_width="fill_parent"
+					android:layout_height="1dip" android:background="#8F9193"
+					android:id="@+id/grayline"></LinearLayout> -->
 				<Button android:layout_centerHorizontal="true" android:id="@+id/trybt"
 					android:text="@string/trynow" android:textColor="#FFFFFF"
 					android:textSize="18dip" android:layout_width="294dip"
 					android:layout_height="70dip" android:layout_marginBottom="8dip"
-					android:layout_marginTop="50dip"></Button>
+					android:layout_marginTop="20dip"></Button>
 				<Button android:layout_centerHorizontal="true" android:id="@+id/nothanksbt"
 					android:text="@string/nothanks" android:textColor="#FFFFFF"
-					android:textSize="15dip" android:layout_width="294dip"
+					android:textSize="15dip" android:layout_width="294dip" android:layout_marginBottom="5dip"
 					android:layout_height="50dip"></Button>
 			</LinearLayout>
 			<!-- END DEFAULT TEMPLATE -->

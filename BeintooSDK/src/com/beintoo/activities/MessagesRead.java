@@ -28,7 +28,6 @@ import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
-import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.UsersMessage;
 
@@ -53,14 +52,15 @@ public class MessagesRead extends Dialog{
 	private Dialog current;
 	private MessagesList previous;
 	private double ratio;		
-	private UsersMessage message;
-	private boolean hasModified = false;
+	private UsersMessage message;	
+	private Integer selectedItem;
 	
-	public MessagesRead(Context context, UsersMessage m, MessagesList p) {
+	public MessagesRead(Context context, UsersMessage m, MessagesList p, Integer s) {
 		super(context, R.style.ThemeBeintoo);
 		current = this;
 		message = m; 
 		previous = p;
+		selectedItem = s;
 		
 		setContentView(R.layout.messagesread);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
@@ -157,24 +157,13 @@ public class MessagesRead extends Dialog{
 	 */
 	private void checkIsUnread(){
 		String status = message.getStatus();		
-		if(status.equals("UNREAD")){
-			hasModified = true;	
+		if(status.equals("UNREAD")){			
 			new Thread(new Runnable(){   // UPDATE THE MESSAGE STATUS  					
 	    		public void run(){
 	    			try{
 	    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
 	    				BeintooMessages bm = new BeintooMessages();
 	    				bm.markAsRead(message.getId(), p.getUser().getId());
-	    			}catch(Exception e){e.printStackTrace();}
-	    		}
-			}).start();	
-			
-			new Thread(new Runnable(){ // UPDATE USER MESSAGES COUNT    					
-	    		public void run(){
-	    			try{
-	    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
-	    				BeintooHome b = (BeintooHome) Beintoo.homeDialog;
-	    				b.updateMessage(p.getUser().getUnreadMessages()-1);
 	    			}catch(Exception e){e.printStackTrace();}
 	    		}
 			}).start();	
@@ -188,7 +177,7 @@ public class MessagesRead extends Dialog{
     			try{
     				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
     				BeintooMessages bm = new BeintooMessages();
-    				bm.markAsArchived(message.getId(), p.getUser().getId());
+    				bm.markAsArchived(message.getId(), p.getUser().getId());    				
     				UIhandler.sendEmptyMessage(0);
     			}catch(Exception e){e.printStackTrace();dialog.dismiss();}
     			dialog.dismiss();
@@ -220,17 +209,14 @@ public class MessagesRead extends Dialog{
 	 */
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
-		if(hasModified){
-			previous.reloadData();
-		}
+		super.onBackPressed();		
 	}
 	
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {
-			  current.dismiss();
-			  previous.reloadData();
+			  current.dismiss();			  
+			  previous.removeItem(selectedItem);
 		  }
 	};
 

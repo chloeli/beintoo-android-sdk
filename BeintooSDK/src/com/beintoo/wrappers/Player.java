@@ -18,78 +18,107 @@ package com.beintoo.wrappers;
 import java.util.Map;
 
 public class Player {
-	 	String guid;
-	    String publicName;
-	    Language language;
-	    User user;
-	    Float rank;
-	    Map<String, PlayerScore> playerScore;
-	    Alliance alliance;
-	    boolean isAllianceAdmin;
-	    Map<String,Double> vgoodThreshold;
-	    
-	    public Player(){
-	    	
-	    }
-	    
-	    public String getGuid() {
-			return guid;
-		}
-		public void setGuid(String guid) {
-			this.guid = guid;
-		}
-		public String getPublicName() {
-			return publicName;
-		}
-		public void setPublicName(String publicName) {
-			this.publicName = publicName;
-		}
-		public Language getLanguage() {
-			return language;
-		}
-		public void setLanguage(Language language) {
-			this.language = language;
-		}
-		public User getUser() {
-			return user;
-		}
-		public void setUser(User user) {
-			this.user = user;
-		}
-		public Float getRank() {
-			return rank;
-		}
-		public void setRank(Float rank) {
-			this.rank = rank;
-		}
-		public Map<String, PlayerScore> getPlayerScore() {
-			return playerScore;
-		}
-		public void setPlayerScore(Map<String, PlayerScore> playerScore) {
-			this.playerScore = playerScore;
-		}
-	    
-		public Alliance getAlliance() {
-			return alliance;
-		}
+	String guid;
+	String publicName;
+	Language language;
+	User user;
+	Float rank;
+	Map<String, PlayerScore> playerScore;
+	Alliance alliance;
+	boolean isAllianceAdmin;
+	Map<String, Double> vgoodThreshold;
+	Integer unreadNotification;
+	boolean hasMission;
+	
+	public Player() {
 
-		public void setAlliance(Alliance alliance) {
-			this.alliance = alliance;
-		}
+	}
 
-		public boolean isAllianceAdmin() {
-			return isAllianceAdmin;
-		}
+	public String getGuid() {
+		return guid;
+	}
 
-		public void setAllianceAdmin(boolean isAllianceAdmin) {
-			this.isAllianceAdmin = isAllianceAdmin;
-		}
+	public void setGuid(String guid) {
+		this.guid = guid;
+	}
 
-		public Map<String, Double> getVgoodThreshold() {
-			return vgoodThreshold;
-		}
+	public String getPublicName() {
+		return publicName;
+	}
 
-		public void setVgoodThreshold(Map<String, Double> vgoodThreshold) {
-			this.vgoodThreshold = vgoodThreshold;
-		}		
-}	
+	public void setPublicName(String publicName) {
+		this.publicName = publicName;
+	}
+
+	public Language getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(Language language) {
+		this.language = language;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Float getRank() {
+		return rank;
+	}
+
+	public void setRank(Float rank) {
+		this.rank = rank;
+	}
+
+	public Map<String, PlayerScore> getPlayerScore() {
+		return playerScore;
+	}
+
+	public void setPlayerScore(Map<String, PlayerScore> playerScore) {
+		this.playerScore = playerScore;
+	}
+
+	public Alliance getAlliance() {
+		return alliance;
+	}
+
+	public void setAlliance(Alliance alliance) {
+		this.alliance = alliance;
+	}
+
+	public boolean isAllianceAdmin() {
+		return isAllianceAdmin;
+	}
+
+	public void setAllianceAdmin(boolean isAllianceAdmin) {
+		this.isAllianceAdmin = isAllianceAdmin;
+	}
+
+	public Map<String, Double> getVgoodThreshold() {
+		return vgoodThreshold;
+	}
+
+	public void setVgoodThreshold(Map<String, Double> vgoodThreshold) {
+		this.vgoodThreshold = vgoodThreshold;
+	}
+
+	public Integer getUnreadNotification() {
+		return unreadNotification;
+	}
+
+	public void setUnreadNotification(Integer unreadNotification) {
+		this.unreadNotification = unreadNotification;
+	}
+
+	public boolean hasMission() {
+		return hasMission;
+	}
+
+	public void setHasMission(boolean hasMission) {
+		this.hasMission = hasMission;
+	}
+}
