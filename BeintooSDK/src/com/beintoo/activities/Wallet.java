@@ -15,31 +15,33 @@
  ******************************************************************************/
 package com.beintoo.activities;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
-
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemClickListener;
 
 
 import com.beintoo.R;
@@ -50,6 +52,9 @@ import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
+import com.beintoo.beintoosdkutility.JSONconverter;
+import com.beintoo.beintoosdkutility.LoaderImageView;
+import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
 
 import com.beintoo.vgood.VgoodSendToFriend;
@@ -57,29 +62,14 @@ import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
 import com.beintoo.wrappers.Vgood;
 
-public class Wallet extends Dialog implements OnItemClickListener, OnScrollListener{
-
-	private ListView listView;	
-	private WalletListAdapter adapter;
-	private ArrayList<ListWalletItem> vgoodslist;
-	
-	private Player p; 
-	
-	private final int MAX_REQ_ROWS = 10;
-	private int currentPageRows = 0;   	
-	private int currentScrollPos = 0;
-	
-	@SuppressWarnings("unused") // used for pagination, not yet implemented on API
-	private boolean isLoading = false;
-	@SuppressWarnings("unused") // used for pagination, not yet implemented on API
-	private boolean hasReachedEnd = false;
-	
+public class Wallet extends Dialog implements OnClickListener{
 	private Dialog current;		
 	private String vgoodExtId;
 	private User[] friends;
-	private List<Vgood> vgoods;
+	private Vgood [] vgood;
 	private final double ratio;
-			
+		
+	private final int LOAD_TABLE 		= 1;
 	private final int CONNECTION_ERROR 	= 2;
 	private final int SEND_TO_FRIEND 	= 3;
 	private final int NOT_REDEEMED 		= 1;
@@ -87,11 +77,9 @@ public class Wallet extends Dialog implements OnItemClickListener, OnScrollListe
 	private int currentSection 			= NOT_REDEEMED;
 	private View selectedRow;
 	
-	private boolean onlyconverted = false;
-	
 	public Wallet(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
-		setContentView(R.layout.walletlist);
+		setContentView(R.layout.wallet);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
 		current = this;
 		
@@ -121,10 +109,23 @@ public class Wallet extends Dialog implements OnItemClickListener, OnScrollListe
 				v.setBackgroundDrawable(b.setPressedBackg(
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
-						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-					onlyconverted = false;
-     				startFirstLoading();
-			}            	
+						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
+				showLoading();
+				new Thread(new Runnable(){      
+            		public void run(){
+            			try{ 
+            				BeintooVgood newvgood = new BeintooVgood();            				
+            				// GET THE CURRENT LOGGED PLAYER
+            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
+            				vgood = newvgood.showByPlayer(p.getGuid(), null, false);
+            				UIhandler.sendEmptyMessage(LOAD_TABLE);
+            			}catch (Exception e){
+            				e.printStackTrace();
+            				manageConnectionException();
+            			}
+            		}
+				}).start();
+			}
         });
 		
 		Button converted = (Button) findViewById(R.id.convertedGoods);
@@ -140,182 +141,169 @@ public class Wallet extends Dialog implements OnItemClickListener, OnScrollListe
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.HIGH_GRAY_GRADIENT)));				
-				onlyconverted = true;
-				startFirstLoading();            	            	
+				
+				showLoading();
+				new Thread(new Runnable(){      
+            		public void run(){
+            			try{ 
+            				BeintooVgood newvgood = new BeintooVgood();            				
+            				// GET THE CURRENT LOGGED PLAYER
+            				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
+            				vgood = newvgood.showByPlayer(p.getGuid(), null, true);
+            				UIhandler.sendEmptyMessage(LOAD_TABLE);
+            			}catch (Exception e){
+            				e.printStackTrace();
+            				manageConnectionException();
+            			}
+            		}
+				}).start();
 			}
         });
 		
-		try {
-	    	p = Current.getCurrentPlayer(getContext());	    	    	
-	    }catch (Exception e){
-	    	e.printStackTrace();
-	    }
-	    
-	    LinearLayout content = (LinearLayout) findViewById(R.id.goodcontent);		
-		content.addView(progressLoading());  
-	    
-	    listView = (ListView) findViewById(R.id.listView);        
-        listView.setCacheColorHint(0);
-	    listView.setOnScrollListener(this);
-	    listView.setOnItemClickListener(this);
-	    listView.addHeaderView(new View(current.getContext()), null, false); // WITHOUT HEADER THE FOOTER IS NOT SHOWN
-	    startFirstLoading();
-	    
+		
+		showLoading();
+		
+		startLoading();
+		
 	}
 	
-	@Override
-	public void onBackPressed() {
-		if(adapter != null && adapter.imageManager != null)
-			adapter.imageManager.interrupThread();
-		
-		super.onBackPressed();
-	}
-
-	public void startFirstLoading (){		
-		vgoods = new ArrayList<Vgood>();	
-		vgoodslist = new ArrayList<ListWalletItem>();
-	    hasReachedEnd = false;
-	    listView.setVisibility(LinearLayout.GONE);
-	    findViewById(R.id.goodcontent).findViewWithTag(1000).setVisibility(LinearLayout.VISIBLE);			  
-		loadData(currentPageRows, MAX_REQ_ROWS);							
-	}
-	
-	/*public void loadMore(){		
-		currentPageRows++;
-		loadData(currentPageRows*MAX_REQ_ROWS, MAX_REQ_ROWS);		
-	}*/
-	
-	public void reloadData(){
-		vgoodslist = new ArrayList<ListWalletItem>();
-		vgoods = new ArrayList<Vgood>();
-		
-		listView.setVisibility(View.GONE);
-		LinearLayout content = (LinearLayout) findViewById(R.id.goodcontent);
-		content.findViewWithTag(1000).setVisibility(LinearLayout.VISIBLE); 	    		
-		
-		int numRows = MAX_REQ_ROWS;		
-		if(currentPageRows > 0)
-			numRows = (currentPageRows+1)*MAX_REQ_ROWS;
-		
-		isLoading = true;
-		loadData(0, numRows);						
-	}
-	
-	private void loadData (final int start, final int rows) {
+	private void startLoading (){
 		new Thread(new Runnable(){      
     		public void run(){
     			try{ 
-    				BeintooVgood w = new BeintooVgood();            				
-					// GET THE CURRENT LOGGED PLAYER
-					final List<Vgood> tmp = w.showByPlayer(p.getGuid(), null, onlyconverted);
-					vgoods.addAll(tmp);	
-			
-					if(tmp.size() == 0){
-						hasReachedEnd = true;
-					}
-										
-					for(int i = start; i < vgoods.size(); i++){
-						String title = null;
-						String date = null;
-						String img = null;
-						if(vgoods.get(i) != null){
-							title = vgoods.get(i).getDescriptionSmall();
-							date = vgoods.get(i).getEnddate();
-							img = vgoods.get(i).getImageSmallUrl();
-						}
-						
-						ListWalletItem item = new ListWalletItem(img, title, date);
-						vgoodslist.add(item); 														
-					}			
-					
-					
-					UIhandler.post(new Runnable(){
-						@Override
-						public void run() {
-							try {
-								if(start == 0){
-									adapter = new WalletListAdapter(current.getContext(), vgoodslist);
-									listView.setAdapter(adapter);
-								}
-								adapter.notifyDataSetChanged();
-								
-								if(start == 0){
-									
-									LinearLayout content = (LinearLayout) findViewById(R.id.goodcontent);
-									content.findViewWithTag(1000).setVisibility(LinearLayout.GONE);									
-									listView.setVisibility(LinearLayout.VISIBLE);									
-								}else{							
-									listView.removeFooterView(listView.findViewWithTag(2000));
-								}
-								
-								if(rows > MAX_REQ_ROWS){ // IF WE ARE RELOADING
-									listView.setSelection(currentScrollPos);
-								}
-								
-							}catch(Exception e){
-								e.printStackTrace();
-							}							
-						}								
-					});					
-					isLoading = false;
-    			}catch (Exception e){
-    				e.printStackTrace();
-    				manageConnectionException ();
-    			}
+    				BeintooVgood bv = new BeintooVgood();
+    				Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
+    				vgood = bv.showByPlayer(p.getGuid(), null, false);
+    				UIhandler.sendEmptyMessage(LOAD_TABLE);
+    			}catch (Exception e){manageConnectionException();}
     		}
-		}).start();
+		}).start();	
 	}
 	
+	public void loadWallet(){
+		try {			
+			if(vgood.length > 0){
+				prepareWallet();
+			}else { // No vgoods show a message
+				TextView noGoods = new TextView(getContext());
+				noGoods.setText(getContext().getString(R.string.walletNoGoods));
+				noGoods.setTextColor(Color.GRAY);
+				noGoods.setPadding(20,15,0,0);						
+				TableLayout table = (TableLayout) findViewById(R.id.table);
+				table.removeAllViews();
+				table.addView(noGoods);
+			}
+		}catch (Exception e){e.printStackTrace();}
+	}
 	
-	private ProgressBar progressLoading (){
-		ProgressBar pb = new ProgressBar(getContext());
-		pb.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));
-		TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,TableLayout.LayoutParams.WRAP_CONTENT);
-		params.setMargins(0, (int)(ratio * 100), 0, 0);
-		params.gravity = Gravity.CENTER;
-		params.height = (int)(ratio * 45);
-		params.width = (int)(ratio * 45);
-		pb.setLayoutParams(params); 
-		pb.setTag(1000);
-		return pb;
+	public void prepareWallet(){
+		TableLayout table = (TableLayout) findViewById(R.id.table);
+
+		table.removeAllViews();
+		
+		int count = 0;
+		final ArrayList<View> rowList = new ArrayList<View>();
+	    for (int i = 0; i < vgood.length; i++){
+	    	
+    		final LoaderImageView image = new LoaderImageView(getContext(), vgood[i].getImageUrl(),(int)(ratio *80),(int)(ratio *80));
+    		
+    		TableRow row = createRow(image, vgood[i].getName(),vgood[i].getEnddate(), table.getContext());
+			row.setId(count);
+			rowList.add(row);
+			BeButton b = new BeButton(getContext());
+			if(count % 2 == 0)
+	    		row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			else
+				row.setBackgroundDrawable(b.setPressedBackg(
+			    		new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT),
+						new BDrawableGradient(0,(int)(ratio * 90),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+			
+			View spacer = createSpacer(getContext(),1,1);
+			spacer.setId(-100);
+			rowList.add(spacer);
+			View spacer2 = createSpacer(getContext(),2,1);
+			spacer2.setId(-100);
+			rowList.add(spacer2);
+	    	count++;
+	    }
+	    
+	    for (View row : rowList) {
+		      row.setPadding(0, 0, 0, 0);	
+		      if(row.getId() != -100) // IF IS NOT A SPACER IT'S CLICKABLE
+		    	  row.setOnClickListener(this);
+		      table.addView(row);
+		}
+	}
+	
+	public TableRow createRow(View image, String name, String end,  Context activity) {
+		  TableRow row = new TableRow(activity);
+		  row.setGravity(Gravity.CENTER);
+		  
+		  image.setPadding((int)(ratio*10), 0, 5, 0);
+		  ((LinearLayout) image).setGravity(Gravity.LEFT);
+
+		  LinearLayout main = new LinearLayout(row.getContext());
+		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT));
+		  main.setOrientation(LinearLayout.VERTICAL);
+		  main.setGravity(Gravity.CENTER_VERTICAL);
+		  
+		  TextView nameView = new TextView(activity);
+		  nameView.setText(name);
+		  nameView.setMaxLines(2);
+		  nameView.setPadding(5, 0, 0, 0);
+		  nameView.setTextColor(Color.parseColor("#545859"));
+		  nameView.setTextSize(14);
+		  nameView.setMaxWidth(50);
+		  TextView enddate = new TextView(activity);
+		  try { // try catch for SimpleDateFormat parse			  
+			  SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
+			  curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			  
+			  Date endDate = curFormater.parse(end);			  
+			  curFormater.setTimeZone(TimeZone.getDefault());
+			  
+			  enddate.setText(activity.getString(R.string.challEnd)+" "+DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(endDate));
+			  enddate.setTextSize(12);
+			  enddate.setMaxLines(2);
+			  enddate.setPadding(5, 0, 0, 0);
+			  enddate.setTextColor(Color.parseColor("#787A77"));
+		  } catch (Exception e){e.printStackTrace();}
+		  
+		  row.addView(image);
+		  main.addView(nameView);
+		  main.addView(enddate);		  
+		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio * 90)));
+		  
+		  return row;
+	}
+		
+	private View createSpacer(Context activity, int color, int height) {
+		  View spacer = new View(activity);
+		  spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,height));
+		  if(color == 1)
+			  spacer.setBackgroundColor(Color.parseColor("#8F9193"));
+		  else if(color == 2)
+			  spacer.setBackgroundColor(Color.WHITE);
+
+		  return spacer;
 	}
 
-	private void manageConnectionException (){
-		UIhandler.sendEmptyMessage(CONNECTION_ERROR);		
+	public void onClick(View v) {
+		selectedRow = v;
+		if(currentSection == NOT_REDEEMED){
+			showConfirmAlert(selectedRow);	
+		}else{
+			BeintooBrowser bb = new BeintooBrowser(current.getContext(),vgood[v.getId()].getShowURL());
+			bb.show();
+		}
 	}
 	
-	/* PAGINATION NOT IMPLEMENTED IN API'S YET */
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)  {
-		/*try {			
-			currentScrollPos = firstVisibleItem;
-			if(!isLoading && !hasReachedEnd){				
-				if(firstVisibleItem != 0 && (firstVisibleItem > totalItemCount - visibleItemCount-1)){
-					isLoading = true;					
-		            listView.addFooterView(loadingFooter());			            
-					loadMore();
-				}		
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}*/
-	}	
-	
-	/*private LinearLayout loadingFooter(){
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(35, 35);
-		ProgressBar pb = new ProgressBar(getContext());
-		pb.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));				
-		pb.setLayoutParams(params);	            	            
-        LinearLayout loading = new LinearLayout(current.getContext());
-        loading.addView(pb);
-        loading.setPadding(0, 10, 0, 10);
-        loading.setGravity(Gravity.CENTER);
-        loading.setTag(2000);
-        return loading;
-	}*/
-	
-	private void showConfirmAlert(final int row){
-		final Vgood v = vgoods.get(row-1);
+	private void showConfirmAlert(final View row){
+		
+		final Vgood v = vgood[row.getId()];
 		
 		final CharSequence[] items = {current.getContext().getString(R.string.vgoodgetcoupondialog), 
 				current.getContext().getString(R.string.vgoodsendgiftdialog)};
@@ -360,53 +348,46 @@ public class Wallet extends Dialog implements OnItemClickListener, OnScrollListe
 		toConvert.setBackgroundDrawable(new BDrawableGradient(0,(int) (ratio*35),BDrawableGradient.LIGHT_GRAY_GRADIENT));
 	}
 	
+	private void showLoading (){
+		ProgressBar pb = new ProgressBar(getContext());
+		pb.setIndeterminateDrawable(getContext().getResources().getDrawable(R.drawable.progress));
+		TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,TableLayout.LayoutParams.WRAP_CONTENT);
+		params.setMargins(0, (int)(100*ratio), 0, 0);		
+		TableRow row = new TableRow(getContext());
+		row.setLayoutParams(params);
+		row.setGravity(Gravity.CENTER);
+		row.addView(pb);
+		TableLayout table = (TableLayout) findViewById(R.id.table);
+		table.removeAllViews();
+		table.addView(row);
+	}
 	
+	private void manageConnectionException (){
+		UIhandler.sendEmptyMessage(CONNECTION_ERROR);		
+	}
 	
-	Handler UIhandler = new Handler() {
+	private Handler UIhandler = new Handler() {
 		  @Override
-		  public void handleMessage(Message msg) {	
-			  switch(msg.what){				 
-				  case CONNECTION_ERROR:					  
-					  ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(), null);
-				  break;
-				  case SEND_TO_FRIEND:
-				  		VgoodSendToFriend f = new VgoodSendToFriend(getContext(), VgoodSendToFriend.OPEN_FRIENDS_FROM_WALLET, friends);
-						f.previous = current;
-						f.rowToRemove = selectedRow;			  		
-						f.vgoodID = vgoodExtId;
-						f.show();
-				  break;
+		  public void handleMessage(Message msg) {
+			  switch(msg.what){			  	
+			  	case LOAD_TABLE:
+			  		loadWallet();
+				break;	
+			  	case SEND_TO_FRIEND:
+			  		VgoodSendToFriend f = new VgoodSendToFriend(getContext(), VgoodSendToFriend.OPEN_FRIENDS_FROM_WALLET, friends);
+					f.previous = current;
+					f.rowToRemove = selectedRow;			  		
+					f.vgoodID = vgoodExtId;
+					f.show();
+			  	break;
+			  	case CONNECTION_ERROR:
+			  		TableLayout table = (TableLayout) findViewById(R.id.table);
+					table.removeAllViews();
+					ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR , current.getContext(), null);
+			  	break;
 			  }
-			  super.handleMessage(msg);
+			super.handleMessage(msg);
 		  }
 	};
-
-	@Override
-	public void onScrollStateChanged(AbsListView arg0, int arg1) {
-		
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {		
-		if(currentSection == NOT_REDEEMED){
-			showConfirmAlert(position);	
-		}else{
-			BeintooBrowser bb = new BeintooBrowser(current.getContext(),vgoods.get(position-1).getShowURL());
-			bb.show();
-		}
-	}
-	
-	public class ListWalletItem {
-		String imgUrl;
-		String title;
-		String date;
-		
-		public ListWalletItem(String imgUrl, String title, String date) {
-			super();
-			this.imgUrl = imgUrl;
-			this.title = title;
-			this.date = date;			
-		}
-	}
 	
 }

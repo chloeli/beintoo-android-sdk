@@ -123,6 +123,7 @@ public class SubmitScoreManager {
 	 */
 	private void submitScoreHelper (final Context ctx, final int lastScore, final Integer balance, final String codeID, 
 			final boolean showNotification,final Location location, final int gravity, final BSubmitScoreListener listener){
+		
 		SerialExecutor executor = SerialExecutor.getInstance();	
 		executor.execute(new Runnable(){     					
     		public void run(){	

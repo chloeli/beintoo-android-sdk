@@ -67,9 +67,6 @@ public class SmartWebUi extends Dialog implements android.webkit.GeolocationPerm
 		ws.setGeolocationEnabled(true);
 		ws.setJavaScriptCanOpenWindowsAutomatically(true);
 		ws.setPluginsEnabled(true);
-		ws.setLoadWithOverviewMode(true);
-		ws.setUseWideViewPort(true);
-		
 		setLoading();
 		
 		webview.setWebChromeClient(new WebChromeClient() {
@@ -102,7 +99,7 @@ public class SmartWebUi extends Dialog implements android.webkit.GeolocationPerm
 				t.setText(title);
 			}			
 		});
-		
+		webview.setInitialScale(1);
 		webview.loadUrl(url);		
 		// DEBUG CALLED URL
 		DebugUtility.showLog(url);	

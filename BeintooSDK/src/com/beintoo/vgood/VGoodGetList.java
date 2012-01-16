@@ -39,9 +39,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -201,14 +199,9 @@ public class VGoodGetList extends Dialog implements OnClickListener{
 		    public void onClick(DialogInterface dialog, int item) {
 		        if(item == 0){ // GET COUPON
 		        	try {
-		        		if(!vgood.isOpenInBrowser()){
-		        			BeintooBrowser getVgood = new BeintooBrowser(current.getContext(),vgood.getGetRealURL());
-		        			Beintoo.currentDialog = getVgood;
-		        			getVgood.show();
-		        		}else{
-							Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(vgood.getGetRealURL()));
-							current.getContext().startActivity(browserIntent);
-						}
+		        		BeintooBrowser getVgood = new BeintooBrowser(current.getContext(),vgood.getGetRealURL());
+		        		Beintoo.currentDialog = getVgood;
+		        		getVgood.show();
 		        		current.dismiss();
 		        	}catch(Exception e){e.printStackTrace();}
 		        }else if(item == 1){ // SEND AS A GIFT

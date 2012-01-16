@@ -18,9 +18,12 @@
     <string name="challStatus">Status:</string>
     <string name="challStart">Starttermin:</string>
     <string name="challEnd">Enddatum:</string>
-    <string name="challWinner">Gewinner</string>
+    <string name="challWinner">Gewinner:</string>
     <string name="challPrize">Preis:</string>
-    <string name="challNoPending">Du hast keine anhängige Herausforderung Zugriffe</string>    
+    <string name="challNoPending">Du hast keine anhängige Herausforderung Zugriffe</string>
+    <string name="challFromTo">Von dich zu\u0020</string>
+    <string name="challFrom">Von\u0020</string>
+    <string name="challYou">\u0020zu dir</string>
     <string name="challRefused">Herausforderung abgelehnt</string>
     <string name="challAccepted">Herausforderung akzeptiert</string>
     <string name="challNoPendingC">Du hast keine anhängige Herausforderung</string>
@@ -31,31 +34,10 @@
     <string name="challAccept">Möchtest du akzeptieren diese Herausforderung zu\u0020 annehmen?</string>
     <string name="challSend">Möchtest du eine Herausforderung schicken? Wette 10 BeDollars um 25 Bedollars gewinnen.</string>   
 	<string name="challTip">Klicke auf einen Benutzer zu interagieren</string>
-    <string name="challmevsyou">Ich wette, du nicht erreichen kannst, diese Partitur in 48 Stunden</string>
-	<string name="challmevsyoutitle">Du kannst nicht erreichen...</string>
-	<string name="challFriends">Ich wette, ich kann diese Partitur in 48 Stunden erreichen</string>
-	<string name="challFriendstitle">Ich kann erreichen...</string>
-	<string name="chall48">Ich wette, ich kann ein besseres Ergebnis als du erhalten, in den nächsten 48 Stunden</string> 
-	<string name="chall48title">Wer ist der Beste?</string>
-	<string name="chall48subtitle">ich kann ein besseres Ergebnis als deine erreichen</string>
-	<string name="challhowmuchbet">Ich wette</string>	
-	<string name="challhowmanypointyou">kann %s nicht erreichen</string>
-	<string name="challhowmanypoint">Werde ich erreichen</string> 
-	<string name="challerrorbedollars">Bitte, lege die Menge an Bedollar, die du wetten willst</string>
-	<string name="challerrorpoints">Bitte, lege die Punkte, die du wetten willst</string>
-	<string name="challFromTo">Von dir zu\u0020</string>
-	<string name="challFrom">Von\u0020</string>
-	<string name="challYou">\u0020zu dir</string>
-	<string name="challFromUser">\u0020Herausforderung du</string>
-	<string name="challBet">Wette</string>
-	<string name="challCanWin">Sieg</string>
-	<string name="challPointsTarget">Punkte zu erreichen</string> 
-	<string name="challPoints">Punkte</string>
-	<string name="clickhere">klicke hier</string>
-	
+	    
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Partitur:\u0020</string>
-    <string name="leadSendChall">Senden</string>
+    <string name="leadSendChall">Senden Herausforderung</string>
 	<string name="leadViewProfile">Profil ansehen</string>
 	<string name="leadAddFriend">Als Fraund hinzufügen</string>
 	<string name="leadshowfriendsonly">Freunden</string>
@@ -193,6 +175,7 @@
     <string name="messageempty">Du hast keine Nachrichten bekommen</string>
     <string name="messageloadmore">Laden früheren</string>
     <string name="messagesent">Nachricht an gesendet an\u0020</string>
+    <string name="messagenotification">Du hast %d ungelesene Nachrichten</string>
     
     <!-- BALANCE -->
     <string name="balance">Bilanz</string>  
@@ -281,10 +264,5 @@
 	<string name="signupchallenge">Fordere deine Freunde, gewinn, und verdiene Bedollars</string>	
 	<string name="signupleaderboard">Gib die Leaderboard und vergleich deine Ergebnisse mit deinen Freunden</string>
 	<string name="signupforums">Diskutiere mit den Spielern und gib deine Ratschläge</string>
-   
-	<!-- NOTIFICATIONS  -->
-	<string name="notifications">Benachrichtigungen</string>
-	<string name="messagenotificationp">Du hast %d Benachrichtigungen</string>
-	<string name="messagenotification">Du hast %d Benachrichtigung</string>
-	<string name="unmissionstatus">Status deiner Mission</string>
+       
 </resources>

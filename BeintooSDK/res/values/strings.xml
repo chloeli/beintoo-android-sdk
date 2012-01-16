@@ -18,9 +18,12 @@
     <string name="challStatus">Status:</string>
     <string name="challStart">Start date:</string>
     <string name="challEnd">End date:</string>
-    <string name="challWinner">Winner</string>
+    <string name="challWinner">Winner:</string>
     <string name="challPrize">Prize:</string>
-    <string name="challNoPending">You have no pending challenge request</string>    
+    <string name="challNoPending">You have no pending challenge request</string>
+    <string name="challFromTo">From you to\u0020</string>
+    <string name="challFrom">From\u0020</string>
+    <string name="challYou">\u0020to you</string>
     <string name="challRefused">Challenge refused</string>
     <string name="challAccepted">Challenge accepted</string>
     <string name="challNoPendingC">You have no pending challenges</string>
@@ -30,30 +33,8 @@
     <string name="challSent">Challenge sent to\u0020</string>
     <string name="challAccept">Do you want to accept this challenge for\u0020</string>
     <string name="challSend">Would you like to send a challenge? Bet 10 BeDollars, to win 25.</string>
-    <string name="challTip">click on a user to interact</string>    
-    <string name="challmevsyou">I bet you can not reach this score in 48 hours</string>
-    <string name="challmevsyoutitle">You can\'t reach...</string>
-    <string name="challFriends">I bet I can reach this score in 48 hours</string>
-    <string name="challFriendstitle">I can reach...</string> 
-    <string name="chall48">I bet I can get a better score than yours in the next 48hours?</string>    
-    <string name="chall48title">Who\'s the best?</string>
-    <string name="chall48subtitle">I can reach a better score than yours</string>
-    <string name="challmaxbet">Bedollars:</string>
-    <string name="challhowmuchbet">I bet</string>
-    <string name="challhowmanypoint">I can reach</string>  
-    <string name="challhowmanypointyou">%s can not reach</string>
-    <string name="challerrorbedollars">Please insert the amount of Bedollars you want to bet</string>
-    <string name="challerrorpoints">Please, insert the points you want to bet</string> 
-    <string name="challFromTo">From you to\u0020</string>
-    <string name="challFrom">From\u0020</string>
-    <string name="challYou">\u0020to you</string>
-    <string name="challFromUser">\u0020challenges you</string>
-    <string name="challBet">Bet</string>
-    <string name="challCanWin">You can win</string>
-    <string name="challPointsTarget">Points to do</string> 
-    <string name="challPoints">Points</string>
-    <string name="clickhere">click here</string>
-        
+    <string name="challTip">click on a user to interact</string>
+    
     <!-- LEADERBOARD -->
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Score:\u0020</string>
@@ -197,7 +178,7 @@
     <string name="messageempty">You have no received messages</string>
     <string name="messageloadmore">Load previous</string>
     <string name="messagesent">Messagge sent to\u0020</string>
-    
+    <string name="messagenotification">You have %d unread messages</string>
     
     <!-- BALANCE -->
     <string name="balance">Balance</string>  
@@ -285,10 +266,4 @@
 	<string name="signupchallenge">Challenge friends, win and earn Bedollars!</string>	
 	<string name="signupleaderboard">Be in the Leaderboard and compare your score with your friends!</string>
 	<string name="signupforums">Discuss with players and give your feedbacks.</string>	
-	
-	<!-- NOTIFICATIONS -->
-	<string name="notifications">Notifications</string>  
-	<string name="messagenotificationp">You have %d notifications</string>
-	<string name="messagenotification">You have %d notification</string>
-	<string name="unmissionstatus">Status of your mission</string>	
 </resources>

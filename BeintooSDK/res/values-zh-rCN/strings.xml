@@ -3,9 +3,12 @@
 	<string name="challStatus">状态：</string>
 	<string name="challStart">开始日期：</string>
 	<string name="challEnd">结束日期：</string> 
-	<string name="challWinner">赢家</string> 
+	<string name="challWinner">赢家：</string> 
 	<string name="challPrize">奖金：</string> 
 	<string name="challNoPending">您没有未处理的挑战请求</string> 
+	<string name="challFromTo">您对\u0020的挑战</string> 
+	<string name="challFrom">\u0020</string> 
+	<string name="challYou">\u0020对您的挑战</string> 
 	<string name="challRefused">拒绝挑战</string> 
 	<string name="challAccepted">接受挑战</string> 
 	<string name="challNoPendingC">您没有未处理的挑战</string> 
@@ -154,6 +157,7 @@
 	<string name="messageempty">您尚未收到消息</string> 
 	<string name="messageloadmore">加载以前的消息</string> 
 	<string name="messagesent">消息发送到\u0020</string> 
+	<string name="messagenotification">您有 %d 条未读消息</string> 
 	
 	<!-- BALANCE --> 
 	<string name="balance">余额</string> 
@@ -229,39 +233,6 @@
 	<string name="alliancerefuse">拒绝</string> 
 	<string name="allianceinvalid">名称的最短长度为 3 个字符</string> 
 	
-	<string name="chall48">我打赌我能在48小时内达到一个比你更好的分数？</string>
-	<string name="chall48subtitle">我能够达到一个比你更好的分数</string>
-	<string name="chall48title">谁是最好的?</string>
-	<string name="challBet">打赌</string>
-	<string name="challCanWin">你能赢</string>
-	<string name="challFriends">我打赌我能在48内达到这个分数</string>
-	<string name="challFriendstitle">我可以达到...</string>
-	<string name="challFrom">从\u0020</string>
-	<string name="challFromTo">从你至\u0020</string>
-	<string name="challFromUser">\u0020挑战你</string>
-	<string name="challPoints">点数</string>
-	<string name="challPointsTarget">要做的点数</string>
-	<string name="challYou">u0020至你</string>
-	<string name="challerrorbedollars">你插入你想要打赌的Be币数量</string>
-	<string name="challerrorpoints">请插入你想要打赌的分数</string>
-	<string name="challhowmanypoint">我可以达到</string>
-	<string name="challhowmanypointyou">%s 无法达到</string>
-	<string name="challhowmuchbet">我打赌</string>
-	<string name="challmaxbet">Be币：</string>
-	<string name="challmevsyou">我打赌你不能在48小时内达到这个分数</string>
-	<string name="challmevsyoutitle">您不能到达...</string>
-	<string name="clickhere">点击这里</string>
-	<string name="messagenotification">您有 %d条通知</string>
-	<string name="messagenotificationp">您有 %d条通知</string>
-	<string name="notifications">通知</string>
-	<string name="signupchallenge">向朋友挑战，赢得并赚取Be币!</string>
-	<string name="signupforums">与玩家讨论并给出反馈意见。</string>
-	<string name="signuphome">享受更多乐趣，与玩家联结并让您赢得的东西成为现实!\n 欢迎来到Beintoo 网络!</string>
-	<string name="signupleaderboard">到排行榜将您和您朋友们的分数进行比较！</string>
-	<string name="signupnow"><data><![CDATA[<b>立刻</b>注册]]></data></string>
-	<string name="signupprofile">创建您的个人资料，结实更多的朋友并管理您的奖品！</string>
-	<string name="unmissionstatus">您的任务的状态</string>	    
-	    
 	<!-- CUSTOM --> 
 	<string name="sponsor"><Data><![CDATA[尽情游戏：<b>赢取<br />&nbsp;&nbsp;独家<br />&nbsp;&nbsp;真实交易！</b>]]></Data></string>
 	<string name="sponsortitle">注册到 Beintoo，您将会在当地得到惊人的折扣作为对游戏战绩的奖励。</string> 

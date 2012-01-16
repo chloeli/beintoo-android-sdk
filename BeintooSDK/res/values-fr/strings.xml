@@ -18,9 +18,12 @@
     <string name="challStatus">Statut:</string>
     <string name="challStart">Début:</string>
     <string name="challEnd">Jusqu\'au:</string>
-    <string name="challWinner">Gagnant</string>
+    <string name="challWinner">Gagnant:</string>
     <string name="challPrize">Prix:</string>
-    <string name="challNoPending">Vous n\'avez aucune demande de défi en attente</string>    
+    <string name="challNoPending">Vous n\'avez aucune demande de défi en attente</string>
+    <string name="challFromTo" xml:space="preserve">De vous à\u0020</string>
+    <string name="challFrom" xml:space="preserve">De\u0020</string>
+    <string name="challYou" xml:space="preserve">\u0020à vous</string>
     <string name="challRefused">Défi refusé</string>
     <string name="challAccepted">Défi accepté</string>
     <string name="challNoPendingC">Vous n\'avez aucune demande de défi en attente</string>
@@ -31,29 +34,7 @@
     <string name="challAccept">Voulez-vous accepter ce défi au coût de\u0020</string>
     <string name="challSend">Voulez-vous envoyer un défi?\nPariez 10 BeDollars, vous pourriez en gagner 25.</string>
     <string name="challTip">cliquez sur un utilisateur pour intéragir</string>
-    <string name="challmevsyou">Je parie que tu n\'atteindras pas ce score en 48 heures</string>
-	<string name="challmevsyoutitle">Tu n\'arrives pas...</string>
-	<string name="challFriends">Je parie que j\'arrive à gagner ce score en 48 heures</string>
-	<string name="challFriendstitle">J\'y arrive...</string> 
-	<string name="chall48">Je parie que j\'aurai un meilleur score que toi dans les prochaines 48heures</string>  
-	<string name="chall48title">Qui est le meilleur?</string>
-	<string name="chall48subtitle">que j\'atteins un score meilleur du tien</string>
-	<string name="challhowmuchbet">Je parie</string>
-	<string name="challhowmanypoint">Que j\'attendrai</string>
-	<string name="challhowmanypointyou">Que %s n\'atteindra pas</string>
-	<string name="challerrorbedollars">S\'il vous plait, ichall48subtitlensérez ici le montant de Bedollars que vous voulez pariez</string>
-	<string name="challerrorpoints">S\'il vous plait, insérez ici le score que vous voulez atteindre</string>
-	<string name="challFromTo">De vous à\u0020</string>
-	<string name="challFrom">De\u0020</string>
-	<string name="challYou">\u0020à vous</string>
-	<string name="challFromUser">\u0020vous défie</string>
-	<string name="challBet">Pari</string>
-	<string name="challCanWin">Vous pouvez gagner</string>
-	<string name="challPointsTarget">Score à atteindre</string>
-	<string name="challPoints">Points</string>
-	<string name="clickhere">cliquez ici</string>
-	
-        
+    
     <string name="leadTitle">Leaderboard</string>
     <string name="leadScore">Score:\u0020</string>
     <string name="leadSendChall">Défier</string>
@@ -197,7 +178,8 @@
     <string name="messagetext">Message:</string> 
     <string name="messageempty">Vous n\'avez reçu aucun message</string>
     <string name="messageloadmore">Voir plus</string>  
-    <string name="messagesent">Message envoyé à \u0020</string>     
+    <string name="messagesent">Message envoyé à \u0020</string>
+    <string name="messagenotification">Vous avez %d messages non lus</string> 
     
     <!-- BALANCE -->
     <string name="balance">Budget</string> 
@@ -284,11 +266,5 @@
 	<string name="signupprofile">Créer votre profil, rencontrer de nouveaux amis et gérez vos prix</string>
 	<string name="signupchallenge">Défiez vos amis, gagnez et encaissez des Bedollars</string>	
 	<string name="signupleaderboard">Entrer dans le classement et comparez votre score avec vos amis</string>
-	<string name="signupforums">Discutez avec les utilisateurs et donnes vos conseils</string>	
-	
-	<!-- NOTIFICATIONS -->
-	<string name="notifications">Notifications</string> 
-	<string name="messagenotificationp">Vous avez %d nouvelles notifications</string>
-	<string name="messagenotification">Vous avez %d nouvelle notification</string>
-	<string name="unmissionstatus">Statut de votre mission</string>    
+	<string name="signupforums">Discutez avec les utilisateurs et donnes vos conseils</string>	    
 </resources>

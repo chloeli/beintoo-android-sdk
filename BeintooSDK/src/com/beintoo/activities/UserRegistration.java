@@ -149,7 +149,7 @@ public class UserRegistration extends Dialog{
 								currentUserUserExt = userLogin.getUser().getId();
 								PreferencesHandler.saveBool("isLogged", true, getContext());
 							}else{ // SHOW NETWORK ERROR
-								ErrorDisplayer.showConnectionErrorOnThread("Connection error.\nPlease check your Internet connection.", getContext(),null);
+								ErrorDisplayer.showConnectionError("Connection error.\nPlease check your Internet connection.", getContext(),null);
 							} 
 							imm.hideSoftInputFromWindow(emailText.getApplicationWindowToken(), 0);
             				dialog.dismiss();

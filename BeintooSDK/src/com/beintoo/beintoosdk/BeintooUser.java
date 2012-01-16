@@ -19,8 +19,6 @@ import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.List;
 
-import android.net.Uri;
-
 import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
@@ -165,47 +163,29 @@ public class BeintooUser {
 	 * @return a json object of request challenges
 	 * @throws Exception 
 	 */
-	public Challenge challenge (String userExtFrom, String userExtTo, String action, String kind, String codeID, String achId, String userActorExtId, Integer score, Integer bet){
-		Uri.Builder apiUrl = Uri.parse(apiPreUrl+"user/challenge/"+userExtFrom+"/"+action+"/"+userExtTo).buildUpon();
-		
+	public Challenge challenge (String userExtFrom, String userExtTo, String action, String codeID){
+		String apiUrl = apiPreUrl+"user/challenge/"+userExtFrom+"/"+action+"/"+userExtTo;
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
-		
 		if(codeID != null){
 			header.getKey().add("codeID");
 			header.getValue().add(codeID);
 		}
-				
-		if(kind != null){
-			apiUrl.appendQueryParameter("kind", kind);		
-		}
-		if(achId != null){
-			apiUrl.appendQueryParameter("achId", achId);			
-		}
-		if(userActorExtId != null){
-			apiUrl.appendQueryParameter("userActor", userActorExtId);				
-		}
-		if(score != null){
-			apiUrl.appendQueryParameter("score", score.toString());				
-		}
-		if(bet != null){
-			apiUrl.appendQueryParameter("bet", bet.toString());				
-		}
-		
 		BeintooConnection conn = new BeintooConnection();
-		String json = null;		
-		json = conn.httpRequest(apiUrl.toString(), header, null);
+		String json = conn.httpRequest(apiUrl, header, null);
 		
 		Gson gson = new Gson();
 		
 		Challenge challenge = gson.fromJson(json, Challenge.class);
 		
+		/*if (challenge.getStatus() == null){
+			Message msg = gson.fromJson(json, Message.class);
+			if(msg.getMessageID() == -15)
+				throw new Exception("-15");
+		}*/
+		
 		return challenge;	
-	}
-	
-	public Challenge challenge (String userExtFrom, String userExtTo, String action, String codeID){
-		return challenge (userExtFrom, userExtTo, action, null, codeID, null, null, null, null);
 	}
 	
 	public Challenge challenge (String userExtFrom, String userExtTo, String action){

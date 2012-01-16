@@ -77,9 +77,7 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 		ws.setGeolocationEnabled(true);
 		ws.setJavaScriptCanOpenWindowsAutomatically(true);
 		ws.setPluginsEnabled(true);
-		ws.setLoadWithOverviewMode(true);
-		ws.setUseWideViewPort(true);
-		
+
 		webview.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
 				ProgressBar p = (ProgressBar) findViewById(R.id.progress);				
@@ -109,7 +107,7 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 				p.setVisibility(LinearLayout.VISIBLE);
 			}
 		});
-		
+		webview.setInitialScale(1);
 		String locationParams = getSavedPlayerLocationParams();
 		
 		if(url.contains("beintoo.com")) // ADD LOCATION COORDINATES IF ON BEINTOO 

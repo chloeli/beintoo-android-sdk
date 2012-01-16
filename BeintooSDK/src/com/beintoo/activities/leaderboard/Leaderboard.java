@@ -7,16 +7,18 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.beintoo.R;
-import com.beintoo.activities.ChallengeCreate;
 import com.beintoo.activities.Friends;
 import com.beintoo.activities.UserProfile;
 import com.beintoo.activities.alliances.UserAlliance;
 import com.beintoo.activities.signupnow.SignupLayouts;
 import com.beintoo.beintoosdk.BeintooAlliances;
 import com.beintoo.beintoosdk.BeintooApp;
+import com.beintoo.beintoosdk.BeintooUser;
+import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.ImageManager;
+import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.LeaderboardContainer;
 import com.beintoo.wrappers.Player;
@@ -26,7 +28,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -62,7 +66,8 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 	private Player player = null;
 	private Leaders currentUser = null;
 	
-	private final double ratio;	
+	private final double ratio;
+	private final int SHOW_MESSAGE = 1;
 	private final int MAX_REQ_ROWS = 20;
 	private int currentPageRows = 1;   
 		
@@ -382,10 +387,13 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		header1.findViewById(R.id.whiteline).setVisibility(LinearLayout.GONE);
 		try {
 			if(currentUser.imageUrl != null){
-				ImageView imageView = new ImageView(currentContext);				
+				ImageView imageView = new ImageView(currentContext);
 				imageView.setTag(currentUser.imageUrl);
 				int size = (int) (50 * currentContext.getResources().getDisplayMetrics().density + 0.5f);
-				imageView.setLayoutParams(new LinearLayout.LayoutParams(size,size));				
+				imageView.setMaxHeight(size);
+				imageView.setMaxWidth(size);
+				imageView.setMinimumHeight(size);
+				imageView.setMinimumWidth(size);
 				imageManager.displayImage(currentUser.imageUrl, currentContext, imageView);
 				
 				LinearLayout a = (LinearLayout)header1.findViewById(R.id.item);
@@ -412,6 +420,45 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		return header1;
 	}
 	
+	public void sendChallenge  (final String userExtFrom, final String userExtTo, final String action, final int id){		
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{             				
+    				BeintooUser user = new BeintooUser();
+    				user.challenge(userExtFrom, userExtTo, action, codeID);
+    				// SHOW THE NOTIFICATION
+    				Bundle b = new Bundle();
+    				b.putString("msg",getContext().getString(R.string.challSent)+usersNicks.get(id));
+    				final Message msg = new Message();
+    				msg.what = SHOW_MESSAGE;
+    				msg.setData(b);
+    				UIHandler.post(new Runnable(){
+						@Override
+						public void run() {
+							MessageDisplayer.showMessage(currentContext, msg.getData().getString("msg"), Gravity.BOTTOM);	
+						}    					
+    				});
+    			}catch (ApiCallException e){
+    				// SHOW THE NOTIFICATION
+    				Bundle b = new Bundle();
+    				b.putString("msg",e.getMessage());
+    				final Message msg = new Message();
+    				msg.what = SHOW_MESSAGE;
+    				msg.setData(b);
+    				UIHandler.post(new Runnable(){
+						@Override
+						public void run() {
+							MessageDisplayer.showMessage(currentContext, msg.getData().getString("msg"), Gravity.BOTTOM);	
+						}    					
+    				}); 
+    			}catch (Exception e){
+    				e.printStackTrace();
+    			}
+    			
+    		}
+		}).start();		
+	}
+	
 	public void showOptionAlert(final int row){
 		
 		final CharSequence[] items = {current.getContext().getString(R.string.leadSendChall), 
@@ -419,16 +466,29 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 		AlertDialog.Builder builder = new AlertDialog.Builder(current.getContext());
 		builder.setTitle(current.getContext().getString(R.string.vgoodchoosedialog));
 		builder.setItems(items, new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int item) {		    	
+		    public void onClick(DialogInterface dialog, int item) {
+		    	final Player p = player;
 		        if(item == 0){ 
-		        	try {		        		
-		        		ChallengeCreate cc = new ChallengeCreate(current.getContext(), ChallengeCreate.SHOW_ENTRY, null, usersExts.get(row));
-		        		cc.codeID = codeID;
-		        		cc.show();		        		
+		        	try {
+		        		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		        		builder.setMessage(getContext().getString(R.string.challSend))
+		        		       .setCancelable(false)
+		        		       .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
+		        		           public void onClick(DialogInterface dialog, int id) {		 		        		        	   		       			
+		        		       			sendChallenge(p.getUser().getId(),usersExts.get(row),"INVITE", row);  
+		        		           }
+		        		       })
+		        		       .setNegativeButton(getContext().getString(R.string.no), new DialogInterface.OnClickListener() {
+		        		           public void onClick(DialogInterface dialog, int id) {
+		        		        	   
+		        		           }
+		        		       });
+		        		AlertDialog alert = builder.create();
+		        		alert.show();
 		        	}catch(Exception e){e.printStackTrace();}
 		        }else if(item == 1){ 
 		        	try {
-		        		UserProfile userProfile = new UserProfile(getContext(),usersExts.get(row));		        		
+		        		UserProfile userProfile = new UserProfile(getContext(),usersExts.get(row));
 		    			userProfile.show();
 		        	}catch(Exception e){e.printStackTrace();}
 		        }else if(item == 2){ 
@@ -486,21 +546,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 			this.isCurrentUser 	= isCurrentUser;
 		}
 	} 
-
-	@Override
-	public void onBackPressed() {		
-		// STOPPING IMAGE MANAGER THREADS
-		try {
-			if(adapter != null && adapter.getImageManager() != null)
-				adapter.getImageManager().interrupThread();
-			if(imageManager != null)
-				imageManager.interrupThread();
-		}catch (Exception e){
-			e.printStackTrace();
-		}		
-		super.onBackPressed();
-	}
-
+ 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)  {
 		try {
@@ -508,7 +554,7 @@ public class Leaderboard extends Dialog implements OnItemClickListener, OnScroll
 				return;
 			
 			if(!isLoading && !hasReachedEnd){
-				if(firstVisibleItem != 0 && (firstVisibleItem > totalItemCount - visibleItemCount-1)){
+				if(firstVisibleItem != 0 && (firstVisibleItem > totalItemCount - 10)){
 					isLoading=true;
 		            listView.addFooterView(loadingFooter());
 					startLoadingMore();

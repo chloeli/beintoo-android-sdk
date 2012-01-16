@@ -21,18 +21,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class LeaderboardAdapter extends ArrayAdapter<Leaders> {
-	private final ArrayList<Leaders> leaders;
-	public 	final ImageManager imageManager;
-	private final Context currentContext;	
+	private ArrayList<Leaders> leaders;
+	public ImageManager imageManager;
+	private Context currentContext;
 	private final double ratio;
-	private final BeButton gradientRow;	
 	
 	public LeaderboardAdapter(Context context, int textViewResourceId, ArrayList<Leaders> leaders) {
 		super(context, textViewResourceId, leaders);
 		this.leaders = leaders;
 		this.currentContext = context;
 		this.ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);
-		gradientRow = new BeButton(getContext());				
+		
 		imageManager = new ImageManager(context);
 	}
 	
@@ -101,22 +100,21 @@ public class LeaderboardAdapter extends ArrayAdapter<Leaders> {
 		return v;
 	}
 	 
-	private void setRowBackground(View v, int position){		
+	private void setRowBackground(View v, int position){
+		BeButton b = new BeButton(getContext());
 		if(position % 2 == 0)
-    		v.findViewById(R.id.item).setBackgroundDrawable(gradientRow.setPressedBackg(
-    	    		new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.LIGHT_GRAY_GRADIENT),
-    				new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.HIGH_GRAY_GRADIENT),
-    				new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.HIGH_GRAY_GRADIENT)));
+    		v.findViewById(R.id.item).setBackgroundDrawable(b.setPressedBackg(
+		    		new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.LIGHT_GRAY_GRADIENT),
+					new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.HIGH_GRAY_GRADIENT),
+					new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 		else
-			v.findViewById(R.id.item).setBackgroundDrawable(gradientRow.setPressedBackg(
+			v.findViewById(R.id.item).setBackgroundDrawable(b.setPressedBackg(
 		    		new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.GRAY_GRADIENT),
 					new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.HIGH_GRAY_GRADIENT),
 					new BDrawableGradient(0,(int)(ratio * 60),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 		
 	}
-	public ImageManager getImageManager(){
-		return imageManager;
-	}
+	
 	private void setPositionBackground(LinearLayout l){		
 		 l.setBackgroundColor(Color.argb(150, 255, 255, 255));
 	}

@@ -112,6 +112,7 @@ public class BeintooFacebookLogin extends Dialog {
 		
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		webview.getSettings().setJavaScriptEnabled(true);		
+		webview.setInitialScale(1);		 		  
 		webview.loadUrl(openUrl); 		
 	}
 
