@@ -18,12 +18,9 @@
     <string name="challStatus">Estado:</string>
     <string name="challStart">Fecha de inicio:</string>
     <string name="challEnd">Fecha final:</string>
-    <string name="challWinner">Ganador:</string>
+    <string name="challWinner">Ganador</string>
     <string name="challPrize">Premio:</string>
-    <string name="challNoPending">No hay solicitudes de desafìo</string>
-    <string name="challFromTo" xml:space="preserve">Desde ti a\u0020</string>
-    <string name="challFrom" xml:space="preserve">Desde\u0020</string>
-    <string name="challYou" xml:space="preserve">\u0020a ti</string>
+    <string name="challNoPending">No hay solicitudes de desafìo</string>    
     <string name="challRefused">Desafìo declinado</string>
     <string name="challAccepted">Desafìo recibido</string>
     <string name="challNoPendingC">No hay solicitudes de desafìo</string>
@@ -34,7 +31,28 @@
     <string name="challAccept">Aceptas este Desafìo para\u0020</string>
     <string name="challSend">¿Quieres enviar un desafìo?\nAposta 10 Bedollars, puedes ganar 25.</string>
     <string name="challTip">Haz clic en un usuario para interactuar</string>
-    
+    <string name="challmevsyou">Apuesto que no puedes alcanzar este resultado en 48 horas</string>
+	<string name="challmevsyoutitle">No puedes llegar...</string>
+	<string name="challFriends">Apuesto que puedo llegar a este resultado en 48 horas</string>
+	<string name="challFriendstitle">Puedo llegar...</string> 
+	<string name="chall48">Apuesto que puedo obtener un mejor resultado de lo que tu en las próximas 48 horas</string> 
+	<string name="chall48title">Quién es el mejor?</string>
+	<string name="chall48subtitle">que puedo llegar a un resultado mejor que el tuyo</string>
+	<string name="challhowmuchbet">Apuesto</string>
+	<string name="challhowmanypoint">Que puedo llegar a</string>
+	<string name="challhowmanypointyou">que %s no puede llegar a</string>
+	<string name="challerrorbedollars">Por favor, introduce la cantidad de Bedollars que deseas jugar</string>
+	<string name="challerrorpoints">Por favor, inserte los puntos que deseas jugar</string> 
+	<string name="challFromTo">De ti\u0020</string>
+	<string name="challFrom">De\u0020</string>
+	<string name="challYou">\u0020a ti</string>
+	<string name="challFromUser">\u0020te desafia</string>
+	<string name="challBet">Apuesta</string>
+	<string name="challCanWin">Puedes ganar</string>
+	<string name="challPointsTarget">Puntos de llegar</string>
+	<string name="challPoints">Puntos</string>
+	<string name="clickhere">haz clic aquí</string>
+
 	<string name="leadTitle">Clasificaciòn</string>
     <string name="leadScore">Tanteo:\u0020</string>
     <string name="leadSendChall">Enviar desafío</string>
@@ -178,8 +196,7 @@
     <string name="messagetext">Mensaje:</string> 
     <string name="messageempty">No has recibido ningùn mensaje</string>
     <string name="messageloadmore">Mensajes anteriores</string>  
-    <string name="messagesent">Mensaje enviado a \u0020</string>
-    <string name="messagenotification">Hay %d mensajes no leìdos</string> 
+    <string name="messagesent">Mensaje enviado a \u0020</string>     
     
     <!-- BALANCE -->
     <string name="balance">Presupuesto</string> 
@@ -266,5 +283,11 @@
 	<string name="signupprofile">Crea tu perfil, conoce nuevos amigos y manejas tus premios</string>
 	<string name="signupchallenge">Desafía a tus amigos, gana, y consigue Bedollars</string>	
 	<string name="signupleaderboard">Entra en la tabla de clasificación y compara tu posición y la de tus amigos</string>
-	<string name="signupforums">Habla con los jugadores y comparte tus trucos</string>	    	
+	<string name="signupforums">Habla con los jugadores y comparte tus trucos</string>	  
+	
+	<!-- NOTIFICATIONS -->
+	<string name="notifications">Notificaciones</string>
+	<string name="messagenotificationp">Tienes %d notificaciones</string>
+	<string name="messagenotification">Tienes %d notificacion</string>
+	<string name="unmissionstatus">Estado de tu mision</string>    	
 </resources>

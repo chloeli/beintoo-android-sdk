@@ -49,7 +49,7 @@ public class GetVgoodManager {
 	
 	public void GetVgood(final String codeID, final boolean isMultiple, final LinearLayout container, final int notificationType, final BGetVgoodListener listener){
 		try {			
-			final SerialExecutor executor = SerialExecutor.getInstance();	
+			SerialExecutor executor = SerialExecutor.getInstance();	
     		executor.execute(new Runnable(){     					
 	    		public void run(){
 	    			try{			
@@ -191,8 +191,94 @@ public class GetVgoodManager {
 					}					 
 				}catch (Exception ex){ if(listener!= null) listener.onError(); }
 			}
+		}			
+	}
+	
+	public void getAd(final String codeID, final LinearLayout container, final int notificationType, final BGetVgoodListener listener){
+		SerialExecutor executor = SerialExecutor.getInstance();	
+		executor.execute(new Runnable(){     					
+    		public void run(){
+    			try{    				
+    				final Player currentPlayer = Current.getCurrentPlayer(currentContext);	    				
+					if(currentPlayer.getGuid() == null) return;
+					
+					Long currentTime = System.currentTimeMillis();
+					Location l = LocationMManager.getSavedPlayerLocation(currentContext);
+		        	if(l != null){
+		        		if((currentTime - l.getTime()) <= 900000){ // TEST 20000 (20 seconds)
+		        			getAdHelper(codeID, currentPlayer, container, notificationType, l, listener);
+		        		}else {	        		
+		        			getAdHelper(codeID, currentPlayer, container, notificationType, null, listener);
+		    				LocationMManager.savePlayerLocation(currentContext);
+		        		}
+		        	}else{
+		        		getAdHelper(codeID, currentPlayer, container, notificationType, null, listener);
+		        		LocationMManager.savePlayerLocation(currentContext);
+		        	}
+    			}catch(Exception e){
+    				e.printStackTrace();
+    			}
+    		}
+    	});
+	}
+	
+	private void getAdHelper(final String codeID, final Player currentPlayer, final LinearLayout container, final int notificationType, final Location l, final BGetVgoodListener listener){
+		synchronized (LAST_OPERATION){
+			try {					
+				if(System.currentTimeMillis() < LAST_OPERATION.get() + OPERATION_TIMEOUT)
+					return;
+				
+				Beintoo.gvl = listener;
+				final BeintooVgood vgoodHand = new BeintooVgood();
+				
+				 // ASSIGN A LIST OF VGOOD TO THE PLAYER
+	    		if(l != null){
+	    			Beintoo.vgoodlist = vgoodHand.getAd(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
+	    					codeID, Double.toString(l.getLatitude()), 
+	    					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
+	    		}else {
+	    			Beintoo.vgoodlist = vgoodHand.getAd(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
+	    					codeID, null, null,null, false);
+	    		}
+		    	if(Beintoo.vgoodlist != null){
+		    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
+	    			if(notificationType == Beintoo.VGOOD_NOTIFICATION_BANNER){
+	    				Beintoo.vgood_container = container;
+	    				// BEINTOO RECOMMENDATION	    					
+    					if(Beintoo.vgoodlist.getVgoods().get(0).getContentType() == null) // BEINTOO RECOMMENDATION WITH IMAGE
+    						Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_BANNER);
+    					else // BEINTOO RECOMMENDATION WITH HTML CONTENT
+    						Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_BANNER_HTML);    				
+	    			}else{	    				
+    					if(Beintoo.vgoodlist.getVgoods().get(0).getContentType() == null) // BEINTOO RECOMMENDATION WITH IMAGE
+    						Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_ALERT);
+    					else // BEINTOO RECOMMENDATION WITH HTML CONTENT
+    						Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_ALERT_HTML);	    				
+	    			}
+		    	}
+
+			    if(listener != null)
+					listener.onComplete(Beintoo.vgoodlist);
+				
+				LAST_OPERATION.set(System.currentTimeMillis());
+			
+			}catch(ApiCallException e){	
+				try {
+					if(e.getId() == -11){
+						if(listener != null)
+							listener.isOverQuota();
+					}else if(e.getId() == -10 || e.getId() == -21){
+						if(listener != null)
+							listener.nothingToDispatch();
+					}else{
+						if(listener != null)
+							listener.onError();
+					}					 
+				}catch (Exception ex){ if(listener!= null) listener.onError(); }
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}	
-		
 	}
 	
 	public void isEligibleForVgood(final Context ctx, final BEligibleVgoodListener el){

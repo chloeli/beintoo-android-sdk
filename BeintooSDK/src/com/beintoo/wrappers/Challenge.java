@@ -15,6 +15,8 @@
  ******************************************************************************/
 package com.beintoo.wrappers;
 
+import java.util.Collection;
+
 public class Challenge {
 	Contest contest;
 	Player playerFrom;
@@ -22,14 +24,18 @@ public class Challenge {
 	String startdate;
 	String enddate;
 	Double playerFromScore;
-    Double playerToScore; // FIXME: implement
+    Double playerToScore; 
     Player winner;
     String status;
     Double prize;
     Double price;
+    AchievementWrap achievement;
+    Player userActor;
+    String type;
+    Collection<AchievementWrap> achievementAllowableSource;
+    Collection<AchievementWrap> achievementAllowableDest;
+    Double targetScore;
     
-	//public Challenge (){}
-	
 	public Contest getContest() {
 		return contest;
 	}
@@ -106,5 +112,42 @@ public class Challenge {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-	
+	public AchievementWrap getAchievement() {
+		return achievement;
+	}
+	public void setAchievement(AchievementWrap achievement) {
+		this.achievement = achievement;
+	}	
+	public Player getActor() {
+		return userActor;
+	}
+	public void setActor(Player userActor) {
+		this.userActor = userActor;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public Collection<AchievementWrap> getAchievementAllowableSource() {
+		return achievementAllowableSource;
+	}
+	public void setAchievementAllowableSource(
+			Collection<AchievementWrap> achievementAllowableSource) {
+		this.achievementAllowableSource = achievementAllowableSource;
+	}
+	public Collection<AchievementWrap> getAchievementAllowableDest() {
+		return achievementAllowableDest;
+	}
+	public void setAchievementAllowableDest(
+			Collection<AchievementWrap> achievementAllowableDest) {
+		this.achievementAllowableDest = achievementAllowableDest;
+	}
+	public Double getTargetScore() {
+		return targetScore;
+	}
+	public void setTargetScore(Double targetScore) {
+		this.targetScore = targetScore;
+	}	
 }

@@ -17,19 +17,19 @@ package com.beintoo.activities;
 
 import java.util.ArrayList;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -41,30 +41,32 @@ import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
+import com.beintoo.beintoosdkutility.ImageManager;
 import com.beintoo.beintoosdkutility.JSONconverter;
-import com.beintoo.beintoosdkutility.LoaderImageView;
-import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.wrappers.Challenge;
 import com.beintoo.wrappers.Player;
-import com.google.beintoogson.Gson;
 
 public class Challenges extends Dialog implements OnClickListener{
 	static Dialog current;
+	private Context context;
 	Challenge [] challenge;
-	private final int PENDING = 0;
-	private final int ACCEPTED = 1;
-	private final int ENDED = 2;
+	public final static int PENDING = 0;
+	public final static int ACCEPTED = 1;
+	public final static int ENDED = 2;
 	private final int CONNECTION_ERROR = 3;
+	private final ImageManager imageManager;
 	
 	int CURRENT_SECTION = 0;
 	final double ratio;
-	public Challenges(Context ctx) {
+	
+	public Challenges(Context ctx, boolean dontLoadOnStart) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.challenges);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
-		
+		context = ctx;
 		current = this;
 		// SET TITLE
 		TextView t = (TextView)findViewById(R.id.dialogTitle);
@@ -76,10 +78,12 @@ public class Challenges extends Dialog implements OnClickListener{
 		double pixels = ratio * 40;
 		RelativeLayout beintooBar = (RelativeLayout) findViewById(R.id.beintoobarsmall);
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
+		imageManager = new ImageManager(context);
 		
 		try{
 			showLoading();
-			startLoading();
+			if(!dontLoadOnStart)
+				startLoading();
 		}catch (Exception e){e.printStackTrace();}
 		
 		
@@ -180,7 +184,11 @@ public class Challenges extends Dialog implements OnClickListener{
             		}
 				}).start();
 			}
-		});
+		});				
+	}
+	
+	public Challenges(Context ctx) {
+		this(ctx, false);
 	}
 	
 	public void startLoading (){
@@ -189,9 +197,10 @@ public class Challenges extends Dialog implements OnClickListener{
     			try{ 
 					BeintooUser newuser = new BeintooUser();            				
 					// GET THE CURRENT LOGGED PLAYER
-					Player p = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));
+					Player p = Current.getCurrentPlayer(context);
 					challenge = newuser.challengeShow(p.getUser().getId(), "TO_BE_ACCEPTED");
 					UIhandler.sendEmptyMessage(PENDING);
+					
     			}catch (Exception e){
     				e.printStackTrace();
     				manageConnectionException();
@@ -205,26 +214,25 @@ public class Challenges extends Dialog implements OnClickListener{
 		TableLayout table = (TableLayout) findViewById(R.id.table);
 		table.setColumnStretchable(1, true);
 		table.removeAllViews();
-		Player p = new Gson().fromJson(PreferencesHandler.getString("currentPlayer", getContext()), Player.class);
+		Player p = Current.getCurrentPlayer(context);
 			
 		int count = 0;
-		final ArrayList<View> rowList = new ArrayList<View>();
-	
+		final ArrayList<View> rowList = new ArrayList<View>();		
+		
 	    for (int i = 0; i < challenge.length; i++){
-	    	final LoaderImageView image;
 	    	String nick;
-	    	String contest;
+	    	String contest;	    	
+	    	ImageView image = new ImageView(context);
 	    	
     		if(p.getUser().getId().equals(challenge[i].getPlayerFrom().getUser().getId())){
-    			//image = new LoaderImageView(getContext(), challenge[i].getPlayerTo().getUser().getUsersmallimg());
-    			image = new LoaderImageView(getContext(),challenge[i].getPlayerTo().getUser().getUserimg(),(int)(ratio * 70),(int)(ratio * 70));
-    			nick = getContext().getString(R.string.challFromTo)+challenge[i].getPlayerTo().getUser().getNickname();
+    			image.setTag(challenge[i].getPlayerTo().getUser().getUserimg());    			
+    			imageManager.displayImage(challenge[i].getPlayerTo().getUser().getUserimg(), context, image);    			
+    			nick = getContext().getString(R.string.challFromTo)+"<font color=\"#000000\">"+challenge[i].getPlayerTo().getUser().getNickname()+"</font>";
     			contest = challenge[i].getContest().getName();
     		}else{
-    			//image = new LoaderImageView(getContext(), challenge[i].getPlayerFrom().getUser().getUsersmallimg());
-    			image = new LoaderImageView(getContext(),challenge[i].getPlayerFrom().getUser().getUserimg(),(int)(ratio * 70),(int)(ratio * 70));
-    			nick = getContext().getString(R.string.challFrom)+challenge[i].getPlayerFrom().getUser().getNickname()+
-    			getContext().getString(R.string.challYou);
+    			image.setTag(challenge[i].getPlayerFrom().getUser().getUserimg());
+    			imageManager.displayImage(challenge[i].getPlayerFrom().getUser().getUserimg(), context, image);    			
+    			nick = "<font color=\"#000000\">"+challenge[i].getPlayerFrom().getUser().getNickname()+"</font>" + getContext().getString(R.string.challFromUser);
     			contest = challenge[i].getContest().getName();    			
     		}
     		
@@ -267,13 +275,20 @@ public class Challenges extends Dialog implements OnClickListener{
 	}
 	
 	
-	private TableRow createRow(View image, String name, String contest, Context activity) {
+	private TableRow createRow(ImageView image, String name, String contest, Context activity) {
 		  TableRow row = new TableRow(activity);
-		  row.setGravity(Gravity.CENTER);
 		  
-		  image.setPadding(15, 4, 10, 4);		  
-		  ((LinearLayout) image).setGravity(Gravity.LEFT);
-		  row.addView(image);
+		  int size = (int) (50 * context.getResources().getDisplayMetrics().density + 0.5f);
+		  LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size,size);
+		  params.rightMargin = (int)(ratio * 10);
+		  params.leftMargin = (int)(ratio * 10);
+		  image.setLayoutParams(params);
+		  params.gravity = Gravity.CENTER;
+	    	
+		  LinearLayout rowContainer = new LinearLayout(row.getContext());
+		  
+		  rowContainer.setOrientation(LinearLayout.HORIZONTAL);
+		  rowContainer.addView(image);
 		  
 		  LinearLayout main = new LinearLayout(row.getContext());
 		  main.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -281,28 +296,30 @@ public class Challenges extends Dialog implements OnClickListener{
 		  main.setGravity(Gravity.CENTER_VERTICAL);
 		  
 		  // NICKNAME TEXTVIEW
-		  TextView nameView = new TextView(activity);		  
+		  TextView contestName = new TextView(activity);		  
 		  if(contest.length() > 26)
-			  nameView.setText(contest.substring(0, 23)+"...");
+			  contestName.setText(contest.substring(0, 23)+"...");
 		  else
-			  nameView.setText(contest);
+			  contestName.setText(contest);
 		  
-		  nameView.setPadding(0, 0, 0, 0);
-		  nameView.setTextColor(Color.parseColor("#545859"));
-		  nameView.setTextSize(16);
-		  nameView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  contestName.setPadding(0, 0, 0, 0);
+		  contestName.setTextColor(Color.parseColor("#545859"));
+		  contestName.setTextSize(16);
+		  contestName.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  
-		  // CONTEST NAME TEXTVIEW
-		  TextView contestView = new TextView(activity);		
-		  contestView.setText(name);		  
-		  contestView.setPadding(0, 0, 0, 0);
-		  contestView.setTextColor(Color.parseColor("#787A77"));
-		  contestView.setTextSize(14);
-		  contestView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+		  // NICKNAME FROM TO TEXTVIEW
+		  TextView from = new TextView(activity);		
+		  from.setText(Html.fromHtml(name));		  
+		  from.setPadding(0, 0, 0, 0);
+		  from.setTextColor(Color.parseColor("#787A77"));
+		  from.setTextSize(14);
+		  from.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 		  	
-		  main.addView(nameView);
-		  main.addView(contestView);		  
-		  row.addView(main,new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,(int)(ratio * 90)));
+		  main.addView(contestName);
+		  main.addView(from);	
+		  rowContainer.addView(main, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, (int)(ratio * 70)));
+		  
+		  row.addView(rowContainer);
 
 		  return row;
 	}
@@ -320,78 +337,29 @@ public class Challenges extends Dialog implements OnClickListener{
 
 	public void onClick(View v) {
 		if(v.getId()!=-100){ // REMOVE THE SPACER
-			if(CURRENT_SECTION == PENDING)
-				this.respondDialog(v);
-			else if(CURRENT_SECTION == ACCEPTED){
-				ChallengeOverview challengeShow = new ChallengeOverview(getContext(),challenge[v.getId()], ACCEPTED);
-				challengeShow.show();
-			}else if(CURRENT_SECTION == ENDED){
-				ChallengeOverview challengeShow = new ChallengeOverview(getContext(),challenge[v.getId()], ENDED);
-				challengeShow.show();
+			final int challengeType;			
+			try {
+				if(challenge[v.getId()].getType().equals("CHALLENGE"))
+					challengeType = ChallengeOverview.CHALLENGE_48_HOURS;
+				else if(challenge[v.getId()].getActor().getGuid().equals(challenge[v.getId()].getPlayerFrom().getGuid()))
+					challengeType = ChallengeOverview.DIRECTION_SOURCE;
+				else
+					challengeType = ChallengeOverview.DIRECTION_DEST;
+				
+				if(CURRENT_SECTION == PENDING){				 
+					ChallengeOverview challengeShow = new ChallengeOverview(getContext(),challenge[v.getId()], v, challengeType, PENDING);
+					challengeShow.show();
+				}else if(CURRENT_SECTION == ACCEPTED){
+					ChallengeOverview challengeShow = new ChallengeOverview(getContext(),challenge[v.getId()], v, challengeType, ACCEPTED);
+					challengeShow.show();
+				}else if(CURRENT_SECTION == ENDED){
+					ChallengeOverview challengeShow = new ChallengeOverview(getContext(),challenge[v.getId()], v, challengeType, ENDED);
+					challengeShow.show();
+				}
+			}catch (Exception e){
+				e.printStackTrace();
 			}
 		}	
-	}
-	
-	private void respondDialog (final View v){
-		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		builder.setMessage(getContext().getString(R.string.challAccept)+challenge[v.getId()].getPrice().intValue()+" BeDollars?")
-		       .setCancelable(false)
-		       .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {		 
-		        	   respondChallenge(challenge[v.getId()].getPlayerTo().getUser().getId(),
-		        			   challenge[v.getId()].getPlayerFrom().getUser().getId(),"ACCEPT",
-		        			   challenge[v.getId()].getContest().getCodeID());      	   
-		        	   dialog.dismiss();
-		        	   MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.challAccepted),Gravity.BOTTOM);
-		        	   
-		        	   TableLayout table = (TableLayout) v.getParent();
-		        	   table.removeView(v);
-		           }
-		       })
-		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		        	   respondChallenge(challenge[v.getId()].getPlayerTo().getUser().getId(),
-		        			   challenge[v.getId()].getPlayerFrom().getUser().getId(),"REFUSE",
-		        			   challenge[v.getId()].getContest().getCodeID());
-		        	   dialog.dismiss();
-		        	   MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.challRefused),Gravity.BOTTOM);
-
-		        	   TableLayout table = (TableLayout) v.getParent();
-		        	   table.removeView(v);
-		           }
-		       }).setNeutralButton("Cancel",  new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		        	   
-		           }
-		       });
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-	
-	private void respondChallenge (final String userExtFrom, final String userExtTo, final String action, final String codeID){
-		new Thread(new Runnable(){      
-    		public void run(){
-    			try{             				
-    				BeintooUser user = new BeintooUser();
-    				user.challenge(userExtFrom, userExtTo, action, codeID); 
-    			}catch (Exception e){
-    				e.printStackTrace();
-    			}
-    			
-    		}
-		}).start();
-	}
-	
-	@SuppressWarnings("unused")
-	private String getStatus (String status){
-		if(status.equals("TO_BE_ACCEPTED"))
-			return "Pending";
-		else if(status.equals("STARTED"))
-			return "Ongoing";
-		else if(status.equals("ENDED"))
-			return "Over";
-		else
-			return "";
 	}
 	
 	private void loadEmptySection (int section){
@@ -444,6 +412,28 @@ public class Challenges extends Dialog implements OnClickListener{
 	
 	private void manageConnectionException (){
 		UIhandler.sendEmptyMessage(3);		
+	}
+	
+	public void openSectionFromOutside(int section){
+		if(section == PENDING){
+			final Button pending = (Button) findViewById(R.id.pendingchall);
+			pending.performClick();
+		}else if(section == ACCEPTED){
+			final Button accepted = (Button) findViewById(R.id.acceptedchall);
+			accepted.performClick();
+		}else if(section == ENDED){
+			final Button ended = (Button) findViewById(R.id.endedchall);
+			ended.performClick();
+		}
+	}
+	
+	@Override
+	public void onBackPressed() {		
+		// STOPPING IMAGE MANAGER THREADS
+		if(imageManager != null){			
+			imageManager.interrupThread();
+		}
+		super.onBackPressed();
 	}
 	
 	Handler UIhandler = new Handler() {

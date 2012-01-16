@@ -65,6 +65,7 @@ public class MessagesList extends Dialog implements OnItemClickListener, OnScrol
 	private int currentScrollPos = 0;
 	private boolean isLoading = false;
 	private boolean hasReachedEnd = false;
+	private int removedItems = 0;
 	
 	ArrayList<ListMessageItem> messagesItems;
 	
@@ -118,10 +119,19 @@ public class MessagesList extends Dialog implements OnItemClickListener, OnScrol
 	    listView.setOnScrollListener(this);
 	    listView.setOnItemClickListener(this);
 	    listView.addHeaderView(new View(current.getContext()), null, false); // WITHOUT HEADER THE FOOTER IS NOT SHOWN
+	    listView.setScrollingCacheEnabled(false);
 	    
 	    startFirstLoading();
 	} 
 	 
+	@Override
+	public void onBackPressed() {
+		if(adapter != null && adapter.imageManager != null)
+			adapter.imageManager.interrupThread();
+		
+		super.onBackPressed();
+	}
+
 	public void startFirstLoading (){		
 		messages = new ArrayList<UsersMessage>();				
 		loadData(currentPageRows, MAX_REQ_ROWS);						
@@ -148,6 +158,28 @@ public class MessagesList extends Dialog implements OnItemClickListener, OnScrol
 		loadData(0, numRows);						
 	}
 	
+	public void setAsRead(int itemPos){
+		try {
+			if(messagesItems.get(itemPos).isUnread){			
+				messagesItems.get(itemPos).isUnread = false;
+				adapter.notifyDataSetChanged();
+			}	
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void removeItem(int itemPos){
+		try {
+			removedItems++;
+			messagesItems.remove(itemPos);
+			messages.remove(itemPos);
+			adapter.notifyDataSetChanged();			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 	private void loadData (final int start, final int rows) {
 		new Thread(new Runnable(){      
     		public void run(){
@@ -161,15 +193,15 @@ public class MessagesList extends Dialog implements OnItemClickListener, OnScrol
 						hasReachedEnd = true;
 					}
 										
-					for(int i = start; i < messages.size(); i++){
+					for(int i = start-removedItems; i < messages.size(); i++){
 						String from = null;
 						String img = null;
 						if(messages.get(i).getUserFrom() != null){
 							from = messages.get(i).getUserFrom().getNickname();
-							img = messages.get(i).getUserFrom().getUserimg();
+							img = messages.get(i).getUserFrom().getUsersmallimg();
 						}else if(messages.get(i).getApp() != null){
 							from = messages.get(i).getApp().getName();
-							img = messages.get(i).getApp().getImageUrl();
+							img = messages.get(i).getApp().getImageSmallUrl();
 						}
 					
 						boolean unread = false;
@@ -239,7 +271,7 @@ public class MessagesList extends Dialog implements OnItemClickListener, OnScrol
 		try {			
 			currentScrollPos = firstVisibleItem;
 			if(!isLoading && !hasReachedEnd){				
-				if(firstVisibleItem != 0 && (firstVisibleItem > totalItemCount - 6)){
+				if(firstVisibleItem != 0 && (firstVisibleItem > totalItemCount - visibleItemCount-1)){
 					isLoading = true;					
 		            listView.addFooterView(loadingFooter());			            
 					loadMore();
@@ -299,8 +331,9 @@ public class MessagesList extends Dialog implements OnItemClickListener, OnScrol
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {		
-		MessagesRead mr = new MessagesRead(v.getContext(), messages.get(position-1), current);
+	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {	
+		setAsRead(position-1);
+		MessagesRead mr = new MessagesRead(v.getContext(), messages.get(position-1), current, position-1);
 		mr.show();		
 	}
 }

@@ -29,6 +29,9 @@
 		<item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
 		<item name="android:windowNoTitle">true</item>
 	</style>
+	<style name="ThemeBeintooTablet" parent="android:style/Theme.Dialog"> 		
+		<item name="android:windowNoTitle">true</item>
+	</style>
 	<style name="ThemeBeintooVgood"
 	parent="@android:style/Theme.Dialog">
 	<item name="android:windowFrame">@null</item>

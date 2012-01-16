@@ -21,25 +21,27 @@ import java.util.HashSet;
 
 import com.beintoo.R;
 import com.beintoo.activities.leaderboard.LeaderboardContest;
+import com.beintoo.activities.notifications.NotificationList;
 import com.beintoo.activities.signupnow.SignupLayouts;
+import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DialogStack;
 import com.beintoo.main.Beintoo;
-import com.beintoo.wrappers.User;
+import com.beintoo.main.Beintoo.BMissionListener;
+import com.beintoo.wrappers.Player;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -48,23 +50,23 @@ public class BeintooHome extends Dialog {
 	private final int OPEN_PROFILE = 1;
 	private final int OPEN_LEADERBOARD = 2;
 	private final int OPEN_WALLET = 3;
-	private final int OPEN_CHALLENGE = 4;
-	private final int UPDATE_UNREAD_MSG = 5;
+	private final int OPEN_CHALLENGE = 4;	
 	private final int OPEN_ACHIEVEMENTS = 6;
 	private final int OPEN_FORUM = 7;
 	private BeButton button;
-	private User u;
+	private Player player;
 	private Dialog current;
-	private double ratio;	
+	private double ratio;
+	private boolean isFirstLoading = true;	
 	
 	public BeintooHome(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
-		setContentView(R.layout.homeb);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
-		current = this;
+		setContentView(R.layout.homeb);		
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
+        current = this;
 		Beintoo.homeDialog = current;
-		// GETTING DENSITY PIXELS RATIO
+		// GETTING DENSITY PIXELS RATIO		
 		ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
 		// SET UP LAYOUTS
 		double pixels = ratio * 47;
@@ -72,14 +74,14 @@ public class BeintooHome extends Dialog {
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
 			
 		// SETTING UP GRADIENTS		
-		button = new BeButton(ctx);
-		RelativeLayout welcome = (RelativeLayout) findViewById(R.id.welcome);
-		welcome.setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*30),BDrawableGradient.GRAY_GRADIENT));
+		button = new BeButton(ctx);		
+		findViewById(R.id.welcome).setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*30),BDrawableGradient.GRAY_GRADIENT));
+		findViewById(R.id.notificationalert).setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*25),BDrawableGradient.NOTIFICATION_BAR_ALERT_CIRCLE));
 		
-		u = Current.getCurrentUser(ctx);
+		player = Current.getCurrentPlayer(ctx);
 		
 		// SET USER ROW IF IS USER
-		if(u != null && Beintoo.isLogged(ctx))
+		if(player != null && player.getUser() != null && Beintoo.isLogged(ctx))
 			showUserInfoRow();
 		else{
 			DialogStack.addToDialogStack(this);
@@ -87,34 +89,51 @@ public class BeintooHome extends Dialog {
 			signup.addView(SignupLayouts.signupRow(current.getContext(),"home"));
 			signup.setVisibility(View.VISIBLE);
 		}
+		
+		setMissionStatusButton();
+		
 		// SET ROWS BACKGROUND, CLICKLISTENER AND CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
 		setFeatureToUse();		
 	}
 	
 	public void showUserInfoRow(){
 		findViewById(R.id.userinfo).setVisibility(View.VISIBLE);
-		try {
-			Context context = current.getContext();			
+		try {						
 			// set the nickname
 			TextView nickname = (TextView) findViewById(R.id.nickname);
-			nickname.setText(u.getNickname());
+			nickname.setText(player.getUser().getNickname());
 			TextView bedollars = (TextView) findViewById(R.id.bedollars);
-			bedollars.setText(u.getBedollars().intValue() + " BeDollars");
-			LinearLayout unread = (LinearLayout) findViewById(R.id.messages);
-			int unreadcount = u.getUnreadMessages();			
-			if(unreadcount > 0){
-				findViewById(R.id.usermsg).setVisibility(View.VISIBLE);
-				TextView unreadtxt = (TextView) findViewById(R.id.unmessage);
-				unreadtxt.setText(String.format(context.getString(R.string.messagenotification), unreadcount));				
+			bedollars.setText(player.getUser().getBedollars().intValue() + " BeDollars");
+		}catch (Exception e){e.printStackTrace();}
+	}
+	
+	public void setMissionStatusButton(){
+		try {
+			if(player.hasMission()){
+				Context context = current.getContext();
+				LinearLayout unread = (LinearLayout) findViewById(R.id.messages);			
+				findViewById(R.id.missionstatus).setVisibility(View.VISIBLE);
+				TextView unreadtxt = (TextView) findViewById(R.id.unmissionstatus);
+				unreadtxt.setText(context.getString(R.string.unmissionstatus));				
 				unread.setBackgroundDrawable(button.setPressedBackg(
 						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 				unread.setOnClickListener(new View.OnClickListener(){
 					@Override
-					public void onClick(View v) {
-						MessagesList ml = new MessagesList(getContext());
-				        ml.show();	
+					public void onClick(View v) {							
+						final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
+						dialog.setCancelable(true);						
+						Beintoo.getMission(current.getContext(), true, new BMissionListener(){
+							@Override
+							public void onComplete() {
+								dialog.dismiss();
+							}
+							@Override
+							public void onError(Exception e) {
+								dialog.dismiss();   
+							}							
+						});								
 					}					
 				});
 			}
@@ -166,7 +185,7 @@ public class BeintooHome extends Dialog {
 			
 			// CHALLENGES
 			if(row4 != null){			    
-				if(u == null){		
+				if(player.getUser() == null){		
 					AlphaAnimation animation = new AlphaAnimation(1.0f, 0.5f);
 				    animation.setDuration(1);
 				    animation.setFillEnabled(true);
@@ -175,7 +194,7 @@ public class BeintooHome extends Dialog {
 				}
 				row4.setOnClickListener(new TableRow.OnClickListener(){
 					public void onClick(View v) {
-						if(u != null){
+						if(player.getUser() != null){
 							UIhandler.sendEmptyMessage(OPEN_CHALLENGE);
 						}else{
 							SignupLayouts.signupNowDialog(current.getContext(), Beintoo.FEATURE_CHALLENGES);
@@ -195,7 +214,7 @@ public class BeintooHome extends Dialog {
 			
 			// Tips&forum
 			if(row6 != null){	
-				if(u == null){		
+				if(player.getUser() == null){		
 					AlphaAnimation animation = new AlphaAnimation(1.0f, 0.5f);
 				    animation.setDuration(1);
 				    animation.setFillEnabled(true);
@@ -204,7 +223,7 @@ public class BeintooHome extends Dialog {
 				}
 				row6.setOnClickListener(new TableRow.OnClickListener(){
 					public void onClick(View v) {	
-						if(u != null){
+						if(player.getUser() != null){
 							UIhandler.sendEmptyMessage(OPEN_FORUM);
 						}else{
 							SignupLayouts.signupNowDialog(current.getContext(), Beintoo.FEATURE_FORUMS);
@@ -213,6 +232,21 @@ public class BeintooHome extends Dialog {
 				});
 			}
 			
+			LinearLayout notifications = (LinearLayout) findViewById(R.id.notifications);
+			notifications.setOnClickListener(new TableRow.OnClickListener(){
+				public void onClick(View v) {	
+					NotificationList nl = new NotificationList(current.getContext());
+					nl.show();					
+				}
+			});
+			TextView notificationsNumber = (TextView) findViewById(R.id.notnumber);
+			if(player != null && player.getUnreadNotification() != null) 
+				notificationsNumber.setText(player.getUnreadNotification().toString());
+			notifications.setBackgroundDrawable(button.setPressedBackg(
+					new BDrawableGradient(0,(int) (ratio*36),BDrawableGradient.NOTIFICATION_BAR_GRADIENT),
+					new BDrawableGradient(0,(int) (ratio*36),BDrawableGradient.GRAY_ROLL_BUTTON_GRADIENT),
+					new BDrawableGradient(0,(int) (ratio*36),BDrawableGradient.GRAY_ROLL_BUTTON_GRADIENT)));
+			findViewById(R.id.notificationcircle).setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*25),BDrawableGradient.NOTIFICATION_BAR_CIRCLE_NUMBER));
 			
 			String[] features = Beintoo.usedFeatures;		
 			if(features != null){			
@@ -270,7 +304,7 @@ public class BeintooHome extends Dialog {
 					setRowBg((TableRow) findViewById(R.id.sixthRow), count);
 					count++;
 				}
-			}
+			}			
 		}catch (Exception e){e.printStackTrace();}
 	}
 		
@@ -289,25 +323,44 @@ public class BeintooHome extends Dialog {
 		}
 	}
 	
-	/*
-	 * Used in the MessageRead.java to update users unread messages
-	 */
-	public void updateMessage (int count){
-		Message msg = new Message();
-		Bundle b = new Bundle();
-		b.putInt("count",count);
-		msg.setData(b);
-		msg.what = UPDATE_UNREAD_MSG;
-		UIhandler.sendMessage(msg);
+	private void updateNotifications(){		
+		new Thread(new Runnable(){      
+    		public void run(){
+    			try{ 
+    				BeintooPlayer bp = new BeintooPlayer();
+    				final Player newPlayer = bp.getPlayer(Current.getCurrentPlayer(getContext()).getGuid());													
+					Current.setCurrentPlayer(getContext(), newPlayer);
+					player = newPlayer;
+					UIhandler.post(new Runnable(){
+						@Override
+						public void run() {
+							try {
+								TextView notificationsNumber = (TextView) findViewById(R.id.notnumber);
+								if(player != null && newPlayer.getUnreadNotification() != null)
+									notificationsNumber.setText(newPlayer.getUnreadNotification().toString());
+								findViewById(R.id.notificationcircle).setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*25),BDrawableGradient.NOTIFICATION_BAR_CIRCLE_NUMBER));
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+						}						
+					});
+    			}catch(Exception e){
+    				e.printStackTrace();
+    			}
+    		}
+		}).start();					
 	}
 	
-	/**
-	 * This Handler open this listed Dialogs:
-	 * 	Profile
-	 * 	Leaderboard
-	 * 	Challenges
-	 * 	Wallet
-	 */
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {		
+		super.onWindowFocusChanged(hasFocus);		
+		if(hasFocus && !isFirstLoading){
+			updateNotifications();
+		}
+		isFirstLoading = false;
+	}
+
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {
@@ -336,9 +389,6 @@ public class BeintooHome extends Dialog {
 				  if(Beintoo.dialogStack != null)
 					  DialogStack.addToDialogStack(challenges);
 				  challenges.show();
-			  }else if(msg.what == UPDATE_UNREAD_MSG){
-				  TextView unreadtxt = (TextView) findViewById(R.id.unmessage);
-				  unreadtxt.setText(String.format(current.getContext().getString(R.string.messagenotification), msg.getData().getInt("count")));
 			  }else if(msg.what == OPEN_ACHIEVEMENTS){			  
 				  UserAchievements achievements = new UserAchievements(getContext());
 				  Beintoo.currentDialog = achievements;
@@ -346,11 +396,11 @@ public class BeintooHome extends Dialog {
 					  DialogStack.addToDialogStack(achievements);
 				  achievements.show();
 			  }else if(msg.what == OPEN_FORUM){		
-				  if(u != null){					  
+				  if(player.getUser() != null){					  
 					  StringBuilder sb = new StringBuilder("http://appsforum.beintoo.com/?apikey=");
 				      sb.append(DeveloperConfiguration.apiKey);
 				      sb.append("&userExt=");
-				      sb.append(u.getId());
+				      sb.append(player.getUser().getId());
 				      sb.append("#main"); 
 					  Forums f = new Forums(getContext(),sb.toString());				  
 					  Beintoo.currentDialog = f;

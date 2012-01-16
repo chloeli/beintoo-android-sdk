@@ -15,6 +15,9 @@
  ******************************************************************************/
 package com.beintoo.beintoosdk;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 
@@ -23,6 +26,7 @@ import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
 import com.google.beintoogson.Gson;
+import com.google.beintoogson.reflect.TypeToken;
 
 public class BeintooVgood {
 	String apiPreUrl = null;
@@ -60,8 +64,7 @@ public class BeintooVgood {
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
-		header.getKey().add("guid");
-		header.getValue().add(guid);
+		
 		if(codeID != null){
 			header.getKey().add("codeID");
 			header.getValue().add(codeID);
@@ -88,6 +91,59 @@ public class BeintooVgood {
 		return vgoods;
 	}
 
+	/**
+	 * Retrieve an ad
+	 * 
+	 * @param guid player guid
+	 * @param imei the device imei
+	 * @param rows how many vgood to retrieve
+	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
+	 * @param latitude
+	 * @param longitude
+	 * @param radius
+	 * @param privategood a bool to set if the vgood has to be private
+	 * @return a json object with vgood data
+	 */
+	public VgoodChooseOne getAd(String guid, String imei, String codeID, String latitude, String longitude, String radius, boolean privategood) {
+		
+		String apiUrl = apiPreUrl+"vgood/getbanner/?allowBanner=true";
+		
+		if(privategood == true) apiUrl = apiUrl + "&private=true"; else apiUrl = apiUrl + "&private=false";  
+		if(latitude != null) apiUrl = apiUrl + "&latitude="+latitude;
+		if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
+		if(radius != null) apiUrl = apiUrl + "&radius="+radius;
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		header.getKey().add("guid");
+		header.getValue().add(guid);
+		
+		if(codeID != null){
+			header.getKey().add("codeID");
+			header.getValue().add(codeID);
+		}		
+		if(imei != null){
+			header.getKey().add("imei");
+			header.getValue().add(imei);
+		}
+		
+		try {
+		// ADD THE USER AGENT
+			String userAgent = Beintoo.userAgent;
+			if(userAgent != null){
+				header.getKey().add("User-Agent");
+				header.getValue().add(userAgent);
+			}
+		}catch (Exception e){e.printStackTrace();}
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl, header, null);
+		
+		VgoodChooseOne vgoods = new Gson().fromJson(json, VgoodChooseOne.class);
+		
+		return vgoods;
+	}
 	
 	/**
 	 * Returns an array with all the vgoods earned by the user
@@ -128,7 +184,7 @@ public class BeintooVgood {
 	 * @param codeID (optional) a string that represents the position in your code. We will use it to indentify different api calls of the same nature.
 	 * @return a Vgood object array
 	 */
-	public Vgood [] showByPlayer(String guid, String codeID, boolean onlyConverted){
+	public List<Vgood> showByPlayer(String guid, String codeID, boolean onlyConverted){
 		String apiUrl = null;
 		if(!onlyConverted)
 			apiUrl = apiPreUrl+"vgood/show/";
@@ -150,7 +206,8 @@ public class BeintooVgood {
 		String json = conn.httpRequest(apiUrl, header, null);
 		Gson gson = new Gson();
 		
-		Vgood[] vgood = gson.fromJson(json, Vgood[].class);
+		Type type = new TypeToken<List<Vgood>>() {}.getType();
+		List<Vgood> vgood = gson.fromJson(json, type);
 		
 		return vgood;		
 	}

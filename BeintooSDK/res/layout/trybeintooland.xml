@@ -13,7 +13,7 @@
 	<LinearLayout android:layout_width="fill_parent"
 		android:id="@+id/maincontainer" android:orientation="vertical"
 		android:background="#d6dbde" android:layout_height="wrap_content">
-		<include layout="@layout/beintoobar" />
+		<include layout="@layout/beintoobar" />    
 		<LinearLayout android:layout_width="fill_parent"
 			android:id="@+id/maincontainer" android:orientation="vertical"
 			android:layout_height="wrap_content" android:gravity="center"
@@ -27,7 +27,7 @@
 					android:layout_height="1dip" android:background="#FFFFFF"
 					android:id="@+id/whiteline"></LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
-					android:id="@+id/textlayout" android:layout_height="90dip"
+					android:id="@+id/textlayout" android:layout_height="70dip"
 					android:padding="15dip">
 					<TextView android:id="@+id/textView1"
 						android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -37,17 +37,23 @@
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#8F9193"
 					android:id="@+id/grayline"></LinearLayout>
+				<LinearLayout android:layout_width="fill_parent" android:gravity="center"
+					android:layout_height="wrap_content" android:background="#dddddd"
+					android:id="@+id/customcontainer" android:layout_margin="10dip">					
+					<ImageView android:layout_width="wrap_content"
+						android:id="@+id/imageView1" android:layout_height="wrap_content"
+						android:src="@drawable/try_beintoo_l" android:layout_gravity="right"></ImageView>
+				</LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
 					android:orientation="horizontal" android:layout_height="wrap_content"
-					android:gravity="center" android:layout_marginTop="30dip">
-
+					android:gravity="center" android:layout_marginTop="3dip">
 					<Button android:layout_centerHorizontal="true" android:id="@+id/nothanksbt"
 						android:text="@string/nothanks" android:textColor="#FFFFFF"
-						android:textSize="15dip" android:layout_width="124dip"
-						android:layout_height="70dip" android:layout_marginRight="10dip"></Button>
+						android:textSize="15dip" android:layout_width="147dip"
+						android:layout_height="50dip" android:layout_marginRight="10dip"></Button>
 					<Button android:id="@+id/trybt" android:text="@string/trynow"
 						android:textColor="#FFFFFF" android:textSize="18dip"
-						android:layout_width="274dip" android:layout_height="70dip"></Button>
+						android:layout_width="277dip" android:layout_height="50dip"></Button>
 				</LinearLayout>
 				<TextView android:id="@+id/textView3" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:text="www.beintoo.com"
@@ -109,7 +115,6 @@
 			</LinearLayout>
 			<!-- END REWARD TEMPLATE -->			
 		</LinearLayout>
-
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="fill_parent" android:id="@+id/maincontainer"
 			android:orientation="vertical" android:gravity="bottom"

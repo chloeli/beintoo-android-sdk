@@ -28,6 +28,7 @@ public class MissionDialog extends Dialog implements OnClickListener{
 	private Player player; 
 	private String deviceUUID; 
 	private Mission mission;
+	private ImageManager imageManager;
 	
 	public static int MISSION_STATUS = 1;
 	public static int MISSION_COMPLETED = 2;
@@ -42,11 +43,10 @@ public class MissionDialog extends Dialog implements OnClickListener{
 		player = p;
 		deviceUUID = _deviceUUID;
 		mission = m;
+		imageManager = new ImageManager(currentContext);
 		
 		applyTypeface();
-		ImageManager imageManager = new ImageManager(currentContext);
-		try{
-			
+		try{			
 			// SETUP DIALOG TITLE, BUTTONS FOR MISSION TYPE (NEW, STATUS, COMPLETED)
 			TextView textView1 = (TextView) findViewById(R.id.textView1);
 			TextView textView2 = (TextView) findViewById(R.id.textView2);
@@ -203,9 +203,21 @@ public class MissionDialog extends Dialog implements OnClickListener{
 		bt2.setTypeface(marke);
 		red.setTypeface(marke);
 	}
-
+	
+	@Override
+	public void onBackPressed() {		
+		// STOPPING IMAGE MANAGER THREADS
+		if(imageManager != null){
+			imageManager.interrupThread();
+		}
+		super.onBackPressed();
+	}
+	
 	@Override
 	public void onClick(View v) {
+		if(imageManager != null){
+			imageManager.interrupThread();
+		}
 		if(v.getId() == 1){ // left button (later)
 			// refuse challenge
 			new Thread(new Runnable(){

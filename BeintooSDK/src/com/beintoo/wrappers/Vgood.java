@@ -34,6 +34,7 @@ public class Vgood {
     private String contentType;
     private String content;
     private String rewardText;
+    private boolean openInBrowser;
     
 	public String getGetRealURL() {
 		return getRealURL;
@@ -131,4 +132,10 @@ public class Vgood {
 	public String getRewardText() {
 		return rewardText;
 	}
+	public boolean isOpenInBrowser() {
+		return openInBrowser;
+	}
+	public void setOpenInBrowser(boolean openInBrowser) {
+		this.openInBrowser = openInBrowser;
+	}	
 }

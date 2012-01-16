@@ -32,27 +32,31 @@ public class MessageListAdapter extends ArrayAdapter<ListMessageItem>{
 	private Context currentContext;
 	private final double ratio;	
 	public ImageManager imageManager;
+	private final SimpleDateFormat curFormater;
+	private final BeButton gradientRow;
 	
 	public MessageListAdapter(Context context, ArrayList<ListMessageItem> list) {
 		super(context, 0, list);
 		this.list = list;
 		this.currentContext = context;
 		this.ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);
+		curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
+		curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));
 		imageManager = new ImageManager(context);
+		gradientRow = new BeButton(getContext());
 	}
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
 		try {			
 			final ListMessageItem item = list.get(position);	
-			View v = new CustomAdapterView(currentContext,item);
-			BeButton b = new BeButton(getContext());
+			View v = new CustomAdapterView(currentContext,item);			
 			if(position % 2 == 0)
-	    		v.setBackgroundDrawable(b.setPressedBackg(
+	    		v.setBackgroundDrawable(gradientRow.setPressedBackg(
 			    		new BDrawableGradient(0,(int)(ratio * 67),BDrawableGradient.LIGHT_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int)(ratio * 67),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int)(ratio * 67),BDrawableGradient.HIGH_GRAY_GRADIENT)));
 			else
-				v.setBackgroundDrawable(b.setPressedBackg(
+				v.setBackgroundDrawable(gradientRow.setPressedBackg(
 			    		new BDrawableGradient(0,(int)(ratio * 67),BDrawableGradient.GRAY_GRADIENT),
 						new BDrawableGradient(0,(int)(ratio * 67),BDrawableGradient.HIGH_GRAY_GRADIENT),
 						new BDrawableGradient(0,(int)(ratio * 67),BDrawableGradient.HIGH_GRAY_GRADIENT)));
@@ -87,9 +91,6 @@ public class MessageListAdapter extends ArrayAdapter<ListMessageItem>{
 				String msgtext, date, from;			
 				from = "<b>"+getContext().getString(R.string.messagefrom)+"</b> "+l.from;						
 	
-				
-				SimpleDateFormat curFormater = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
-				curFormater.setTimeZone(TimeZone.getTimeZone("GMT"));			
 				Date msgDate = curFormater.parse(l.date);			
 				curFormater.setTimeZone(TimeZone.getDefault());			
 				date = "<b>"+getContext().getString(R.string.messagedate)+"</b> "+(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,Locale.getDefault()).format(msgDate));

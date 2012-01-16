@@ -65,7 +65,6 @@
 			<ImageView android:id="@+id/layoutbottom"
 				android:layout_width="fill_parent" android:background="@drawable/footer"
 				android:layout_height="11dip" />
-
 		</LinearLayout>
 	</LinearLayout>
 </ScrollView>

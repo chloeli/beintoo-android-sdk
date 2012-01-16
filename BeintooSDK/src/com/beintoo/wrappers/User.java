@@ -34,6 +34,7 @@ public class User {
     Integer unreadMessages;
     Integer pendingFriendRequest;
     
+    
     public User() {
     	
     }
