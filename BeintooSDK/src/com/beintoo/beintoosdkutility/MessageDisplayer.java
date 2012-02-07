@@ -38,6 +38,7 @@ public class MessageDisplayer{
 	static WindowManager wM;
 	static View v;
 	static Handler mHandler;
+	
 	public static void showMessage (Context ctx, String message, int g){
 		try {
 			wM = (WindowManager) ctx.getApplicationContext()
@@ -56,8 +57,13 @@ public class MessageDisplayer{
 			v = inflate.inflate(R.layout.notification, null);
 			
 			TextView tw = (TextView) v.findViewById(R.id.message);
+			if(message.contains("\n")){ // if multiple lines disable ellipsize
+				tw.setEllipsize(null);
+				tw.setMarqueeRepeatLimit(0);
+				tw.setHorizontallyScrolling(false);
+			}			
 			tw.setText(message);
-			
+								
 			LinearLayout ll = (LinearLayout) v.findViewById(R.id.main);
 			ll.setBackgroundColor(Color.argb(200, 65, 65, 65)); 
 			
@@ -68,8 +74,7 @@ public class MessageDisplayer{
 			mParams.format = PixelFormat.TRANSLUCENT;
 			mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
 			mParams.windowAnimations = android.R.style.Animation_Toast;		
-			wM.addView(v, mParams);
-		
+			wM.addView(v, mParams);		
 		
 			mHandler = new Handler();
 			int delay = getDelay(tw.length());

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:background="#fff"
+	android:padding="10dip" android:id="@+id/buy_container">
+	<TextView android:id="@+id/textView1" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="@string/youarebuying"
+		android:layout_marginTop="10dip" android:layout_marginBottom="5dip"
+		android:textColor="@color/light_gray_text" />
+	<RelativeLayout android:id="@+id/relativeLayout1"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:background="#ccd3dc" android:paddingBottom="10dip">
+		<ImageView android:id="@+id/buy_coupon_image"
+			android:layout_width="60dip" android:layout_height="60dip"
+			android:src="@drawable/alllist" android:layout_margin="5dip" />
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/buy_coupon_image" android:orientation="vertical"
+			android:layout_marginTop="5dip" android:layout_marginLeft="5dip"
+			android:layout_marginRight="5dip">
+			<TextView android:id="@+id/buy_couponname"
+				android:textColor="@color/gray_text" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="TextView" />
+			<TextView android:id="@+id/buy_couponwhere"
+				android:textColor="@color/light_gray_text" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="TextView" />
+			<TextView android:id="@+id/buy_coupon_bedollars"
+				android:textColor="@color/light_gray_text" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="TextView" />
+		</LinearLayout>
+
+	</RelativeLayout>
+	<LinearLayout android:id="@+id/buy_buttons"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_marginTop="10dip">
+		<Button android:id="@+id/buy_sendgift_button"
+			android:layout_width="fill_parent" android:layout_height="40dip"
+			android:text="@string/sendasgift" android:layout_weight="1"
+			android:background="@drawable/blu_gradient_button"
+			android:layout_marginRight="5dip" android:textColor="@color/white_text" />
+		<Button android:id="@+id/buy_buy_button" android:layout_width="fill_parent"
+			android:layout_height="40dip" android:text="@string/buy"
+			android:layout_weight="1" android:background="@drawable/blu_gradient_button"
+			android:layout_marginLeft="5dip" android:textColor="@color/white_text" />
+	</LinearLayout>
+	<TextView android:id="@+id/buy_youneedbedollars" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" 
+			android:textSize="14dip" android:layout_marginTop="10dip"
+			android:textColor="@color/gray_text" android:visibility="gone"/>
+	<Button android:id="@+id/buy_signup_button" android:layout_width="fill_parent"
+			android:layout_height="40dip" android:text="@string/signupnow"
+			android:background="@drawable/blu_gradient_button"
+			android:textColor="@color/white_text" android:layout_marginTop="5dip" android:visibility="gone"/>
+</LinearLayout>

@@ -7,9 +7,8 @@
 	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
 	the specific language governing permissions and limitations under the License. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/myScroll" android:layout_width="fill_parent"
-	android:scrollbars="vertical" android:layout_height="fill_parent"
-	android:fillViewport="true">
+	android:id="@+id/myScroll" android:layout_width="fill_parent"  android:background="#dddddd"
+	android:scrollbars="vertical" android:layout_height="fill_parent">
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:id="@+id/maincontainer"
 		android:orientation="vertical" android:background="#dddddd">

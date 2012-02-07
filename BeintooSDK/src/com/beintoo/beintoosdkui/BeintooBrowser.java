@@ -53,7 +53,7 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 		current = this;		
 		setContentView(R.layout.browser);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
+
 		// GETTING DENSITY PIXELS RATIO
 		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
 		// SET UP LAYOUTS
@@ -63,7 +63,6 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 		
 		webview = (WebView) findViewById(R.id.webview);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);		
-		webview.getSettings().setJavaScriptEnabled(true);
 		
 		// ADD ZOOM CONTROLS
 		final FrameLayout.LayoutParams ZOOM_PARAMS =new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
@@ -75,10 +74,9 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 		WebSettings ws = webview.getSettings();
 		ws.setJavaScriptEnabled(true);
 		ws.setGeolocationEnabled(true);
-		ws.setJavaScriptCanOpenWindowsAutomatically(true);
-		ws.setPluginsEnabled(true);
+		ws.setJavaScriptCanOpenWindowsAutomatically(true);		
 		ws.setLoadWithOverviewMode(true);
-		ws.setUseWideViewPort(true);
+		ws.setUseWideViewPort(true);		
 		
 		webview.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
@@ -145,13 +143,15 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 	private String getSavedPlayerLocationParams(){
 		try {
 			Location loc = LocationMManager.getSavedPlayerLocation(getContext());
-			Double latitude = loc.getLatitude();
-			Double longitude = loc.getLongitude();
-			Float accuracy = loc.getAccuracy();
+			if(loc != null){
+				Double latitude = loc.getLatitude();
+				Double longitude = loc.getLongitude();
+				Float accuracy = loc.getAccuracy();
 
-			String params = "&lat="+latitude+"&lng="+longitude+"&acc="+accuracy;
+				String params = "&lat="+latitude+"&lng="+longitude+"&acc="+accuracy;
 			
-			return params;
+				return params;
+			}else return "";
 		}catch (Exception e){
 			return "";
 		}

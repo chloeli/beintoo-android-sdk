@@ -44,7 +44,7 @@
 		android:layout_height="wrap_content" style="@android:style/Widget.ProgressBar.Horizontal"
 		android:layout_width="fill_parent"></ProgressBar>
 
-	<WebView android:id="@+id/webview" android:layout_width="fill_parent"
+	<WebView android:id="@+id/webview" android:layout_width="fill_parent" android:layout_weight="1"
 		android:layout_height="fill_parent" android:layout_margin="0dip" />
 
 </LinearLayout>

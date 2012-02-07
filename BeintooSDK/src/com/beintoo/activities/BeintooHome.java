@@ -21,6 +21,7 @@ import java.util.HashSet;
 
 import com.beintoo.R;
 import com.beintoo.activities.leaderboard.LeaderboardContest;
+import com.beintoo.activities.marketplace.Marketplace;
 import com.beintoo.activities.notifications.NotificationList;
 import com.beintoo.activities.signupnow.SignupLayouts;
 import com.beintoo.beintoosdk.BeintooPlayer;
@@ -49,6 +50,7 @@ import android.widget.TextView;
 public class BeintooHome extends Dialog {
 	private final int OPEN_PROFILE = 1;
 	private final int OPEN_LEADERBOARD = 2;
+	private final int OPEN_MARKETPLACE = 8;
 	private final int OPEN_WALLET = 3;
 	private final int OPEN_CHALLENGE = 4;	
 	private final int OPEN_ACHIEVEMENTS = 6;
@@ -148,6 +150,7 @@ public class BeintooHome extends Dialog {
 			TableRow row4 = (TableRow) findViewById(R.id.fourthRow);
 			TableRow row5 = (TableRow) findViewById(R.id.fifthRow);
 			TableRow row6 = (TableRow) findViewById(R.id.sixthRow);
+			TableRow row7 = (TableRow) findViewById(R.id.sevenRow);
 					
 			setRowBg(row1,0);
 			setRowBg(row2,1);
@@ -155,6 +158,7 @@ public class BeintooHome extends Dialog {
 			setRowBg(row4,3);
 			setRowBg(row5,4);
 			setRowBg(row6,5);
+			setRowBg(row7,6);
 			
 			// PROFILE	
 			if(row1 != null){		
@@ -169,14 +173,23 @@ public class BeintooHome extends Dialog {
 			if(row2 != null){			    
 				row2.setOnClickListener(new TableRow.OnClickListener(){
 					public void onClick(View v) {		
+						UIhandler.sendEmptyMessage(OPEN_MARKETPLACE);
+					}
+				});
+			}
+			
+			// LEADERBOARD
+			if(row3 != null){			    
+				row3.setOnClickListener(new TableRow.OnClickListener(){
+					public void onClick(View v) {		
 						UIhandler.sendEmptyMessage(OPEN_LEADERBOARD);
 					}
 				});
 			}
 			
 			// WALLET
-			if(row3 != null){			    
-				row3.setOnClickListener(new TableRow.OnClickListener(){
+			if(row4 != null){			    
+				row4.setOnClickListener(new TableRow.OnClickListener(){
 					public void onClick(View v) {	
 						UIhandler.sendEmptyMessage(OPEN_WALLET);
 					}
@@ -184,15 +197,15 @@ public class BeintooHome extends Dialog {
 			}
 			
 			// CHALLENGES
-			if(row4 != null){			    
+			if(row5 != null){			    
 				if(player.getUser() == null){		
 					AlphaAnimation animation = new AlphaAnimation(1.0f, 0.5f);
 				    animation.setDuration(1);
 				    animation.setFillEnabled(true);
 				    animation.setFillAfter(true);
-					row4.setAnimation(animation);
+					row5.setAnimation(animation);
 				}
-				row4.setOnClickListener(new TableRow.OnClickListener(){
+				row5.setOnClickListener(new TableRow.OnClickListener(){
 					public void onClick(View v) {
 						if(player.getUser() != null){
 							UIhandler.sendEmptyMessage(OPEN_CHALLENGE);
@@ -204,8 +217,8 @@ public class BeintooHome extends Dialog {
 			}
 			
 			// ACHIEVEMENTS
-			if(row5 != null){			    
-				row5.setOnClickListener(new TableRow.OnClickListener(){
+			if(row6 != null){			    
+				row6.setOnClickListener(new TableRow.OnClickListener(){
 					public void onClick(View v) {								
 		            	UIhandler.sendEmptyMessage(OPEN_ACHIEVEMENTS);								            	
 					}
@@ -213,15 +226,15 @@ public class BeintooHome extends Dialog {
 			}
 			
 			// Tips&forum
-			if(row6 != null){	
+			if(row7 != null){	
 				if(player.getUser() == null){		
 					AlphaAnimation animation = new AlphaAnimation(1.0f, 0.5f);
 				    animation.setDuration(1);
 				    animation.setFillEnabled(true);
 				    animation.setFillAfter(true);
-					row6.setAnimation(animation);
+					row7.setAnimation(animation);
 				}
-				row6.setOnClickListener(new TableRow.OnClickListener(){
+				row7.setOnClickListener(new TableRow.OnClickListener(){
 					public void onClick(View v) {	
 						if(player.getUser() != null){
 							UIhandler.sendEmptyMessage(OPEN_FORUM);
@@ -264,7 +277,7 @@ public class BeintooHome extends Dialog {
 					setRowBg((TableRow) findViewById(R.id.firstRow), count);
 					count++;
 				}
-				if(!f.contains("wallet")){
+				if(!f.contains("marketplace")){
 					tl.removeView((LinearLayout)findViewById(R.id.secondWhiteline));
 					tl.removeView((LinearLayout)findViewById(R.id.secondGrayline));
 					tl.removeView((TableRow) findViewById(R.id.secondRow));				
@@ -272,7 +285,7 @@ public class BeintooHome extends Dialog {
 					setRowBg((TableRow) findViewById(R.id.secondRow), count);
 					count++;
 				}
-				if(!f.contains("leaderboard")){
+				if(!f.contains("wallet")){
 					tl.removeView((LinearLayout)findViewById(R.id.thirdWhiteline));
 					tl.removeView((LinearLayout)findViewById(R.id.thirdGrayline));
 					tl.removeView((TableRow) findViewById(R.id.thirdRow));				
@@ -280,15 +293,15 @@ public class BeintooHome extends Dialog {
 					setRowBg((TableRow) findViewById(R.id.thirdRow), count);
 					count++;
 				}
-				if(!f.contains("challenges")){
-					tl.removeView((LinearLayout)findViewById(R.id.fourthWhiteline));
+				if(!f.contains("leaderboard")){
 					tl.removeView((LinearLayout)findViewById(R.id.fourthGrayline));
+					tl.removeView((LinearLayout)findViewById(R.id.fourthWhiteline));
 					tl.removeView((TableRow) findViewById(R.id.fourthRow));				
 				}else{
 					setRowBg((TableRow) findViewById(R.id.fourthRow), count);
 					count++;
 				}
-				if(!f.contains("achievements")){
+				if(!f.contains("challenges")){
 					tl.removeView((LinearLayout)findViewById(R.id.fifthWhiteline));
 					tl.removeView((LinearLayout)findViewById(R.id.fifthGrayline));
 					tl.removeView((TableRow) findViewById(R.id.fifthRow));				
@@ -296,12 +309,20 @@ public class BeintooHome extends Dialog {
 					setRowBg((TableRow) findViewById(R.id.fifthRow), count);
 					count++;
 				}
-				if(!f.contains("forums")){
+				if(!f.contains("achievements")){
 					tl.removeView((LinearLayout)findViewById(R.id.sixthWhiteline));
 					tl.removeView((LinearLayout)findViewById(R.id.sixthGrayline));
 					tl.removeView((TableRow) findViewById(R.id.sixthRow));				
 				}else{
 					setRowBg((TableRow) findViewById(R.id.sixthRow), count);
+					count++;
+				}
+				if(!f.contains("forums")){
+					tl.removeView((LinearLayout)findViewById(R.id.sevenWhiteline));
+					tl.removeView((LinearLayout)findViewById(R.id.sevenGrayline));
+					tl.removeView((TableRow) findViewById(R.id.sevenRow));				
+				}else{
+					setRowBg((TableRow) findViewById(R.id.sevenRow), count);
 					count++;
 				}
 			}			
@@ -371,6 +392,12 @@ public class BeintooHome extends Dialog {
 				  if(Beintoo.dialogStack != null)
 					  DialogStack.addToDialogStack(userProfile);
 				  userProfile.show();
+			  }else if(msg.what == OPEN_MARKETPLACE){			  
+				  Marketplace markeplace = new Marketplace(getContext());
+				  Beintoo.currentDialog = markeplace;
+				  if(Beintoo.dialogStack != null)
+					  DialogStack.addToDialogStack(markeplace);
+				  markeplace.show();
 			  }else if(msg.what == OPEN_LEADERBOARD){
 				  LeaderboardContest leaderboard = new LeaderboardContest(getContext());
 				  Beintoo.currentDialog = leaderboard;

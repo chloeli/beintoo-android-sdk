@@ -35,6 +35,12 @@ public class Vgood {
     private String content;
     private String rewardText;
     private boolean openInBrowser;
+    private String shareURL;
+    private Integer rating;
+    private Integer bedollars;
+    private Double virtualCurrencyPrice;
+    private Double distance;
+    private Boolean isFeatured;
     
 	public String getGetRealURL() {
 		return getRealURL;
@@ -137,5 +143,41 @@ public class Vgood {
 	}
 	public void setOpenInBrowser(boolean openInBrowser) {
 		this.openInBrowser = openInBrowser;
-	}	
+	}
+	public String getShareURL() {
+		return shareURL;
+	}
+	public void setShareURL(String shareURL) {
+		this.shareURL = shareURL;
+	}
+	public Integer getRating() {
+		return rating;
+	}
+	public void setRating(Integer rating) {
+		this.rating = rating;
+	}
+	public Integer getBedollars() {
+		return bedollars;
+	}
+	public void setBedollars(Integer bedollars) {
+		this.bedollars = bedollars;
+	}
+	public Double getVirtualCurrencyPrice() {
+		return virtualCurrencyPrice;
+	}
+	public void setVirtualCurrencyPrice(Double virtualCurrencyPrice) {
+		this.virtualCurrencyPrice = virtualCurrencyPrice;
+	}
+	public Double getDistance() {
+		return distance;
+	}
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
+	public Boolean getIsFeatured() {
+		return isFeatured;
+	}
+	public void setIsFeatured(Boolean isFeatured) {
+		this.isFeatured = isFeatured;
+	}			
 }

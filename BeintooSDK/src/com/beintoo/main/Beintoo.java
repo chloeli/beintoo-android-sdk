@@ -16,6 +16,7 @@
 package com.beintoo.main;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -93,6 +94,7 @@ public class Beintoo{
 	
 	public static String[] usedFeatures = null; 
 	public static String FEATURE_PROFILE = "profile";
+	public static String FEATURE_MARKETPLACE = "marketplace";
 	public static String FEATURE_LEADERBOARD = "leaderboard";
 	public static String FEATURE_WALLET = "wallet";
 	public static String FEATURE_CHALLENGES = "challenges";
@@ -103,9 +105,11 @@ public class Beintoo{
 	
 	public static int TRY_BEINTOO_DEFAULT = 0;
 	public static int TRY_BEINTOO_REWARD = 1;
-	public static int TRY_BEINTOO_TEMPLATE = TRY_BEINTOO_DEFAULT;
+	public static int TRY_BEINTOO_TEMPLATE = TRY_BEINTOO_REWARD;
 	
 	public static String userAgent = null;
+	
+	public static Map<String, String> virtualCurrencyData = null;
 	
 	/**
 	 * Set the developer apikey
@@ -535,6 +539,44 @@ public class Beintoo{
 	}
 	public static void featureToUse(String[] features){
 		setFeaturesToUse(features);
+	}
+	
+	/**
+	 * Initial setting of the developer virtual currency data
+	 * @param currencyName is your virtual currency name
+	 * @param devUserUID is your unique identifier for your user (used in the server callback to update the balance)
+	 * @param currencyBalance the user virtual currency balance
+	 */
+	public static void setupVirtualCurrencyData(String currencyName, String devUserUID, Double currencyBalance){
+		virtualCurrencyData = new HashMap<String,String>();
+		virtualCurrencyData.put("currencyName", currencyName);
+		virtualCurrencyData.put("devUserUID", devUserUID);
+		virtualCurrencyData.put("currencyBalance", currencyBalance.toString());
+	}
+	/**
+	 * Update the user virtual currency balance.
+	 * Use it everytime your user spend or earn your currency value 
+	 * 
+	 * @param currencyBalance the updated currency balance
+	 */
+	public static void updateVirtualCurrencyBalance(Double currencyBalance){
+		if(virtualCurrencyData != null)
+			virtualCurrencyData.put("currencyBalance", currencyBalance.toString());
+	}
+	public static String getVirtualCurrencyDevUserId(){
+		if(virtualCurrencyData != null)
+			return virtualCurrencyData.get("devUserUID");
+		else return null;
+	}
+	public static String getVirtualCurrencyUserBalance(){
+		if(virtualCurrencyData != null)
+			return virtualCurrencyData.get("currencyBalance");
+		else return null;
+	}
+	public static String getVirtualCurrencyName(){
+		if(virtualCurrencyData != null)
+			return virtualCurrencyData.get("currencyName");
+		else return null;
 	}
 	
 	/*

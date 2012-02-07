@@ -138,8 +138,6 @@
 	<string name="invalidnickname">La longitud mínima del apodo es de 3 caracteres</string>
 
     <!-- BUTTONS -->
-    <string name="trynow">Regístrate ahora</string>
-    <string name="nothanks">Mas tardes</string>
     <string name="anotheraccount">Usa una otra cuenta</string>
     <string name="all">Todos</string>
     <string name="people">Personas</string>
@@ -273,10 +271,6 @@
 	<string name="alliancerefuse">Rechazar</string>
 	<string name="allianceinvalid">La longitud mínima del nombre es de 3 caracteres</string>
 		
-	<!-- CUSTOM -->
-	<string name="sponsor"><Data><![CDATA[ Juega duro: <b><br />&nbsp;&nbsp;gana tu<br />&nbsp;&nbsp;descuentos<br />&nbsp;&nbsp;exclusivos!</b> ]]> </Data></string>
-	<string name="sponsortitle">Regìstrate a Beintoo y obtén grandes descuentos en tu ciudades como recompensa por tu resultados en los juegos.</string>
-	
 	<!-- PLAYER SIGNUP -->
 	<string name="signuphome">Diviertete, conoce los jugadores, y haz que tus ganancias reales!\nBienvenido a la red Beintoo!</string>
 	<string name="signupnow"><data><![CDATA[Regístrate <b>ahora</b>]]></data></string>
@@ -290,4 +284,39 @@
 	<string name="messagenotificationp">Tienes %d notificaciones</string>
 	<string name="messagenotification">Tienes %d notificacion</string>
 	<string name="unmissionstatus">Estado de tu mision</string>    	
+	
+	<!-- CUSTOM -->
+    <string name="sponsor"><Data><![CDATA[<b>Diviértete y gana</b><br /><br /><b>Gana Bedollars</b> jugando con esta aplicación, <b>y elije la oferta individual</b> que te gusta mas</b>! ]]> </Data></string>
+    <string name="sponsorvirtualcurrency"><Data>Diviértete y gana<![CDATA[<b></b><br /><br /><b>Usa la moneda que has ganado</b> en esta aplicación para <b>comparar las ofertas </b> que te gustan mas ]]> </Data></string>
+    <string name="sponsortitle">Registrate a la comunidad y gana descuentos y ofertas como recompensas por tu resultados en esta aplicación!</string>        
+
+    <!-- MARKETPLACE -->
+    <string name="marketplace">Marketplace</string>
+    <string name="buymarketplace">Elige tus ofertas</string>
+    <string name="featured">Destacado</string>
+    <string name="national">National</string>
+    <string name="aroundme">Around me</string>
+    <string name="top">Top</string>
+    <string name="categories">Productos</string>
+    <string name="buy">Compra</string>
+    <string name="yourbalance">Tus creditos:</string>
+    <string name="youarebuying">Estas comprando:</string>
+    <string name="price">Valor:\u0020</string>
+    <string name="where">Lugar:\u0020</string>
+    <string name="addresslist">Lista de direcciones</string>
+    <string name="buynow">Cómpralo ya!</string>
+    <string name="distance">Distancia:\u0020</string>
+    <string name="nocoupon">Todavía no hay cupones en esta categoría</string>
+    <string name="needbedollars"> No tienes créditos suficientes para obtener esta oferta, 
+        se olvidan %s, juega para ganar ahora</string>           
+    <string name="signupmarketplacefriends">Regístrate en Beintoo el fin de enviar este coupón de regalo.</string>
+    <string name="trybeintoomarketplacetitle">Te gustan las aplicaciones?</string>
+    <string name="trybeintoomarketplace">Disfruta de tus juegos favoritos para ganar dólares de descuento y !</string>	
+	<string name="submitscorempmessage">Tienes ahora %s, no te lo pierdas! Compra en el Marketplace!</string>
+   	<string name="submitscorempmessageplayer">Ir al Marketplace ahora!</string>        
+   	<string name="orderbyprice">Ordenar por precio</string>	
+	
+	<!-- TRY BEINTOO -->
+    <string name="trynow">Unirse a la comunidad</string>
+    <string name="nothanks">No, no quiero jugar y ganar</string>	    
 </resources>

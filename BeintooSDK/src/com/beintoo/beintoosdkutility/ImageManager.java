@@ -2,6 +2,7 @@ package com.beintoo.beintoosdkutility;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Stack;
@@ -16,7 +17,7 @@ import android.widget.ImageView;
 
 public class ImageManager {
 	
-	private HashMap<String, Bitmap> imageMap = new HashMap<String, Bitmap>();
+	private HashMap<String, SoftReference<Bitmap>> imageMap = new HashMap<String, SoftReference<Bitmap>>();
 	
 	private File cacheDir;
 	private ImageQueue imageQueue = new ImageQueue();
@@ -41,9 +42,10 @@ public class ImageManager {
 	}
 	   
 	public void displayImage(String url, Context context, ImageView imageView) {
-		try {			
-			if(imageMap.containsKey(url)){
-				imageView.setImageBitmap(imageMap.get(url));
+		try {						
+			if(imageMap.containsKey(url) && imageMap.get(url).get() != null){
+				//imageView.setImageBitmap(imageMap.get(url));
+				imageView.setImageBitmap(imageMap.get(url).get());
 			}else {
 				imageView.setImageResource(R.drawable.general_image);
 				queueImage(url, context, imageView);
@@ -69,17 +71,18 @@ public class ImageManager {
 	private Bitmap getBitmap(String url) {
 		try {
 			String filename = String.valueOf(url.hashCode());
-			File f = new File(cacheDir, filename);
-			
+			File f = new File(cacheDir, filename);				
 			try{
 				// CHECK IF CACHE IS TOO OLD
-				if(f!=null){
+				if(f.exists()){
 					if(System.currentTimeMillis() > f.lastModified() + 86400000) // 24 HOURS
 						f.delete();
 				}
 			}catch(Exception e){if(debug) e.printStackTrace();}
 			
-			Bitmap bitmap = BitmapFactory.decodeFile(f.getPath());
+			Bitmap bitmap = null;
+			if(f.exists())
+				bitmap = BitmapFactory.decodeFile(f.getPath());
 			if(bitmap != null) return bitmap;
 
 			bitmap = BitmapFactory.decodeStream(new URL(url).openConnection().getInputStream());
@@ -151,7 +154,8 @@ public class ImageManager {
 						}
 						
 						Bitmap bmp = getBitmap(imageToLoad.url);
-						imageMap.put(imageToLoad.url, bmp);
+						//imageMap.put(imageToLoad.url, bmp);
+						imageMap.put(imageToLoad.url, new SoftReference<Bitmap>(bmp));
 						Object tag = imageToLoad.imageView.getTag();
 						
 						if(tag != null && ((String)tag).equals(imageToLoad.url)) {
@@ -191,7 +195,7 @@ public class ImageManager {
 		try {			
 			imageLoaderThread.interrupt();
 		}catch (Exception e){
-			e.printStackTrace();
+			if(debug) e.printStackTrace();
 		}
 	}
 	

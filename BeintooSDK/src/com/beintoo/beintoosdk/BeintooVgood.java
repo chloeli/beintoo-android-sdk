@@ -18,10 +18,13 @@ package com.beintoo.beintoosdk;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import android.net.Uri;
+
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 
 import com.beintoo.main.Beintoo;
+import com.beintoo.wrappers.Category;
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
@@ -321,27 +324,38 @@ public class BeintooVgood {
 		return v;	
 	}
 	
+	
 	/**
-	 * Post a user vgood on the marketplace
-	 * 
-	 * @param vgoodExt the user id of the vgood
-	 * @param userExt the user id of the user
-	 * @return a message with the operation result
+	 * Return a list of categories on sale in the marketplace
+	 * @param latitude the user latitude
+	 * @param longitude the user longitude
+	 * @param rows how many vgood you want to retrieve
+	 * @param featured 
+	 * @return a list of vgoods
 	 */
-	public Message sellVgood (String vgoodExt, String userExt){
-		String apiUrl = apiPreUrl+"vgood/marketplace/sell/"+vgoodExt+"/"+userExt;
+	public List<Category> showCategories(String guid){
+		
+		Uri.Builder apiUrl = Uri.parse(apiPreUrl+"vgood/show/categories").buildUpon();
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
+		if(guid != null){
+			header.getKey().add("guid");
+			header.getValue().add(guid);
+		}
 		
 		BeintooConnection conn = new BeintooConnection();
-		String json = conn.httpRequest(apiUrl, header, null,true);
+		String json = conn.httpRequest(apiUrl.toString(), header, null);
 		Gson gson = new Gson();
 		
-		Message msg = gson.fromJson(json, Message.class);
+		List<Category> categories = gson.fromJson(json, new TypeToken<List<Category>>() {}.getType());
 		
-		return msg;	
+		return categories;	
+	}
+	
+	public List<Category> showCategories(){
+		return showCategories(null);
 	}
 	
 	/**
@@ -352,34 +366,45 @@ public class BeintooVgood {
 	 * @param featured 
 	 * @return a list of vgoods
 	 */
-	public Vgood[] showMarketPlace (String latitude, String longitude, int rows, boolean featured){
-		String apiUrl = "";
-		if(featured)
-			apiUrl = apiPreUrl+"vgood/marketplace/show/?featured=true";
-		else
-			apiUrl = apiPreUrl+"vgood/marketplace/show";
+	public List<Vgood> marketplace (Double latitude, Double longitude,
+			Float radius, Integer start, Integer rows, String marketplaceKind, String sort, Integer category, String guid){
+		
+		Uri.Builder apiUrl = Uri.parse(apiPreUrl+"marketplace").buildUpon();
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
 		
-		if(latitude != null && longitude != null){
-			header.getKey().add("latitude");
-			header.getValue().add(latitude);
-			header.getKey().add("longitude");
-			header.getValue().add(longitude);	
+		if(guid != null){
+			header.getKey().add("guid");
+			header.getValue().add(guid);
 		}
 		
-		if(rows > 0){
-			header.getKey().add("rows");
-			header.getValue().add(Integer.toString(rows));
+		if(latitude != null && longitude != null){
+			apiUrl.appendQueryParameter("latitude", latitude.toString());
+			apiUrl.appendQueryParameter("longitude", longitude.toString());			
 		}
+		
+		if(radius != null)
+			apiUrl.appendQueryParameter("radius", radius.toString());
+		
+		if(start != null && rows != null){
+			apiUrl.appendQueryParameter("start", start.toString());
+			apiUrl.appendQueryParameter("rows", rows.toString());			
+		}
+		
+		if(marketplaceKind != null)
+			apiUrl.appendQueryParameter("type", marketplaceKind);
+		if(sort != null)
+			apiUrl.appendQueryParameter("sort", sort);
+		if(category != null)
+			apiUrl.appendQueryParameter("category", category.toString());
 		
 		BeintooConnection conn = new BeintooConnection();
-		String json = conn.httpRequest(apiUrl, header, null);
+		String json = conn.httpRequest(apiUrl.toString(), header, null);
 		Gson gson = new Gson();
 		
-		Vgood[] goods = gson.fromJson(json, Vgood[].class);
+		List<Vgood> goods = gson.fromJson(json, new TypeToken<List<Vgood>>() {}.getType());
 		
 		return goods;	
 	}

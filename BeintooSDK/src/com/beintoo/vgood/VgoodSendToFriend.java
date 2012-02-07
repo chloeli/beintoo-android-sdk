@@ -21,15 +21,22 @@ import java.util.ArrayList;
 import com.beintoo.R;
 
 import com.beintoo.beintoosdk.BeintooVgood;
+import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
+import com.beintoo.main.Beintoo;
+import com.beintoo.main.managers.LocationMManager;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.User;
+import com.beintoo.wrappers.Vgood;
 
+import android.location.Location;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View.OnClickListener;
@@ -37,6 +44,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
@@ -53,6 +61,7 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 	public static final int OPEN_FRIENDS_FROM_VGOOD = 1;
 	public static final int OPEN_FRIENDS_FROM_WALLET = 2;
 	public static final int OPEN_FRIENDS_FROM_GPS = 2;
+	public static final int OPEN_FRIENDS_FROM_MARKETPLACE = 3;
 	
 	public Dialog previous;
 	public Dialog backPrevious;
@@ -63,17 +72,28 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 	private ArrayList<String> usersExts;
 	private ArrayList<String> usersNicks;	
 	private User [] friends;
-	private final double ratio;
+	private double ratio;
 	private int calledFrom;
+	private Vgood vgood;
 	
+	public VgoodSendToFriend(Context context, int calledFrom, User[] userData, Vgood vgood){
+		super(context, R.style.ThemeBeintoo);
+		initializeView(context, calledFrom, userData, vgood);		
+	}
 	
-	public VgoodSendToFriend(Context context, int calledFrom, User[] u) {
+	public VgoodSendToFriend(Context context, int calledFrom, User[] userData) {
 		super(context);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		initializeView(context, calledFrom, userData, null);	
+	}
+	
+	private void initializeView(Context context, int calledFrom, User[] u, Vgood vgood){		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.friendlist);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
-		current = this;		
-		friends = u;
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
+		this.current = this;		
+		this.friends = u;
+		this.vgood = vgood;
 		this.calledFrom = calledFrom;
 		
 		// GETTING DENSITY PIXELS RATIO
@@ -119,7 +139,7 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 			
 			// IF WE CALLED THE DIALOG FROM SEND AS A GIFT WE NEED THE
 			// ROW CLICKABLE TO SEND THE VGOOD AS A GIFT
-			if(calledFrom == OPEN_FRIENDS_FROM_VGOOD || calledFrom == OPEN_FRIENDS_FROM_WALLET)
+			if(calledFrom == OPEN_FRIENDS_FROM_VGOOD || calledFrom == OPEN_FRIENDS_FROM_WALLET || calledFrom == OPEN_FRIENDS_FROM_MARKETPLACE)
 				row.setOnClickListener(this);
 			
 			View spacer = createSpacer(getContext(),1,1);
@@ -211,17 +231,22 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 		        	   if(backPrevious != null)
 		        		   backPrevious.dismiss();
 		        	    
-		        	   if(calledFrom == OPEN_FRIENDS_FROM_WALLET){		        		   
+		        	   	if(calledFrom == OPEN_FRIENDS_FROM_WALLET){		        		   
 			        	   try {
 				        	   TableLayout wallet = (TableLayout) previous.findViewById(R.id.table);				        	   
 				        	   wallet.removeView(rowToRemove);
 			        	   }catch(Exception e){
 			        		   e.printStackTrace();
 			        	   }
-		        	   }else{
+		        	   	}else if(calledFrom == OPEN_FRIENDS_FROM_MARKETPLACE){
+		        	   		handleOpenSendAsAGiftInBrowser(usersExts.get(selected));
+		        	   		if(previous != null)
+		        	   			previous.dismiss();
+		        	   		return;
+		           		}else{
 		        		   previous.dismiss();
-		        	   }
-		        	   
+		           		}
+		        	   	
 		        	   new Thread(new Runnable(){      
 				    	public void run(){
 			    			try{     
@@ -251,6 +276,37 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 	
 	public void doneDialog (int i) {
 		MessageDisplayer.showMessage(getContext(), getContext().getString(R.string.friendSent)+usersNicks.get(i),Gravity.BOTTOM);
+	}
+	
+	public void handleOpenSendAsAGiftInBrowser(String friendExtId){
+		if(vgood == null) return;
+		current.dismiss();
+		Uri.Builder url = Uri.parse(vgood.getGetRealURL()).buildUpon();
+		Player p = Current.getCurrentPlayer(getContext());
+		if(p!=null) url.appendQueryParameter("guid", p.getGuid());
+		
+		if(Beintoo.virtualCurrencyData != null)
+			url.appendQueryParameter("developer_user_guid", Beintoo.getVirtualCurrencyDevUserId());		
+		if(friendExtId != null)
+			url.appendQueryParameter("friend_user_ext", friendExtId);
+		
+		if(!vgood.isOpenInBrowser()){
+			BeintooBrowser bb = new BeintooBrowser(current.getContext(), url.toString());
+			bb.show();
+		}else{
+			Location loc = LocationMManager.getSavedPlayerLocation(getContext());
+			if(loc != null){
+				Double latitude = loc.getLatitude();
+				Double longitude = loc.getLongitude();
+				Float accuracy = loc.getAccuracy();
+				url.appendQueryParameter("lat", latitude.toString());
+				url.appendQueryParameter("lon", longitude.toString());
+				url.appendQueryParameter("acc", accuracy.toString());
+			}
+						
+			Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url.toString()));
+			current.getContext().startActivity(browserIntent);
+		}		
 	}
 	
 	Handler UIhandler = new Handler() {

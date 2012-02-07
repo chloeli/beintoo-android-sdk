@@ -135,6 +135,7 @@ public class PlayerManager {
 			String key = guid+":count";
 			PreferencesHandler.clearPref(key, ctx);
 			PreferencesHandler.clearPref("currentPlayer", ctx);
+			PreferencesHandler.clearPref("SubmitScoresCount", ctx);
 		}catch(Exception e){ e.printStackTrace(); }
 	}
 	

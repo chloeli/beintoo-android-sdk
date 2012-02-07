@@ -20,4 +20,14 @@ public class DialogStack {
 			Beintoo.dialogStack = null;
 		}
 	}	
+	
+	public static void removeFromDialogStack(Dialog d){
+		if(Beintoo.dialogStack != null){
+			try {
+				Beintoo.dialogStack.remove(d);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
 }

@@ -16,6 +16,7 @@
 package com.beintoo.main.managers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -45,6 +46,7 @@ public class SubmitScoreManager {
 	
 	private static AtomicLong LAST_OPERATION = new AtomicLong(0);
 	private long OPERATION_TIMEOUT = 2000;
+	private final int MIN_SUBMITSCORE_FOR_MARKETPLACE_NOTIFICATION = 15;
 	
 	public void submitScoreAndGetVgood (final Context ctx, final int score, final int threshold, final String codeID, final boolean isMultiple,
 			final LinearLayout container, final int notificationType, final BSubmitScoreListener slistener, final BGetVgoodListener glistener){
@@ -131,12 +133,22 @@ public class SubmitScoreManager {
 						if(System.currentTimeMillis() < LAST_OPERATION.get() + OPERATION_TIMEOUT)
 							return;
 						
+						final Player p = Current.getCurrentPlayer(ctx);	
+						int storedSubmitMpNotificationCount = PreferencesHandler.getInt("SubmitScoresCount", ctx);
+						Integer submitMpNotificationThreshold = (p.getMinSubmitPerMarketplace() != null) ? p.getMinSubmitPerMarketplace() : MIN_SUBMITSCORE_FOR_MARKETPLACE_NOTIFICATION;
+						
+						
 		    			final Message msg = new Message();
 						Bundle b = new Bundle();
-						if(balance != null)
-							b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore)+String.format(ctx.getString(R.string.earnedBalance), balance)); 
-						else
-							b.putString("Message", String.format(ctx.getString(R.string.earnedScore), lastScore));
+						
+						String mpMessage = createMarketplaceMessage(p, ctx, submitMpNotificationThreshold, storedSubmitMpNotificationCount);
+						if(balance != null){
+							String message = String.format(ctx.getString(R.string.earnedScore), lastScore)+String.format(ctx.getString(R.string.earnedBalance), balance);							
+							b.putString("Message", message + mpMessage); 
+						}else{
+							String message = String.format(ctx.getString(R.string.earnedScore), lastScore);
+							b.putString("Message", message + mpMessage);
+						}
 						
 						b.putInt("Gravity", gravity);
 						
@@ -144,7 +156,7 @@ public class SubmitScoreManager {
 						msg.what = Beintoo.SUBMITSCORE_POPUP;
 															
 						final BeintooPlayer player = new BeintooPlayer();						
-						final Player p = Current.getCurrentPlayer(ctx);
+						
 						com.beintoo.wrappers.Message result = null;
 						try {
 							if(location != null){
@@ -168,8 +180,13 @@ public class SubmitScoreManager {
 							}
 						}
 						
-						if(showNotification)
-							Beintoo.UIhandler.sendMessage(msg);
+						if(showNotification){
+							Beintoo.UIhandler.sendMessage(msg);						
+							storedSubmitMpNotificationCount++;
+							if(storedSubmitMpNotificationCount  > submitMpNotificationThreshold)
+								storedSubmitMpNotificationCount = 0;
+							PreferencesHandler.saveInt("SubmitScoresCount", storedSubmitMpNotificationCount, ctx);
+						}
 
 						if(listener != null)
 							listener.onComplete();
@@ -185,6 +202,28 @@ public class SubmitScoreManager {
     	});				
 	}
 	
+	private String createMarketplaceMessage(Player p, Context ctx, Integer submitMpNotificationThreshold, int storedSubmitMpNotificationCount){
+		String mpMessage = "";
+		try {
+			if(storedSubmitMpNotificationCount >= submitMpNotificationThreshold){
+				if(Beintoo.usedFeatures != null && !Arrays.asList(Beintoo.usedFeatures).contains(Beintoo.FEATURE_MARKETPLACE)){
+					return mpMessage;
+				}else{				
+					if(Beintoo.virtualCurrencyData != null){
+						mpMessage = "\n"+String.format(ctx.getString(R.string.submitscorempmessage), Beintoo.virtualCurrencyData.get("currencyName"));
+					}else if(p.getUser() != null){
+						mpMessage = "\n"+String.format(ctx.getString(R.string.submitscorempmessage), "Bedollars");
+					}else if(p.getUser() == null){
+						mpMessage = "\n"+ctx.getString(R.string.submitscorempmessageplayer);
+					}	
+				}
+			}
+			
+			return mpMessage;
+		}catch (Exception e){
+			return mpMessage;
+		}		
+	}
 	
 	public void submitScoreMultiple(final Context ctx, final Map<String,Integer> scores, final boolean showNotification, final int gravity, final BSubmitScoreListener listener){
 		new Thread(new Runnable(){     					

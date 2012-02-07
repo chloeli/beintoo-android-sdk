@@ -29,6 +29,7 @@ public class Player {
 	Map<String, Double> vgoodThreshold;
 	Integer unreadNotification;
 	boolean hasMission;
+	Integer minSubmitPerMarketplace;
 	
 	public Player() {
 
@@ -120,5 +121,12 @@ public class Player {
 
 	public void setHasMission(boolean hasMission) {
 		this.hasMission = hasMission;
+	}
+
+	public Integer getMinSubmitPerMarketplace() {
+		return minSubmitPerMarketplace;
+	}
+	public void setMinSubmitPerMarketplace(Integer minSubmitPerMarketplace) {
+		this.minSubmitPerMarketplace = minSubmitPerMarketplace;
 	}
 }

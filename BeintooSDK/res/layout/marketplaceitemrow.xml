@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" android:layout_width="fill_parent"
+	android:layout_height="wrap_content" android:gravity="center"
+	android:id="@+id/marketplace_listview_row" android:paddingTop="5dip"
+	android:paddingBottom="5dip">
+	<ImageView android:id="@+id/marketplace_row_img"
+		android:layout_width="50dip" android:layout_height="50dip"
+		android:layout_marginLeft="5dip" android:layout_marginRight="5dip" />
+	<LinearLayout android:id="@+id/linearLayout1"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="vertical" android:layout_weight="1"
+		android:layout_marginRight="5dip" android:layout_marginTop="5dip"
+		android:layout_marginBottom="5dip" android:layout_marginLeft="5dip">
+		<TextView android:id="@+id/marketplace_row_name"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textColor="@color/gray_text" android:textSize="16dip" />
+		<TextView android:id="@+id/marketplace_row_desc"
+			android:lines="2" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textColor="@color/light_gray_text"
+			android:textSize="12dip" />
+		<TextView android:id="@+id/marketplace_row_distance"
+			android:lines="1" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textColor="@color/light_gray_text"
+			android:textSize="12dip" />
+	</LinearLayout>
+	<!-- <Button android:id="@+id/marketplace_buy" android:layout_width="60dip" 
+		android:layout_height="50dip" android:text="@string/buy" android:background="@drawable/blu_gradient_button" 
+		android:textStyle="bold" android:layout_marginRight="10dip" android:textColor="#fff" 
+		/> -->
+	<RelativeLayout android:id="@+id/marketplace_buy"
+		android:layout_width="60dip" android:background="@drawable/blu_gradient_button"
+		android:layout_marginRight="10dip" android:layout_height="50dip"
+		android:gravity="center">
+		<TextView android:id="@+id/buy_price" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="200.0" 
+			android:textStyle="bold" android:textColor="#fff" android:gravity="center"/>
+		<ImageView android:id="@+id/buy_bedollar_logo"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:src="@drawable/b02" android:layout_toRightOf="@+id/buy_price"
+			android:layout_marginLeft="2dip" android:layout_marginTop="2dip"/>
+	</RelativeLayout>
+</LinearLayout>

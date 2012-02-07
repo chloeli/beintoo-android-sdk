@@ -15,7 +15,7 @@
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:id="@+id/maincontainer"
 		android:orientation="vertical" android:background="#dddddd">
-		<include layout="@layout/beintoobar" />  
+		<include layout="@layout/beintoobar" />
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="vertical"
 			android:id="@+id/userinfo" android:visibility="gone">
@@ -52,7 +52,7 @@
 	</LinearLayout>
 	<ScrollView android:id="@+id/myScroll" android:layout_width="fill_parent"
 		android:scrollbars="vertical" android:layout_height="fill_parent"
-		android:fillViewport="true" android:layout_weight="1" 
+		android:fillViewport="true" android:layout_weight="1"
 		android:fadingEdge="none">
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="fill_parent" android:id="@+id/maincontainer"
@@ -63,13 +63,13 @@
 				<LinearLayout android:gravity="center_vertical"
 					android:id="@+id/messages" android:layout_width="fill_parent"
 					android:layout_height="32dip" android:orientation="horizontal">
-					<ImageView android:layout_width="wrap_content" android:paddingLeft="5dip"
-							android:id="@+id/missionimage" android:layout_height="wrap_content"
-							android:src="@drawable/sm" />
+					<ImageView android:layout_width="wrap_content"
+						android:paddingLeft="5dip" android:id="@+id/missionimage"
+						android:layout_height="wrap_content" android:src="@drawable/sm" />
 					<TextView android:layout_width="wrap_content" android:id="@+id/unmissionstatus"
-						android:gravity="center_vertical" 
-						android:textSize="14dip" android:layout_height="wrap_content"
-						android:textColor="#000000" android:paddingLeft="5dip"></TextView>
+						android:gravity="center_vertical" android:textSize="14dip"
+						android:layout_height="wrap_content" android:textColor="#000000"
+						android:paddingLeft="5dip"></TextView>
 				</LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="1dip" android:background="#8F9193"
@@ -86,10 +86,9 @@
 					android:layout_height="wrap_content" android:scrollbars="vertical"
 					android:layout_width="fill_parent">
 					<TableRow android:id="@+id/firstRow" android:tag="profile">
-						<ImageView android:layout_width="50dip"
-							android:id="@+id/imageView1" android:layout_height="50dip"
-							android:src="@drawable/profbt" android:layout_marginRight="15dip"
-							android:layout_margin="10dip"></ImageView>
+						<ImageView android:layout_width="50dip" android:id="@+id/imageView1"
+							android:layout_height="50dip" android:src="@drawable/profbt"
+							android:layout_marginRight="15dip" android:layout_margin="10dip"></ImageView>
 						<LinearLayout android:id="@+id/linearLayout1"
 							android:layout_width="wrap_content" android:layout_height="fill_parent"
 							android:gravity="center_vertical" android:orientation="vertical">
@@ -109,11 +108,33 @@
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#FFFFFF"
 						android:id="@+id/firstWhiteline"></LinearLayout>
-
-					<TableRow android:id="@+id/secondRow" android:tag="leaderboard">
-						<ImageView android:layout_width="50dip"
-							android:id="@+id/imageView2" android:layout_height="50dip"
-							android:src="@drawable/leaderboardbt" android:layout_margin="10dip"></ImageView>
+					<TableRow android:id="@+id/secondRow" android:tag="marketplace">
+						<ImageView android:layout_width="50dip" android:id="@+id/imageView1"
+							android:layout_height="50dip" android:src="@drawable/mp"
+							android:layout_marginRight="15dip" android:layout_margin="10dip"></ImageView>
+						<LinearLayout android:id="@+id/linearLayout1"
+							android:layout_width="wrap_content" android:layout_height="fill_parent"
+							android:gravity="center_vertical" android:orientation="vertical">
+							<TextView android:layout_width="wrap_content"
+								android:textSize="17dip" android:id="@+id/textView1"
+								android:text="@string/marketplace" android:layout_height="wrap_content"
+								android:textColor="#000000"></TextView>
+							<TextView android:id="@+id/textView5"
+								android:layout_width="wrap_content" android:layout_height="wrap_content"
+								android:textSize="14dip" android:text="@string/buymarketplace"
+								android:textColor="#878485"></TextView>
+						</LinearLayout>
+					</TableRow>
+					<LinearLayout android:layout_width="fill_parent"
+						android:layout_height="1dip" android:background="#8F9193"
+						android:id="@+id/secondGrayline"></LinearLayout>
+					<LinearLayout android:layout_width="fill_parent"
+						android:layout_height="1dip" android:background="#FFFFFF"
+						android:id="@+id/secondWhiteline"></LinearLayout>
+					<TableRow android:id="@+id/thirdRow" android:tag="leaderboard">
+						<ImageView android:layout_width="50dip" android:id="@+id/imageView2"
+							android:layout_height="50dip" android:src="@drawable/leaderboardbt"
+							android:layout_margin="10dip"></ImageView>
 						<LinearLayout android:id="@+id/linearLayout4"
 							android:layout_width="wrap_content" android:layout_height="fill_parent"
 							android:gravity="center_vertical" android:orientation="vertical">
@@ -128,15 +149,15 @@
 					</TableRow>
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#8F9193"
-						android:id="@+id/secondGrayline"></LinearLayout>
+						android:id="@+id/thirdGrayline"></LinearLayout>
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#FFFFFF"
-						android:id="@+id/secondWhiteline"></LinearLayout>
+						android:id="@+id/thirdWhiteline"></LinearLayout>
 
-					<TableRow android:id="@+id/thirdRow" android:tag="wallet">
-						<ImageView android:layout_width="50dip"
-							android:id="@+id/imageView3" android:layout_height="50dip"
-							android:src="@drawable/walletbt" android:layout_margin="10dip"></ImageView>
+					<TableRow android:id="@+id/fourthRow" android:tag="wallet">
+						<ImageView android:layout_width="50dip" android:id="@+id/imageView3"
+							android:layout_height="50dip" android:src="@drawable/walletbt"
+							android:layout_margin="10dip"></ImageView>
 						<LinearLayout android:id="@+id/linearLayout5"
 							android:layout_width="wrap_content" android:layout_height="fill_parent"
 							android:gravity="center_vertical" android:orientation="vertical">
@@ -151,15 +172,15 @@
 					</TableRow>
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#8F9193"
-						android:id="@+id/thirdGrayline"></LinearLayout>
+						android:id="@+id/fourthGrayline"></LinearLayout>
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#FFFFFF"
-						android:id="@+id/thirdWhiteline"></LinearLayout>
+						android:id="@+id/fourthWhiteline"></LinearLayout>
 
-					<TableRow android:id="@+id/fourthRow" android:tag="challenges">
-						<ImageView android:layout_width="50dip"
-							android:id="@+id/imageView4" android:layout_height="50dip"
-							android:src="@drawable/challengebt" android:layout_margin="10dip"></ImageView>
+					<TableRow android:id="@+id/fifthRow" android:tag="challenges">
+						<ImageView android:layout_width="50dip" android:id="@+id/imageView4"
+							android:layout_height="50dip" android:src="@drawable/challengebt"
+							android:layout_margin="10dip"></ImageView>
 						<LinearLayout android:id="@+id/linearLayout6"
 							android:layout_width="wrap_content" android:layout_height="fill_parent"
 							android:gravity="center_vertical" android:orientation="vertical">
@@ -174,15 +195,15 @@
 					</TableRow>
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#8F9193"
-						android:id="@+id/fourthGrayline"></LinearLayout>
+						android:id="@+id/fifthGrayline"></LinearLayout>
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#FFFFFF"
-						android:id="@+id/fourthWhiteline"></LinearLayout>
+						android:id="@+id/fifthWhiteline"></LinearLayout>
 
-					<TableRow android:id="@+id/fifthRow" android:tag="achievements">
-						<ImageView android:layout_width="50dip"
-							android:id="@+id/imageView5" android:layout_height="50dip"
-							android:src="@drawable/achievements" android:layout_margin="10dip"></ImageView>
+					<TableRow android:id="@+id/sixthRow" android:tag="achievements">
+						<ImageView android:layout_width="50dip" android:id="@+id/imageView5"
+							android:layout_height="50dip" android:src="@drawable/achievements"
+							android:layout_margin="10dip"></ImageView>
 						<LinearLayout android:id="@+id/linearLayout6"
 							android:layout_width="wrap_content" android:layout_height="fill_parent"
 							android:gravity="center_vertical" android:orientation="vertical">
@@ -198,15 +219,15 @@
 
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#8F9193"
-						android:id="@+id/fifthGrayline"></LinearLayout>
+						android:id="@+id/sixthGrayline"></LinearLayout>
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#FFFFFF"
-						android:id="@+id/fifthWhiteline"></LinearLayout>
+						android:id="@+id/sixthWhiteline"></LinearLayout>
 
-					<TableRow android:id="@+id/sixthRow" android:tag="forum">
-						<ImageView android:layout_width="50dip"
-							android:id="@+id/imageView6" android:layout_height="50dip"
-							android:src="@drawable/forum" android:layout_margin="10dip"></ImageView>
+					<TableRow android:id="@+id/sevenRow" android:tag="forum">
+						<ImageView android:layout_width="50dip" android:id="@+id/imageView6"
+							android:layout_height="50dip" android:src="@drawable/forum"
+							android:layout_margin="10dip"></ImageView>
 						<LinearLayout android:id="@+id/linearLayout6"
 							android:layout_width="wrap_content" android:layout_height="fill_parent"
 							android:gravity="center_vertical" android:orientation="vertical">
@@ -222,10 +243,10 @@
 
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#8F9193"
-						android:id="@+id/sixthGrayline"></LinearLayout>
+						android:id="@+id/sevenGrayline"></LinearLayout>
 					<LinearLayout android:layout_width="fill_parent"
 						android:layout_height="1dip" android:background="#FFFFFF"
-						android:id="@+id/sixthWhiteline"></LinearLayout>
+						android:id="@+id/sevenWhiteline"></LinearLayout>
 
 				</TableLayout>
 			</LinearLayout>
@@ -239,23 +260,25 @@
 		android:id="@+id/notifications" android:orientation="horizontal"
 		android:paddingLeft="5dip" android:gravity="center_vertical"
 		android:layout_height="36dip">
-		<LinearLayout android:layout_width="30dip" android:layout_marginLeft="5dip"
-			android:layout_height="24dip" android:id="@+id/notificationalert" android:gravity="center">
+		<LinearLayout android:layout_width="30dip"
+			android:layout_marginLeft="5dip" android:layout_height="24dip"
+			android:id="@+id/notificationalert" android:gravity="center">
 			<TextView android:layout_width="wrap_content"
-				android:textSize="16dip" android:paddingRight="5dip"
-				android:id="@+id/n" android:layout_height="wrap_content"
-				android:textColor="#FFFFFF" android:text="!" android:textStyle="bold"/>
+				android:textSize="16dip" android:paddingRight="5dip" android:id="@+id/n"
+				android:layout_height="wrap_content" android:textColor="#FFFFFF"
+				android:text="!" android:textStyle="bold" />
 		</LinearLayout>
 		<TextView android:layout_width="wrap_content"
-			android:layout_marginLeft="0dip" android:textSize="17dip"
-			android:id="@+id/textView4" android:layout_height="wrap_content"
-			android:textColor="#000000" android:text="@string/notifications" android:layout_weight="1"/>
-		<LinearLayout android:layout_width="30dip" android:layout_marginRight="10dip"
-			android:layout_height="24dip" android:id="@+id/notificationcircle" android:gravity="center">
+			android:layout_marginLeft="0dip" android:textSize="17dip" android:id="@+id/textView4"
+			android:layout_height="wrap_content" android:textColor="#000000"
+			android:text="@string/notifications" android:layout_weight="1" />
+		<LinearLayout android:layout_width="30dip"
+			android:layout_marginRight="10dip" android:layout_height="24dip"
+			android:id="@+id/notificationcircle" android:gravity="center">
 			<TextView android:layout_width="wrap_content"
 				android:textSize="16dip" android:layout_marginLeft="0dip"
 				android:id="@+id/notnumber" android:layout_height="wrap_content"
-				android:textColor="#FFFFFF" android:text="0" android:textStyle="bold"/>
+				android:textColor="#FFFFFF" android:text="0" android:textStyle="bold" />
 		</LinearLayout>
 	</LinearLayout>
 	<LinearLayout android:layout_width="fill_parent"

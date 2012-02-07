@@ -75,8 +75,12 @@ public class tryBeintoo extends Dialog {
 		if(Beintoo.TRY_BEINTOO_TEMPLATE == Beintoo.TRY_BEINTOO_REWARD){
 			findViewById(R.id.default_template).setVisibility(View.GONE);
 			findViewById(R.id.reward_template).setVisibility(View.VISIBLE);
+			String sponsortext = ctx.getResources().getString(R.string.sponsor);
+			if(Beintoo.virtualCurrencyData != null){
+				sponsortext = ctx.getResources().getString(R.string.sponsorvirtualcurrency);
+			}			
 			TextView sponsor = (TextView) findViewById(R.id.textSponsor);
-			sponsor.setText(Html.fromHtml(ctx.getResources().getString(R.string.sponsor)));
+			sponsor.setText(Html.fromHtml(sponsortext));
 			trynowbt = (Button) findViewById(R.id.trybtrew);
 			nothanksbt = (Button) findViewById(R.id.nothanksbtrew);
 			if(isLandscape){
@@ -94,11 +98,7 @@ public class tryBeintoo extends Dialog {
 		double pixels = ratio * 47;
 		LinearLayout beintooBar = (LinearLayout) findViewById(R.id.beintoobar);
 		beintooBar.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.BAR_GRADIENT));
-		
-		pixels = ratio * 70;
-		LinearLayout textlayout = (LinearLayout) findViewById(R.id.textlayout);
-		textlayout.setBackgroundDrawable(new BDrawableGradient(0,(int)pixels,BDrawableGradient.GRAY_GRADIENT));
-		
+				
 		pixels = ratio * trynowButtonHeight;
 		
 		BeButton b = new BeButton(ctx);		

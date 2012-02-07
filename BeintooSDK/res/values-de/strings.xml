@@ -134,8 +134,6 @@
 	<string name="invalidnickname">Die Mindestlänge der Spitzname ist 3 Zeichen</string>
     
     <!-- BUTTONS -->
-    <string name="trynow">Anmeldung</string>
-    <string name="nothanks">Später</string>
     <string name="anotheraccount">Verwende ein anderes Konto</string>
     <string name="all">Alle</string>
     <string name="people">Menschen</string>
@@ -270,10 +268,7 @@
 	<string name="alliancerefuse">Ablehnen</string>
 	<string name="allianceinvalid">Die Mindestlänge der name ist 3 Zeichen</string>
 	
-   <!-- CUSTOM -->
-   <string name="sponsor"><Data><![CDATA[ Play hard: <b>win<br />&nbsp;&nbsp;your exclusive<br />&nbsp;&nbsp;real deal!</b> ]]> </Data></string>
-   <string name="sponsortitle">Registrieren Sie sich auf Beintoo und erhalten Sie einen Rabatt in Ihrer Stadt als Belohnung für Ihre Spiele Errungenschaften.</string>
-   
+
    	<!-- PLAYER SIGNUP -->
 	<string name="signuphome">Noch mehr Spaß, verbinde mit den Spielern, und hole dich deine Gewinne echte.\nWilkommen auf der Beintoo Netzwerk!</string>
 	<string name="signupnow"><data><![CDATA[<b>Anmeldung</b>]]></data></string>
@@ -287,4 +282,41 @@
 	<string name="messagenotificationp">Du hast %d Benachrichtigungen</string>
 	<string name="messagenotification">Du hast %d Benachrichtigung</string>
 	<string name="unmissionstatus">Status deiner Mission</string>
+	
+	<!-- CUSTOM -->
+    <string name="sponsor"><Data><![CDATA[<b>Viel Spaß & Verdienen</b><br /><br /><b>Earn Bedollars</b> mit dieser App und <b>wähle das angepasste Angebot</b> das <b>besser passt für dich</b>! ]]> </Data></string>
+    <string name="sponsorvirtualcurrency"><Data><![CDATA[<b>Viel Spaß & Verdienen</b><br /><br /><b>mit den Credits, die du in dieser App verdienst, um maßgeschneiderte Angebote deiner Wahl einlösen ]]> </Data></string>
+    <string name="sponsortitle">Mitglied in der Community und erhalte einen Rabatt um dich herum, wie für Ihre Leistungen in diesem app belohnen!</string>        
+
+    <!-- MARKETPLACE -->
+    <string name="marketplace">Marketplace</string>
+    <string name="buymarketplace">Wähle deine Angebote</string>
+    <string name="featured">Im Spotlight</string>
+    <string name="national">National</string>
+    <string name="aroundme">Um mich herum</string>
+    <string name="top">Top</string>
+    <string name="categories">Kategorien</string>
+    <string name="buy">Kaufen</string>
+    <string name="yourbalance">Deine Credits:</string>
+    <string name="youarebuying">Du kaufst:</string>
+    <string name="price">Preis:\u0020</string>
+    <string name="where">Wo:\u0020</string>
+    <string name="addresslist">Addressliste</string>
+    <string name="buynow">Jetzt kaufen</string>
+    <string name="distance">Abstand:\u0020</string>
+    <string name="nocoupon">Es gibt keine Coupons in dieser Kategorie</string>
+    <string name="needbedollars"> Du hast nicht genug Kredits um dieses Angebot zu kaufen, 
+        du vermisst %s, geh und spiel um verdienen!</string>           
+    <string name="signupmarketplacefriends">Anmelden, um diesen Gutschein als Geschenk zu senden.</string>
+    <string name="trybeintoomarketplacetitle">Liebe das Spiel mit Apps?</string>
+    <string name="trybeintoomarketplace">Genieße deine Lieblings-Spiele und alles spielerisch Funktionen zu verdienen, und verbringe auf dem Marketplace!</string>
+	
+	<string name="submitscorempmessage">Du hast jetzt %s, verliere sie nicht! Benutzer sie auf dem Marketplace!</string>
+   	<string name="submitscorempmessageplayer">Gehe jetzt auf Marketplace</string>        
+   	<string name="orderbyprice">Sortieren bei Preis</string>
+        
+        
+    <!-- TRY BEINTOO -->
+    <string name="trynow">Mitglied in der Community</string>
+    <string name="nothanks">Ich will nicht spielen und verdienen</string>	
 </resources>

@@ -139,8 +139,6 @@
 	<string name="invalidnickname">La longueur minimale du surnom est de 3 caractères</string>
 	
     <!-- BUTTONS -->
-    <string name="trynow">S\'enregistrer</string>
-    <string name="nothanks">Plus tard</string>
     <string name="anotheraccount">Utiliser un autre profil</string>
     <string name="all">Tous</string>
     <string name="people">Personnes</string>
@@ -274,10 +272,6 @@
 	<string name="alliancerefuse">Refuser</string>
 	<string name="allianceinvalid">La longueur minimale du nom est de 3 caractères</string>
 	
-	<!-- CUSTOM -->
-	<string name="sponsor"><Data><![CDATA[ Jouez le jeu: <b><br />&nbsp;&nbsp;gagnez vos<br />&nbsp;&nbsp;offres exclusives!</b> ]]> </Data></string>
-	<string name="sponsortitle">Enregistrez-vous à Beintoo et obtenez de nombreuses réductions dans votre ville comme prix pour vos résultats dans les jeux.</string>
-	
 	<!-- PLAYER SIGNUP -->
 	<string name="signuphome">Amusez-vous encore plus, rejoignez des millions d\'utilisateurs et rendez vos succès réels!\nBienvenue dans le réseaux Beintoo!</string>
 	<string name="signupnow"><data><![CDATA[<b>S\'enregistrer</b>]]></data></string>
@@ -290,5 +284,37 @@
 	<string name="notifications">Notifications</string> 
 	<string name="messagenotificationp">Vous avez %d nouvelles notifications</string>
 	<string name="messagenotification">Vous avez %d nouvelle notification</string>
-	<string name="unmissionstatus">Statut de votre mission</string>    
+	<string name="unmissionstatus">Statut de votre mission</string> 
+	
+	<!-- CUSTOM -->
+    <string name="sponsor"><Data><![CDATA[<b>Jouez & Gagnez</b><br /><br /><b>Gagnez des Bedollars</b> en jouant avec cette appli, <b>et obtenez réductions et offres personnalisées </b> de votre choix </b>! ]]> </Data></string>
+    <string name="sponsorvirtualcurrency"><Data><![CDATA[<b>Jouez & Gagnez</b><br /><br /><b>Utilisez les points gagnés </b> dans cette appli pour <b> obtenir des offres et réductions de votre choix. ]]> </Data></string>
+    <string name="sponsortitle">Inscrivez-vous et obtenez des offres et réductions dans votre ville pour vos succès dans les applis!</string>        
+ 	
+ 	<!-- MARKETPLACE -->
+    <string name="marketplace">Marketplace</string>
+    <string name="buymarketplace">choisissez vos offres</string>
+    <string name="featured">En vedette</string>
+    <string name="national">National</string>
+    <string name="aroundme">Autour de moi</string>
+    <string name="top">Top</string>
+    <string name="categories">Categories</string>
+    <string name="buy">Achetez</string>
+    <string name="yourbalance">Votre crédit:</string>
+    <string name="youarebuying">Vous achetez:</string>
+    <string name="price">Prix:\u0020</string>
+    <string name="where">Où:\u0020</string>
+    <string name="addresslist">Addresses</string>
+    <string name="buynow">Achetez maintenant</string>
+    <string name="distance">Distance:\u0020</string>
+    <string name="nocoupon">Il n\'y a aucun coupon dans cette catégorie</string>
+    <string name="needbedollars"> Vous n\'avez pas assez de crédits pour achetez cette offre, 
+        il vous manque %s, jouez pour gagner maintenant</string>           
+    <string name="signupmarketplacefriends"> Iscrivez vous à Beintoo pour offrir ce coupon </string>
+    <string name="trybeintoomarketplacetitle">Vous aimez jouez avec les applis?</string>
+    <string name="trybeintoomarketplace">Prenez plaisir à jouer avec les applis et défier vos amis, gagner de la monnaie et obtenez des offers et reduction de voter choix!</string>
+	
+	<!-- TRY BEINTOO -->
+    <string name="trynow">S\'inscrire</string>
+    <string name="nothanks">Non, je ne veux pas jouer et gagner</string>	    
 </resources>

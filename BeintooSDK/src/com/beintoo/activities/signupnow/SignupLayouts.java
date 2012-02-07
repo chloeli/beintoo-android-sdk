@@ -64,6 +64,11 @@ public class SignupLayouts {
 			icon.setImageResource(R.drawable.forum);
 			title.setText(context.getString(R.string.forum));
 			subtitle.setText(context.getString(R.string.forumdesc));
+		}else if(feature.equals(Beintoo.FEATURE_MARKETPLACE)){
+			signuptext.setText(context.getString(R.string.signupmarketplacefriends));
+			icon.setImageResource(R.drawable.mp);
+			title.setText(context.getString(R.string.marketplace));
+			subtitle.setText(context.getString(R.string.buymarketplace));
 		}
 		
 		
@@ -242,8 +247,7 @@ public class SignupLayouts {
     			dialog.dismiss();
     			DialogStack.dismissAllDialogStack();
     		}
-		}).start();
-		
+		}).start();		
 	}
 	
 	private static Handler UIhandler = new Handler() {
