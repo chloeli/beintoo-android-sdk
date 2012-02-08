@@ -3,7 +3,7 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:id="@+id/main" android:orientation="vertical"
 	android:background="#dddddd">
-	<include layout="@layout/beintoobarsmall" />
+	<include layout="@layout/beintoobarsmall" /> 
 	<RelativeLayout android:layout_width="fill_parent"
 		android:layout_height="1dip" android:background="#FFFFFF" android:id="@+id/whiteline" />
 	<LinearLayout android:layout_width="fill_parent"
@@ -11,11 +11,11 @@
 		android:layout_height="27dip" android:paddingLeft="10dip">
 		<TextView android:id="@+id/marketplace_balancetitle"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:text="@string/yourbalance" android:textColor="@color/light_gray_text"
+			android:text="@string/yourbalance" android:textColor="@color/gray_text"
 			android:layout_weight="1" />
 		<TextView android:id="@+id/marketplace_balancecredit"
 			android:layout_marginRight="10dip" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:textColor="@color/light_gray_text"
+			android:layout_height="wrap_content" android:textColor="@color/gray_text"
 			android:textStyle="bold" />
 	</LinearLayout>
 	<RelativeLayout android:layout_width="fill_parent"
@@ -78,10 +78,10 @@
 		android:gravity="right|center_vertical" android:paddingRight="10dip">
 		<TextView android:id="@+id/orderprice_lbl" android:textColor="@color/gray_text"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:text="@string/orderbyprice" android:layout_marginTop="5dip"
-			android:layout_marginRight="5dip" />
+			android:text="@string/orderbyprice" android:layout_marginTop="3dip"
+			android:layout_marginRight="10dip" />
 		<RelativeLayout android:id="@+id/marketplace_order_asc"
-			android:layout_width="30dip" android:layout_height="30dip"
+			android:layout_width="27dip" android:layout_height="27dip"
 			android:gravity="center" android:layout_toRightOf="@id/orderprice_lbl"
 			android:background="@drawable/blu_gradient_button"
 			android:layout_marginRight="5dip">
@@ -90,7 +90,7 @@
 				android:src="@drawable/up" />
 		</RelativeLayout>
 		<RelativeLayout android:id="@+id/marketplace_order_desc"
-			android:layout_width="30dip" android:layout_height="30dip"
+			android:layout_width="27dip" android:layout_height="27dip"
 			android:gravity="center" android:layout_toRightOf="@id/marketplace_order_asc"
 			android:background="@drawable/blu_gradient_button">
 			<ImageView android:id="@+id/imageView2"

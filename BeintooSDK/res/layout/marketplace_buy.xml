@@ -9,10 +9,10 @@
 		android:textColor="@color/light_gray_text" />
 	<RelativeLayout android:id="@+id/relativeLayout1"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:background="#ccd3dc" android:paddingBottom="10dip">
+		android:background="#aaccd3dc" android:paddingBottom="10dip">
 		<ImageView android:id="@+id/buy_coupon_image"
 			android:layout_width="60dip" android:layout_height="60dip"
-			android:src="@drawable/alllist" android:layout_margin="5dip" />
+			android:scaleType="fitStart" android:adjustViewBounds="true" android:layout_marginBottom="5dip" android:layout_marginLeft="10dip" android:layout_marginRight="5dip" android:layout_marginTop="10dip"/>
 		<LinearLayout android:id="@+id/linearLayout1"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:layout_toRightOf="@id/buy_coupon_image" android:orientation="vertical"

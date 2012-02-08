@@ -3,5 +3,6 @@
     <color name="white_text">#ffffffff</color>
 	<color name="gray_text">#ff545859</color>
 	<color name="light_gray_text">#ff787A77</color>
+	<color name="dark_text">#ff000000</color>
 </resources>
 

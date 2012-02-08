@@ -6,7 +6,8 @@
 	android:paddingBottom="5dip">
 	<ImageView android:id="@+id/marketplace_row_img"
 		android:layout_width="50dip" android:layout_height="50dip"
-		android:layout_marginLeft="5dip" android:layout_marginRight="5dip" />
+		android:layout_marginLeft="10dip" android:layout_marginRight="5dip"
+		android:scaleType="centerCrop" android:adjustViewBounds="true" />
 	<LinearLayout android:id="@+id/linearLayout1"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:orientation="vertical" android:layout_weight="1"
@@ -33,11 +34,11 @@
 		android:layout_marginRight="10dip" android:layout_height="50dip"
 		android:gravity="center">
 		<TextView android:id="@+id/buy_price" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:text="200.0" 
-			android:textStyle="bold" android:textColor="#fff" android:gravity="center"/>
+			android:layout_height="wrap_content" android:text="200.0"
+			android:textStyle="bold" android:textColor="#fff" android:gravity="center" />
 		<ImageView android:id="@+id/buy_bedollar_logo"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:src="@drawable/b02" android:layout_toRightOf="@+id/buy_price"
-			android:layout_marginLeft="2dip" android:layout_marginTop="2dip"/>
+			android:layout_marginLeft="2dip" android:layout_marginTop="1dip" />
 	</RelativeLayout>
 </LinearLayout>

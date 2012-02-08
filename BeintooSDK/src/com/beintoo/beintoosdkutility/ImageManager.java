@@ -38,11 +38,19 @@ public class ImageManager {
 			if(!cacheDir.exists())
 				cacheDir.mkdirs();
 			
+			/*Long currentTime = System.currentTimeMillis();
+			Long savedTime = PreferencesHandler.getLong("lastCacheControl", context);
+        	if(savedTime != null){
+        		if((currentTime - savedTime) <= 10000){ //604800000 one week
+        			deleteFiles(cacheDir);
+        			PreferencesHandler.saveLong("lastCacheControl", currentTime, context);
+        		}
+        	}*/
 		}catch(Exception e){ if(debug) e.printStackTrace(); }
 	}
 	   
 	public void displayImage(String url, Context context, ImageView imageView) {
-		try {						
+		try {			
 			if(imageMap.containsKey(url) && imageMap.get(url).get() != null){
 				//imageView.setImageBitmap(imageMap.get(url));
 				imageView.setImageBitmap(imageMap.get(url).get());
@@ -84,9 +92,9 @@ public class ImageManager {
 			if(f.exists())
 				bitmap = BitmapFactory.decodeFile(f.getPath());
 			if(bitmap != null) return bitmap;
-
 			bitmap = BitmapFactory.decodeStream(new URL(url).openConnection().getInputStream());
-			writeFile(bitmap, f);
+			
+			writeFile(bitmap, f); 
 			
 			return bitmap;
 		} catch (Exception ex) {
@@ -205,7 +213,10 @@ public class ImageManager {
 			if (dir.isDirectory()) {
 		        String[] children = dir.list();
 		        for (int i = 0; i < children.length; i++) {
-		            new File(dir, children[i]).delete();
+		            File f = new File(dir, children[i]);
+		            if(System.currentTimeMillis() > f.lastModified() + 432000000){
+		            	f.delete();
+		            }
 		        }
 		    }
 		}catch(Exception e){if(debug) e.printStackTrace();}

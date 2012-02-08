@@ -16,7 +16,6 @@
 package com.beintoo.vgood;
 
 
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -175,8 +174,8 @@ public class BeintooRecomBanner implements OnClickListener{
 						String userAgent = getWebUserAgent();
 						if(userAgent != null)
 							conn.setRequestProperty("User-Agent", userAgent);
-						conn.connect();	            
-			            InputStream is = conn.getInputStream();
+						conn.connect();
+						InputStream is = conn.getInputStream();
 			            BufferedInputStream bis = new BufferedInputStream(is);
 			            Bitmap bmImg = BitmapFactory.decodeStream(is);
 			            // SCALE THE IMAGE TO FIT THE DEVICE SIZE

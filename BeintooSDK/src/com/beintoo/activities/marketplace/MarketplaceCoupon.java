@@ -89,8 +89,7 @@ public class MarketplaceCoupon extends BeintooListViewDialogES implements Button
 			((TextView)findViewById(R.id.coupon_bedollars)).setText(mContext.getString(R.string.price) + price + " "+ currencyName);
 			((TextView)findViewById(R.id.coupon_bedollars_buy)).setText(price +" "+ ((!currencyName.equals("Bedollars")) ? " "+currencyName : ""));
 			((TextView)findViewById(R.id.coupon_bedollars_sendgift)).setText(price +" "+ ((!currencyName.equals("Bedollars")) ? " "+currencyName : ""));
-			
-			((TextView)findViewById(R.id.coupon_title_large)).setText(vgood.getName());
+			((TextView)findViewById(R.id.coupon_title_large)).setText((vgood.getName().length() > 22) ? vgood.getName().substring(0, 22) + "..." : vgood.getName());
 			((TextView)findViewById(R.id.coupon_desc)).setText(vgood.getDescription());
 			SimpleDateFormat dateFormatter = new SimpleDateFormat("d-MMM-y HH:mm:ss", Locale.ENGLISH); 
 			dateFormatter.setTimeZone(TimeZone.getTimeZone("GMT"));

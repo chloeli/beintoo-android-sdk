@@ -100,18 +100,12 @@ public class Marketplace extends BeintooListViewDialogES implements Button.OnCli
 		((Button) findViewById(R.id.marketplace_aroundme_button)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.tab_buttons));
 		((Button) findViewById(R.id.marketplace_top_button)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.tab_buttons));
 		((Button) findViewById(R.id.marketplace_category_button)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.tab_buttons));
-		((RelativeLayout)findViewById(R.id.marketplace_order_asc)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.gray_gradient_button));
-		((RelativeLayout)findViewById(R.id.marketplace_order_desc)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.blu_gradient_button));
+		//((RelativeLayout)findViewById(R.id.marketplace_order_asc)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.gray_gradient_button));
+		//((RelativeLayout)findViewById(R.id.marketplace_order_desc)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.blu_gradient_button));
 		
 		((Button) findViewById(selected)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.tab_buttons_selected));
 	}
 	
-	private void setSelectedFilterButton(int selected){
-		((RelativeLayout)findViewById(R.id.marketplace_order_asc)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.blu_gradient_button));
-		((RelativeLayout)findViewById(R.id.marketplace_order_desc)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.blu_gradient_button));
-		((RelativeLayout)findViewById(selected)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.gray_gradient_button));
-	}
-
 	private void showPriceFilter(){
 		RelativeLayout filter = (RelativeLayout) findViewById(R.id.marketplace_order_filter);
 		if(filter.getVisibility() == View.GONE){
@@ -153,8 +147,6 @@ public class Marketplace extends BeintooListViewDialogES implements Button.OnCli
 		
 		if(v.getId() != R.id.marketplace_order_asc && v.getId() != R.id.marketplace_order_desc)
 			setSelectedButton(v.getId());
-		else
-			setSelectedFilterButton(v.getId());
 		
 		if(v.getId() == R.id.marketplace_featured_button){
 			mCurrentSection = R.id.marketplace_featured_button;

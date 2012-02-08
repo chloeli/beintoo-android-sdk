@@ -308,8 +308,7 @@
     <string name="buynow">Achetez maintenant</string>
     <string name="distance">Distance:\u0020</string>
     <string name="nocoupon">Il n\'y a aucun coupon dans cette catégorie</string>
-    <string name="needbedollars"> Vous n\'avez pas assez de crédits pour achetez cette offre, 
-        il vous manque %s, jouez pour gagner maintenant</string>           
+    <string name="needbedollars"> Vous n\'avez pas assez de crédits pour achetez cette offre, il vous manque %s, jouez pour gagner maintenant</string>           
     <string name="signupmarketplacefriends"> Iscrivez vous à Beintoo pour offrir ce coupon </string>
     <string name="trybeintoomarketplacetitle">Vous aimez jouez avec les applis?</string>
     <string name="trybeintoomarketplace">Prenez plaisir à jouer avec les applis et défier vos amis, gagner de la monnaie et obtenez des offers et reduction de voter choix!</string>
