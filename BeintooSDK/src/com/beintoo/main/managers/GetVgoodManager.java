@@ -110,8 +110,7 @@ public class GetVgoodManager {
 			    	VgoodChooseOne v = new VgoodChooseOne(list);	    				    	
 			    	Beintoo.vgoodlist = v;
 			    	
-			    	
-			    	if(Beintoo.vgood.getName() != null){		    		
+			    	if(Beintoo.vgood.getName() != null){
 			    		if(notificationType == Beintoo.VGOOD_NOTIFICATION_BANNER){
 			    			Beintoo.vgood_container = container;
 			    			if(!Beintoo.vgood.isBanner()){ // NORMAL VGOOD REWARD
@@ -240,6 +239,7 @@ public class GetVgoodManager {
 	    			Beintoo.vgoodlist = vgoodHand.getAd(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
 	    					codeID, null, null,null, false);
 	    		}
+	    		
 		    	if(Beintoo.vgoodlist != null){
 		    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
 	    			if(notificationType == Beintoo.VGOOD_NOTIFICATION_BANNER){
@@ -249,7 +249,7 @@ public class GetVgoodManager {
     						Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_BANNER);
     					else // BEINTOO RECOMMENDATION WITH HTML CONTENT
     						Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_BANNER_HTML);    				
-	    			}else{	    				
+	    			}else{	 	    			
     					if(Beintoo.vgoodlist.getVgoods().get(0).getContentType() == null) // BEINTOO RECOMMENDATION WITH IMAGE
     						Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_ALERT);
     					else // BEINTOO RECOMMENDATION WITH HTML CONTENT

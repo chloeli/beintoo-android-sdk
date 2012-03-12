@@ -261,6 +261,7 @@ public class UserProfile extends Dialog {
 					if(ws == CURRENT_USER_PROFILE){
 						Player currentSaved = JSONconverter.playerJsonToObject(PreferencesHandler.getString("currentPlayer", getContext()));				
 						currentPlayer = bPlayer.getPlayer(currentSaved.getGuid());
+						Current.setCurrentPlayer(getContext(), currentPlayer);
 					}else if(ws == FRIEND_USER_PROFILE){
 						currentPlayer = bPlayer.getPlayerByUser(userExt, null);
 						Bundle b = new Bundle();

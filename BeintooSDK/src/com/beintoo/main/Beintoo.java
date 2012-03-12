@@ -37,6 +37,7 @@ import com.beintoo.main.managers.AchievementManager;
 import com.beintoo.main.managers.GetVgoodManager;
 import com.beintoo.main.managers.PlayerManager;
 import com.beintoo.main.managers.SubmitScoreManager;
+import com.beintoo.main.managers.UserManager;
 import com.beintoo.vgood.BeintooRecomBanner;
 import com.beintoo.vgood.BeintooRecomBannerHTML;
 import com.beintoo.vgood.BeintooRecomDialog;
@@ -300,6 +301,26 @@ public class Beintoo{
 	
 	public static void playerLogin(final Context ctx){
 		playerLogin(ctx, null, null);
+	}
+	
+	/**
+	 * Create a new user on Beintoo with provided informations
+	 * It automatically logins the user in Beintoo
+	 * 
+	 * @param ctx
+	 * @param email
+	 * @param nickname
+	 * @param password
+	 * @param name
+	 * @param address
+	 * @param country
+	 * @param sendGreetingsEmail
+	 * @param imageUrl
+	 */
+	public static void createUser(final Context ctx, final String email, final String nickname, final String password,
+			final String name, final String address, final String country, final Boolean sendGreetingsEmail, final String imageUrl){
+		UserManager um = new UserManager(ctx);
+		um.createUser(email, nickname, password, name, address, country, sendGreetingsEmail, imageUrl);		
 	}
 	
 	/**

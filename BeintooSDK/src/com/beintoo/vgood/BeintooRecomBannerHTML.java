@@ -109,7 +109,7 @@ public class BeintooRecomBannerHTML{
 					    }
 					});
 					
-					webview.loadData(vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "utf-8");					
+					webview.loadDataWithBaseURL(null, vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "UTF-8", null);					
 				}catch (Exception e){e.printStackTrace();}
 			} 
 		}).start();

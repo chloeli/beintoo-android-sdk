@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -156,9 +157,28 @@ public class BeintooRecomDialogHTML extends Dialog implements OnClickListener{
 					        return true;
 					    }
 					    
-					    public void onPageFinished(WebView view, String url){
+					    @Override
+						public void onReceivedError(WebView view,
+								int errorCode, String description,
+								String failingUrl) {
+							System.out.println(description + " "+ errorCode);
+							super.onReceivedError(view, errorCode, description, failingUrl);
+						}
+
+						public void onPageFinished(WebView view, String url){
 							UIhandler.sendEmptyMessage(SHOW_DIALOG);
 						}
+					});
+					
+					webview.setWebChromeClient(new WebChromeClient(){
+
+						@Override
+						public void onConsoleMessage(String message,
+								int lineNumber, String sourceID) {
+							System.out.println(message);
+							super.onConsoleMessage(message, lineNumber, sourceID);
+						}
+						
 					});
 					
 					webview.setOnTouchListener(new View.OnTouchListener() {						
@@ -166,8 +186,8 @@ public class BeintooRecomDialogHTML extends Dialog implements OnClickListener{
 					      return (event.getAction() == MotionEvent.ACTION_MOVE);
 					    }
 					});
-					
-					webview.loadData("<div align=\"center\">"+vgood.getVgoods().get(0).getContent()+"</div>", vgood.getVgoods().get(0).getContentType(), "UTF-8");									
+						
+					webview.loadDataWithBaseURL(null, "<div align=\"center\">"+vgood.getVgoods().get(0).getContent()+"</div>", vgood.getVgoods().get(0).getContentType(), "UTF-8", null);									
 				}catch (Exception e){e.printStackTrace();}
 			} 
 		}).start();

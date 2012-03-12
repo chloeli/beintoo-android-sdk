@@ -100,9 +100,6 @@ public class Marketplace extends BeintooListViewDialogES implements Button.OnCli
 		((Button) findViewById(R.id.marketplace_aroundme_button)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.tab_buttons));
 		((Button) findViewById(R.id.marketplace_top_button)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.tab_buttons));
 		((Button) findViewById(R.id.marketplace_category_button)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.tab_buttons));
-		//((RelativeLayout)findViewById(R.id.marketplace_order_asc)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.gray_gradient_button));
-		//((RelativeLayout)findViewById(R.id.marketplace_order_desc)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.blu_gradient_button));
-		
 		((Button) findViewById(selected)).setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.tab_buttons_selected));
 	}
 	
@@ -144,6 +141,7 @@ public class Marketplace extends BeintooListViewDialogES implements Button.OnCli
 	@Override
 	public void onClick(View v) {		
 		if(isLoading) return;
+		mCurrentCategory = null;
 		
 		if(v.getId() != R.id.marketplace_order_asc && v.getId() != R.id.marketplace_order_desc)
 			setSelectedButton(v.getId());
@@ -325,7 +323,7 @@ public class Marketplace extends BeintooListViewDialogES implements Button.OnCli
 					loadMarketplace(Marketplace.MarketplaceKind_NATIONAL, Marketplace.MarketplaceSort_PRICE_ASC, mCurrentCategory);
 				}else if (objectList.get(0) instanceof Vgood){
 					MarketplaceCoupon mc = new MarketplaceCoupon(mContext, ((Vgood)objectList.get(position)));
-					mc.show();
+					mc.show();					
 				}
 		}else{
 			MarketplaceCoupon mc = new MarketplaceCoupon(mContext, ((Vgood)objectList.get(position)));
@@ -356,7 +354,13 @@ public class Marketplace extends BeintooListViewDialogES implements Button.OnCli
 		if(adapter != null){
 			MarketplaceListAdapter a = (MarketplaceListAdapter) adapter;
 			a.interruptImageManager();
+		}		
+		if(mCurrentSection == R.id.marketplace_category_button && mCurrentCategory != null){
+			mCurrentCategory = null;
+			loadCategories();
+			return;
 		}
+		
 		super.onBackPressed();
 	}
 	

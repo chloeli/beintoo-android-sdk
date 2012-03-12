@@ -155,7 +155,7 @@ public class UserBalance extends Dialog{
 		}
 	}
 	
-	public TableRow createRow(View image, String appName,String date, double value, String reason, Context activity) {
+	public TableRow createRow(View image, String appName,String date, Double value, String reason, Context activity) {
 		  TableRow row = new TableRow(activity);
 		  row.setGravity(Gravity.CENTER); 
 		  
@@ -224,8 +224,8 @@ public class UserBalance extends Dialog{
 		  
 		  TextView movvalue = new TextView(activity);
 		  String textvalue;
-		  if(value > 0) textvalue = "+"+String.format("%02d", (int)value);
-		  else textvalue = String.format("%02d", (int)value);
+		  if(value > 0) textvalue = "+"+value;//String.format("%02d", (int)value);
+		  else textvalue = value.toString();//String.format("%02d", (int)value);
 		  movvalue.setText(textvalue);
 		  movvalue.setPadding(0, 0, 0, 0);
 		  movvalue.setTextColor(Color.GRAY);
@@ -233,7 +233,7 @@ public class UserBalance extends Dialog{
 		  position.addView(movvalue);
 		  
 		  TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT);
-		  params.setMargins(0, 0, 15, 0);
+		  params.setMargins(0, 0, 10, 0);
 		  row.addView(position,params);
 		  
 		  return row;
