@@ -30,6 +30,21 @@ public class Current {
 		Current.setCurrentPlayer(context, p);
 	}
 	
+	public static Player setCurrentUserAndGetPlayer(Context context, User user){
+		Player p = Current.getCurrentPlayer(context);
+		p.setUser(user);
+		Current.setCurrentPlayer(context, p);
+		
+		return p;
+	}
+	
+	public static Player attachUserToPlayerAndSetCurrentPlayer(Context context, User user, Player p){		
+		p.setUser(user);
+		Current.setCurrentPlayer(context, p);
+		
+		return p;
+	}
+	
 	public static void setCurrentPlayer(Context context, Player p){
 		PreferencesHandler.saveString("currentPlayer", new Gson().toJson(p), context);
 	}

@@ -318,10 +318,16 @@ public class Beintoo{
 	 * @param imageUrl
 	 */
 	public static void createUser(final Context ctx, final String email, final String nickname, final String password,
-			final String name, final String address, final String country, final Boolean sendGreetingsEmail, final String imageUrl){
+			final String name, final String address, final String country, final Boolean sendGreetingsEmail, final String imageUrl, final BCreateUserListener callback){
 		UserManager um = new UserManager(ctx);
-		um.createUser(email, nickname, password, name, address, country, sendGreetingsEmail, imageUrl);		
+		um.createUser(email, nickname, password, name, address, country, sendGreetingsEmail, imageUrl, callback);		
 	}
+	
+	public static void createUser(final Context ctx, final String email, final String nickname, final String password,
+			final String name, final String address, final String country, final Boolean sendGreetingsEmail, final String imageUrl){		
+		createUser(ctx, email, nickname, password, name, address, country, sendGreetingsEmail, imageUrl, null);		
+	}
+	
 	
 	/**
 	 * True if the user is logged in, false if not
@@ -680,6 +686,14 @@ public class Beintoo{
 	 *  Listener for playerLogin callback
 	 */
 	public static interface BPlayerLoginListener {
+		public void onComplete(Player p);
+		public void onError();
+	}
+	
+	/** 
+	 *  Listener for createUser callback
+	 */
+	public static interface BCreateUserListener {
 		public void onComplete(Player p);
 		public void onError();
 	}
