@@ -285,7 +285,7 @@ public class BeintooHome extends Dialog {
 					setRowBg((TableRow) findViewById(R.id.secondRow), count);
 					count++;
 				}
-				if(!f.contains("wallet")){
+				if(!f.contains("leaderboard")){
 					tl.removeView((LinearLayout)findViewById(R.id.thirdWhiteline));
 					tl.removeView((LinearLayout)findViewById(R.id.thirdGrayline));
 					tl.removeView((TableRow) findViewById(R.id.thirdRow));				
@@ -293,7 +293,7 @@ public class BeintooHome extends Dialog {
 					setRowBg((TableRow) findViewById(R.id.thirdRow), count);
 					count++;
 				}
-				if(!f.contains("leaderboard")){
+				if(!f.contains("wallet")){
 					tl.removeView((LinearLayout)findViewById(R.id.fourthGrayline));
 					tl.removeView((LinearLayout)findViewById(R.id.fourthWhiteline));
 					tl.removeView((TableRow) findViewById(R.id.fourthRow));				
