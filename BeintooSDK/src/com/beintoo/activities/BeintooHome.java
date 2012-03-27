@@ -21,13 +21,14 @@ import java.util.HashSet;
 
 import com.beintoo.R;
 import com.beintoo.activities.leaderboard.LeaderboardContest;
-import com.beintoo.activities.marketplace.Marketplace;
 import com.beintoo.activities.notifications.NotificationList;
 import com.beintoo.activities.signupnow.SignupLayouts;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DialogStack;
 import com.beintoo.main.Beintoo;
@@ -37,6 +38,7 @@ import com.beintoo.wrappers.Player;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -169,10 +171,10 @@ public class BeintooHome extends Dialog {
 				});
 			}
 			
-			// LEADERBOARD
+			// MARKETPLACE
 			if(row2 != null){			    
 				row2.setOnClickListener(new TableRow.OnClickListener(){
-					public void onClick(View v) {		
+					public void onClick(View v) {		 
 						UIhandler.sendEmptyMessage(OPEN_MARKETPLACE);
 					}
 				});
@@ -393,11 +395,28 @@ public class BeintooHome extends Dialog {
 					  DialogStack.addToDialogStack(userProfile);
 				  userProfile.show();
 			  }else if(msg.what == OPEN_MARKETPLACE){			  
-				  Marketplace markeplace = new Marketplace(getContext());
+				  /*Marketplace markeplace = new Marketplace(getContext());
 				  Beintoo.currentDialog = markeplace;
 				  if(Beintoo.dialogStack != null)
 					  DialogStack.addToDialogStack(markeplace);
-				  markeplace.show();
+				  markeplace.show();*/
+				  String web = BeintooSdkParams.webUrl;
+					if(BeintooSdkParams.internalSandbox) 
+						web = BeintooSdkParams.sandboxWebUrl;
+					
+					Uri.Builder marketplaceUrl = Uri.parse(web+"m/marketplace.html").buildUpon();
+					if(player.getGuid() != null)
+						marketplaceUrl.appendQueryParameter("guid", player.getGuid());
+					marketplaceUrl.appendQueryParameter("apikey", DeveloperConfiguration.apiKey);
+					if(Beintoo.virtualCurrencyData != null){
+						marketplaceUrl.appendQueryParameter("developer_user_guid", Beintoo.getVirtualCurrencyDevUserId());
+						marketplaceUrl.appendQueryParameter("virtual_currency_amount", Beintoo.getVirtualCurrencyUserBalance());
+					}
+					BeintooBrowser bb = new BeintooBrowser(current.getContext(), marketplaceUrl.toString());
+					Beintoo.currentDialog = bb;
+					  if(Beintoo.dialogStack != null)
+						  DialogStack.addToDialogStack(bb);
+					bb.show();
 			  }else if(msg.what == OPEN_LEADERBOARD){
 				  LeaderboardContest leaderboard = new LeaderboardContest(getContext());
 				  Beintoo.currentDialog = leaderboard;

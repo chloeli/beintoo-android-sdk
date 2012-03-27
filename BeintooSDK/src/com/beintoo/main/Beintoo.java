@@ -112,6 +112,8 @@ public class Beintoo{
 	
 	public static Map<String, String> virtualCurrencyData = null;
 	
+	public static int CONNECTION_ERRORS = 0;
+	
 	/**
 	 * Set the developer apikey
 	 * 
@@ -170,11 +172,15 @@ public class Beintoo{
 								}
 							});
 						}
+						CONNECTION_ERRORS = 0;
         			}catch (Exception e ){
         				dialog.dismiss();
         				e.printStackTrace();
         				ErrorDisplayer.showConnectionErrorOnThread(ErrorDisplayer.CONN_ERROR, ctx,e);
-        				logout(ctx);
+        				if(CONNECTION_ERRORS > 5){
+        					Beintoo.logout(ctx);
+        				}
+        				CONNECTION_ERRORS++;
         			}
         			dialog.dismiss();
         		}
@@ -205,7 +211,14 @@ public class Beintoo{
 					t.start();
 				}
 			}
-		}catch (Exception e){e.printStackTrace(); ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR, ctx, e); logout(ctx);}
+		}catch (Exception e){
+			e.printStackTrace(); 
+			ErrorDisplayer.showConnectionError(ErrorDisplayer.CONN_ERROR, ctx, e);
+			if(CONNECTION_ERRORS > 5){
+				Beintoo.logout(ctx);				
+			}
+			CONNECTION_ERRORS++;
+		}
 	} 
 	
 	public static void BeintooStart(final Context ctx, boolean goToDashboard){

@@ -89,7 +89,7 @@ public class Marketplace extends BeintooListViewDialogES implements Button.OnCli
 			double balance = player.getUser().getBedollars();			
 			((TextView) findViewById(R.id.marketplace_balancecredit)).setText((int)balance+" "+currencyName);
 		}else{ // if it's only a player and no virtual currency
-			Marketplace.userBedollars = 0.0;
+			Marketplace.userBedollars = -0.1;
 			findViewById(R.id.tip).setVisibility(View.GONE);
 		}						
 	}
