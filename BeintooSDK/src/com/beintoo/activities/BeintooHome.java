@@ -21,6 +21,7 @@ import java.util.HashSet;
 
 import com.beintoo.R;
 import com.beintoo.activities.leaderboard.LeaderboardContest;
+import com.beintoo.activities.marketplace.Marketplace;
 import com.beintoo.activities.notifications.NotificationList;
 import com.beintoo.activities.signupnow.SignupLayouts;
 import com.beintoo.beintoosdk.BeintooPlayer;
@@ -400,23 +401,11 @@ public class BeintooHome extends Dialog {
 				  if(Beintoo.dialogStack != null)
 					  DialogStack.addToDialogStack(markeplace);
 				  markeplace.show();*/
-				  String web = BeintooSdkParams.webUrl;
-					if(BeintooSdkParams.internalSandbox) 
-						web = BeintooSdkParams.sandboxWebUrl;
-					
-					Uri.Builder marketplaceUrl = Uri.parse(web+"m/marketplace.html").buildUpon();
-					if(player.getGuid() != null)
-						marketplaceUrl.appendQueryParameter("guid", player.getGuid());
-					marketplaceUrl.appendQueryParameter("apikey", DeveloperConfiguration.apiKey);
-					if(Beintoo.virtualCurrencyData != null){
-						marketplaceUrl.appendQueryParameter("developer_user_guid", Beintoo.getVirtualCurrencyDevUserId());
-						marketplaceUrl.appendQueryParameter("virtual_currency_amount", Beintoo.getVirtualCurrencyUserBalance());
-					}
-					BeintooBrowser bb = new BeintooBrowser(current.getContext(), marketplaceUrl.toString());
-					Beintoo.currentDialog = bb;
+				  	Marketplace mp = new Marketplace(getContext(), player);				  	
+					Beintoo.currentDialog = mp;
 					  if(Beintoo.dialogStack != null)
-						  DialogStack.addToDialogStack(bb);
-					bb.show();
+						  DialogStack.addToDialogStack(mp);
+					mp.show();
 			  }else if(msg.what == OPEN_LEADERBOARD){
 				  LeaderboardContest leaderboard = new LeaderboardContest(getContext());
 				  Beintoo.currentDialog = leaderboard;

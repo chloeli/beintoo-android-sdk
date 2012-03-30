@@ -77,7 +77,7 @@ public class MarketplaceCoupon extends BeintooListViewDialogES implements Button
 			}
 
 			// if we are using bedollars and the player doesn't have much bedollars change the bedollars logo
-			if((Beintoo.virtualCurrencyData == null) && (Marketplace.userBedollars == null || Marketplace.userBedollars < price)){
+			if((Beintoo.virtualCurrencyData == null) && (MarketplaceList.userBedollars == null || MarketplaceList.userBedollars < price)){
 				((ImageView)findViewById(R.id.buy_bedollar_logo)).setImageDrawable(mContext.getResources().getDrawable(R.drawable.b01));
 				((ImageView)findViewById(R.id.buy_sendgift_bedollar_logo)).setImageDrawable(mContext.getResources().getDrawable(R.drawable.b01));
 			}
@@ -110,7 +110,7 @@ public class MarketplaceCoupon extends BeintooListViewDialogES implements Button
 	}
 	
 	private void setButtonsListeners(){				
-		if(Marketplace.userBedollars == null || Marketplace.userBedollars < price){											
+		if(MarketplaceList.userBedollars == null || MarketplaceList.userBedollars < price){											
 			RelativeLayout sendgift = (RelativeLayout)findViewById(R.id.coupon_sendgift_button);
 			RelativeLayout buy = (RelativeLayout)findViewById(R.id.coupon_get_button);
 			sendgift.setBackgroundColor(Color.parseColor("#c4c5c7"));

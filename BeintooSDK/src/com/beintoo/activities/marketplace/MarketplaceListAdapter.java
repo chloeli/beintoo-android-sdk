@@ -123,7 +123,7 @@ public class MarketplaceListAdapter extends ArrayAdapter<Object>{
 						}*/
 					}				
 				});	
-				if(Marketplace.userBedollars == null || (Marketplace.userBedollars < item.bedollars)){				
+				if(MarketplaceList.userBedollars == null || (MarketplaceList.userBedollars < item.bedollars)){				
 					priceValue.setTextColor(mContext.getResources().getColor(R.color.light_gray_text));
 					priceValue.setTypeface(Typeface.DEFAULT);
 					holder.buy.setBackgroundColor(Color.parseColor("#d4d5d7"));

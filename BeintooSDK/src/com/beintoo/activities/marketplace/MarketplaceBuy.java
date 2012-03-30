@@ -72,11 +72,11 @@ public class MarketplaceBuy extends Dialog implements Button.OnClickListener{
 			}
 		}else findViewById(R.id.buy_couponwhere).setVisibility(View.GONE);
 				
-		if(Marketplace.userBedollars == null || Marketplace.userBedollars < price){
+		if(MarketplaceList.userBedollars == null || MarketplaceList.userBedollars < price){
 			findViewById(R.id.buy_buttons).setVisibility(View.GONE);			
 			TextView needBedollars = (TextView) findViewById(R.id.buy_youneedbedollars);
 			needBedollars.setVisibility(View.VISIBLE);
-			String text = String.format(mContext.getString(R.string.needbedollars), ((int) (price-Marketplace.userBedollars)) +" "+ currencyName);
+			String text = String.format(mContext.getString(R.string.needbedollars), ((int) (price-MarketplaceList.userBedollars)) +" "+ currencyName);
 			needBedollars.setText(text);
 		}else{		
 			if(showBuyButton){
@@ -109,7 +109,7 @@ public class MarketplaceBuy extends Dialog implements Button.OnClickListener{
 		if(v.getId() == R.id.buy_sendgift_button){			
 			if(player != null && player.getUser() == null){ // players can't send as a gift
 				current.dismiss();
-				Marketplace.openSignupDialog(mContext);
+				MarketplaceList.openSignupDialog(mContext);
 				return;
 			}
 			final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.friendLoading),true);
@@ -141,7 +141,7 @@ public class MarketplaceBuy extends Dialog implements Button.OnClickListener{
 		}
 		
 		if(Beintoo.virtualCurrencyData != null){
-			Marketplace.updateVirtualCurrency(price);
+			MarketplaceList.updateVirtualCurrency(price);
 		}
 		
 		DialogStack.removeFromDialogStack(this);
