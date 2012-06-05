@@ -155,6 +155,14 @@ public class BeintooFacebookLogin extends Dialog {
 					
 					// FINALLY GO HOME
 					UIhandler.sendEmptyMessage(GO_HOME);
+					
+					if(uri.toString().contains("m/landing_register_ok_no_script.html")){
+						if(Beintoo.mUserSignupCallback != null)
+    				  		Beintoo.mUserSignupCallback.onUserSignup(newPlayer);
+					}else if(uri.toString().contains("m/landing_welcome_no_script.html")){
+						if(Beintoo.mUserSignupCallback != null)
+    				  		Beintoo.mUserSignupCallback.onUserLogin(newPlayer);
+					}
 				} catch (Exception e) {
 					dialog.dismiss();
 					ErrorDisplayer.externalReport(e);

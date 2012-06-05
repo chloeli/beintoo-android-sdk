@@ -5,10 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -16,7 +14,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.GeolocationPermissions.Callback;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,10 +24,13 @@ import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DebugUtility;
+import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
 import com.beintoo.main.managers.LocationMManager;
 import com.beintoo.wrappers.Player;
+import com.google.beintoogson.Gson;
 
 public class Marketplace extends Dialog implements android.webkit.GeolocationPermissions.Callback{
 	WebView webview;
@@ -51,13 +51,7 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 		
 		webview = (WebView) findViewById(R.id.webview);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);		
-		
-		// ADD ZOOM CONTROLS
-		final FrameLayout.LayoutParams ZOOM_PARAMS =new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-				 																	ViewGroup.LayoutParams.WRAP_CONTENT,
-				 																	Gravity.BOTTOM);
-		final View zoom = webview.getZoomControls();
-		webview.addView(zoom, ZOOM_PARAMS);
+		webview.addJavascriptInterface(new BeintooJavaScriptInterface(getContext()), "Beintoo");
 		
 		WebSettings ws = webview.getSettings();
 		ws.setJavaScriptEnabled(true);
@@ -65,6 +59,8 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 		ws.setJavaScriptCanOpenWindowsAutomatically(true);		
 		ws.setLoadWithOverviewMode(true);
 		ws.setUseWideViewPort(true);		
+		ws.setSupportZoom(true);
+		ws.setBuiltInZoomControls(true);
 		
 		webview.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
@@ -123,10 +119,12 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 			marketplaceUrl.appendQueryParameter("developer_user_guid", Beintoo.getVirtualCurrencyDevUserId());
 			marketplaceUrl.appendQueryParameter("virtual_currency_amount", Beintoo.getVirtualCurrencyUserBalance());
 		}
-		 
-		String locationParams = getSavedPlayerLocationParams();
 		
-		return marketplaceUrl.toString() + locationParams;
+		marketplaceUrl.appendQueryParameter("os_source", "android"); 
+		
+		String locationParamsUrl = getSavedPlayerLocationParams(marketplaceUrl.toString());
+		
+		return locationParamsUrl;
 	}
 
 	@Override
@@ -141,22 +139,38 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 	    return super.onKeyDown(keyCode, event);
 	}
 	
-	private String getSavedPlayerLocationParams(){
+	private String getSavedPlayerLocationParams(String url){
 		try {
 			Location loc = LocationMManager.getSavedPlayerLocation(getContext());
 			if(loc != null){
 				Double latitude = loc.getLatitude();
 				Double longitude = loc.getLongitude();
 				Float accuracy = loc.getAccuracy();
-
-				String params = "&lat="+latitude+"&lng="+longitude+"&acc="+accuracy;
-			
-				return params;
-			}else return "";
+				
+				Uri.Builder b = Uri.parse(url).buildUpon();
+				b.appendQueryParameter("lat", latitude.toString());
+				b.appendQueryParameter("lng", longitude.toString());
+				b.appendQueryParameter("acc", accuracy.toString());
+				
+				return b.toString();
+			}else return url;
 		}catch (Exception e){
-			return "";
-		}
-		
+			return url;
+		}		
+	}
+	
+	public class BeintooJavaScriptInterface {
+	    Context mContext; 
+
+	    BeintooJavaScriptInterface(Context c) {
+	        mContext = c;
+	    }
+
+	    public void setPlayer(String player) {
+	    	Player p = new Gson().fromJson(player, Player.class);
+	    	Current.setCurrentPlayer(mContext, p);
+	    	PreferencesHandler.saveBool("isLogged", true, getContext());
+	    }
 	}
 
 	public void invoke(String origin, boolean allow, boolean remember) {

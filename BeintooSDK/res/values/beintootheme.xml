@@ -32,8 +32,7 @@
 	<style name="ThemeBeintooTablet" parent="android:style/Theme.Dialog"> 		
 		<item name="android:windowNoTitle">true</item>
 	</style>
-	<style name="ThemeBeintooVgood"
-	parent="@android:style/Theme.Dialog">
+	<style name="ThemeBeintooVgood" parent="@android:style/Theme.Dialog">
 	<item name="android:windowFrame">@null</item>
 		<!-- <item name="android:windowIsFloating">true</item>
 		<item name="android:windowFrame">@null</item>
@@ -43,6 +42,13 @@
 		<item name="android:windowNoTitle">true</item>
 		<item name="android:backgroundDimEnabled">false</item> -->
     	<item name="android:windowBackground">@android:color/transparent</item>
+	</style>
+	<style name="ThemeBeintooVgoodFullScreen" parent="@android:style/Theme.Dialog">
+		<item name="android:windowFrame">@null</item>
+    	<item name="android:windowBackground">@android:color/transparent</item>
+    	<item name="android:windowTitleStyle">@null</item>
+    	<item name="android:backgroundDimEnabled">false</item>
+    	<!-- <item name="android:windowFullscreen">true</item> -->  
 	</style>
 	<style name="ThemeBeintooMessage">
 		<item name="android:windowIsFloating">true</item>

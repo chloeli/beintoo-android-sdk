@@ -129,6 +129,9 @@ public class UserLogin extends Dialog{
 								// FINALLY GO USER HOME
 								UIhandler.sendEmptyMessage(GO_HOME);	
 								dialog.dismiss();
+								
+								if(Beintoo.mUserSignupCallback != null)
+	        				  		Beintoo.mUserSignupCallback.onUserLogin(newPlayer);
 							}							
             			}catch(Exception e){
             				dialog.dismiss();

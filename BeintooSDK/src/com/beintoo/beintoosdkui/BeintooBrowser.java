@@ -19,10 +19,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.view.Gravity;
+import android.net.Uri;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -32,7 +31,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.GeolocationPermissions.Callback;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -64,19 +62,14 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 		webview = (WebView) findViewById(R.id.webview);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);		
 		
-		// ADD ZOOM CONTROLS
-		final FrameLayout.LayoutParams ZOOM_PARAMS =new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-				 																	ViewGroup.LayoutParams.WRAP_CONTENT,
-				 																	Gravity.BOTTOM);
-		final View zoom = webview.getZoomControls();
-		webview.addView(zoom, ZOOM_PARAMS);
-		
 		WebSettings ws = webview.getSettings();
 		ws.setJavaScriptEnabled(true);
 		ws.setGeolocationEnabled(true);
 		ws.setJavaScriptCanOpenWindowsAutomatically(true);		
 		ws.setLoadWithOverviewMode(true);
 		ws.setUseWideViewPort(true);		
+		ws.setSupportZoom(true);
+		ws.setBuiltInZoomControls(true);
 		
 		webview.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
@@ -108,10 +101,12 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 			}
 		});
 		
-		String locationParams = getSavedPlayerLocationParams();
 		
-		if(url.contains("beintoo.com")) // ADD LOCATION COORDINATES IF ON BEINTOO 
-			url = url + locationParams;
+		
+		if(url.contains("beintoo.com")){ // ADD LOCATION COORDINATES IF ON BEINTOO
+			String locationParamsUrl = getSavedPlayerLocationParams(url);
+			url = locationParamsUrl;
+		}
 		
 		webview.loadUrl(url);		
 		// DEBUG CALLED URL
@@ -140,22 +135,24 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 	    return super.onKeyDown(keyCode, event);
 	}
 	
-	private String getSavedPlayerLocationParams(){
+	private String getSavedPlayerLocationParams(String url){
 		try {
 			Location loc = LocationMManager.getSavedPlayerLocation(getContext());
 			if(loc != null){
 				Double latitude = loc.getLatitude();
 				Double longitude = loc.getLongitude();
 				Float accuracy = loc.getAccuracy();
-
-				String params = "&lat="+latitude+"&lng="+longitude+"&acc="+accuracy;
-			
-				return params;
-			}else return "";
+				
+				Uri.Builder b = Uri.parse(url).buildUpon();
+				b.appendQueryParameter("lat", latitude.toString());
+				b.appendQueryParameter("lng", longitude.toString());
+				b.appendQueryParameter("acc", accuracy.toString());
+				
+				return b.toString();
+			}else return url;
 		}catch (Exception e){
-			return "";
-		}
-		
+			return url;
+		}		
 	}
 
 	/*public void clearCache() {

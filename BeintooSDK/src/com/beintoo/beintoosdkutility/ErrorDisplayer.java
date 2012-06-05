@@ -49,10 +49,10 @@ public class ErrorDisplayer{
 	   handler.sendMessage(status);	
 	   
 	   // REPORT THE ERROR (REMOVE CONNECTION ERRORS
-	   if(e!=null && !(e instanceof java.net.SocketTimeoutException) && !(e instanceof java.net.ConnectException))
+	   /*if(e!=null && !(e instanceof java.net.SocketTimeoutException) && !(e instanceof java.net.ConnectException))
 		   try {
 			   errorReport(StackStraceTostring(e));		   
-		   }catch(Exception ex){}
+		   }catch(Exception ex){}*/
 	}
 	
 	public static void showConnectionErrorOnThread (String Message, final Context ctx, Exception e){

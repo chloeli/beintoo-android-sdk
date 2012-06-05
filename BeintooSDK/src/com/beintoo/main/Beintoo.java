@@ -24,12 +24,16 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
+import com.beintoo.activities.UserRegistration;
+import com.beintoo.activities.UserSelection;
 import com.beintoo.activities.tryBeintoo;
 import com.beintoo.activities.tryDialog;
 import com.beintoo.beintoosdk.BeintooPlayer;
+import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DebugUtility;
+import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -48,8 +52,10 @@ import com.beintoo.vgood.VgoodBanner;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerAchievement;
 import com.beintoo.wrappers.PlayerScore;
+import com.beintoo.wrappers.User;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
+import com.google.beintoogson.Gson;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -77,6 +83,8 @@ public class Beintoo{
 	public final static int UPDATE_USER_AGENT = 10;
 	public final static int GET_RECOMM_ALERT_HTML = 11;
 	public final static int GET_RECOMM_BANNER_HTML = 12;
+	public static final int GO_REG = 13;
+	public static final int USER_SEL = 14;
 	
 	public static int VGOOD_NOTIFICATION_BANNER = 1; 
 	public static int VGOOD_NOTIFICATION_ALERT = 2;
@@ -101,8 +109,9 @@ public class Beintoo{
 	public static String FEATURE_CHALLENGES = "challenges";
 	public static String FEATURE_ACHIEVEMENTS = "achievements";
 	public static String FEATURE_FORUMS = "forums";
-	
+		
 	public static boolean OPEN_DASHBOARD_AFTER_LOGIN = true;
+	public static BUserSignupListener mUserSignupCallback = null;
 	
 	public static int TRY_BEINTOO_DEFAULT = 0;
 	public static int TRY_BEINTOO_REWARD = 1;
@@ -225,6 +234,45 @@ public class Beintoo{
 		Beintoo.BeintooStart(ctx, false, goToDashboard);
 	}
 	
+	
+	public static void signupUser(final Context context, boolean goToDashboard, final BUserSignupListener callback){
+		currentContext = context;
+		OPEN_DASHBOARD_AFTER_LOGIN = goToDashboard;
+		mUserSignupCallback = callback;
+		
+		final ProgressDialog  dialog = ProgressDialog.show(currentContext, "", currentContext.getString(R.string.loadingBeintoo),true);
+		dialog.setCancelable(true);
+		final BeintooUser usr = new BeintooUser(); 		
+		new Thread(new Runnable(){      
+    		public void run(){
+    			User[] arr = null;
+    			try{             			
+    				String deviceID = DeviceId.getUniqueDeviceId(currentContext);            				
+    				if(deviceID != null){ // CHECK IF WE ARE ON FROYO AND WITHOUT SIM (BUG)
+        				arr = usr.getUsersByDeviceUDID(deviceID);
+        				if(arr.length == 0) { // Loading the registration form 
+        					Message msg = new Message();
+        			        msg.what = GO_REG;
+        			        UIhandler.sendMessage(msg);
+        				}else if(arr.length > 0){ // check the existing users
+        					Gson gson = new Gson();
+        					String jsonUsers = gson.toJson(arr);
+        					PreferencesHandler.saveString("deviceUsersList", jsonUsers, currentContext);        					
+        					Message msg = new Message();
+        			        msg.what = USER_SEL;
+        			        UIhandler.sendMessage(msg);            					
+        				} 
+    				}else {
+    					UIhandler.sendEmptyMessage(GO_REG);            					
+    				}
+    			}catch(Exception e){ 
+    				ErrorDisplayer.showConnectionErrorOnThread("Connection error.\nPlease check your Internet connection.", currentContext,null); 
+    			}
+    			dialog.dismiss();
+    		}
+		}).start();
+	}
+	
 	/**
 	 * Show a dialog with the try Beintoo message. The dialog is shown interval of days passed in daysInterval
 	 * 
@@ -295,6 +343,19 @@ public class Beintoo{
 		
 		GetVgoodManager gvm = new GetVgoodManager(ctx);
 		gvm.isEligibleForVgood(ctx, el);		
+	}
+	
+	/**
+	 * Check if the country is covered by rewards
+	 * 
+	 * @param ctx
+	 * @param el
+	 */
+	public static void isRewardCovered(final Context ctx, final BIsRewardCoveredListener listener){
+		currentContext = ctx;
+		
+		GetVgoodManager gvm = new GetVgoodManager(ctx);
+		gvm.isVgoodCovered(listener);		
 	}
 	
 	/**
@@ -673,6 +734,16 @@ public class Beintoo{
 	            case UPDATE_USER_AGENT:
 	            	getUA();
 	            break;
+	            case GO_REG:
+	            	UserRegistration userReg = new UserRegistration(currentContext);
+	            	Beintoo.currentDialog = userReg;
+	            	userReg.show();
+	            break;
+	            case USER_SEL:
+					UserSelection userSelection = new UserSelection(currentContext);      
+					Beintoo.currentDialog = userSelection;
+					userSelection.show();
+	            break;
 		    }
 	        super.handleMessage(msg);
 		  }
@@ -704,6 +775,14 @@ public class Beintoo{
 	}
 	
 	/** 
+	 *  interface for user signup callback
+	 */
+	public static interface BUserSignupListener {
+		public void onUserSignup(Player p);
+		public void onUserLogin(Player p);
+	}
+	
+	/** 
 	 *  Listener for createUser callback
 	 */
 	public static interface BCreateUserListener {
@@ -729,6 +808,15 @@ public class Beintoo{
 		 public void vgoodAvailable(Player p);
 		 public void isOverQuota(Player p);
 		 public void nothingToDispatch(Player p);
+		 public void onError();
+	 }
+	 
+	 /**
+	  * Listener for isEligible callback 
+	  */
+	 public static interface BIsRewardCoveredListener {
+		 public void onCovered();
+		 public void onUncovered();
 		 public void onError();
 	 }
 	

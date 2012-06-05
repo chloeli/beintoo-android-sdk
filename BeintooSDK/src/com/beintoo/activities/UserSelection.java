@@ -23,8 +23,7 @@ import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DeviceId;
-import com.beintoo.beintoosdkutility.ErrorDisplayer;
-import com.beintoo.beintoosdkutility.LoaderImageView;
+import com.beintoo.beintoosdkutility.ImageManager;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
@@ -43,6 +42,8 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -52,13 +53,15 @@ public class UserSelection extends Dialog implements OnClickListener{
 	User[] users;
 	final Dialog current;
 	private static double ratio;
+	private ImageManager imageManager;
+	
 	public UserSelection(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.userselection);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		current = this;
-		
+		imageManager = new ImageManager(ctx);
 		// GETTING DENSITY PIXELS RATIO
 		ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
 		// SET UP LAYOUTS
@@ -84,7 +87,16 @@ public class UserSelection extends Dialog implements OnClickListener{
 			
 			for(int i = 0; i< users.length; i++){
 				if(users[i] != null){
-					final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUserimg(),(int)(ratio*70),(int)(ratio*70));
+					//final LoaderImageView image = new LoaderImageView(getContext(), users[i].getUserimg(),(int)(ratio*70),(int)(ratio*70));
+					ImageView image = new ImageView(ctx);
+					LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(((int)ratio*65), ((int)ratio*65));
+					lp.setMargins(((int)ratio*10), 0, ((int)ratio*6), 0);
+					image.setLayoutParams(lp);
+					image.setAdjustViewBounds(true);
+					image.setScaleType(ScaleType.CENTER_CROP);
+					image.setTag(users[i].getUserimg());					
+					imageManager.displayImage(users[i].getUserimg(), ctx, image);
+					
 					TableRow row = createRow(image, users[i].getNickname(), getContext());
 					
 					if(i % 2 == 0)
@@ -109,7 +121,7 @@ public class UserSelection extends Dialog implements OnClickListener{
 		    	  row.setOnClickListener(this);
 		      table.addView(row);
 		    }
-		}catch (Exception e) {ErrorDisplayer.externalReport(e);}
+		}catch (Exception e) {e.printStackTrace();}
 		
 		// ADD THE NEW PLAYER BUTTON
 	    Button newplayer = (Button) findViewById(R.id.anotheracc);
@@ -147,7 +159,7 @@ public class UserSelection extends Dialog implements OnClickListener{
 		  
 		  image.setPadding((int)(ratio * 15), 0, (int)(ratio * 15), 0);
 		  		  
-		  ((LinearLayout) image).setGravity(Gravity.LEFT);
+		  //((LinearLayout) image).setGravity(Gravity.LEFT);
 		  
 		  main.addView(image);
 		  main.addView(text);
@@ -194,9 +206,11 @@ public class UserSelection extends Dialog implements OnClickListener{
 					PreferencesHandler.saveString("currentPlayer", jsonPlayer, getContext());
 					// SET THAT THE PLAYER IS LOGGED IN BEINTOO
 					PreferencesHandler.saveBool("isLogged", true, getContext());
-					if(newPlayer.getUser() != null)
+					if(newPlayer.getUser() != null){						
 						UIhandler.sendEmptyMessage(1);
-					else 
+						if(Beintoo.mUserSignupCallback != null)
+    				  		Beintoo.mUserSignupCallback.onUserLogin(newPlayer);
+					}else 
 						UIhandler.sendEmptyMessage(0);
     			}catch(Exception e){}	
         			dialog.dismiss();
@@ -204,6 +218,18 @@ public class UserSelection extends Dialog implements OnClickListener{
 			}).start();		
 	}
 	
+	@Override
+	public void onDetachedFromWindow() {
+		// STOPPING IMAGE MANAGER THREADS
+		try {
+			if(imageManager != null)
+				imageManager.interrupThread();
+		}catch (Exception e){
+			e.printStackTrace();
+		}	
+		super.onDetachedFromWindow();
+	}
+
 	Handler UIhandler = new Handler() {
 		  @Override
 		  public void handleMessage(Message msg) {

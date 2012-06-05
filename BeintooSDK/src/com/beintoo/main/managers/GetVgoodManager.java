@@ -32,9 +32,11 @@ import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BEligibleVgoodListener;
 import com.beintoo.main.Beintoo.BGetVgoodListener;
+import com.beintoo.main.Beintoo.BIsRewardCoveredListener;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
+import com.beintoo.wrappers.VgoodCovered;
 
 public class GetVgoodManager {
 	private static AtomicLong LAST_OPERATION = new AtomicLong(0);
@@ -89,7 +91,7 @@ public class GetVgoodManager {
 					return;
 				
 				final BeintooVgood vgoodHand = new BeintooVgood();
-				boolean isBanner = false;
+				//boolean isBanner = false;
 				if(!isMultiple) { // ASSIGN A SINGLE VGOOD TO THE PLAYER
 					if(l != null){				
 						VgoodChooseOne v = vgoodHand.getVgoodList(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
@@ -116,7 +118,7 @@ public class GetVgoodManager {
 			    			if(!Beintoo.vgood.isBanner()){ // NORMAL VGOOD REWARD
 			    				Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_VGOOD_BANNER);
 			    			}else{ // BEINTOO RECOMMENDATION
-			    				isBanner = true;
+			    				//isBanner = true;
 			    				if(Beintoo.vgood.getContentType() == null) // BEINTOO RECOMMENDATION WITH IMAGE
 			    					Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_BANNER);
 			    				else // BEINTOO RECOMMENDATION WITH HTML CONTENT
@@ -127,7 +129,7 @@ public class GetVgoodManager {
 			    			if(!Beintoo.vgood.isBanner()){ // NORMAL VGOOD REWARD
 			    				Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_VGOOD_ALERT);
 			    			}else{ // BEINTOO RECOMMENDATION
-			    				isBanner = true;
+			    				//isBanner = true;
 			    				if(Beintoo.vgood.getContentType() == null) // BEINTOO RECOMMENDATION WITH IMAGE
 			    					Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_ALERT);
 			    				else // BEINTOO RECOMMENDATION WITH HTML CONTENT
@@ -151,7 +153,7 @@ public class GetVgoodManager {
 		    				if(!Beintoo.vgoodlist.getVgoods().get(0).isBanner()){ // NORMAL VGOOD REWARD
 		    					Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_VGOOD_BANNER);
 		    				}else{ // BEINTOO RECOMMENDATION
-		    					isBanner = true;
+		    					//isBanner = true;
 		    					if(Beintoo.vgoodlist.getVgoods().get(0).getContentType() == null) // BEINTOO RECOMMENDATION WITH IMAGE
 		    						Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_BANNER);
 		    					else // BEINTOO RECOMMENDATION WITH HTML CONTENT
@@ -161,7 +163,7 @@ public class GetVgoodManager {
 		    				if(!Beintoo.vgoodlist.getVgoods().get(0).isBanner()){
 		    					Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_VGOOD_ALERT);
 		    				}else{ // BEINTOO RECOMMENDATION
-		    					isBanner = true;
+		    					//isBanner = true;
 		    					if(Beintoo.vgoodlist.getVgoods().get(0).getContentType() == null) // BEINTOO RECOMMENDATION WITH IMAGE
 		    						Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_ALERT);
 		    					else // BEINTOO RECOMMENDATION WITH HTML CONTENT
@@ -171,7 +173,7 @@ public class GetVgoodManager {
 			    	}
 		    	}
 				
-				if(listener != null && !isBanner)
+				if(listener != null)
 					listener.onComplete(Beintoo.vgoodlist);
 				
 				LAST_OPERATION.set(System.currentTimeMillis());
@@ -192,6 +194,62 @@ public class GetVgoodManager {
 			}
 		}			
 	}
+	
+	public void isVgoodCovered(final BIsRewardCoveredListener listener){
+		try {			
+			SerialExecutor executor = SerialExecutor.getInstance();	
+    		executor.execute(new Runnable(){     					
+	    		public void run(){
+	    			try{			
+	    				final Player currentPlayer = Current.getCurrentPlayer(currentContext);	    				
+	    				if(currentPlayer.getGuid() == null) return;
+	    				
+	    				Long currentTime = System.currentTimeMillis();
+	    				Location pLoc = LocationMManager.getSavedPlayerLocation(currentContext);
+	    	        	if(pLoc != null){
+	    	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
+	    	        			// GET A VGOOD WITH COORDINATES
+	    	        			isVgoodCoveredHelper(pLoc, listener);
+	    	        		}else {
+	    	        			// GET A VGOOD WITHOUT COORDINATES
+	    	        			isVgoodCoveredHelper(null, listener);
+			    				LocationMManager.savePlayerLocation(currentContext);
+	    	        		}
+	    	        	}else{
+	    	        		isVgoodCoveredHelper(null, listener);
+		    				LocationMManager.savePlayerLocation(currentContext);
+	    	        	}
+	    			}catch(Exception e){e.printStackTrace();}
+	    		}
+    		});
+		}catch (Exception e){
+			e.printStackTrace();
+		} 
+	}
+	
+	private void isVgoodCoveredHelper(final Location location, final BIsRewardCoveredListener listener){
+		try {
+			VgoodCovered msg = null;
+			BeintooVgood bv = new BeintooVgood();		
+			if(location != null){
+				msg = bv.isVgoodCovered(Double.toString(location.getLatitude()), Double.toString(location.getLongitude()),
+						Double.toString(location.getAccuracy()));
+			}else{
+				msg = bv.isVgoodCovered(null, null, null);
+			}
+			
+			if(msg != null){
+				if(msg.isCovered())
+					listener.onCovered();
+				else if(!msg.isCovered())
+					listener.onUncovered();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			listener.onError();
+		}
+	}
+	
 	
 	public void getAd(final String codeID, final LinearLayout container, final int notificationType, final BGetVgoodListener listener){
 		SerialExecutor executor = SerialExecutor.getInstance();	

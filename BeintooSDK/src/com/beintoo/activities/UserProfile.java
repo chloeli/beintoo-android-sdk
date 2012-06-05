@@ -28,8 +28,8 @@ import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
+import com.beintoo.beintoosdkutility.ImageManager;
 import com.beintoo.beintoosdkutility.JSONconverter;
-import com.beintoo.beintoosdkutility.LoaderImageView;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Player;
@@ -69,6 +69,8 @@ public class UserProfile extends Dialog {
 	public static final int CURRENT_USER_PROFILE = 1; 
 	public static final int FRIEND_USER_PROFILE = 2;
 		
+	private ImageManager imageManager;
+	
 	public UserProfile(final Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);				
 		current = this;
@@ -77,7 +79,8 @@ public class UserProfile extends Dialog {
 		setupMainLayoutGradients();
 		showLoading();
 		setupCurrentUserProfileLayout();		
-		startLoading(null, CURRENT_USER_PROFILE);			
+		startLoading(null, CURRENT_USER_PROFILE);		
+		imageManager = new ImageManager(context);
 	}
 	
 	public UserProfile(final Context ctx, final String userExt) {
@@ -89,6 +92,7 @@ public class UserProfile extends Dialog {
 		showLoading();
 		setupFriendProfileLayout();
 		startLoading(userExt, FRIEND_USER_PROFILE);
+		imageManager = new ImageManager(context);
 	}
 	
 	private void setupMainLayoutGradients (){
@@ -282,15 +286,16 @@ public class UserProfile extends Dialog {
 	
 	private void loadData (){
 		// SETTING UP TEXTVIEWS AND PROFILE IMAGE
-		LoaderImageView profilepict = (LoaderImageView) findViewById(R.id.profilepict);		
+		ImageView profilepict = (ImageView) findViewById(R.id.profilepict);		
 		TextView nickname = (TextView) findViewById(R.id.nickname);
 		TextView alliance = (TextView) findViewById(R.id.alliance);
 		TextView level = (TextView) findViewById(R.id.level);
 		TextView dollars = (TextView) findViewById(R.id.bedollars);
 		TextView bescore = (TextView) findViewById(R.id.salary);
 		LinearLayout contestsContainer = (LinearLayout) findViewById(R.id.contests);
-		if(currentPlayer.getUser() != null){
-			profilepict.setImageDrawable(currentPlayer.getUser().getUserimg());
+		if(currentPlayer.getUser() != null){			
+			profilepict.setTag(currentPlayer.getUser().getUserimg());
+			imageManager.displayImage(currentPlayer.getUser().getUserimg(), context, profilepict);			
 			nickname.setText(currentPlayer.getUser().getNickname());
 			level.setText(getContext().getString(R.string.profileLevel)+fromIntToLevel(currentPlayer.getUser().getLevel()));
 			dollars.setText("Bedollars: "+currentPlayer.getUser().getBedollars());
@@ -299,10 +304,7 @@ public class UserProfile extends Dialog {
 			nickname.setText("Player");
 			level.setVisibility(View.INVISIBLE);
 			dollars.setVisibility(View.INVISIBLE);
-			ImageView v = new ImageView(context);
-			v.setImageResource(R.drawable.profbt);
-			profilepict.removeAllViews();
-			profilepict.addView(v);
+			profilepict.setImageResource(R.drawable.profbt);
 		}
 		if(currentPlayer.getAlliance() != null){
 			alliance.setText(currentPlayer.getAlliance().getName());
@@ -447,6 +449,18 @@ public class UserProfile extends Dialog {
 		if(level == 4) return "Winner";
 		
 		return "Novice";
+	}
+	
+	@Override
+	public void onBackPressed() {		
+		// STOPPING IMAGE MANAGER THREADS
+		try {
+			if(imageManager != null)
+				imageManager.interrupThread();
+		}catch (Exception e){
+			e.printStackTrace();
+		}		
+		super.onBackPressed();
 	}
 	
 	Handler UIhandler = new Handler() {

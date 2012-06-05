@@ -320,7 +320,7 @@
 	<string name="trynow">Join the community</string>
     <string name="nothanks">No, I don\'t want to play&amp;earn</string>
    
-	<string name="submitscorempmessage">You\'ve got now %s, don\'t loose them! Use them in the Marketplace!</string>
+	<string name="submitscorempmessage">You\'ve got now %s, don\'t lose them! Use them in the Marketplace!</string>
    	<string name="submitscorempmessageplayer">Go now to Marketplace!</string>        
    	<string name="orderbyprice">Order by price</string>        
 </resources>

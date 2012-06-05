@@ -65,6 +65,7 @@ public class UserRegistration extends Dialog{
 	private String nickname;
 	private String email;
 	private String currentUserUserExt;
+	private Player player;
 	
 	public UserRegistration(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
@@ -188,15 +189,17 @@ public class UserRegistration extends Dialog{
 	            				BeintooUser bu = new BeintooUser();
 								bu.setOrUpdateUser("update", null, currentUserUserExt, email, nicknameText.getText().toString(), null, null, null, null, null, true, null, null);
 								
-								Player userLogin = bp.playerLogin(currentUserUserExt, null, null, null, null, null);
-								PreferencesHandler.saveString("currentPlayer", new Gson().toJson(userLogin), getContext());
+								player = bp.playerLogin(currentUserUserExt, null, null, null, null, null);
+								PreferencesHandler.saveString("currentPlayer", new Gson().toJson(player), getContext());
             				}
             				
             				imm.hideSoftInputFromWindow(nicknameText.getApplicationWindowToken(), 0);
-            				UIhandler.sendEmptyMessage(GO_HOME);
-            				
+            				UIhandler.sendEmptyMessage(GO_HOME);            				
             				current.dismiss();
             				dialog.dismiss();
+            				
+            				if(Beintoo.mUserSignupCallback != null)
+        				  		Beintoo.mUserSignupCallback.onUserSignup(player);
             			}catch(Exception e){dialog.dismiss(); e.printStackTrace();}	            			
             			
             		} 
@@ -300,7 +303,7 @@ public class UserRegistration extends Dialog{
 					  beintooHome.show();
 					}
 				  	Beintoo.currentDialog.dismiss();
-				  	current.dismiss();
+				  	current.dismiss();				  	
 				  }else  if(msg.what == SIGNUP_BROWSER){
 					BeintooSignupBrowser signupBrowser = new BeintooSignupBrowser(getContext());
 					signupBrowser.show();

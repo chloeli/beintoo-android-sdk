@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.beintoo.R;
+import com.beintoo.activities.Friends;
 import com.beintoo.activities.UserProfile;
 import com.beintoo.beintoosdk.BeintooAlliances;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdkui.BeButton;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.JSONconverter;
 import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
@@ -282,15 +284,40 @@ public class UserAlliance extends Dialog{
 							listView.setAdapter(adapter);
 							listView.setOnItemClickListener(new OnItemClickListener(){
 								@Override
-								public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-									UserProfile userProfile = new UserProfile(getContext(),a.getUsers().get(position).getId());
-					    			userProfile.show();										
+								public void onItemClick(AdapterView<?> parent, View v, final int position, long id) {
+									
+									Player p = Current.getCurrentPlayer(currentContext);
+									if(p != null && p.getUser() != null){
+										if(p.getUser().getId().equalsIgnoreCase(a.getUsers().get(position).getId())){
+											return;
+										}
+									}
+									
+									final CharSequence[] items = { current.getContext().getString(R.string.leadViewProfile), current.getContext().getString(R.string.leadAddFriend)};
+									AlertDialog.Builder builder = new AlertDialog.Builder(current.getContext());
+									builder.setTitle(current.getContext().getString(R.string.vgoodchoosedialog));
+									builder.setItems(items, new DialogInterface.OnClickListener() {
+									    public void onClick(DialogInterface dialog, int item) {		    	
+									        if(item == 0){ 
+									        	try {
+									        		UserProfile userProfile = new UserProfile(getContext(),a.getUsers().get(position).getId());
+									    			userProfile.show();
+									        	}catch(Exception e){e.printStackTrace();}
+									        }else if(item == 1){ 
+									        	try {
+									        		Friends f = new Friends(current.getContext(),current,0,0);
+									        		f.friendshipThread(a.getUsers().get(position).getId(), "invite");
+									        	}catch(Exception e){e.printStackTrace();}		        	
+									        }
+									    }
+									});
+									AlertDialog alert = builder.create();
+									alert.show();																			
 								}								
 							});
 					        adapter.notifyDataSetChanged();
 					        content.findViewWithTag(1000).setVisibility(LinearLayout.GONE);
 							listView.setVisibility(LinearLayout.VISIBLE);
-							
 						}						
 					});
 				}catch(Exception e){

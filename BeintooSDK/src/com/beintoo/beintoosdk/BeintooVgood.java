@@ -28,6 +28,7 @@ import com.beintoo.wrappers.Category;
 import com.beintoo.wrappers.Message;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
+import com.beintoo.wrappers.VgoodCovered;
 import com.google.beintoogson.Gson;
 import com.google.beintoogson.reflect.TypeToken;
 
@@ -248,6 +249,31 @@ public class BeintooVgood {
 		String json = conn.httpRequest(apiUrl, header, null);
 		
 		Message resp = new Gson().fromJson(json, Message.class);
+		
+		return resp;
+	}
+	
+	/**
+	 * Determinate if the Location is covered by rewards
+	 * 
+	 */
+	public VgoodCovered isVgoodCovered(String latitude, String longitude, String radius) {
+		
+		Uri.Builder apiUrl =  Uri.parse(apiPreUrl+"vgood/coverage").buildUpon();
+		
+		if(latitude != null) apiUrl = apiUrl.appendQueryParameter("latitude", latitude);
+		if(longitude != null) apiUrl = apiUrl.appendQueryParameter("longitude", longitude);
+		if(radius != null) apiUrl = apiUrl.appendQueryParameter("radius", radius);
+		apiUrl.appendQueryParameter("allowBanner", "false");
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl.toString(), header, null);
+		
+		VgoodCovered resp = new Gson().fromJson(json, VgoodCovered.class);
 		
 		return resp;
 	}
