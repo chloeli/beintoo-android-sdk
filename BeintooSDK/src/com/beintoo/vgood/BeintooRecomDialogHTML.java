@@ -128,7 +128,7 @@ public class BeintooRecomDialogHTML extends Dialog{
 					    }
 					});
 						
-					webview.loadDataWithBaseURL(null, "<div align=\"center\">"+vgood.getVgoods().get(0).getContent()+"</div>", vgood.getVgoods().get(0).getContentType(), "UTF-8", null);									
+					webview.loadDataWithBaseURL(null, vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "UTF-8", null);									
 				}catch (Exception e){e.printStackTrace();}
 			} 
 		}).start();
