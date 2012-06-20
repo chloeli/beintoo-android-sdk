@@ -91,9 +91,9 @@
 					android:id="@+id/grayline"></LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="wrap_content" android:background="#FFFFFF"
-					android:id="@+id/customcontainer" android:gravity="right" android:paddingBottom="2dip" android:paddingTop="2dip">
+					android:id="@+id/customcontainer_reward" android:gravity="right" android:paddingBottom="2dip" android:paddingTop="2dip">
 					<LinearLayout android:layout_width="wrap_content"
-						android:background="#FFFFFF" android:id="@+id/text"
+						android:background="#FFFFFF" android:id="@+id/text_reward"
 						android:gravity="center"
 						android:layout_height="fill_parent" android:layout_weight="1" android:paddingLeft="10dip">
 						<TextView android:id="@+id/textSponsor" android:textSize="18dip"

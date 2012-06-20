@@ -89,6 +89,10 @@ public class tryBeintoo extends Dialog {
 			}else{
 				nothanksButtonHeight = 35;
 			}
+			
+			// bug fix for some few devices where the background wasn't shown
+			findViewById(R.id.customcontainer_reward).setBackgroundColor(Color.WHITE);
+			findViewById(R.id.text_reward).setBackgroundColor(Color.WHITE);
 		}
 	
 		// GETTING DENSITY PIXELS RATIO

@@ -94,9 +94,9 @@
 					android:id="@+id/grayline"></LinearLayout>
 				<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="wrap_content" android:background="#FFFFFF"
-					android:id="@+id/customcontainer" android:gravity="right"
+					android:id="@+id/customcontainer_reward" android:gravity="right"
 					android:paddingTop="3dip" android:paddingBottom="2dip">
-					<LinearLayout android:id="@+id/text"
+					<LinearLayout android:id="@+id/text_reward"
 						android:layout_width="wrap_content" android:layout_height="fill_parent"
 						android:layout_weight="1" android:background="#FFFFFF"
 						android:gravity="center" android:paddingLeft="7dip">

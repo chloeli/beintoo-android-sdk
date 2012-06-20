@@ -115,8 +115,8 @@ public class BeintooRecomDialogHTML extends Dialog{
 
 						@Override
 						public void onConsoleMessage(String message,
-								int lineNumber, String sourceID) {
-							System.out.println(message);
+								int lineNumber, String sourceID) {							
+							System.out.println(""+message);
 							super.onConsoleMessage(message, lineNumber, sourceID);
 						}
 						
@@ -128,7 +128,8 @@ public class BeintooRecomDialogHTML extends Dialog{
 					    }
 					});
 						
-					webview.loadDataWithBaseURL(null, vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "UTF-8", null);									
+					webview.loadDataWithBaseURL(null, vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "UTF-8", null);
+					
 				}catch (Exception e){e.printStackTrace();}
 			} 
 		}).start();
