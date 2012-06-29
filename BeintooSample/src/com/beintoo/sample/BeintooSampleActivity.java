@@ -1,6 +1,5 @@
 package com.beintoo.sample;
 
-
 import com.beintoo.R;
 import com.beintoo.main.Beintoo;
 import com.beintoo.main.Beintoo.BGetVgoodListener;
@@ -20,7 +19,7 @@ public class BeintooSampleActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        Beintoo.setApiKey("YOUR-API-KEY");
+        Beintoo.setApiKey("YOUR-APIKEY-HERE");
         
         // THIS SET THE TRY BEINTOO VIEW WITH THE REWARD TEMPLATE
         // IF YOU DO NOT WANT IT JUST REMOVE THIS LINE
@@ -30,7 +29,7 @@ public class BeintooSampleActivity extends Activity {
         Button start = (Button) findViewById(R.id.start);
         start.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {
-				Beintoo.BeintooStart(BeintooSampleActivity.this, true);										
+				Beintoo.BeintooStart(v.getContext(), true);										
 			} 			
         });  
         
@@ -47,15 +46,15 @@ public class BeintooSampleActivity extends Activity {
 			public void onClick(View v) {	
 				// GET A REWARD AND SHOW IT AS A BANNER, HERE WITHOUT A CALLBACK
 				LinearLayout l = (LinearLayout) findViewById(R.id.testlayout);
-            	Beintoo.GetVgood(BeintooSampleActivity.this, true, l, Beintoo.VGOOD_NOTIFICATION_BANNER);				
+            	Beintoo.GetVgood(BeintooSampleActivity.this, true, l, Beintoo.VGOOD_NOTIFICATION_BANNER);          				
 			}
         });
 	    
-	   Button submit = (Button) findViewById(R.id.submit);
+	    Button submit = (Button) findViewById(R.id.submit);
 	    submit.setOnClickListener(new Button.OnClickListener(){
 			public void onClick(View v) {	
 				// SUBMIT 1 POINT AND NOTIFY THE PLAYER IN THE BOTTOM OF THE SCREEN
-				Beintoo.submitScore(BeintooSampleActivity.this, 1, true, Gravity.BOTTOM,null);				
+				Beintoo.submitScore(BeintooSampleActivity.this, 1, true, Gravity.BOTTOM,null);
 			}
         }); 
 	    
@@ -67,14 +66,14 @@ public class BeintooSampleActivity extends Activity {
 				// WE SUBMIT 4 POINTS AND SET THE TRESHOLD TO 16, WHEN THE PLAYER REACHES
 				// 16 POINTS IT WILL AUTOMATICALLY RECEIVE A REWARD
 				LinearLayout l = (LinearLayout) findViewById(R.id.testlayout);
-				Beintoo.submitScoreAndGetVgood(BeintooSampleActivity.this, 4, 16, null, true, l, Beintoo.VGOOD_NOTIFICATION_ALERT, sl,gvl);				
+				Beintoo.submitScoreWithVgoodCheck(BeintooSampleActivity.this, 4, 16, null, true, l, Beintoo.VGOOD_NOTIFICATION_ALERT, sl,gvl);     
 			}
         });
     }
     
     @Override
 	protected void onResume() {
-		super.onResume();			
+		super.onResume();
 		Beintoo.playerLogin(this);
 	}
     

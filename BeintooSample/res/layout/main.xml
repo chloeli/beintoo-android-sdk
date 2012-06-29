@@ -37,18 +37,15 @@
 				<LinearLayout android:layout_height="wrap_content"
 					android:orientation="vertical" android:layout_width="fill_parent"
 					android:id="@+id/linearLayout4">
-					<TextView android:text="Get Reward" android:id="@+id/textView3"
+					<TextView android:text="Get Vgood" android:id="@+id/textView3"
 						android:layout_width="wrap_content" android:layout_height="wrap_content"
 						android:textStyle="bold"></TextView>
 					<Button android:layout_width="90dip" android:id="@+id/getVgood"
-						android:layout_height="wrap_content" android:text="Get Reward"></Button>
+						android:layout_height="wrap_content" android:text="Get Vgood"></Button>
 					<Button android:layout_width="wrap_content" android:id="@+id/vgoodlist"
 						android:layout_height="wrap_content" android:text="Get Vgood banner"></Button>					
-				</LinearLayout>								    
+				</LinearLayout>
 			</LinearLayout>
-			
-			  
-			    
 			<LinearLayout android:layout_height="wrap_content"
 				android:orientation="vertical" android:layout_width="fill_parent"
 				android:layout_weight="1" android:id="@+id/rightcolumn">
@@ -61,10 +58,7 @@
 				
 				<Button android:background="@drawable/startbt"
 					android:layout_width="wrap_content" android:id="@+id/start"
-					android:layout_height="wrap_content" android:layout_marginBottom="20dip"></Button>	
-					
-				    			<Button android:layout_width="wrap_content" android:id="@+id/vgoodlist"
-						android:layout_height="wrap_content" android:text="Player login"></Button>
+					android:layout_height="wrap_content" android:layout_marginBottom="20dip"></Button>				
 			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>
