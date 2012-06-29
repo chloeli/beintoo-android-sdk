@@ -85,7 +85,7 @@ public class Wallet extends Dialog implements OnItemClickListener, OnScrollListe
 	private final int NOT_REDEEMED 		= 1;
 	private final int REDEEMED 			= 2;
 	private int currentSection 			= NOT_REDEEMED;
-	private View selectedRow;
+	private int selectedRow;
 	
 	private boolean onlyconverted = false;
 	
@@ -371,8 +371,7 @@ public class Wallet extends Dialog implements OnItemClickListener, OnScrollListe
 				  break;
 				  case SEND_TO_FRIEND:
 				  		VgoodSendToFriend f = new VgoodSendToFriend(getContext(), VgoodSendToFriend.OPEN_FRIENDS_FROM_WALLET, friends);
-						f.previous = current;
-						f.rowToRemove = selectedRow;			  		
+						f.previous = current;			  		
 						f.vgoodID = vgoodExtId;
 						f.show();
 				  break;
@@ -381,6 +380,12 @@ public class Wallet extends Dialog implements OnItemClickListener, OnScrollListe
 		  }
 	};
 
+	public void removeSentAsAGiftItem(){
+		vgoods.remove(selectedRow-1);
+		vgoodslist.remove(selectedRow-1);
+		adapter.notifyDataSetChanged();
+	}
+	
 	@Override
 	public void onScrollStateChanged(AbsListView arg0, int arg1) {
 		
@@ -389,6 +394,7 @@ public class Wallet extends Dialog implements OnItemClickListener, OnScrollListe
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {		
 		if(currentSection == NOT_REDEEMED){
+			selectedRow = position;
 			showConfirmAlert(position);	
 		}else{
 			BeintooBrowser bb = new BeintooBrowser(current.getContext(),vgoods.get(position-1).getShowURL());

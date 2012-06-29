@@ -447,6 +447,7 @@ public class UserProfile extends Dialog {
 		if(level == 2) return "Learner";
 		if(level == 3) return "Passionate";
 		if(level == 4) return "Winner";
+		if(level == 5) return "Master";
 		
 		return "Novice";
 	}
