@@ -173,8 +173,8 @@ public class GetVgoodManager {
 			    	}
 		    	}
 				
-				/*if(listener != null)
-					listener.onComplete(Beintoo.vgoodlist);*/
+				if(listener != null)
+					listener.onComplete(Beintoo.vgoodlist);
 				
 				LAST_OPERATION.set(System.currentTimeMillis());
 				

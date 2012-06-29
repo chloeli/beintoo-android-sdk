@@ -158,7 +158,7 @@ public class BeintooRecomDialogHTML extends Dialog{
 		  public void handleMessage(Message msg) {
 			 if(msg.what == SHOW_DIALOG){
 				  current.show();
-
+				  
 				  if(gvl != null)
 					  gvl.onComplete(vgood);
 			  }else if(msg.what == HIDE_DIALOG)

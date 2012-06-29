@@ -26,7 +26,6 @@ import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.Current;
-import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
@@ -54,15 +53,11 @@ public class SubmitScoreManager {
 		new Thread(new Runnable(){     					
     		public void run(){
     			try {				
-					Player currentPlayer = Current.getCurrentPlayer(ctx);					
+					Player currentPlayer = Current.getCurrentPlayer(ctx);
 					int thresholdScore = threshold;
 					if(currentPlayer.getVgoodThreshold() != null && codeID != null &&
 							currentPlayer.getVgoodThreshold().get(codeID) != null){
 						thresholdScore = currentPlayer.getVgoodThreshold().get(codeID).intValue();
-					}else if(currentPlayer.getVgoodThreshold() != null && codeID == null){
-						if(currentPlayer.getVgoodThreshold().get("default") != null){
-							thresholdScore = currentPlayer.getVgoodThreshold().get("default").intValue();
-						}
 					}
 					
 					String key;
@@ -71,7 +66,7 @@ public class SubmitScoreManager {
 					else
 						key = currentPlayer.getGuid()+":count";
 					
-					int currentTempScore = PreferencesHandler.getInt(key, ctx);					
+					int currentTempScore = PreferencesHandler.getInt(key, ctx);
 					currentTempScore+=score;
 							
 					if(currentTempScore >= thresholdScore) { // THE USER REACHED THE DEVELOPER THRESHOLD SEND VGOOD AND SAVE THE REST

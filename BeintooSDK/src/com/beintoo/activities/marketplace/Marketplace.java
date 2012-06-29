@@ -2,7 +2,6 @@ package com.beintoo.activities.marketplace;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
@@ -81,14 +80,6 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 					Toast.makeText(getContext(), "Oh no! " + description,
 						Toast.LENGTH_SHORT).show();
 			}
-			
-			public boolean shouldOverrideUrlLoading(WebView view, String url){
-	            if (url.startsWith("mailto:") || url.startsWith("tel:")) { 
-                	Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url)); 
-                	current.getContext().startActivity(intent);
-                	return true;
-	            }else return false;	            
-	        }
 			
 			public void onPageFinished(WebView view, String url){
 				ProgressBar p = (ProgressBar) findViewById(R.id.progress);

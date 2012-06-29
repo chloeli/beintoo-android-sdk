@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import com.beintoo.R;
 
-import com.beintoo.activities.Wallet;
 import com.beintoo.beintoosdk.BeintooVgood;
 import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
@@ -234,7 +233,8 @@ public class VgoodSendToFriend extends Dialog implements OnClickListener{
 		        	    
 		        	   	if(calledFrom == OPEN_FRIENDS_FROM_WALLET){		        		   
 			        	   try {
-			        		   ((Wallet)previous).removeSentAsAGiftItem();
+				        	   TableLayout wallet = (TableLayout) previous.findViewById(R.id.table);				        	   
+				        	   wallet.removeView(rowToRemove);
 			        	   }catch(Exception e){
 			        		   e.printStackTrace();
 			        	   }
