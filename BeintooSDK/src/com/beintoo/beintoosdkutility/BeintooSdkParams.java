@@ -22,5 +22,5 @@ public class BeintooSdkParams {
 	public static String sandboxWebUrl = "http://sandbox.beintoo.com/";	
 	public static boolean useSandbox = false;
 	public static boolean internalSandbox = false;
-	public static String version = "2.10.5beta-android";
+	public static String version = "2.10.6beta-android";
 }

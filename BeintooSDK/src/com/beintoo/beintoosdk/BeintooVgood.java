@@ -55,7 +55,7 @@ public class BeintooVgood {
 	 * @param privategood a bool to set if the vgood has to be private
 	 * @return a json object with vgood data
 	 */
-	public VgoodChooseOne getVgoodList(String guid, String imei, Integer rows, String codeID, String latitude, String longitude, String radius, boolean privategood) {
+	public VgoodChooseOne getVgoodList(String guid, String deviceUUID, String imei, String macaddress, Integer rows, String codeID, String latitude, String longitude, String radius, boolean privategood) {
 		
 		String apiUrl = apiPreUrl+"vgood/byguid/"+guid+"/?allowBanner=true";
 		
@@ -73,11 +73,18 @@ public class BeintooVgood {
 			header.getKey().add("codeID");
 			header.getValue().add(codeID);
 		}		
+		if(deviceUUID != null){
+			header.getKey().add("deviceUUID");
+			header.getValue().add(deviceUUID);			
+		}
 		if(imei != null){
 			header.getKey().add("imei");
 			header.getValue().add(imei);
 		}
-		
+		if(macaddress != null){
+			header.getKey().add("macaddress");
+			header.getValue().add(macaddress);			
+		}
 		try {
 		// ADD THE USER AGENT
 			String userAgent = Beintoo.userAgent;
@@ -108,7 +115,7 @@ public class BeintooVgood {
 	 * @param privategood a bool to set if the vgood has to be private
 	 * @return a json object with vgood data
 	 */
-	public VgoodChooseOne getAd(String guid, String imei, String codeID, String latitude, String longitude, String radius, boolean privategood) {
+	public VgoodChooseOne getAd(String guid, String deviceUUID, String imei, String macaddress, String codeID, String latitude, String longitude, String radius, boolean privategood) {
 		
 		String apiUrl = apiPreUrl+"vgood/getbanner/?allowBanner=true";
 		
@@ -127,9 +134,17 @@ public class BeintooVgood {
 			header.getKey().add("codeID");
 			header.getValue().add(codeID);
 		}		
+		if(deviceUUID != null){
+			header.getKey().add("deviceUUID");
+			header.getValue().add(deviceUUID);			
+		}
 		if(imei != null){
 			header.getKey().add("imei");
 			header.getValue().add(imei);
+		}
+		if(macaddress != null){
+			header.getKey().add("macaddress");
+			header.getValue().add(macaddress);			
 		}
 		
 		try {

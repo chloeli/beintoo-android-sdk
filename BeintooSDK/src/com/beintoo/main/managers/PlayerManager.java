@@ -69,16 +69,21 @@ public class PlayerManager {
 	    					
 	    					if(guid != null){
 	    						loginPlayer = player.playerLogin(null,guid,null,
-		        						DeviceId.getUniqueDeviceId(ctx),language, null);
+		        						DeviceId.getUniqueDeviceId(ctx),
+		        						DeviceId.getImei(ctx), DeviceId.getMACAddress(ctx),
+		        						language, null);
 	    					}else if(loggedUser == null){ // FIRST EXECUTION
 		    					loginPlayer = player.playerLogin(null,null,null,
-		    						DeviceId.getUniqueDeviceId(ctx),language, null);
+		    						DeviceId.getUniqueDeviceId(ctx),
+		    						DeviceId.getImei(ctx), DeviceId.getMACAddress(ctx), language, null);
 		    				}else if(loggedUser.getUser() == null){ // A PLAYER EXISTS BUT NOT A USER
 		    					loginPlayer = player.playerLogin(null,loggedUser.getGuid(),null,
-		        						DeviceId.getUniqueDeviceId(ctx),language, null);
+		        						DeviceId.getUniqueDeviceId(ctx),
+		        						DeviceId.getImei(ctx), DeviceId.getMACAddress(ctx), language, null);
 		    				}else{ // PLAYER HAS A REGISTERED USER
 		    					loginPlayer = player.playerLogin(loggedUser.getUser().getId(),null,null,
-		        						DeviceId.getUniqueDeviceId(ctx),language, null);
+		        						DeviceId.getUniqueDeviceId(ctx),
+		        						DeviceId.getImei(ctx), DeviceId.getMACAddress(ctx), language, null);
 		    				} 
 		    				
 		    				if(loginPlayer.getGuid()!= null){

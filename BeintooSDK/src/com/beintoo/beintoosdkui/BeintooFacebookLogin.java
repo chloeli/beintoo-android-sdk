@@ -145,7 +145,8 @@ public class BeintooFacebookLogin extends Dialog {
 					// PARSE THE LOGGED_URI TO GET THE USEREXT
 					android.net.Uri uri = android.net.Uri.parse(webview.getUrl());
 					DebugUtility.showLog("LOGGED URL: "+uri.toString());
-					Player newPlayer = player.playerLogin(uri.getQueryParameter("userext"),null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
+					Player newPlayer = player.playerLogin(uri.getQueryParameter("userext"),null,null,DeviceId.getUniqueDeviceId(getContext()), 
+							DeviceId.getImei(getContext()), DeviceId.getMACAddress(getContext()), null, null);
 					
 					// SET THAT THE PLAYER IS LOGGED IN BEINTOO
 					PreferencesHandler.saveBool("isLogged", true, getContext());

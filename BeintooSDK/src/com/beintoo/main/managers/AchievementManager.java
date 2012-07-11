@@ -139,11 +139,12 @@ public class AchievementManager {
 								if(!isMissionCompleted && hasUnlocked && showNotification){
 									final Bundle msg = new Bundle();
 									msg.putString("name", achivementsName.toString());
-									msg.putString("message", message.toString());
+									msg.putString("message", message.toString());									
+									final MissionAchievementMessage notification = new MissionAchievementMessage(currentContext, msg, gravity); 									
 									Beintoo.UIhandler.post(new Runnable(){
 										@Override
 										public void run() {
-											MissionAchievementMessage.showMessage(currentContext, msg, gravity);											
+											notification.showMessage(currentContext);												
 										}										
 									});
 								}else if(isMissionCompleted){

@@ -78,7 +78,6 @@ public class Forums extends Dialog {
 		});
 		
 		webview.setInitialScale(1);
-		
 		webview.loadUrl(url);		
 		// DEBUG CALLED URL
 		DebugUtility.showLog(url);

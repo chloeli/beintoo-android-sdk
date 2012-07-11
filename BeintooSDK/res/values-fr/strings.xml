@@ -20,10 +20,10 @@
     <string name="challEnd">Jusqu\'au:</string>
     <string name="challWinner">Gagnant</string>
     <string name="challPrize">Prix:</string>
-    <string name="challNoPending">Vous n\'avez aucune demande de défi en attente</string>    
+    <string name="challNoPending">Vous n\'avez aucune demande de défi en attente. Défiez quelqu\'un depuis le classement!</string>    
     <string name="challRefused">Défi refusé</string>
     <string name="challAccepted">Défi accepté</string>
-    <string name="challNoPendingC">Vous n\'avez aucune demande de défi en attente</string>
+    <string name="challNoPendingC">Vous n\'avez aucune demande de défi en attente. Défiez quelqu\'un depuis le classement</string>
     <string name="challNoAccepted">Vous n\'avez accepté aucun défi</string>
     <string name="challNoEnded">Vous n\'avez aucun défi achevé</string>
     <string name="challChallenge">Défi</string>
@@ -32,7 +32,7 @@
     <string name="challSend">Voulez-vous envoyer un défi?\nPariez 10 BeDollars, vous pourriez en gagner 25.</string>
     <string name="challTip">cliquez sur un utilisateur pour intéragir</string>
     <string name="challmevsyou">Je parie que tu n\'atteindras pas ce score en 48 heures</string>
-	<string name="challmevsyoutitle">Tu n\'arrives pas...</string>
+	<string name="challmevsyoutitle">Tu n\'y arrives pas...</string>
 	<string name="challFriends">Je parie que j\'arrive à gagner ce score en 48 heures</string>
 	<string name="challFriendstitle">J\'y arrive...</string> 
 	<string name="chall48">Je parie que j\'aurai un meilleur score que toi dans les prochaines 48heures</string>  
@@ -41,7 +41,7 @@
 	<string name="challhowmuchbet">Je parie</string>
 	<string name="challhowmanypoint">Que j\'attendrai</string>
 	<string name="challhowmanypointyou">Que %s n\'atteindra pas</string>
-	<string name="challerrorbedollars">S\'il vous plait, ichall48subtitlensérez ici le montant de Bedollars que vous voulez pariez</string>
+	<string name="challerrorbedollars">S\'il vous plait, insérez ici le montant de Bedollars que vous voulez pariez</string>
 	<string name="challerrorpoints">S\'il vous plait, insérez ici le score que vous voulez atteindre</string>
 	<string name="challFromTo">De vous à\u0020</string>
 	<string name="challFrom">De\u0020</string>
@@ -54,7 +54,7 @@
 	<string name="clickhere">cliquez ici</string>
 	
         
-    <string name="leadTitle">Leaderboard</string>
+    <string name="leadTitle">Classement</string>
     <string name="leadScore">Score:\u0020</string>
     <string name="leadSendChall">Défier</string>
 	<string name="leadViewProfile">Voir profil</string>
@@ -66,20 +66,20 @@
     <string name="friendsTitle">Vos amis</string>
     <string name="friendSel">Sélectionnez un ami</string>
     <string name="friendsNo">Vous n\'avez aucun amis pour l\'instant</string>    
-    <string name="friendSure" xml:space="preserve">Êtes vous sûr de vouloir envoyer ce coupon comme cadeau à\u0020</string>
-    <string name="friendSent" xml:space="preserve">Cadeau envoyé à\u0020</string> 
+    <string name="friendSure" xml:space="preserve">Êtes vous sûr de vouloir offrir ce coupon à\u0020</string>
+    <string name="friendSent" xml:space="preserve">Coupon envoyé à\u0020</string> 
     <string name="friendLoading">Chargement en cours...</string>
     <string name="friendTitle">Amis</string> 
     <string name="friendFind">Retrouver amis</string>
-    <string name="friendFindT">Retrouver amis sur Beintoo</string>
+    <string name="friendFindT">Retrouver vos amis sur Beintoo</string>
     <string name="friendYours">Vos amis</string>
-    <string name="friendYoursT">Voir vos amis sur Beintoo</string>
+    <string name="friendYoursT">Voir qui est votre ami sur Beintoo</string>
     <string name="friendFriendshipReqT">Gérez vos demandes d\'amitié.</string>    
-    <string name="friendFindeditsearch">Rechercher un pseudo, un nom ou une email</string>
+    <string name="friendFindeditsearch">Rechercher un pseudo, un nom ou un email</string>
 	<string name="friendRecommendT">Conseiller à un ami</string>
 	<string name="friendRecommend">Conseillez cette appli à vos amis</string>    
     <string name="friendSendReq">Voulez-vous envoyer une demande d\'amitié à %s?</string>
-    <string name="friendReqTitle">Demande d\'amitié</string>
+    <string name="friendReqTitle">Demandes d\'amitié</string>
     <string name="friendReqSubtitle">Cliquez sur le nom pour accepter</string>
     <string name="friendReqEmpty">Vous n\'avez pas de demandes d\'amitié</string>
     <string name="friendReqAccept">Acceptez-vous la demande d\'amitié?</string>
@@ -96,7 +96,7 @@
     <string name="profileBestScore" xml:space="preserve">Meilleur:\u0020</string>
     <string name="profileLastScore" xml:space="preserve">Dernier:\u0020</string>
     <string name="profileNoScores">Vous n\'avez encore aucun score sur cette Appli</string>
-    <string name="profileDetach">Éliminer profil de ce dispositif</string>
+    <string name="profileDetach">Éliminer mon profil de ce dispositif</string>
     <string name="profileOf">Profil de %s</string>
     <string name="password">Mot de passe</string>
     <string name="logout">Déconnexion</string>
@@ -104,13 +104,13 @@
     <string name="vgoodWhoAlso">Ont déjà obtenu le prix</string>
     <string name="vgoodEnd">Valable jusqu\'au:</string>
     
-    <string name="walletNoGoods">Vous n\'avez aucun prix pour l\'instant</string>
-    <string name="walletConverted">Obtenus</string>
+    <string name="walletNoGoods">Vous n\'avez aucune offre pour l\'instant</string>
+    <string name="walletConverted">Collectés</string>
     <string name="walletNotConverted">À obtenir</string>
    
    
    	<string name="tryBe">Beintoo transforme votre passion pour les Applis en de vrais prix.\nC\'est gratuit et extrèmement facile!</string>
-    <string name="pressBt">Cliquez si dessous et essayez Beintoo</string>
+    <string name="pressBt">Cliquez ci-dessous et essayez Beintoo</string>
     
     <!-- ERROR DISPLAYER AND TOAST MESSAGES -->
     <string name="connectionError">Erreur de connexion.\nVérifiez votre connexion à Internet s\'il vous plait.</string>
@@ -131,12 +131,12 @@
     <string name="boxUserLogin">Connectez-vous à Beintoo</string>
     <string name="boxemail">Insérez votre adresse email:</string>
    	<string name="youremail">Votre email:</string>
-   	<string name="startBeintooFun">Commencer à jouer!</string>
+   	<string name="startBeintooFun">Commencez à jouer!</string>
    	<string name="orloginExisting">ou accédez avec un profil déjà existant ></string>
    	<string name="tos">Beintoo ne diffusera pas votre email ni vous serez objet de spam. Votre email passe à travers une connexion sûre.</string>
    	<string name="confirmnick">Confirmer votre pseudo</string>
-   	<string name="invalidemail">S\'il vous plaît fournir une adresse email valide</string>
-	<string name="invalidnickname">La longueur minimale du surnom est de 3 caractères</string>
+   	<string name="invalidemail">S\'il vous plaît fournir une adresse email valable</string>
+	<string name="invalidnickname">La longueur minimale du pseudo est de 3 caractères</string>
 	
     <!-- BUTTONS -->
     <string name="anotheraccount">Utiliser un autre profil</string>
@@ -145,9 +145,9 @@
     <string name="friends">Amis</string>
     <string name="pending">En attente</string>
     <string name="ongoing">En cours</string>
-    <string name="ended">Achevés</string>
+    <string name="ended">Terminés</string>
     <string name="getcoupon">Obtenir le prix</string>
-    <string name="sendasgift">Envoyer comme cadeau</string>
+    <string name="sendasgift">Offrir à un ami</string>
     <string name="loginbt">Connexion</string>
     <string name="newuser">Enregistrez-vous</string>
     <!-- OTHERS -->
@@ -157,13 +157,13 @@
     
     <!-- HOME -->
     <string name="profile">Profil</string>
-    <string name="profiledesc">Voir vos statistiques</string>
+    <string name="profiledesc">Voir mes statistiques</string>
     <string name="leaderboard">Classement</string>
-    <string name="leaderboarddesc">voir les scores totaux</string>    
+    <string name="leaderboarddesc">Voir les scores pour cette Appli</string>    
     <string name="wallet">Vos prix</string>
-    <string name="walletdesc">gérez vos prix virtuels</string>
+    <string name="walletdesc">Gérez vos offres collectées</string>
     <string name="challenges">Défis</string>
-    <string name="challengesdesc">gérez vos défis</string>
+    <string name="challengesdesc">Gérez vos défis</string>
     <string name="forum">Conseils et forum</string>
     <string name="forumdesc">donnez vos opinions e vos conseils</string>
     
@@ -209,24 +209,24 @@
 	<string name="CREATE_USER">Création utilisateur</string>
 	<string name="FRIEND_ADDED">Amis ajouté</string>
 	<string name="FRIEND_INVITE">Amis invité</string>
-	<string name="LEADERBOARD_IMPROVE">Affermissement dans la Leaderboard</string>
-	<string name="MARKETPLACE_BUY">Achat Marketplace</string>
-	<string name="MARKETPLACE_SELL">Vente Marketplace</string>
-	<string name="SEND_BEDOLLAR_METHOD">Versement depuis Appli</string>
+	<string name="LEADERBOARD_IMPROVE">Progression dans le classement</string>
+	<string name="MARKETPLACE_BUY">Obtention d\'une offre</string>
+	<string name="MARKETPLACE_SELL">Vente</string>
+	<string name="SEND_BEDOLLAR_METHOD">Offerts par l\'Appli</string>
 	<string name="SHARE">Partage d\'une info</string>
 	<string name="SUBMIT_SCORE">Nouveau score</string>
 	<string name="VGOOD_CONVERSION">Prix obtenu</string>
 	<string name="WEEKLY_PAYMENT">Salaire hebdomadaire</string>
-	<string name="ACHIEVEMENT_UNLOCKED">Objectif atteint</string>
+	<string name="ACHIEVEMENT_UNLOCKED">Buts atteint</string>
 	
 	<!-- ACHIEVEMENTS -->
-   	<string name="achievement">Achèvements</string>
-  	<string name="achievementdesc">Voir vos achèvements</string>
-  	<string name="achievementempty">Vous n\'avez encore aucun achèvement pour cette Appli</string>
-  	<string name="achievementsunlocked">Vous avez atteint les achèvements suivants:\u0020</string>
-  	<string name="blockedbyplur">Bloqué par les achèvements suivantes</string>
-	<string name="blockedbysing">Bloqué par la achèvement suivante</string>
-	<string name="onapp">sur app:\u0020</string>
+   	<string name="achievement">Buts</string>
+  	<string name="achievementdesc">Voir vos buts à atteindre</string>
+  	<string name="achievementempty">Il n\'y a encore aucun but pour cette Appli</string>
+  	<string name="achievementsunlocked">Vous avez atteint les buts suivants:\u0020</string>
+  	<string name="blockedbyplur">Bloqué par les buts suivants</string>
+	<string name="blockedbysing">Bloqué par le but suivant</string>
+	<string name="onapp">sur l\'appli:\u0020</string>
 	
 	<string name="achievementunlocked">ATTEINT!</string>
 	<string name="achievementmission">Pour accomplir votre mission et gagner votre prix, jouez maintenant sur\u0020</string>
@@ -243,7 +243,7 @@
 	<string name="missionachieveonly">COMPLÉTEZ VOTRE MISSION</string>
 	
 	<!--  ALLIANCES -->
-	<string name="alliance">Clan</string>
+	<string name="alliance">Clans</string>
 	<string name="alliances">Clans</string>
 	<string name="alliancemaintip">Créez votre clan ou cherchez-en un</string>
 	<string name="alliancemaincreate">Créer clan</string>
@@ -256,18 +256,18 @@
 	<string name="alliancecreateeditext">Insérez le nom de votre clan</string>
 	<string name="allianceviewmembers">Membres du clan</string>
 	<string name="allianceviewpending">Demandes en attente</string>
-	<string name="alliancesendreq">Demandez de faire partie</string>
+	<string name="alliancesendreq">Demander de faire partie</string>
 	<string name="alliancedetails">Détails</string>
 	<string name="alliancependingtip">Cliquez sur un joueur pour accepter ou refuser</string>
 	<string name="alliancependindialog">Voulez-vous accepter %s dans votre clan?</string>
 	<string name="alliancependingaccepted">%s a été accepté dans votre clan</string>
 	<string name="alliancependingrefused">%s a été refusé dans votre clan</string>
-	<string name="alliancerequestdialog">Voulez-vous demander à entrer dans le clan %s?</string>
+	<string name="alliancerequestdialog">Voulez-vous demander à %s d\'entrer dans le clan?</string>
 	<string name="alliancerequestsent">Demande envoyée</string>
 	<string name="allianceleave">Quitter le clan</string>
 	<string name="alliancesearch">Chercher un clan</string>
 	<string name="alliancemembers">Membres:\u0020</string>
-	<string name="allianceadmin">Admin:\u0020</string>
+	<string name="allianceadmin">Administrateur:\u0020</string>
 	<string name="allianceaccept">Accepter</string>
 	<string name="alliancerefuse">Refuser</string>
 	<string name="allianceinvalid">La longueur minimale du nom est de 3 caractères</string>
@@ -278,7 +278,7 @@
 	<string name="signupprofile">Créer votre profil, rencontrer de nouveaux amis et gérez vos prix</string>
 	<string name="signupchallenge">Défiez vos amis, gagnez et encaissez des Bedollars</string>	
 	<string name="signupleaderboard">Entrer dans le classement et comparez votre score avec vos amis</string>
-	<string name="signupforums">Discutez avec les utilisateurs et donnes vos conseils</string>	
+	<string name="signupforums">Discutez avec les utilisateurs et donnez vos conseils</string>	
 	
 	<!-- NOTIFICATIONS -->
 	<string name="notifications">Notifications</string> 
@@ -287,31 +287,31 @@
 	<string name="unmissionstatus">Statut de votre mission</string> 
 	
 	<!-- CUSTOM -->
-    <string name="sponsor"><Data><![CDATA[<b>Jouez & Gagnez</b><br /><br /><b>Gagnez des Bedollars</b> en jouant avec cette appli, <b>et obtenez réductions et offres personnalisées </b> de votre choix </b>! ]]> </Data></string>
+    <string name="sponsor"><Data><![CDATA[<b>Jouez & Gagnez</b><br /><br /><b>Gagnez des Bedollars</b> en jouant avec cette appli, <b>et obtenez des réductions et des offres personnalisées </b> de votre choix </b>! ]]> </Data></string>
     <string name="sponsorvirtualcurrency"><Data><![CDATA[<b>Jouez & Gagnez</b><br /><br /><b>Utilisez les points gagnés </b> dans cette appli pour <b> obtenir des offres et réductions de votre choix. ]]> </Data></string>
     <string name="sponsortitle">Inscrivez-vous et obtenez des offres et réductions dans votre ville pour vos succès dans les applis!</string>        
  	
  	<!-- MARKETPLACE -->
-    <string name="marketplace">Marketplace</string>
-    <string name="buymarketplace">choisissez vos offres</string>
-    <string name="featured">En vedette</string>
+    <string name="marketplace">Obtenez vos prix</string>
+    <string name="buymarketplace">Utilisez vos Bedollars pour obtenir des offres</string>
+    <string name="featured">La sélection</string>
     <string name="national">National</string>
     <string name="aroundme">Autour de moi</string>
     <string name="top">Top</string>
-    <string name="categories">Categories</string>
+    <string name="categories">Catégories</string>
     <string name="buy">Achetez</string>
     <string name="yourbalance">Votre crédit:</string>
-    <string name="youarebuying">Vous achetez:</string>
+    <string name="youarebuying">Vous obtenez:</string>
     <string name="price">Prix:\u0020</string>
     <string name="where">Où:\u0020</string>
-    <string name="addresslist">Addresses</string>
-    <string name="buynow">Achetez maintenant</string>
+    <string name="addresslist">Addresse</string>
+    <string name="buynow">Profitez maintenant</string>
     <string name="distance">Distance:\u0020</string>
-    <string name="nocoupon">Il n\'y a aucun coupon dans cette catégorie</string>
-    <string name="needbedollars"> Vous n\'avez pas assez de crédits pour achetez cette offre, il vous manque %s, jouez pour gagner maintenant</string>           
-    <string name="signupmarketplacefriends"> Iscrivez vous à Beintoo pour offrir ce coupon </string>
+    <string name="nocoupon">Il n\'y a pas d\'offres dans cette catégorie</string>
+    <string name="needbedollars"> Vous n\'avez pas assez de crédits pour obtenir cette offre, il vous manque %s, jouez pour gagner maintenant</string>           
+    <string name="signupmarketplacefriends"> Iscrivez-vous à Beintoo pour offrir ce coupon </string>
     <string name="trybeintoomarketplacetitle">Vous aimez jouez avec les applis?</string>
-    <string name="trybeintoomarketplace">Prenez plaisir à jouer avec les applis et défier vos amis, gagner de la monnaie et obtenez des offers et reduction de voter choix!</string>
+    <string name="trybeintoomarketplace">Prenez plaisir à jouer avec les applis et défier vos amis, gagner de la monnaie et obtenez des offres et reduction de votre choix!</string>
 	
 	<!-- TRY BEINTOO -->
     <string name="trynow">S\'inscrire</string>

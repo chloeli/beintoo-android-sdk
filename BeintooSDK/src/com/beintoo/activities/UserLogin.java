@@ -117,7 +117,8 @@ public class UserLogin extends Dialog{
 										guid = p.getGuid(); 
 								}catch(Exception e){e.printStackTrace();}
 								
-								Player newPlayer = player.playerLogin(loggedUser.getId(),guid,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
+								Player newPlayer = player.playerLogin(loggedUser.getId(),guid,null,DeviceId.getUniqueDeviceId(getContext()), 
+										DeviceId.getImei(getContext()), DeviceId.getMACAddress(getContext()),null, null);
 								Gson gson = new Gson();					
 								String jsonPlayer = gson.toJson(newPlayer);
 								 

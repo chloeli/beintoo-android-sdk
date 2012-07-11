@@ -29,7 +29,8 @@ public class UserManager {
 	    				Player player = Current.getCurrentPlayer(currentContext);
 	    				if(player == null){
 	    					BeintooPlayer bp = new BeintooPlayer();
-	    					player = bp.playerLogin(null, null, null, DeviceId.getUniqueDeviceId(currentContext), null, null);
+	    					player = bp.playerLogin(null, null, null, DeviceId.getUniqueDeviceId(currentContext), 
+	    							DeviceId.getImei(currentContext), DeviceId.getMACAddress(currentContext), null, null);
 	    					BeintooUser bu = new BeintooUser();	    					
 	    					User u = bu.setOrUpdateUser("set", player.getGuid(), null, email, nickname, password, name, address, country, null, sendGreetingsEmail, imageUrl, null);
 	    					if(u != null){

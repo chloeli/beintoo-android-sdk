@@ -19,31 +19,31 @@
     <string name="challStart">Start date:</string>
     <string name="challEnd">End date:</string>
     <string name="challWinner">Winner</string>
-    <string name="challPrize">Prize:</string>
-    <string name="challNoPending">You have no pending challenge request</string>    
+    <string name="challPrize">Offer:</string>
+    <string name="challNoPending">You have no pending challenge requests</string>    
     <string name="challRefused">Challenge refused</string>
     <string name="challAccepted">Challenge accepted</string>
-    <string name="challNoPendingC">You have no pending challenges</string>
-    <string name="challNoAccepted">You have no accepted challenges</string>
+    <string name="challNoPendingC">You have no pending challenges. Challenge a friend from the leaderboard and earn Bedollars!</string>
+    <string name="challNoAccepted">You have no accepted challenges. Accept one or challenge a friend from the leaderboard</string>
     <string name="challNoEnded">You have no ended challenges</string>
     <string name="challChallenge">Challenge</string>
     <string name="challSent">Challenge sent to\u0020</string>
-    <string name="challAccept">Do you want to accept this challenge for\u0020</string>
+    <string name="challAccept">Do you want to accept this challenge from\u0020</string>
     <string name="challSend">Would you like to send a challenge? Bet 10 BeDollars, to win 25.</string>
     <string name="challTip">click on a user to interact</string>    
-    <string name="challmevsyou">I bet you can not reach this score in 48 hours</string>
+    <string name="challmevsyou">I bet you can\'t reach this score in 48 hours</string>
     <string name="challmevsyoutitle">You can\'t reach...</string>
     <string name="challFriends">I bet I can reach this score in 48 hours</string>
     <string name="challFriendstitle">I can reach...</string> 
-    <string name="chall48">I bet I can get a better score than yours in the next 48hours?</string>    
+    <string name="chall48">I bet I can get a better score than yours in the next 48 hours</string>    
     <string name="chall48title">Who\'s the best?</string>
     <string name="chall48subtitle">I can reach a better score than yours</string>
     <string name="challmaxbet">Bedollars:</string>
     <string name="challhowmuchbet">I bet</string>
     <string name="challhowmanypoint">I can reach</string>  
-    <string name="challhowmanypointyou">%s can not reach</string>
+    <string name="challhowmanypointyou">%s cannot reach</string>
     <string name="challerrorbedollars">Please insert the amount of Bedollars you want to bet</string>
-    <string name="challerrorpoints">Please, insert the points you want to bet</string> 
+    <string name="challerrorpoints">Please insert the points you want to bet</string> 
     <string name="challFromTo">From you to\u0020</string>
     <string name="challFrom">From\u0020</string>
     <string name="challYou">\u0020to you</string>
@@ -72,18 +72,18 @@
     <string name="friendLoading">Loading friends...</string>
     <string name="friendTitle">Friends</string>    
     <string name="friendFind">Find Friends</string>
-    <string name="friendFindT">Find people on Beintoo community</string>
+    <string name="friendFindT">Find people in the Beintoo community</string>
     <string name="friendYours">Your friends</string>
     <string name="friendYoursT">View your Beintoo friends</string>
-    <string name="friendFriendshipReqT">Manage your friendship requests</string>    
+    <string name="friendFriendshipReqT">Manage your friend requests</string>    
     <string name="friendFindeditsearch">Search a nickname, name or mail</string>
     <string name="friendRecommendT">Recommend to a friend</string>    
     <string name="friendRecommend">Recommend this app to your friends</string>
     <string name="friendSendReq">Send %s a friend request?</string>
     <string name="friendReqTitle">Friend requests</string>
     <string name="friendReqSubtitle">Click on name to accept</string>
-    <string name="friendReqEmpty">You have no friendship requests</string>
-    <string name="friendReqAccept">Do you accept the friendship request?</string>
+    <string name="friendReqEmpty">You have no friend requests</string>
+    <string name="friendReqAccept">Do you accept the friend request?</string>
     <string name="friendNotfound">Not found</string>
     <string name="friendReqSent">Friend request sent</string>
     <string name="friendReqAcc">Friend request accepted</string>
@@ -104,11 +104,11 @@
     <string name="vgoodWhoAlso">Who also purchased</string>
     <string name="vgoodEnd">End date:</string>
     
-    <string name="walletNoGoods">You have no virtual goods</string>
-    <string name="walletConverted">Redeemed goods</string>
+    <string name="walletNoGoods">You have no offers yet</string>
+    <string name="walletConverted">Redeemed offers</string>
     <string name="walletNotConverted">To be redeemed</string>
    
- 	<string name="tryBe">Beintoo turn your Passion for apps into real rewards.\nIt\'s free and extremely easy!</string>  
+ 	<string name="tryBe">Beintoo turns your Passion for apps into real offers.\nIt\'s free and extremely easy!</string>  
     <string name="pressBt">Press the button below to try Beintoo</string>
     
     <!-- ERROR DISPLAYER AND TOAST MESSAGES -->
@@ -122,12 +122,12 @@
     <string name="earnedMultiScore">You earned multiple points:\u0020 %s</string>
     
     <!-- BOXES -->
-    <string name="boxWallet">Here\'s your wallet of great rewards</string>
+    <string name="boxWallet">Here are the offers you have collected!</string>
     <string name="boxChallenge">Here are your challenges\nIt\'s time to win</string>
-    <string name="boxCoupon">Congratulations! You deserve a reward</string>
-    <string name="boxCouponList">Congratulations! Choose your reward</string>
+    <string name="boxCoupon">Congratulations! You deserve an offer</string>
+    <string name="boxCouponList">Congratulations! Choose your offer</string>
     <string name="boxUserSel">Which profile do you want to use?\nSelect one or use another account</string>
-    <string name="boxUserLogin">Login on Beintoo</string>
+    <string name="boxUserLogin">Login to Beintoo</string>
     <string name="boxemail">Enter your email address:</string>
     <string name="youremail">Your email</string>
     <string name="startBeintooFun">Start having fun!</string>
@@ -160,20 +160,20 @@
     <string name="profiledesc">view your global scoring</string>
     <string name="leaderboard">Leaderboards</string>
     <string name="leaderboarddesc">view your stats</string>
-    <string name="wallet">Wallet</string>
-    <string name="walletdesc">manage your virtual goods</string>
+    <string name="wallet">My Offers</string>
+    <string name="walletdesc">manage your offers</string>
     <string name="challenges">Challenges</string>
     <string name="challengesdesc">manage your challenges</string>
     <string name="forum">Tips&amp;Forum</string>
     <string name="forumdesc">join discussions and feedbacks</string>
     
     <!-- VGOOD DIALOG -->
-    <string name="vgoodmessagealert">Hey! You won a Beintoo reward by using this app!\nTap redeem and get it</string>
+    <string name="vgoodmessagealert">Hey! You earned a Beintoo offer by using this app!\nTap redeem and get it</string>
     <string name="vgoodmessagepositive">Redeem</string>
     <string name="vgoodrecommpositive">See More</string>
     <string name="vgoodmessagenegative">Later</string>    
-    <string name="vgoodmessagebanner">Hey! You got a Beintoo reward by using this app!\nTap here and redeem it</string>
-    <string name="vgoodhtmlmessage">View here the prize you get</string>
+    <string name="vgoodmessagebanner">Hey! You got a Beintoo offer by using this app!\nTap here and redeem it</string>
+    <string name="vgoodhtmlmessage">View your offer here</string>
     <string name="vgoodchoosedialog">Choose an option</string>
     <string name="vgoodgetcoupondialog">Get the coupon</string>
     <string name="vgoodsendgiftdialog">Send as a gift</string>
@@ -200,7 +200,7 @@
     
     <!-- BALANCE -->
     <string name="balance">Balance</string>  
-    <string name="balanceempty">You have no beDollars transactions</string>      
+    <string name="balanceempty">You have no Bedollar transactions</string>      
     <string name="BADGE_WIN">Badge Won</string>
 	<string name="CHALLENGE_ACCEPT">Challenge Accepted</string>
 	<string name="CHALLENGE_INVITE">Challenge Invited</string>
@@ -211,12 +211,12 @@
 	<string name="FRIEND_ADDED">Friend Added</string>
 	<string name="FRIEND_INVITE">Friend invited</string>
 	<string name="LEADERBOARD_IMPROVE">Leaderboard improvement</string>
-	<string name="MARKETPLACE_BUY">Marketplace Purchase</string>
-	<string name="MARKETPLACE_SELL">Marketplace Sale</string>
+	<string name="MARKETPLACE_BUY">Purchase in Redeem</string>
+	<string name="MARKETPLACE_SELL">Sale in Redeem</string>
 	<string name="SEND_BEDOLLAR_METHOD">Given by App</string>
 	<string name="SHARE">Sharing</string>
 	<string name="SUBMIT_SCORE">Score submitted</string>
-	<string name="VGOOD_CONVERSION">VGood converted</string>
+	<string name="VGOOD_CONVERSION">Offer converted</string>
 	<string name="WEEKLY_PAYMENT">Weekly salary</string>
 	<string name="ACHIEVEMENT_UNLOCKED">Achievement unlocked</string>
 	
@@ -230,16 +230,16 @@
 	<string name="onapp">on app:\u0020</string>
 	
 	<string name="achievementunlocked">UNLOCKED!</string>
-	<string name="achievementmission">To achieve your mission and win your reward play now on\u0020</string>
+	<string name="achievementmission">To achieve your mission and earn your offer play now on\u0020</string>
 	<string name="missionwelcome">Welcome to your \u0020</string>
 	<string name="missionstatus">Status of your \u0020</string>
 	<string name="missionwelcomeweek">MISSION OF THE WEEK!</string>
-	<string name="missionachieve">ACHIEVE YOUR MISSION AND <Data><![CDATA[<font color="#abc237">EARN A REAL REWARD</font>]]> </Data></string>
+	<string name="missionachieve">ACHIEVE YOUR MISSION AND <Data><![CDATA[<font color="#abc237">EARN A REAL OFFER</font>]]> </Data></string>
 	<string name="missionlater">Later</string>
 	<string name="missionjoin">JOIN NOW</string>
 	<string name="missiondownload">Download now</string>
 	<string name="missionaccomplished">MISSION ACCOMPLISHED!</string>
-	<string name="missionreward">GET YOUR REWARD NOW!</string>
+	<string name="missionreward">GET YOUR OFFER NOW!</string>
 	<string name="missionredeem">Redeem!</string>
 	<string name="missionachieveonly">ACHIEVE YOUR MISSION</string>
 	
@@ -253,7 +253,7 @@
 	<string name="alliancemainyoursbottom">View details of your alliance</string>
 	<string name="alliancemainlist">Alliances list</string>
 	<string name="alliancemainlistbottom">View alliances list</string>
-	<string name="alliancemaintextfooter">The alliances are a group of users who decide to team up together and collaborate against other alliances in order to win more prizes and more Bedollars</string>
+	<string name="alliancemaintextfooter">Alliances are groups of users who decide to team up together and collaborate against other alliances in order to earn more prizes and more Bedollars</string>
 	<string name="alliancecreateeditext">Enter name of your alliance</string>
 	<string name="allianceviewmembers">Alliance members</string>
 	<string name="allianceviewpending">Pending requests</string>
@@ -262,7 +262,7 @@
 	<string name="alliancependingtip">Click on user to accept or refuse</string>
 	<string name="alliancependindialog">Want to admit %s in your alliance?</string>
 	<string name="alliancependingaccepted">%s has been admitted in your alliance</string>
-	<string name="alliancependingrefused">%s has been refused in your alliance</string>
+	<string name="alliancependingrefused">%s has been refused from your alliance</string>
 	<string name="alliancerequestdialog">Do you want to apply to enter the alliance %s?</string>
 	<string name="alliancerequestsent">Request sent</string>
 	<string name="allianceleave">Leave the alliance</string>
@@ -274,12 +274,12 @@
 	<string name="allianceinvalid">The minimum length of the name is 3 characters</string>
 	
 	<!-- PLAYER SIGNUP -->
-	<string name="signuphome">Have more fun, connect with players and make your winnings real!\nWelcome to the Beintoo network!</string>
+	<string name="signuphome">Have more fun, connect with players and make your earnings real!\nWelcome to the Beintoo network!</string>
 	<string name="signupnow"><data><![CDATA[SIGN UP <b>NOW</b>]]></data></string>
-	<string name="signupprofile">Create your profile, get new friends and manage your rewards!</string>
+	<string name="signupprofile">Create your profile, make new friends and manage your offers!</string>
 	<string name="signupchallenge">Challenge friends, win and earn Bedollars!</string>	
-	<string name="signupleaderboard">Be in the Leaderboard and compare your score with your friends!</string>
-	<string name="signupforums">Discuss with players and give your feedbacks.</string>
+	<string name="signupleaderboard">View the Leaderboard and compare your score with your friends!</string>
+	<string name="signupforums">Discuss with players and give your feedback.</string>
 		
 	
 	<!-- NOTIFICATIONS -->
@@ -290,12 +290,12 @@
 	
 	    
 	<!-- CUSTOM -->
-	<string name="sponsor"><Data><![CDATA[<b>Have fun & Earn</b><br /><br /><b>Earn Bedollars</b> by using this app and <b>choose the customized offer</b> that fits <b>better for you</b>! ]]> </Data></string>
+	<string name="sponsor"><Data><![CDATA[<b>Have fun & Earn</b><br /><br /><b>Earn Bedollars</b> by using this app and <b>choose the customized offer</b> that fits <b>you best</b>! ]]> </Data></string>
 	<string name="sponsorvirtualcurrency"><Data><![CDATA[<b>Have fun & Earn</b><br /><br /><b>Use the coins you earn</b> in this app to <b>redeem customized offers</b> of your choice ]]> </Data></string>
-	<string name="sponsortitle">Join the community and get great discounts around you as reward for your achievements in this app!</string>	    
+	<string name="sponsortitle">Join the community and earn great discounts around you from the achievements in this app!</string>	    
 	    
 	<!-- MARKETPLACE -->
-	<string name="marketplace">Marketplace</string>
+	<string name="marketplace">Redeem</string>
 	<string name="buymarketplace">choose your offers</string>
 	<string name="featured">Featured</string>
 	<string name="national">National</string>
@@ -312,15 +312,15 @@
 	<string name="distance">Distance:\u0020</string>
 	<string name="nocoupon">There are no coupons in this category</string>
 	<string name="needbedollars"> You do not have enough credits to get this offer, 
-	    you miss %s, go and play to earn them right now</string>		   
-	<string name="signupmarketplacefriends">Signup on Beintoo to send this coupon as a gift.</string>
+	    you\'re missing %s, go play to earn them right now</string>		   
+	<string name="signupmarketplacefriends">Signup to Beintoo to send this coupon as a gift.</string>
 	<string name="trybeintoomarketplacetitle">Love playing with apps?</string>
-	<string name="trybeintoomarketplace">Enjoy your favorite games and all this playful features to earn dollars of discount and settle how to spend them in the Marketplace!</string>
+	<string name="trybeintoomarketplace">Enjoy your favorite games and all these playful features to earn dollars of discount and decide how to spend them in the Redeem section!</string>
 	
 	<string name="trynow">Join the community</string>
     <string name="nothanks">No, I don\'t want to play&amp;earn</string>
    
-	<string name="submitscorempmessage">You\'ve got now %s, don\'t lose them! Use them in the Marketplace!</string>
-   	<string name="submitscorempmessageplayer">Go now to Marketplace!</string>        
+	<string name="submitscorempmessage">You now have %s, don\'t lose them! Use them in the Redeem section!</string>
+   	<string name="submitscorempmessageplayer">Go Redeem now!</string>        
    	<string name="orderbyprice">Order by price</string>        
 </resources>

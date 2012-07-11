@@ -23,13 +23,13 @@
     <string name="challNoPending">Du hast keine anhängige Herausforderung Zugriffe</string>    
     <string name="challRefused">Herausforderung abgelehnt</string>
     <string name="challAccepted">Herausforderung akzeptiert</string>
-    <string name="challNoPendingC">Du hast keine anhängige Herausforderung</string>
+    <string name="challNoPendingC">Du hast keine anhängige Herausforderung. Fordere einen Freund heraus aus der Rangliste.</string>
     <string name="challNoAccepted">Du hast keine Herausforderung akzeptiert</string>
     <string name="challNoEnded">Du hast keine Herausforderung beendet</string>
     <string name="challChallenge">Herausforderung</string>
     <string name="challSent">Herausforderung an\u0020 gesendet</string>
     <string name="challAccept">Möchtest du akzeptieren diese Herausforderung zu\u0020 annehmen?</string>
-    <string name="challSend">Möchtest du eine Herausforderung schicken? Wette 10 BeDollars um 25 Bedollars gewinnen.</string>   
+    <string name="challSend">Möchtest du eine Herausforderung schicken? Wette 10 Bedollars um 25 Bedollars gewinnen.</string>   
 	<string name="challTip">Klicke auf einen Benutzer zu interagieren</string>
     <string name="challmevsyou">Ich wette, du nicht erreichen kannst, diese Partitur in 48 Stunden</string>
 	<string name="challmevsyoutitle">Du kannst nicht erreichen...</string>
@@ -51,13 +51,13 @@
 	<string name="challCanWin">Sieg</string>
 	<string name="challPointsTarget">Punkte zu erreichen</string> 
 	<string name="challPoints">Punkte</string>
-	<string name="clickhere">klicke hier</string>
+	<string name="clickhere">hier klicken</string>
 	
-    <string name="leadTitle">Leaderboard</string>
+    <string name="leadTitle">Rangliste</string>
     <string name="leadScore">Partitur:\u0020</string>
     <string name="leadSendChall">Senden</string>
 	<string name="leadViewProfile">Profil ansehen</string>
-	<string name="leadAddFriend">Als Fraund hinzufügen</string>
+	<string name="leadAddFriend">Als Freund hinzufügen</string>
 	<string name="leadshowfriendsonly">Freunden</string>
 	<string name="leadshowclosestsonly">Zu übertreffen</string>
 	
@@ -79,9 +79,9 @@
 	<string name="friendRecommend">Empfehle dieses App zu deinen Freunden</string>
     <string name="friendSendReq">Willst du %s eine anfrange schicken?</string>
     <string name="friendReqTitle">Freundschaftsanfragen</string>
-    <string name="friendReqSubtitle">Klicke auf dem Namen falls zu akzeptieren</string>
+    <string name="friendReqSubtitle">Klicke auf dem Namen zu akzeptieren</string>
     <string name="friendReqEmpty">Du hast keine neue Anfragen</string>
-    <string name="friendReqAccept">Akzeptierst du die Freundschaftsanfragen</string>
+    <string name="friendReqAccept">Akzeptierst du die Freundschaftsanfragen?</string>
     <string name="friendNotfound">Nicht gefunden</string>
     <string name="friendReqSent">Freundschaftsanfragen geschickt</string>
     <string name="friendReqAcc">Freundschaftsanfragen akzeptiert</string>
@@ -153,13 +153,13 @@
     
     <!-- HOME -->
     <string name="profile">Profil</string>
-    <string name="profiledesc">Sieh deine Gesamtpunktzahl</string>
-    <string name="leaderboard">Leaderboard</string>
-    <string name="leaderboarddesc">Sieh deine Statistiken</string>
+    <string name="profiledesc">Sieh deine Statistiken</string>
+    <string name="leaderboard">Rangliste</string>
+    <string name="leaderboarddesc">Sieh deine Gesamtpunktzahl</string>
     <string name="wallet">Brieftasche</string>
-    <string name="walletdesc">Verwahlte deine Virtuelle Preise</string>
+    <string name="walletdesc">Verwahlte deine Preise</string>
     <string name="challenges">Herausforderunge</string>
-    <string name="challengesdesc">Verwahlte deine Virtuelle Preise</string>
+    <string name="challengesdesc">Verwalten Herausforderungen</string>
     <string name="forum">Tipps Und Forum</string>
     <string name="forumdesc">diskutiere und gib deine Vorschlage</string>
     
@@ -204,15 +204,15 @@
 	<string name="CREATE_USER">Konto Schöpfung</string>
 	<string name="FRIEND_ADDED">Freund Hinzufügen</string>
 	<string name="FRIEND_INVITE">Friend eingeladen</string>
-	<string name="LEADERBOARD_IMPROVE">Leaderboard improvement</string>
-	<string name="MARKETPLACE_BUY">Marketplace Kauf</string>
-	<string name="MARKETPLACE_SELL">Marketplace Verkauf</string>
-	<string name="SEND_BEDOLLAR_METHOD">Given by App</string>
+	<string name="LEADERBOARD_IMPROVE">Rangliste Verbesserung</string>
+	<string name="MARKETPLACE_BUY">Angebot Kauf</string>
+	<string name="MARKETPLACE_SELL">Angebot Verkauf</string>
+	<string name="SEND_BEDOLLAR_METHOD">Gegeben von App</string>
 	<string name="SHARE">Teilen</string>
-	<string name="SUBMIT_SCORE">Score submitted</string>
+	<string name="SUBMIT_SCORE">Ergebnis vorgelegt</string>
 	<string name="VGOOD_CONVERSION">Preis eingelost</string>
 	<string name="WEEKLY_PAYMENT">Wöchentliches Gehalt</string>
-	<string name="ACHIEVEMENT_UNLOCKED">Achievement entriegelt</string>
+	<string name="ACHIEVEMENT_UNLOCKED">Erfolg entriegelt</string>
    
    	<!-- ACHIEVEMENTS --> 
    	<string name="achievement">Erfolge</string>
@@ -255,7 +255,7 @@
 	<string name="alliancesendreq">Fragen zu ferbinden</string>
 	<string name="alliancedetails">Details</string>
 	<string name="alliancependingtip">Klicke auf Benutzer zu akzeptieren oder abzulehnen</string>
-	<string name="alliancependindialog">Möchstest du %s in daine Allianz zugeben?</string>
+	<string name="alliancependindialog">Möchstest du %s in deine Allianz zugeben?</string>
 	<string name="alliancependingaccepted">%s hat in deiner Allianz aufgenommen worden</string>
 	<string name="alliancependingrefused">%s hat in deiner Allianz abgelehnt worden</string>
 	<string name="alliancerequestdialog">Willst du gelten für die Allianz %s geben?</string>
@@ -285,11 +285,11 @@
 	
 	<!-- CUSTOM -->
     <string name="sponsor"><Data><![CDATA[<b>Viel Spaß & Verdienen</b><br /><br /><b>Earn Bedollars</b> mit dieser App und <b>wähle das angepasste Angebot</b> das <b>besser passt für dich</b>! ]]> </Data></string>
-    <string name="sponsorvirtualcurrency"><Data><![CDATA[<b>Viel Spaß & Verdienen</b><br /><br /><b>mit den Credits, die du in dieser App verdienst, um maßgeschneiderte Angebote deiner Wahl einlösen ]]> </Data></string>
+    <string name="sponsorvirtualcurrency"><Data><![CDATA[<b>Viel Spaß & Verdienen</b><br /><br /><b>mit den Bedollars, die du in dieser App verdienst, um maßgeschneiderte Angebote deiner Wahl einlösen ]]> </Data></string>
     <string name="sponsortitle">Mitglied in der Community und erhalte einen Rabatt um dich herum, wie für Ihre Leistungen in diesem app belohnen!</string>        
 
     <!-- MARKETPLACE -->
-    <string name="marketplace">Marketplace</string>
+    <string name="marketplace">Angebote einlösen</string>
     <string name="buymarketplace">Wähle deine Angebote</string>
     <string name="featured">Im Spotlight</string>
     <string name="national">National</string>
@@ -311,8 +311,8 @@
     <string name="trybeintoomarketplacetitle">Liebe das Spiel mit Apps?</string>
     <string name="trybeintoomarketplace">Genieße deine Lieblings-Spiele und alles spielerisch Funktionen zu verdienen, und verbringe auf dem Marketplace!</string>
 	
-	<string name="submitscorempmessage">Du hast jetzt %s, verliere sie nicht! Benutzer sie auf dem Marketplace!</string>
-   	<string name="submitscorempmessageplayer">Gehe jetzt auf Marketplace</string>        
+	<string name="submitscorempmessage">Du hast jetzt %s, verliere sie nicht!</string>
+   	<string name="submitscorempmessageplayer">Gehe jetzt sie zu erlösen</string>        
    	<string name="orderbyprice">Sortieren bei Preis</string>
         
         

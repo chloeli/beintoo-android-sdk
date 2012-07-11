@@ -94,13 +94,19 @@ public class GetVgoodManager {
 				//boolean isBanner = false;
 				if(!isMultiple) { // ASSIGN A SINGLE VGOOD TO THE PLAYER
 					if(l != null){				
-						VgoodChooseOne v = vgoodHand.getVgoodList(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
+						VgoodChooseOne v = vgoodHand.getVgoodList(currentPlayer.getGuid(),
+								DeviceId.getUniqueDeviceId(currentContext),
+								DeviceId.getImei(currentContext), 
+								DeviceId.getMACAddress(currentContext),
 								1, codeID, Double.toString(l.getLatitude()), 
 								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
 						if(v.getVgoods() != null && v.getVgoods().get(0) != null)
 							Beintoo.vgood = v.getVgoods().get(0);
 					}else {			
-						VgoodChooseOne v = vgoodHand.getVgoodList(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 1,
+						VgoodChooseOne v = vgoodHand.getVgoodList(currentPlayer.getGuid(), 
+								DeviceId.getUniqueDeviceId(currentContext),
+								DeviceId.getImei(currentContext), 
+								DeviceId.getMACAddress(currentContext), 1,
 								codeID, null, null, null, false);
 						if(v.getVgoods() != null && v.getVgoods().get(0) != null)
 							Beintoo.vgood = v.getVgoods().get(0);
@@ -139,11 +145,17 @@ public class GetVgoodManager {
 			    	}
 		    	}else { // ASSIGN A LIST OF VGOOD TO THE PLAYER
 		    		if(l != null){
-		    			Beintoo.vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
+		    			Beintoo.vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), 
+		    					DeviceId.getUniqueDeviceId(currentContext),
+		    					DeviceId.getImei(currentContext), 
+		    					DeviceId.getMACAddress(currentContext),
 		    					3, codeID, Double.toString(l.getLatitude()), 
 		    					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
 		    		}else {
-		    			Beintoo.vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
+		    			Beintoo.vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), 
+		    					DeviceId.getUniqueDeviceId(currentContext),
+		    					DeviceId.getImei(currentContext), 
+		    					DeviceId.getMACAddress(currentContext),
 		    					3, codeID, null, null,null, false);
 		    		}
 			    	if(Beintoo.vgoodlist != null){
@@ -290,11 +302,17 @@ public class GetVgoodManager {
 				
 				 // ASSIGN A LIST OF VGOOD TO THE PLAYER
 	    		if(l != null){
-	    			Beintoo.vgoodlist = vgoodHand.getAd(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
+	    			Beintoo.vgoodlist = vgoodHand.getAd(currentPlayer.getGuid(), 
+	    					DeviceId.getUniqueDeviceId(currentContext),
+	    					DeviceId.getImei(currentContext), 
+	    					DeviceId.getMACAddress(currentContext),
 	    					codeID, Double.toString(l.getLatitude()), 
 	    					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
 	    		}else {
-	    			Beintoo.vgoodlist = vgoodHand.getAd(currentPlayer.getGuid(), DeviceId.getImei(currentContext), 
+	    			Beintoo.vgoodlist = vgoodHand.getAd(currentPlayer.getGuid(), 
+	    					DeviceId.getUniqueDeviceId(currentContext),
+	    					DeviceId.getImei(currentContext), 
+	    					DeviceId.getMACAddress(currentContext),
 	    					codeID, null, null,null, false);
 	    		}
 	    		

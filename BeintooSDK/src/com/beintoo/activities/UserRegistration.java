@@ -136,7 +136,8 @@ public class UserRegistration extends Dialog{
 		    				DebugUtility.showLog("Logged player before new "+currentPlayer);
 		    				
 		    				if(loggedUser == null || loggedUser.getUser() != null) // GET A NEW RANDOM PLAYER
-		    					newPlayer = player.playerLogin(null,null,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
+		    					newPlayer = player.playerLogin(null,null,null,DeviceId.getUniqueDeviceId(getContext()),
+		    							DeviceId.getImei(getContext()), DeviceId.getMACAddress(getContext()), null, null);
 		    				else // USE THE CURRENT SAVED PLAYER 
 		    					newPlayer = loggedUser;
 		    				
@@ -145,7 +146,7 @@ public class UserRegistration extends Dialog{
 								BeintooUser bu = new BeintooUser();
 								bu.setOrUpdateUser("set", newPlayer.getGuid(), null, email, nickname, null, null, null, null, null, true, null, null);
 								
-								Player userLogin = player.playerLogin(null, newPlayer.getGuid(), null, null, null, null);
+								Player userLogin = player.playerLogin(null, newPlayer.getGuid(), null, null, null, null, null, null);
 								PreferencesHandler.saveString("currentPlayer", new Gson().toJson(userLogin), getContext());
 								currentUserUserExt = userLogin.getUser().getId();
 								PreferencesHandler.saveBool("isLogged", true, getContext());
@@ -189,7 +190,7 @@ public class UserRegistration extends Dialog{
 	            				BeintooUser bu = new BeintooUser();
 								bu.setOrUpdateUser("update", null, currentUserUserExt, email, nicknameText.getText().toString(), null, null, null, null, null, true, null, null);
 								
-								player = bp.playerLogin(currentUserUserExt, null, null, null, null, null);
+								player = bp.playerLogin(currentUserUserExt, null, null, null, null, null, null, null);
 								PreferencesHandler.saveString("currentPlayer", new Gson().toJson(player), getContext());
             				}
             				

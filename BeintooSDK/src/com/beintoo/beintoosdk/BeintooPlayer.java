@@ -47,7 +47,7 @@ public class BeintooPlayer {
 	 * @param publicname player public name
 	 * @return return a json object of the logged in player
 	 */
-	public Player playerLogin(String userExt, String guid, String codeID, String deviceUUID, String language, String publicname) {
+	public Player playerLogin(String userExt, String guid, String codeID, String deviceUUID, String imei, String macaddress, String language, String publicname) {
 		String apiUrl = apiPreUrl+"player/login?";
 		
 		if(language != null) apiUrl = apiUrl  + "language="+language;
@@ -64,16 +64,22 @@ public class BeintooPlayer {
 		if(codeID != null){
 			header.getKey().add("codeID");
 			header.getValue().add(codeID);
-		}
-		
+		}		
 		if(deviceUUID != null){
 			header.getKey().add("deviceUUID");
 			header.getValue().add(deviceUUID);
-		}
-		
+		}		
 		if(guid != null){
 			header.getKey().add("guid");
 			header.getValue().add(guid);
+		}		
+		if(macaddress != null){
+			header.getKey().add("macaddress");
+			header.getValue().add(macaddress);			
+		}		
+		if(imei != null){
+			header.getKey().add("imei");
+			header.getValue().add(imei);			
 		}
 		
 		BeintooConnection conn = new BeintooConnection();

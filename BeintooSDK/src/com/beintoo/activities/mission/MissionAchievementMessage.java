@@ -11,44 +11,45 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 public class MissionAchievementMessage {
-	static Dialog toast = null;
-	static WindowManager wM;
-	static LinearLayout container;
-	static Handler mHandler;
-	static Typeface tf;
-	public static void showMessage(final Context ctx, final Bundle message, final int gravity){
+	Dialog toast = null;
+	WindowManager wM;
+	LinearLayout container;
+	Handler mHandler;
+	Typeface tf;
+	TextView completed;
+	TextView message;
+	TextView greetingstext;
+	Handler UIHandler;
+	public void showMessage(final Context ctx){
+		UIHandler = new Handler();
 		new Thread(new Runnable(){
 			@Override
 			public void run() {
 				tf = CustomFonts.handWriteFont(ctx);
+				if(tf != null){
+					completed.setTypeface(tf);
+					greetingstext.setTypeface(tf);
+					message.setTypeface(tf);
+				}
 				UIHandler.post(new Runnable(){
 					@Override
 					public void run() {
-						show(ctx, message, gravity);
+						show();
 					}					
 				});								
 			}			
 		}).start();
 	}
 	
-	public static void show (Context ctx, Bundle data, int gravity){
+	public MissionAchievementMessage(final Context ctx, final Bundle data, final int gravity){
 		try {
 			wM = (WindowManager) ctx.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-			if(container != null){
-				if(container.isShown()){
-					wM.removeView(container);
-					mHandler.removeCallbacks(mRunnable);
-				}
-			}
-				
-			WindowManager.LayoutParams mParams = new WindowManager.LayoutParams();
-			
 			
 			container = new LinearLayout(ctx);
 			container.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -64,7 +65,7 @@ public class MissionAchievementMessage {
 			secondRow.setPadding(0, toDip(ctx,10), 0, 0);
 			 			
 			// ACHIEVEMENT NAME AND UNLOCKED MESSAGE
-			TextView greetingstext = new TextView(ctx);
+			greetingstext = new TextView(ctx);
 			String text = "<font color=\"#abc237\">"+ data.get("name").toString() + "</font> " + ctx.getString(R.string.achievementunlocked);
 			greetingstext.setText(Html.fromHtml(text));
 			greetingstext.setMaxLines(2);			
@@ -76,23 +77,17 @@ public class MissionAchievementMessage {
 			greetingstext.setTextColor(Color.parseColor("#FFFFFF"));
 			
 			// 100% TEXT
-			TextView completed = new TextView(ctx);
+			completed = new TextView(ctx);
 			completed.setText("100%");
 			completed.setTextSize(17);
 			completed.setTextColor(Color.rgb(171, 194, 55));
 			
 			// ACHIEVEMENT MISSION MESSAGE 
-			TextView message = new TextView(ctx);
+			message = new TextView(ctx);
 			message.setText(data.get("message").toString());
 			message.setTextSize(15);
 			message.setMaxLines(2);
 			message.setTextColor(Color.parseColor("#FFFFFF"));
-			
-			if(tf != null){
-				completed.setTypeface(tf);
-				greetingstext.setTypeface(tf);
-				message.setTypeface(tf);
-			}
 			
 			firstRow.addView(greetingstext);
 			firstRow.addView(completed);
@@ -101,23 +96,26 @@ public class MissionAchievementMessage {
 			container.addView(firstRow);
 			
 			if(data.get("message").toString().length() > 0)
-				container.addView(secondRow);
+				container.addView(secondRow);	
 			
-			mParams.gravity = gravity;
-			mParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-			mParams.width = WindowManager.LayoutParams.FILL_PARENT;
-			mParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-			mParams.format = PixelFormat.TRANSLUCENT;
-			mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-			mParams.windowAnimations = android.R.style.Animation_Toast;		
-			wM.addView(container, mParams);
-				
-			mHandler = new Handler();			
-			mHandler.postDelayed(mRunnable, 5000);
 		}catch (Exception e){e.printStackTrace();}
 	}
 	
-	private static Runnable mRunnable = new Runnable(){
+	public void show (){
+		WindowManager.LayoutParams mParams = new WindowManager.LayoutParams();
+		mParams.gravity = Gravity.BOTTOM;
+		mParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+		mParams.width = WindowManager.LayoutParams.FILL_PARENT;
+		mParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+		mParams.format = PixelFormat.TRANSLUCENT;
+		mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+		mParams.windowAnimations = android.R.style.Animation_Toast;		
+		wM.addView(container, mParams);
+		mHandler = new Handler();			
+		mHandler.postDelayed(mRunnable, 5000);		
+	}
+	
+	private Runnable mRunnable = new Runnable(){
 	    public void run()
 	    {	    	
 	    	try {
@@ -126,10 +124,8 @@ public class MissionAchievementMessage {
 	    }
 	};
 	 
-	private static int toDip (Context context, int px) {
+	private int toDip (Context context, int px) {
 		double ratio = (context.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);			
 		return (int)(ratio*px);
-	}
-	
-	private static Handler UIHandler = new Handler(); 
+	} 
 }

@@ -199,7 +199,7 @@ public class UserSelection extends Dialog implements OnClickListener{
 					}catch(Exception e){e.printStackTrace();}
 					
 					BeintooPlayer player = new BeintooPlayer();
-					Player newPlayer = player.playerLogin(userExt,guid,null,DeviceId.getUniqueDeviceId(getContext()),null, null);
+					Player newPlayer = player.playerLogin(userExt,guid,null,DeviceId.getUniqueDeviceId(getContext()), null, null, null, null);
 					String jsonPlayer = gson.toJson(newPlayer);
 					
 					// SAVE THE CURRENT PLAYER

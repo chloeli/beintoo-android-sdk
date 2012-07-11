@@ -26,7 +26,6 @@ import com.beintoo.R;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdkutility.ApiCallException;
 import com.beintoo.beintoosdkutility.Current;
-import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;

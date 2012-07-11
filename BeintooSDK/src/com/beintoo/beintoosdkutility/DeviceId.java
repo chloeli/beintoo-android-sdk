@@ -26,6 +26,8 @@ import com.beintoo.beintoosdk.DeveloperConfiguration;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
 
@@ -126,5 +128,21 @@ public class DeviceId {
 		}
 		
 		return imei;
+	}
+	
+	public static String getMACAddress(Context context){
+		String macAddress = null;
+		try {
+			PackageManager pm = context.getPackageManager();
+			if(PackageManager.PERMISSION_GRANTED == pm.checkPermission(Manifest.permission.ACCESS_WIFI_STATE, context.getPackageName())){
+				WifiManager wifiMan = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+				WifiInfo wifiInf = wifiMan.getConnectionInfo();
+				macAddress = wifiInf.getMacAddress();
+			}			
+		}catch(Exception e){
+			return null;
+		}
+		
+		return macAddress;
 	}
 }

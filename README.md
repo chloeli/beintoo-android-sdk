@@ -47,7 +47,7 @@ For example
 	
 Finally you have to add the gson framework which is included in the BeintooSDK directory
 
-To include gson Select your application project then __Properties__ -> __Java build path__ -> __Libraries__ -> __Add External JARs__ and then select __beintoogson-1.7.1.jar__ in the BeintooSDK directory
+To do that you should put the __beintoogson-1.7.1.jar__ in your project libs dir __yourproject/libs/beintoogson-1.7.1.jar__
 
 
 Start using Beintoo
