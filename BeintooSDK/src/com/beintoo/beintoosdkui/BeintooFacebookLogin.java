@@ -33,6 +33,7 @@ import android.widget.Toast;
 import android.graphics.Bitmap;
 import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
+import com.beintoo.activities.TutorialPostSignup;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.DebugUtility;
@@ -47,6 +48,7 @@ public class BeintooFacebookLogin extends Dialog {
 	WebView webview;
 	final Dialog current;
 	private static final int GO_HOME = 1;
+	private static final int GO_TO_TUTORIAL = 2;
 	
 	public BeintooFacebookLogin(Context ctx, String openUrl) {
 		super(ctx, R.style.ThemeBeintoo);		
@@ -154,8 +156,11 @@ public class BeintooFacebookLogin extends Dialog {
 					String jsonUser = gson.toJson(newPlayer);
 					PreferencesHandler.saveString("currentPlayer", jsonUser, getContext());
 					
-					// FINALLY GO HOME
-					UIhandler.sendEmptyMessage(GO_HOME);
+					// GO TO TUTORIAL IF NEW USER OR DASHBOARD IF EXISTING USER
+					if(uri.toString().contains("m/landing_register_ok_no_script.html")) // SIGNUP
+						UIhandler.sendEmptyMessage(GO_TO_TUTORIAL);
+					else
+						UIhandler.sendEmptyMessage(GO_HOME);
 					
 					if(uri.toString().contains("m/landing_register_ok_no_script.html")){
 						if(Beintoo.mUserSignupCallback != null)
@@ -182,6 +187,11 @@ public class BeintooFacebookLogin extends Dialog {
 					  BeintooHome beintooHome = new BeintooHome(getContext());
 					  beintooHome.show();
 				  }
+				current.dismiss();
+				Beintoo.currentDialog.dismiss();
+			  }else if(msg.what == GO_TO_TUTORIAL){
+				TutorialPostSignup tps = new TutorialPostSignup(getContext());
+				tps.show();
 				current.dismiss();
 				Beintoo.currentDialog.dismiss();
 			  }

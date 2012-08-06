@@ -1,5 +1,6 @@
 package com.beintoo.activities.marketplace;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +38,7 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 	WebView webview;
 	final Dialog current;
 	public String openUrl = null;
+
 	public Marketplace(Context ctx, Player player) {
 		super(ctx, R.style.ThemeBeintoo);		
 		current = this;		
@@ -69,6 +71,7 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 				p.setProgress(progress);
 			}
 			
+			@SuppressLint({ "NewApi", "NewApi" })
 			public void onGeolocationPermissionsShowPrompt(String origin, Callback callback) {				
 				super.onGeolocationPermissionsShowPrompt(origin, callback);
 				callback.invoke(origin, true, false);
@@ -118,9 +121,11 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 	
 	private String getMarketplaceUrl(Player player){
 		String web = BeintooSdkParams.webUrl;
+		
 	  	if(BeintooSdkParams.internalSandbox) 
-			web = BeintooSdkParams.sandboxWebUrl;
+			web = BeintooSdkParams.sandboxWebUrl;	  	
 		Uri.Builder marketplaceUrl = Uri.parse(web+"m/marketplace.html").buildUpon();
+		
 		if(player.getGuid() != null)
 			marketplaceUrl.appendQueryParameter("guid", player.getGuid());
 		marketplaceUrl.appendQueryParameter("apikey", DeveloperConfiguration.apiKey);
@@ -132,7 +137,7 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 		marketplaceUrl.appendQueryParameter("os_source", "android"); 
 		
 		String locationParamsUrl = getSavedPlayerLocationParams(marketplaceUrl.toString());
-		
+				
 		return locationParamsUrl;
 	}
 

@@ -26,6 +26,7 @@ import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
 import com.beintoo.wrappers.Contest;
 import com.beintoo.wrappers.LeaderboardContainer;
+import com.beintoo.wrappers.UserCredit;
 import com.google.beintoogson.Gson;
 import com.google.beintoogson.reflect.TypeToken;
 
@@ -155,6 +156,30 @@ public class BeintooApp {
 	
 	public List<Contest> getContests(){
 		return getContests(null, true, null);
+	}
+	
+	/**
+	 * give bedollars to a user
+	 * 
+	 * @return
+	 */
+	public UserCredit giveBedollars(String userExt, String amount){		
+		Uri.Builder apiUrl = Uri.parse(apiPreUrl+"app/givebedollars/"+userExt).buildUpon();
+		
+		HeaderParams header = new HeaderParams();
+		header.getKey().add("apikey");
+		header.getValue().add(DeveloperConfiguration.apiKey);
+		PostParams post = new PostParams();
+		post.getKey().add("reason");
+		post.getValue().add(amount);
+				
+		BeintooConnection conn = new BeintooConnection();
+		String json = conn.httpRequest(apiUrl.toString(), header, post, true);
+		Gson gson = new Gson();
+		
+		UserCredit uc = gson.fromJson(json, UserCredit.class);
+		
+		return uc;		
 	}
 	
 	/**

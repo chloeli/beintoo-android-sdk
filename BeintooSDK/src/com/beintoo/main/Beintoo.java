@@ -38,6 +38,7 @@ import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.MessageDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.managers.AchievementManager;
+import com.beintoo.main.managers.AppManager;
 import com.beintoo.main.managers.GetVgoodManager;
 import com.beintoo.main.managers.PlayerManager;
 import com.beintoo.main.managers.SubmitScoreManager;
@@ -53,6 +54,7 @@ import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerAchievement;
 import com.beintoo.wrappers.PlayerScore;
 import com.beintoo.wrappers.User;
+import com.beintoo.wrappers.UserCredit;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
 import com.google.beintoogson.Gson;
@@ -123,6 +125,10 @@ public class Beintoo{
 	
 	public static int CONNECTION_ERRORS = 0;
 	
+	public static String GIVE_1_BEDOLLAR = "GIVE_BEDOLLARS_1";
+	public static String GIVE_2_BEDOLLAR = "GIVE_BEDOLLARS_2";
+	public static String GIVE_5_BEDOLLAR = "GIVE_BEDOLLARS_5";
+	
 	/**
 	 * Set the developer apikey
 	 * 
@@ -143,16 +149,15 @@ public class Beintoo{
 	 * 
 	 * @param ctx current Context
 	 */
-	public static void BeintooStart(final Context ctx, boolean forceSignup, boolean goToDashboard){
+	public static void BeintooStart(final Context ctx, boolean forceSignup){
 		currentContext = ctx;
-		OPEN_DASHBOARD_AFTER_LOGIN = goToDashboard;
 		
 		try{			
 			boolean isLogged = PreferencesHandler.getBool("isLogged", ctx);
-			String savedPlayer = Current.getCurrentPlayerJson(ctx);
+			Player savedPlayer = Current.getCurrentPlayer(ctx);
 			final Player currentPlayer;
 			if(savedPlayer != null){
-				currentPlayer = Current.getCurrentPlayer(ctx);
+				currentPlayer = savedPlayer;
 			}else{
 				forceSignup = true; // if no player force the try beintoo
 				currentPlayer = null;
@@ -163,24 +168,26 @@ public class Beintoo{
 			Thread t = new Thread(new Runnable(){   				
         		public void run(){        			
         			try{        				        				
-						BeintooPlayer player = new BeintooPlayer();
-						// DEBUG
-						DebugUtility.showLog("current saved player: "+Current.getCurrentPlayerJson(ctx));											
-
-						// LOGIN TO BEINTOO		
-						if(currentPlayer != null){
-							Player newPlayer = player.getPlayer(currentPlayer.getGuid());													
-							Current.setCurrentPlayer(ctx, newPlayer);
-							UIhandler.sendEmptyMessage(GO_HOME); // OPEN DASHBOARD
-						}else{
-							UIhandler.post(new Runnable(){
-								public void run(){ 
-									tryBeintoo tryBe = new tryBeintoo(ctx);
-									currentDialog = tryBe;
-									tryBe.show();
-								}
-							});
-						}
+        				User[] arr = null;
+        				BeintooUser usr = new BeintooUser();        				
+        				String deviceID = DeviceId.getUniqueDeviceId(currentContext);            				
+        				if(deviceID != null){ // CHECK IF WE ARE ON FROYO AND WITHOUT SIM (BUG)
+            				arr = usr.getUsersByDeviceUDID(deviceID);
+            				if(arr.length == 0) { // Loading the registration form 
+            					Message msg = new Message();
+            			        msg.what = GO_REG;
+            			        UIhandler.sendMessage(msg);
+            				}else if(arr.length > 0){ // check the existing users
+            					Gson gson = new Gson();
+            					String jsonUsers = gson.toJson(arr);
+            					PreferencesHandler.saveString("deviceUsersList", jsonUsers, currentContext);        					
+            					Message msg = new Message();
+            			        msg.what = USER_SEL;
+            			        UIhandler.sendMessage(msg);            					
+            				} 
+        				}else {
+        					UIhandler.sendEmptyMessage(GO_REG);            					
+        				}
 						CONNECTION_ERRORS = 0;
         			}catch (Exception e ){
         				dialog.dismiss();
@@ -195,29 +202,27 @@ public class Beintoo{
         		}
 			});
 			// AVOID BAD LOGIN
-			if(isLogged == true && (savedPlayer == null || savedPlayer == "")) logout(ctx);
-			if(forceSignup){
-				if(isLogged == true && currentPlayer.getUser() != null){
+			if(isLogged == true && (savedPlayer == null)) logout(ctx);
+			DebugUtility.showLog("currentPlayer "+currentPlayer + " isLogged "+isLogged    );
+			if(forceSignup){ // don't go to the player dashboard
+				if(isLogged == true && currentPlayer.getUser() != null){ // if the user is logged in go to dashboard
+					UIhandler.sendEmptyMessage(GO_HOME);				
+				}else{ // if the user is not logged in ask for signup
 					dialog.show();
-					t.start();				
-				}else{
-					tryBeintoo tryBe = new tryBeintoo(ctx);
-					currentDialog = tryBe;
-					tryBe.show();
+					t.start();
 				}
-			}else{ // forceSignup == false
+			}else{ // signup is not forced
 				long lastDay = PreferencesHandler.getLong("lastSignupDialog", ctx);
 				long now = System.currentTimeMillis();
 				long daysIntervalMillis = 86400000 * 7; // 7 days - (20 sec 2857)   
-				long nextPopup = lastDay + daysIntervalMillis;							
-				if((lastDay == 0 || now >= nextPopup) && !isLogged){
-					tryBeintoo tryBe = new tryBeintoo(ctx);
-					currentDialog = tryBe;
-					tryBe.show();
-					PreferencesHandler.saveLong("lastSignupDialog", now, ctx);
-				}else{
+				long nextPopup = lastDay + daysIntervalMillis;			
+				
+				if((lastDay == 0 || now >= nextPopup) && !isLogged){ // every 7 days we show the signup					
 					dialog.show();
-					t.start();
+					t.start();						
+					PreferencesHandler.saveLong("lastSignupDialog", now, ctx);
+				}else{ // if are not 7 days from the last launch go to the dashboard
+					UIhandler.sendEmptyMessage(GO_HOME);
 				}
 			}
 		}catch (Exception e){
@@ -229,11 +234,6 @@ public class Beintoo{
 			CONNECTION_ERRORS++;
 		}
 	} 
-	
-	public static void BeintooStart(final Context ctx, boolean goToDashboard){
-		Beintoo.BeintooStart(ctx, false, goToDashboard);
-	}
-	
 	
 	public static void signupUser(final Context context, boolean goToDashboard, final BUserSignupListener callback){
 		currentContext = context;
@@ -315,6 +315,17 @@ public class Beintoo{
 	
 	public static void GetVgood(final Context ctx, final boolean isMultiple, final LinearLayout container, final int notificationType){
 		GetVgood(ctx, null, isMultiple, container, notificationType, null);
+	}
+	
+	public static void getSpecialReward(Context ctx, String developerUserGuid, final BGetVgoodListener listener){
+		currentContext = ctx;			
+		gvl = listener;
+		GetVgoodManager gvm = new GetVgoodManager(ctx);
+		gvm.GetSpecialReward(developerUserGuid, listener);
+	}
+	
+	public static void getSpecialReward(Context ctx, String developerUserGuid){
+		getSpecialReward(ctx, developerUserGuid, null);
 	}
 	
 	/** 
@@ -546,6 +557,20 @@ public class Beintoo{
 		submitScoreMultiple(ctx, scores, showNotification, Gravity.BOTTOM, null);
 	}
 	
+	/**
+	 * give bedollars 
+	 * 
+	 * @param ctx
+	 * @param amount is one of GIVE_BEDOLLARS_1 GIVE_BEDOLLARS_2 GIVE_BEDOLLARS_5
+	 */
+	public static void giveBedollars(final Context ctx, final String amount, final boolean showNotification, final BGiveBedollarsListener callback){
+		new AppManager().giveBedollars(ctx, amount, showNotification, callback);
+	}
+	
+	public static void giveBedollars(final Context ctx, final String amount, final boolean showNotification){
+		giveBedollars(ctx, amount, showNotification, null);
+	}
+	
 	/** 
 	 * Get the current player score
 	 * 
@@ -608,27 +633,6 @@ public class Beintoo{
 	
 	public static void setAchievementScore(Context ctx, final String achievement, final Float percentage, final Float value,final BAchievementListener listener){
 		submitAchievementScore(ctx, achievement, percentage, value, false, true, Gravity.BOTTOM, listener);
-	}
-	
-	/**
-	 * Shows new/current mission to the user
-	 * 
-	 * @param ctx current Context
-	 * @param alwaysShow if true the popup is show at every call, if false is show every 24 hours
-	 * @param listener callback listener
-	 */
-	public static void getMission(Context ctx, boolean alwaysShow, BMissionListener listener){		
-		currentContext = ctx;
-		AchievementManager am = new AchievementManager(ctx);
-		am.getMission(listener, alwaysShow);		
-	}
-	
-	public static void getMission(Context ctx, boolean alwaysShow){		
-		getMission(ctx, alwaysShow, null);
-	}
-	
-	public static void getMission(Context ctx){
-		getMission(ctx, false, null);
 	}
 	
 	/**
@@ -816,14 +820,14 @@ public class Beintoo{
 	  */
 	 public static interface BIsRewardCoveredListener {
 		 public void onCovered();
-		 public void onUncovered();
+		 public void onSpecialCampaignCovered();
 		 public void onError();
 	 }
 	
 	/** 
 	 *  Listener for submitScore callback
 	 */	
-	public static interface BSubmitScoreListener {
+	 public static interface BSubmitScoreListener {
 		 public void onComplete();		 
 		 public void onBeintooError(Exception e);
 	 }
@@ -835,6 +839,15 @@ public class Beintoo{
 		 public void onComplete(PlayerScore p);
 		 public void onBeintooError(Exception e);
 	 }
+	 
+	 /** 
+	 *  Listener for GiveBedollars callback
+	 */	
+	 public static interface BGiveBedollarsListener {
+		 public void onComplete(UserCredit u);	
+		 public void onPlayerNotUser();
+		 public void onError(Exception e);
+	 }	 
 	 
 	 /** 
 	  *  Listener for submitAchievementScore callback

@@ -23,8 +23,11 @@ import com.beintoo.activities.alliances.UserAlliance;
 import com.beintoo.activities.signupnow.SignupLayouts;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooUser;
+import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkui.BeButton;
+import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
@@ -38,6 +41,7 @@ import com.beintoo.wrappers.PlayerScore;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -226,6 +230,17 @@ public class UserProfile extends Dialog {
 				if(isUser){
 					MessagesList ml = new MessagesList(getContext());
 			        ml.show();
+				}else{
+					SignupLayouts.signupNowDialog(context, Beintoo.FEATURE_PROFILE);
+				}														
+			}
+		});
+		
+		ImageButton settings = (ImageButton) findViewById(R.id.settingsbt);
+		settings.setOnClickListener(new ImageButton.OnClickListener(){
+			public void onClick(View v) {
+				if(isUser){
+					openProfileSettings();
 				}else{
 					SignupLayouts.signupNowDialog(context, Beintoo.FEATURE_PROFILE);
 				}														
@@ -436,6 +451,25 @@ public class UserProfile extends Dialog {
 				mw.show();												
 			}
 		});
+	}
+	
+	private void openProfileSettings(){
+		String webUrl = null;
+        if(!BeintooSdkParams.internalSandbox){
+        	webUrl = BeintooSdkParams.webUrl;
+        }else{
+        	webUrl = BeintooSdkParams.sandboxWebUrl;
+        }
+		Uri.Builder b = Uri.parse(webUrl+"nativeapp/settings.html").buildUpon();
+        Player p = Current.getCurrentPlayer(getContext());
+        if(p!=null && p.getUser() != null){
+        	b.appendQueryParameter("extId", p.getUser().getId());
+        	b.appendQueryParameter("guid", p.getGuid());
+        }
+        b.appendQueryParameter("apikey", DeveloperConfiguration.apiKey);
+        
+        BeintooBrowser bb = new BeintooBrowser(getContext(), b.build().toString());
+        bb.show();
 	}
 	
 	private void manageConnectionException (){

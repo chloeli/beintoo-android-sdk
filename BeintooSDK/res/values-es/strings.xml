@@ -120,6 +120,8 @@
     <string name="earnedBalance">Tu tanteo total està de: %d</string>
     <string name="earnedScore">Has ganado %d puntos.\u0020</string>
     <string name="earnedMultiScore">Has ganado múltiple puntos:\u0020 %s</string>
+    <string name="giveBedollarsEarned">Acabas de ganar %d Bedollars!\nÚsalos para disfrutar de grandes ofertas en Beintoo</string>
+    <string name="giveBedollarsEarned_s">Vous venez de gagner %d Bedollar!\nUtilisez vos Bedollars et profitez d\'offres exclusives sur Beintoo</string>
     
     <!-- BOXES -->
     <string name="boxWallet">Tus premios</string>
@@ -128,11 +130,11 @@
     <string name="boxCouponList">¡Felicitaciones! Elige tu premio</string>
     <string name="boxUserSel">¿Que perfil quieres utilizar?\nSelecciona o insiere nueva cuenta</string>
     <string name="boxUserLogin">Entra en Beintoo</string>
-    <string name="boxemail">Ingresa tu dirección de correo electrónico:</string>
+    <string name="boxemail">Ingresa tu dirección de correo electrónico</string>
    	<string name="youremail">tu correo electrónico</string>
    	<string name="startBeintooFun">Empieza a jugar!</string>
-   	<string name="orloginExisting">o entra con un perfil existente></string>
-   	<string name="tos">Beintoo no distribuirà tu dirección de correo electrónico y tampoco serás objectivo de correo no deseado.</string>
+   	<string name="tos">Beintoo no distribuirà tu dirección de correo electrónico y tampoco serás objectivo de correo no deseado. 
+   	    Suscribiéndote a beintoo estas de acuerdo con los términos de <Data><![CDATA[<a href="http://www.beintoo.com/tos.html">servicio y la política</a>]]></Data> de <Data><![CDATA[<a href="http://www.beintoo.com/tos.html">privacidad</a>]]></Data> de Beintoo.</string>
    	<string name="confirmnick">Confirme tu apodo</string>
    	<string name="invalidemail">Por favor ingrese tu dirección de correo electrónico válida</string>
 	<string name="invalidnickname">La longitud mínima del apodo es de 3 caracteres</string>
@@ -319,4 +321,9 @@
 	<!-- TRY BEINTOO -->
     <string name="trynow">Unirse a la comunidad</string>
     <string name="nothanks">No, no quiero jugar y ganar</string>	    
+    
+    <string name="or">o</string>
+	<string name="signup">Regístrate</string>
+	<string name="orloginExisting">¿Ya estás registrado? Entra aquí >></string>
+    <string name="signup_message">Únete a la comunidad, gana Bedollars y disfruta de ofertas esclusivas</string>	
 </resources>

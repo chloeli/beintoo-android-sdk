@@ -81,8 +81,52 @@ public class GetVgoodManager {
 		} 
 	}
 	
+	public void GetSpecialReward(final String developerUserGuid, final BGetVgoodListener listener){
+		try {			
+			SerialExecutor executor = SerialExecutor.getInstance();	
+    		executor.execute(new Runnable(){     					
+	    		public void run(){
+	    			try{			
+	    				final Player currentPlayer = Current.getCurrentPlayer(currentContext);	    				
+	    				if(currentPlayer == null) return;
+	    				
+	    				Long currentTime = System.currentTimeMillis();
+	    				Location pLoc = LocationMManager.getSavedPlayerLocation(currentContext);
+	    	        	if(pLoc != null){
+	    	        		if((currentTime - pLoc.getTime()) <= 900000){ // TEST 20000 (20 seconds)
+	    	        			// GET A VGOOD WITH COORDINATES
+						    	getVgoodHelper(null, true, null, 
+						    			Beintoo.VGOOD_NOTIFICATION_ALERT,pLoc,currentPlayer, true, 
+						    			developerUserGuid, listener);
+	    	        		}else {
+	    	        			// GET A VGOOD WITHOUT COORDINATES
+			    				getVgoodHelper(null, true, null, Beintoo.VGOOD_NOTIFICATION_ALERT,
+			    						null,currentPlayer, true, developerUserGuid, listener);
+			    				LocationMManager.savePlayerLocation(currentContext);
+	    	        		}
+	    	        	}else{
+	    	        		getVgoodHelper(null, true, null, Beintoo.VGOOD_NOTIFICATION_ALERT,
+	    	        				null,currentPlayer, true, developerUserGuid, listener);
+		    				LocationMManager.savePlayerLocation(currentContext);
+	    	        	}
+	    			}catch(Exception e){e.printStackTrace();}
+	    		}
+    		});
+		}catch (Exception e){
+			e.printStackTrace();
+		} 
+	}
+	
+	
 	private void getVgoodHelper (String codeID, boolean isMultiple,final LinearLayout container, 
 			final int notificationType, Location l, Player currentPlayer, final BGetVgoodListener listener){
+		
+		this.getVgoodHelper(codeID, isMultiple, container, notificationType, l, currentPlayer, null, null, listener);
+	}
+	
+	private void getVgoodHelper (String codeID, boolean isMultiple,final LinearLayout container, 
+			final int notificationType, Location l, Player currentPlayer, Boolean specialRewardOnly, 
+			String developerUserGuid, final BGetVgoodListener listener){
 		synchronized (LAST_OPERATION){
 			try {
 				Beintoo.gvl = listener;
@@ -99,7 +143,9 @@ public class GetVgoodManager {
 								DeviceId.getImei(currentContext), 
 								DeviceId.getMACAddress(currentContext),
 								1, codeID, Double.toString(l.getLatitude()), 
-								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
+								Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), 
+								false, specialRewardOnly, developerUserGuid);
+						
 						if(v.getVgoods() != null && v.getVgoods().get(0) != null)
 							Beintoo.vgood = v.getVgoods().get(0);
 					}else {			
@@ -107,7 +153,8 @@ public class GetVgoodManager {
 								DeviceId.getUniqueDeviceId(currentContext),
 								DeviceId.getImei(currentContext), 
 								DeviceId.getMACAddress(currentContext), 1,
-								codeID, null, null, null, false);
+								codeID, null, null, null, false, specialRewardOnly, developerUserGuid);
+						
 						if(v.getVgoods() != null && v.getVgoods().get(0) != null)
 							Beintoo.vgood = v.getVgoods().get(0);
 					}
@@ -150,13 +197,15 @@ public class GetVgoodManager {
 		    					DeviceId.getImei(currentContext), 
 		    					DeviceId.getMACAddress(currentContext),
 		    					3, codeID, Double.toString(l.getLatitude()), 
-		    					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), false);
+		    					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), 
+		    					false, specialRewardOnly, developerUserGuid);
 		    		}else {
 		    			Beintoo.vgoodlist = vgoodHand.getVgoodList(currentPlayer.getGuid(), 
 		    					DeviceId.getUniqueDeviceId(currentContext),
 		    					DeviceId.getImei(currentContext), 
 		    					DeviceId.getMACAddress(currentContext),
-		    					3, codeID, null, null,null, false);
+		    					3, codeID, null, null,null, 
+		    					false, specialRewardOnly, developerUserGuid);
 		    		}
 			    	if(Beintoo.vgoodlist != null){
 			    		// CHECK IF THERE IS MORE THAN ONE VGOOD AVAILABLE
@@ -252,9 +301,9 @@ public class GetVgoodManager {
 			
 			if(msg != null){
 				if(msg.isCovered())
-					listener.onCovered();
-				else if(!msg.isCovered())
-					listener.onUncovered();
+					listener.onCovered();				
+				if(msg.isSpecialAvailable())
+					listener.onSpecialCampaignCovered();
 			}
 		}catch(Exception e){
 			e.printStackTrace();

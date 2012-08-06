@@ -121,6 +121,8 @@
     <string name="earnedBalance">Votre score total est de: %d</string>
     <string name="earnedScore">Vous avez gagné %d points.\u0020</string>
     <string name="earnedMultiScore">Vous avez gagné multiples points:\u0020 %s</string>
+    <string name="giveBedollarsEarned">Vous venez de gagner %d Bedollars!\nUtilisez-les et profitez d\'offres exclusives sur Beintoo</string>
+    <string name="giveBedollarsEarned_s">Vous venez de gagner %d Bedollar!\nUtilisez vos Bedollars et profitez d\'offres exclusives sur Beintoo</string>
     
     <!-- BOXES -->
     <string name="boxWallet">Vos prix</string>
@@ -129,11 +131,11 @@
     <string name="boxCouponList">Félicitations! Choisissez votre prix</string>
     <string name="boxUserSel">Quel profil voulez-vous utiliser?\nSélectionnez-le ou ajoutez-en un autre</string>
     <string name="boxUserLogin">Connectez-vous à Beintoo</string>
-    <string name="boxemail">Insérez votre adresse email:</string>
+    <string name="boxemail">Insérez votre adresse email</string>
    	<string name="youremail">Votre email:</string>
    	<string name="startBeintooFun">Commencez à jouer!</string>
-   	<string name="orloginExisting">ou accédez avec un profil déjà existant ></string>
-   	<string name="tos">Beintoo ne diffusera pas votre email ni vous serez objet de spam. Votre email passe à travers une connexion sûre.</string>
+   	<string name="tos">Beintoo ne diffusera pas votre email ni vous serez objet de spam. Votre email passe à travers une connexion sûre.
+   	    En vous inscrivant à Beintoo vous acceptez les <Data><![CDATA[<a href="http://www.beintoo.com/tos.html">conditions d\'utilisation</a>]]></Data> et la <Data><![CDATA[<a href="http://www.beintoo.com/tos.html">politique de confidentialité</a>]]></Data> de Beintoo.</string>
    	<string name="confirmnick">Confirmer votre pseudo</string>
    	<string name="invalidemail">S\'il vous plaît fournir une adresse email valable</string>
 	<string name="invalidnickname">La longueur minimale du pseudo est de 3 caractères</string>
@@ -315,5 +317,10 @@
 	
 	<!-- TRY BEINTOO -->
     <string name="trynow">S\'inscrire</string>
-    <string name="nothanks">Non, je ne veux pas jouer et gagner</string>	    
+    <string name="nothanks">Non, je ne veux pas jouer et gagner</string>	 
+    
+    <string name="or">ou</string>
+	<string name="signup">Inscription</string>
+	<string name="orloginExisting">Déjà enregistré? Connectez vous >></string>    
+    <string name="signup_message">Rejoignez la communauté, gagnez des Bedollars et utilisez-les pour profitez d\'offres exclusives</string>
 </resources>

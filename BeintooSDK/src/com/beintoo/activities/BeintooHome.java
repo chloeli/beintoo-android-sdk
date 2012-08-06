@@ -31,11 +31,9 @@ import com.beintoo.beintoosdkutility.BDrawableGradient;
 import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DialogStack;
 import com.beintoo.main.Beintoo;
-import com.beintoo.main.Beintoo.BMissionListener;
 import com.beintoo.wrappers.Player;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -92,8 +90,6 @@ public class BeintooHome extends Dialog {
 			signup.setVisibility(View.VISIBLE);
 		}
 		
-		setMissionStatusButton();
-		
 		// SET ROWS BACKGROUND, CLICKLISTENER AND CHECK IF THE DEVELOPER WANTS TO REMOVE SOME FEATURES
 		setFeatureToUse();		
 	}
@@ -105,40 +101,7 @@ public class BeintooHome extends Dialog {
 			TextView nickname = (TextView) findViewById(R.id.nickname);
 			nickname.setText(player.getUser().getNickname());
 			TextView bedollars = (TextView) findViewById(R.id.bedollars);
-			bedollars.setText(player.getUser().getBedollars().intValue() + " BeDollars");
-		}catch (Exception e){e.printStackTrace();}
-	}
-	
-	public void setMissionStatusButton(){
-		try {
-			if(player.hasMission()){
-				Context context = current.getContext();
-				LinearLayout unread = (LinearLayout) findViewById(R.id.messages);			
-				findViewById(R.id.missionstatus).setVisibility(View.VISIBLE);
-				TextView unreadtxt = (TextView) findViewById(R.id.unmissionstatus);
-				unreadtxt.setText(context.getString(R.string.unmissionstatus));				
-				unread.setBackgroundDrawable(button.setPressedBackg(
-						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.LIGHT_GRAY_GRADIENT),
-						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.HIGH_GRAY_GRADIENT),
-						new BDrawableGradient(0,(int) (ratio*30),BDrawableGradient.HIGH_GRAY_GRADIENT)));
-				unread.setOnClickListener(new View.OnClickListener(){
-					@Override
-					public void onClick(View v) {							
-						final ProgressDialog  dialog = ProgressDialog.show(getContext(), "", getContext().getString(R.string.loading),true);
-						dialog.setCancelable(true);						
-						Beintoo.getMission(current.getContext(), true, new BMissionListener(){
-							@Override
-							public void onComplete() {
-								dialog.dismiss();
-							}
-							@Override
-							public void onError(Exception e) {
-								dialog.dismiss();   
-							}							
-						});								
-					}					
-				});
-			}
+			bedollars.setText(player.getUser().getBedollars().intValue() + " Bedollars");
 		}catch (Exception e){e.printStackTrace();}
 	}
 	
@@ -360,6 +323,10 @@ public class BeintooHome extends Dialog {
 								if(player != null && newPlayer.getUnreadNotification() != null)
 									notificationsNumber.setText(newPlayer.getUnreadNotification().toString());
 								findViewById(R.id.notificationcircle).setBackgroundDrawable(new BDrawableGradient(0,(int)(ratio*25),BDrawableGradient.NOTIFICATION_BAR_CIRCLE_NUMBER));
+								if(player != null && player.getUser() != null){
+									TextView bedollars = (TextView) findViewById(R.id.bedollars);
+									bedollars.setText(player.getUser().getBedollars().intValue() + " Bedollars");
+								}
 							}catch(Exception e){
 								e.printStackTrace();
 							}

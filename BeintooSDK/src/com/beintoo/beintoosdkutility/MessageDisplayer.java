@@ -99,17 +99,17 @@ public class MessageDisplayer{
 			 else if(lenght >=40 && lenght < 60)
 				 return 6000;
 			 else if(lenght >=60 && lenght < 80)
-				 return 11000;
+				 return 8000;
 			 else if(lenght >=80 && lenght < 100)
-				 return 16000;
+				 return 9000;
 			 else if(lenght >=100 && lenght < 120)
-				 return 21000;
+				 return 12000;
 			 else if(lenght >=120 && lenght < 140)
-				 return 26000;
+				 return 16000;
 			 else if(lenght >=140 && lenght < 160)
-				 return 31000;
+				 return 19000;
 			 else if(lenght >=160 && lenght < 180)
-				 return 36000;
+				 return 24000;
 			 else
 				 return 41000; 
 		 else
@@ -118,15 +118,15 @@ public class MessageDisplayer{
 			 else if(lenght >=60 && lenght <80)
 				 return 6000;
 			 else if(lenght >=80 && lenght <100)
-				 return 11000;
+				 return 8000;
 			 else if(lenght >=100 && lenght <120)
-				 return 16000;
+				 return 11000;
 			 else if(lenght >=120 && lenght <140)
-				 return 21000;
+				 return 16000;
 			 else if(lenght >=140 && lenght <160)
-				 return 26000;
+				 return 20000;
 			 else 
-				 return 31000;
+				 return 25000;
 	 }
 	 
 	@SuppressWarnings("unused")

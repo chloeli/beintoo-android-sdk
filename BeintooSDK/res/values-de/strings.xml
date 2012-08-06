@@ -124,14 +124,17 @@
     <string name="boxCouponList">Glückwünsche! Wähle dein Belohnungen</string>
     <string name="boxUserSel">Welches Profil möchtest du verwenden?\nWähle ein Profil oder verwende ein anderes Konto.</string>
     <string name="boxUserLogin">Anmelde dich auf Beintoo</string>
-    <string name="boxemail">Gib deine E-Mail Adresse:</string>
+    <string name="boxemail">Gib deine E-Mail Adresse</string>
   	<string name="youremail">E-Mail Addresse</string>
   	<string name="startBeintooFun">Start Spaß!</string>
-   	<string name="orloginExisting">oder mit einem bestehenden Account einloggen></string>
-   	<string name="tos">Beintoo wird nicht deine E-Mail verteilen oder spam.Deine E-Mail wird über eine sichere Verbindung gesendet.</string>
+   	<string name="tos">Beintoo wird nicht deine E-Mail verteilen oder spam.Deine E-Mail wird über eine sichere Verbindung gesendet.
+   	    Mit der Anmeldung zu Beintoo du erklärest mit Beintoo <Data><![CDATA[<a href="http://www.beintoo.com/tos.html">Nutzungsbedingungen</a>]]></Data> und <Data><![CDATA[<a href="http://www.beintoo.com/tos.html">Datenschutzerklärung</a>]]></Data></string>
     <string name="confirmnick">Bestätigen Sie Ihre Spitznamen</string>
     <string name="invalidemail">Bitte geben Sie eine gültige E-Mail-Adresse</string>
 	<string name="invalidnickname">Die Mindestlänge der Spitzname ist 3 Zeichen</string>
+    <string name="giveBedollarsEarned">Du hast gerade %d Bedollars verdient!\nBenutze um tolle Angebote auf Beintoo einlösen</string>
+    <string name="giveBedollarsEarned_s">Du hast gerade %d Bedollar verdient!\nBenutze um tolle Angebote auf Beintoo einlösen</string>
+    
     
     <!-- BUTTONS -->
     <string name="anotheraccount">Verwende ein anderes Konto</string>
@@ -318,5 +321,11 @@
         
     <!-- TRY BEINTOO -->
     <string name="trynow">Mitglied in der Community</string>
-    <string name="nothanks">Ich will nicht spielen und verdienen</string>	
+    <string name="nothanks">Ich will nicht spielen und verdienen</string>
+    
+    <!-- new -->
+    <string name="or">o</string>
+	<string name="signup">oder</string>
+	<string name="orloginExisting">Bereits registriert? Hier anmelden >></string>
+    <string name="signup_message">Werde Mitglied der Community, verdiene Bedollars und genieße realen Angebote</string>	
 </resources>

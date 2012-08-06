@@ -30,6 +30,7 @@ import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.beintoosdkutility.DeviceId;
+import com.beintoo.beintoosdkutility.DpiPxConverter;
 import com.beintoo.beintoosdkutility.ErrorDisplayer;
 import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.Beintoo;
@@ -41,14 +42,18 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -70,9 +75,11 @@ public class UserRegistration extends Dialog{
 	public UserRegistration(Context ctx) {
 		super(ctx, R.style.ThemeBeintoo);		
 		setContentView(R.layout.registration);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
-		current = this;
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);		
+		current = this;		
+		if(ctx.getApplicationContext().getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE){
+			switchViewToPortrait();
+        }
 		
 		// GETTING DENSITY PIXELS RATIO
 		double ratio = (ctx.getApplicationContext().getResources().getDisplayMetrics().densityDpi / 160d);						
@@ -256,6 +263,9 @@ public class UserRegistration extends Dialog{
 				current.dismiss();
 			}
 		});
+		
+		((TextView) findViewById(R.id.tos)).setText(Html.fromHtml(getContext().getResources().getString(R.string.tos)));
+		((TextView) findViewById(R.id.tos)).setMovementMethod(LinkMovementMethod.getInstance());
 	}
 	
 	private boolean checkEmail(String email) {
@@ -272,6 +282,13 @@ public class UserRegistration extends Dialog{
 		return EMAIL_ADDRESS_PATTERN.matcher(email).matches();
 	}
 
+	private void switchViewToPortrait(){				
+		((LinearLayout)findViewById(R.id.orientationContainer)).setOrientation(LinearLayout.VERTICAL);
+		((ImageView) findViewById(R.id.infoImage)).setImageDrawable(getContext().getResources().getDrawable(R.drawable.signup_portrait));
+		((ImageView) findViewById(R.id.infoImage)).setLayoutParams(
+				new LinearLayout.LayoutParams(DpiPxConverter.pixelToDpi(getContext(), 234), DpiPxConverter.pixelToDpi(getContext(), 188)));	
+	}
+	
 	private void showEmailError(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(current.getContext());
 		builder.setMessage(current.getContext().getString(R.string.invalidemail))
@@ -298,10 +315,12 @@ public class UserRegistration extends Dialog{
 		  @Override
 		  public void handleMessage(Message msg) {
 			  try{
-				  if(msg.what == GO_HOME){
+				  if(msg.what == GO_HOME){ // we have introduced the tutorial go to tutorial and then dashboard
 					if(Beintoo.OPEN_DASHBOARD_AFTER_LOGIN){
-					  BeintooHome beintooHome = new BeintooHome(getContext());
-					  beintooHome.show();
+					  //BeintooHome beintooHome = new BeintooHome(getContext());
+					  //beintooHome.show();
+						TutorialPostSignup tps = new TutorialPostSignup(getContext());
+						tps.show();
 					}
 				  	Beintoo.currentDialog.dismiss();
 				  	current.dismiss();				  	

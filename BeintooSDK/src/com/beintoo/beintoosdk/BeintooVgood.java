@@ -55,7 +55,8 @@ public class BeintooVgood {
 	 * @param privategood a bool to set if the vgood has to be private
 	 * @return a json object with vgood data
 	 */
-	public VgoodChooseOne getVgoodList(String guid, String deviceUUID, String imei, String macaddress, Integer rows, String codeID, String latitude, String longitude, String radius, boolean privategood) {
+	public VgoodChooseOne getVgoodList(String guid, String deviceUUID, String imei, String macaddress, Integer rows, 
+			String codeID, String latitude, String longitude, String radius, boolean privategood, Boolean specialRewardOnly, String developerUserGuid) {
 		
 		String apiUrl = apiPreUrl+"vgood/byguid/"+guid+"/?allowBanner=true";
 		
@@ -64,6 +65,8 @@ public class BeintooVgood {
 		if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
 		if(radius != null) apiUrl = apiUrl + "&radius="+radius;
 		if(rows != null) apiUrl = apiUrl + "&rows="+rows;
+		if(specialRewardOnly != null) apiUrl = apiUrl + "&specialRewardOnly="+specialRewardOnly.toString();
+		if(developerUserGuid != null) apiUrl = apiUrl + "&developer_user_guid="+developerUserGuid;	
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
@@ -85,6 +88,7 @@ public class BeintooVgood {
 			header.getKey().add("macaddress");
 			header.getValue().add(macaddress);			
 		}
+		
 		try {
 		// ADD THE USER AGENT
 			String userAgent = Beintoo.userAgent;
@@ -100,6 +104,11 @@ public class BeintooVgood {
 		VgoodChooseOne vgoods = new Gson().fromJson(json, VgoodChooseOne.class);
 		
 		return vgoods;
+	}
+	
+	public VgoodChooseOne getVgoodList(String guid, String deviceUUID, String imei, String macaddress, Integer rows, 
+			String codeID, String latitude, String longitude, String radius, boolean privategood){
+		return getVgoodList(guid, deviceUUID, imei, macaddress, rows, codeID, latitude, longitude, radius, privategood, null, null);
 	}
 
 	/**
@@ -292,6 +301,7 @@ public class BeintooVgood {
 		
 		return resp;
 	}
+	
 	
 	/**
 	 * Send a Vgood as a gift from a user to another user
