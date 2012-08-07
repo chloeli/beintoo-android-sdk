@@ -846,6 +846,7 @@ public class Beintoo{
 	 public static interface BGiveBedollarsListener {
 		 public void onComplete(UserCredit u);	
 		 public void onPlayerNotUser();
+		 public void onUserOverquota();
 		 public void onError(Exception e);
 	 }	 
 	 

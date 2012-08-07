@@ -32,29 +32,37 @@ public class AppManager {
 						if(u != null){
 							BeintooApp ba = new BeintooApp();
 							UserCredit uc = ba.giveBedollars(u.getId(), amount);
-	
+							uc.setValue(0.0);
 							if(showNotification){
-								final Message msg = new Message();
-								Bundle b = new Bundle();
-								String message = null;
-								if(amount.equals(Beintoo.GIVE_1_BEDOLLAR)){
-									message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned_s), 1);
-								}else if(amount.equals(Beintoo.GIVE_2_BEDOLLAR)){
-									message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned), 2);
-								}else if(amount.equals(Beintoo.GIVE_5_BEDOLLAR)){
-									message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned), 5);
-								}								
-								b.putString("Message", message);
-								b.putInt("Gravity", Gravity.BOTTOM);
-								
-								msg.setData(b);
-								msg.what = Beintoo.SUBMITSCORE_POPUP;
-								Beintoo.UIhandler.sendMessage(msg);
+								if(uc != null && uc.getValue() > 0){
+									final Message msg = new Message();
+									Bundle b = new Bundle();
+									String message = null;								
+									if(amount.equals(Beintoo.GIVE_1_BEDOLLAR)){
+										message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned_s), 1);
+									}else if(amount.equals(Beintoo.GIVE_2_BEDOLLAR)){
+										message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned), 2);
+									}else if(amount.equals(Beintoo.GIVE_5_BEDOLLAR)){
+										message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned), 5);
+									}								
+									b.putString("Message", message);
+									b.putInt("Gravity", Gravity.BOTTOM);
+									
+									msg.setData(b);
+									msg.what = Beintoo.SUBMITSCORE_POPUP;
+									Beintoo.UIhandler.sendMessage(msg);
+								}
 							}
 							
-							if (callback != null) {
-								callback.onComplete(uc);
-							}														
+							if(uc != null && uc.getValue() > 0){
+								if (callback != null) {
+									callback.onComplete(uc);
+								}
+							}else if(uc != null && uc.getValue() == 0){
+								if (callback != null) {
+									callback.onUserOverquota();
+								}
+							}
 						}else{
 							if (callback != null) {
 								callback.onPlayerNotUser();
