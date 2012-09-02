@@ -126,7 +126,7 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 			web = BeintooSdkParams.sandboxWebUrl;	  	
 		Uri.Builder marketplaceUrl = Uri.parse(web+"m/marketplace.html").buildUpon();
 		
-		if(player.getGuid() != null)
+		if(player != null && player.getGuid() != null)
 			marketplaceUrl.appendQueryParameter("guid", player.getGuid());
 		marketplaceUrl.appendQueryParameter("apikey", DeveloperConfiguration.apiKey);
 		if(Beintoo.virtualCurrencyData != null){

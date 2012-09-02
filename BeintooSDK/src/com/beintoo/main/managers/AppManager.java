@@ -32,7 +32,6 @@ public class AppManager {
 						if(u != null){
 							BeintooApp ba = new BeintooApp();
 							UserCredit uc = ba.giveBedollars(u.getId(), amount);
-
 							if(showNotification){
 								if(uc != null && uc.getValue() > 0){
 									final Message msg = new Message();

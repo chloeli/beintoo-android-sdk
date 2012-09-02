@@ -28,6 +28,7 @@ import com.beintoo.activities.UserRegistration;
 import com.beintoo.activities.UserSelection;
 import com.beintoo.activities.tryBeintoo;
 import com.beintoo.activities.tryDialog;
+import com.beintoo.activities.marketplace.Marketplace;
 import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
@@ -635,6 +636,15 @@ public class Beintoo{
 		submitAchievementScore(ctx, achievement, percentage, value, false, true, Gravity.BOTTOM, listener);
 	}
 	
+
+	/**
+	 * This method launch the redeem webview 
+	 */	
+	public static void openRedeem(Context context){
+		Marketplace mp = new Marketplace(context, Current.getCurrentPlayer(context));				  					  
+		mp.show();
+	}
+		
 	/**
 	 * Se which features to use in your app
 	 * @param features an array of features avalaible features are: profile, leaderboard, wallet, challenge 
