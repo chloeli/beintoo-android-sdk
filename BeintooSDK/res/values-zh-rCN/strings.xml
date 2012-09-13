@@ -265,4 +265,6 @@
 	<!-- CUSTOM --> 
 	<string name="sponsor"><Data><![CDATA[尽情游戏：<b>赢取<br />&nbsp;&nbsp;独家<br />&nbsp;&nbsp;真实交易！</b>]]></Data></string>
 	<string name="sponsortitle">注册到 Beintoo，您将会在当地得到惊人的折扣作为对游戏战绩的奖励。</string> 
+	
+	<string name="settings">设置</string>
 </resources>

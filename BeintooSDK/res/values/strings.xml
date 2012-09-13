@@ -331,9 +331,9 @@
    	<string name="signup_message">Join the community to earn Bedollars and redeem high value offers</string>
    	<string name="signup">Signup</string>
    	<string name="orloginExisting">Already registered? Sign in here >></string> 
-   	<string name="gotodashboard">Go to dashboard</string>
-   	<string name="settings">Settings</string>
    	
+   	<string name="gotodashboard">Start now!</string>
+   	<string name="settings">Settings</string>   	
    	<string name="tutorial_play"><Data><![CDATA[<b>PLAY</b>]]> </Data> / Engage with your favourite apps in the Beintoo network</string>
    	<string name="tutorial_earn"><Data><![CDATA[<b>EARN</b>]]> </Data> / Collect Bedollars from your activity</string>
    	<string name="tutorial_redeem"><Data><![CDATA[<b>REDEEM</b>]]> </Data> / Get real world offers in the Beintoo store</string>

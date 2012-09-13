@@ -37,6 +37,7 @@ import android.widget.LinearLayout;
 
 
 import com.beintoo.R;
+import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.main.Beintoo.BGetVgoodListener;
 import com.beintoo.wrappers.VgoodChooseOne;
 
@@ -66,6 +67,8 @@ public class BeintooRecomDialogHTML extends Dialog{
 		webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 		this.setContentView(webview);
 	    getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+	    
+	    DebugUtility.showLog("DIALO");
 	}
 	
 	public void loadAlert(){
@@ -74,8 +77,8 @@ public class BeintooRecomDialogHTML extends Dialog{
 				try{
 					webview.setVerticalScrollBarEnabled(false);
 					webview.setHorizontalScrollBarEnabled(false);
-					webview.setFocusableInTouchMode(false);
-					webview.setFocusable(false);
+					//webview.setFocusableInTouchMode(false);
+					//webview.setFocusable(false);
 											
 					webview.setWebViewClient(new WebViewClient() {						
 					    @Override

@@ -88,8 +88,8 @@ public class BeintooRecomBannerHTML{
 				try{
 					webview.setVerticalScrollBarEnabled(false);
 					webview.setHorizontalScrollBarEnabled(false);
-					webview.setFocusableInTouchMode(false);
-					webview.setFocusable(false);					
+					//webview.setFocusableInTouchMode(false);
+					//webview.setFocusable(false);					
 					webview.setWebViewClient(new WebViewClient() {
 						public void onReceivedError(WebView view, int errorCode,
 								String description, String failingUrl) {

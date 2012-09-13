@@ -62,6 +62,20 @@ public class DeviceId {
 		return toSHA1(UUID.randomUUID()+":"+System.nanoTime());
 	}
 	
+	public static String getAndroidId(Context context){
+		String androidId = null;
+		try {			
+			PackageManager pm = context.getPackageManager();			
+			if(PackageManager.PERMISSION_GRANTED == pm.checkPermission(Manifest.permission.READ_PHONE_STATE, context.getPackageName())){
+				androidId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+			}			
+		}catch(Exception e){			
+			return null;
+		}
+		
+		return androidId;		
+	}
+	
 	public static String toSHA1(String input) {
         try {
             int lenght = 40; // 64 from SHA-256

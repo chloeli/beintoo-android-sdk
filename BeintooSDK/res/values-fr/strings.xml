@@ -323,4 +323,10 @@
 	<string name="signup">Inscription</string>
 	<string name="orloginExisting">Déjà enregistré? Connectez vous >></string>    
     <string name="signup_message">Rejoignez la communauté, gagnez des Bedollars et utilisez-les pour profitez d\'offres exclusives</string>
+    
+    <string name="settings">Paramètres</string>
+    <string name="gotodashboard">Accédez maintenant!</string>
+	<string name="tutorial_play"><Data><![CDATA[<b>JOUEZ</b>]]> </Data> / avec vos applis préférées dans le réseau Beintoo</string>
+	<string name="tutorial_earn"><Data><![CDATA[<b>GAGNEZ</b>]]> </Data> / des Bedollars pour vos activités</string>
+	<string name="tutorial_redeem"><Data><![CDATA[<b>OBTENEZE</b>]]> </Data> / des fabuleuses offres dans le Beintoo Store</string>	    
 </resources>
