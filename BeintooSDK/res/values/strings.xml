@@ -120,8 +120,8 @@
     <string name="earnedBalance">Your balance is: %d</string>
     <string name="earnedScore">You earned %d points.\u0020</string>
     <string name="earnedMultiScore">You earned multiple points:\u0020 %s</string>
-    <string name="giveBedollarsEarned">You just earned %d Bedollars!\nUse them to redeem great offers on Beintoo</string>
-    <string name="giveBedollarsEarned_s">You just earned %d Bedollar!\nUse your Bedollars to redeem great offers on Beintoo</string>
+    <string name="giveBedollarsEarned">You just earned %s Bedollars!\nUse them to redeem great offers on Beintoo</string>
+    <string name="giveBedollarsEarned_s">You just earned %s Bedollar!\nUse your Bedollars to redeem great offers on Beintoo</string>
     
     <!-- BOXES -->
     <string name="boxWallet">Here are the offers you have collected!</string>

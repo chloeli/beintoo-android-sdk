@@ -1,4 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2011 Beintoo
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <resources>
 	<string name="challStatus">状态：</string>
 	<string name="challStart">开始日期：</string>
@@ -16,6 +31,28 @@
 	<string name="challAccept">您愿意接收\u0020的挑战吗</string> 
 	<string name="challSend">您想发送挑战吗？下注 10 BeDollar，赢回 25。</string> 
 	<string name="challTip">点击另一个用户开始互动</string> 
+	<string name="chall48">我打赌我能在48小时内达到一个比你更好的分数？</string>
+	<string name="chall48subtitle">我能够达到一个比你更好的分数</string>
+	<string name="chall48title">谁是最好的?</string>
+	<string name="challBet">打赌</string>
+	<string name="challCanWin">你能赢</string>
+	<string name="challFriends">我打赌我能在48内达到这个分数</string>
+	<string name="challFriendstitle">我可以达到...</string>
+	<string name="challFrom">从\u0020</string>
+	<string name="challFromTo">从你至\u0020</string>
+	<string name="challFromUser">\u0020挑战你</string>
+	<string name="challPoints">点数</string>
+	<string name="challPointsTarget">要做的点数</string>
+	<string name="challYou">u0020至你</string>
+	<string name="challerrorbedollars">你插入你想要打赌的Be币数量</string>
+	<string name="challerrorpoints">请插入你想要打赌的分数</string>
+	<string name="challhowmanypoint">我可以达到</string>
+	<string name="challhowmanypointyou">%s 无法达到</string>
+	<string name="challhowmuchbet">我打赌</string>
+	<string name="challmaxbet">Be币：</string>
+	<string name="challmevsyou">我打赌你不能在48小时内达到这个分数</string>
+	<string name="challmevsyoutitle">您不能到达...</string>
+	<string name="clickhere">点击这里</string>
 	
 	<!-- LEADERBOARD --> 
 	<string name="leadTitle">排名榜</string> 
@@ -24,6 +61,7 @@
 	<string name="leadViewProfile">查看档案</string> 
 	<string name="leadAddFriend">添加为好友</string> 
 	<string name="leadshowfriendsonly">仅查看好友</string> 
+    <string name="leadshowclosestsonly">比拼</string>
 	
 	<!-- FRIENDS --> 
 	<string name="friendSel">选择好友</string> 
@@ -50,6 +88,7 @@
 	<string name="friendReqSent">好友请求已发送</string> 
 	<string name="friendReqAcc">好友请求已接受</string> 
 	<string name="friendReqIgn">好友请求已拒绝</string> 
+    
 	<string name="homeWelcome" xml:space="preserve">欢迎回到\u0020</string> 
 	<string name="profileScore">您的得分</string> 
 	<string name="profileLevel">等级：\u0020</string> 
@@ -61,11 +100,14 @@
 	<string name="profileOf">%s 档案</string> 
 	<string name="password">密码</string> 
 	<string name="logout">注销</string> 
+    
 	<string name="vgoodWhoAlso">购买此物品的其他玩家</string> 
 	<string name="vgoodEnd">结束日期：</string> 
+    
 	<string name="walletNoGoods">您没有虚拟物品</string> 
 	<string name="walletConverted">赎回物品</string> 
 	<string name="walletNotConverted">等待赎回</string> 
+    
 	<string name="tryBe">Beintoo 让您对游戏的热情转换为实际的物品奖励。\免费而且超级简单！</string> 
 	<string name="pressBt">按下面的按钮，开始试用 Beintoo</string> 
 	
@@ -78,6 +120,8 @@
 	<string name="earnedBalance">您的余额为：%d</string> 
 	<string name="earnedScore">您赚得 %d 分。\u0020</string> 
 	<string name="earnedMultiScore">您赚得多项分数：\u0020 %s</string> 
+	<string name="giveBedollarsEarned">您刚刚获得了 %s Be币!\n立刻使用,在Beintoo平台来兑现精美的实物奖励吧!</string>
+    <string name="giveBedollarsEarned_s">您刚刚获得了 %s Be币!\n立刻使用Be币,在Beintoo平台来兑现精美的实物奖励吧!</string>
 	
 	<!-- BOXES --> 
 	<string name="boxWallet">您的奖励钱包</string> 
@@ -89,15 +133,14 @@
 	<string name="boxemail">输入您的电邮地址：</string> 
 	<string name="youremail">您的电邮地址</string> 
 	<string name="startBeintooFun">开始游戏！</string> 
-	<string name="orloginExisting">或者使用现有的帐号登录></string> 
-	<string name="tos">Beintoo 我们绝不会滥用您的电邮地址，也不会给您发送垃圾邮件。您的电子邮件通过安全连接发送。</string> 
+	
+	<string name="tos">Beintoo 我们绝不会滥用您的电邮地址，也不会给您发送垃圾邮件。您的电子邮件通过安全连接发送。
+    通过订阅Beintoo, 您同意Beintoo的 <Data><![CDATA[<a href="http://www.beintoo.com/tos.html"><b>各项服务</b></a>]]></Data> 和 <Data><![CDATA[<a href="http://www.beintoo.com/tos.html"><b>privacy</b></a>]]></Data> 政策.</string> 
 	<string name="confirmnick">确认您的昵称</string> 
 	<string name="invalidemail">请提供有效的电邮地址</string> 
 	<string name="invalidnickname">昵称的最短长度为 3 个字符</string> 
 	
-	<!-- BUTTONS --> 
-	<string name="trynow">立即试用 Beintoo</string> 
-	<string name="nothanks">不用了，谢谢</string> 
+	<!-- BUTTONS -->  
 	<string name="anotheraccount">使用另一个帐号</string> 
 	<string name="people">玩家</string> 
 	<string name="friends">好友</string> 
@@ -137,6 +180,7 @@
 	<string name="vgoodgetcoupondialog">取得优惠券</string> 
 	<string name="vgoodsendgiftdialog">作为礼品发送</string> 
 	<string name="vgooddetaildialog">更多详情</string> 
+    
 	<!-- MESSAGES --> 
 	<string name="messages">消息</string> 
 	<string name="messagesnewmsg">新消息</string> 
@@ -228,43 +272,67 @@
 	<string name="allianceaccept">接受</string> 
 	<string name="alliancerefuse">拒绝</string> 
 	<string name="allianceinvalid">名称的最短长度为 3 个字符</string> 
-	
-	<string name="chall48">我打赌我能在48小时内达到一个比你更好的分数？</string>
-	<string name="chall48subtitle">我能够达到一个比你更好的分数</string>
-	<string name="chall48title">谁是最好的?</string>
-	<string name="challBet">打赌</string>
-	<string name="challCanWin">你能赢</string>
-	<string name="challFriends">我打赌我能在48内达到这个分数</string>
-	<string name="challFriendstitle">我可以达到...</string>
-	<string name="challFrom">从\u0020</string>
-	<string name="challFromTo">从你至\u0020</string>
-	<string name="challFromUser">\u0020挑战你</string>
-	<string name="challPoints">点数</string>
-	<string name="challPointsTarget">要做的点数</string>
-	<string name="challYou">u0020至你</string>
-	<string name="challerrorbedollars">你插入你想要打赌的Be币数量</string>
-	<string name="challerrorpoints">请插入你想要打赌的分数</string>
-	<string name="challhowmanypoint">我可以达到</string>
-	<string name="challhowmanypointyou">%s 无法达到</string>
-	<string name="challhowmuchbet">我打赌</string>
-	<string name="challmaxbet">Be币：</string>
-	<string name="challmevsyou">我打赌你不能在48小时内达到这个分数</string>
-	<string name="challmevsyoutitle">您不能到达...</string>
-	<string name="clickhere">点击这里</string>
-	<string name="messagenotification">您有 %d条通知</string>
-	<string name="messagenotificationp">您有 %d条通知</string>
-	<string name="notifications">通知</string>
+
+    
+	<!-- PLAYER SIGNUP -->    
+    <string name="signuphome">享受更多乐趣，与玩家联结并让您赢得的东西成为现实!\n 欢迎来到Beintoo 网络!</string>
+    <string name="signupnow"><data><![CDATA[<b>立刻</b>注册]]></data></string>
 	<string name="signupchallenge">向朋友挑战，赢得并赚取Be币!</string>
 	<string name="signupforums">与玩家讨论并给出反馈意见。</string>
-	<string name="signuphome">享受更多乐趣，与玩家联结并让您赢得的东西成为现实!\n 欢迎来到Beintoo 网络!</string>
 	<string name="signupleaderboard">到排行榜将您和您朋友们的分数进行比较！</string>
-	<string name="signupnow"><data><![CDATA[<b>立刻</b>注册]]></data></string>
 	<string name="signupprofile">创建您的个人资料，结实更多的朋友并管理您的奖品！</string>
-	<string name="unmissionstatus">您的任务的状态</string>	    
+
+	<!-- NOTIFICATIONS -->
+    <string name="notifications">通知</string>
+	<string name="messagenotification">您有 %d条通知</string>
+	<string name="messagenotificationp">您有 %d条通知</string>
+    <string name="unmissionstatus">您的任务的状态</string>
 	    
 	<!-- CUSTOM --> 
 	<string name="sponsor"><Data><![CDATA[尽情游戏：<b>赢取<br />&nbsp;&nbsp;独家<br />&nbsp;&nbsp;真实交易！</b>]]></Data></string>
-	<string name="sponsortitle">注册到 Beintoo，您将会在当地得到惊人的折扣作为对游戏战绩的奖励。</string> 
+    <string name="sponsorvirtualcurrency"><Data><![CDATA[<b>尽情游戏： & 赢取</b><br /><br /><b>使用你获得的分数</b> 在应用中来选择 <b>兑现您的定制奖励</b>  ]]> </Data></string>	
+    <string name="sponsortitle">注册到 Beintoo，您将会在当地得到惊人的折扣作为对游戏战绩的奖励。</string> 
+    
+    <!-- MARKETPLACE -->
+	<string name="marketplace">兑现</string>
+	<string name="buymarketplace">选择你的礼品</string>
+	<string name="featured">特色推荐</string>
+	<string name="national">全国</string>
+	<string name="aroundme">周边</string>
+	<string name="top">最佳</string>
+	<string name="categories">分类</string>
+	<string name="buy">购买</string>
+	<string name="yourbalance">你的 积分:</string>
+	<string name="youarebuying">你正在购买:</string>
+	<string name="price">价格:\u0020</string>
+	<string name="where">位置:\u0020</string>
+	<string name="addresslist">地址列表</string>
+	<string name="buynow">立即购买</string>
+	<string name="distance">距离:\u0020</string>
+	<string name="nocoupon">在这个分类没有优惠券</string>
+	<string name="needbedollars"> 你没有足够的积分来获得这个礼品, 
+	    你现在还缺 %s, 现在来玩游戏来获取积分吧</string>		   
+	<string name="signupmarketplacefriends">注册Beitoo,可以获得一个优惠券作为礼物.</string>
+	<string name="trybeintoomarketplacetitle">喜欢玩这些游戏和应用吗?</string>
+	<string name="trybeintoomarketplace">享受您最爱玩的游戏和他们有趣的特色,获取大量的折扣奖励,您来决定如何在兑现部分使用它们!</string>
 	
-	<string name="settings">设置</string>
+	<string name="trynow">加入社区</string>
+    <string name="nothanks">不, 我不想玩和挣奖励</string>
+   
+	<string name="submitscorempmessage">你现在有 %s, 别浪费它! 在兑现部分使用它吧!</string>
+   	<string name="submitscorempmessageplayer">现在去兑现奖品!</string>        
+   	<string name="orderbyprice">按价格排序</string>
+   	
+   	<!-- NEW -->   	
+   	<string name="or">或者</string>
+   	<string name="signup_message">加入社区来获得be币,并且可以兑现高额奖励!</string>
+   	<string name="signup">注册</string>
+   	<string name="orloginExisting">已经注册过了? 在这里登陆 >></string> 
+   	
+   	<string name="gotodashboard">现在开始!</string>
+   	<string name="settings">设置</string>   	
+   	<string name="tutorial_play"><Data><![CDATA[<b>PLAY</b>]]> </Data> / 在Beintoo社区网络,畅玩你最爱的游戏和应用</string>
+   	<string name="tutorial_earn"><Data><![CDATA[<b>EARN</b>]]> </Data> / 通过你的活动来收集Be币</string>
+   	<string name="tutorial_redeem"><Data><![CDATA[<b>REDEEM</b>]]> </Data> / 在Beintoo商店获取实物奖励</string>
+
 </resources>

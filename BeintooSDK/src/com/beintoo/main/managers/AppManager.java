@@ -19,7 +19,7 @@ import com.beintoo.wrappers.UserCredit;
 public class AppManager {
 	private static AtomicLong LAST_OPERATION = new AtomicLong(0);
 	private long OPERATION_TIMEOUT = 2000;
-	public void giveBedollars(final Context ctx, final String amount, final boolean showNotification, final BGiveBedollarsListener callback) {
+	public void giveBedollars(final Context ctx, final Double amount, final boolean showNotification, final BGiveBedollarsListener callback) {
 		SerialExecutor executor = SerialExecutor.getInstance();
 		executor.execute(new Runnable() {
 			public void run() {
@@ -36,14 +36,13 @@ public class AppManager {
 								if(uc != null && uc.getValue() > 0){
 									final Message msg = new Message();
 									Bundle b = new Bundle();
-									String message = null;								
-									if(amount.equals(Beintoo.GIVE_1_BEDOLLAR)){
-										message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned_s), 1);
-									}else if(amount.equals(Beintoo.GIVE_2_BEDOLLAR)){
-										message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned), 2);
-									}else if(amount.equals(Beintoo.GIVE_5_BEDOLLAR)){
-										message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned), 5);
-									}								
+									String message = null;			
+									if(amount <= 1){
+										message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned_s), amount.toString());
+									}else{
+										message = String.format(ctx.getResources().getString(R.string.giveBedollarsEarned), amount.toString());
+									}
+																	
 									b.putString("Message", message);
 									b.putInt("Gravity", Gravity.BOTTOM);
 									

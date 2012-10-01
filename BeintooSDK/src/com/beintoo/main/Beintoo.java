@@ -21,15 +21,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+import android.view.Gravity;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.WebView;
+import android.widget.LinearLayout;
 
 import com.beintoo.R;
 import com.beintoo.activities.BeintooHome;
 import com.beintoo.activities.UserRegistration;
 import com.beintoo.activities.UserSelection;
-import com.beintoo.activities.tryBeintoo;
 import com.beintoo.activities.tryDialog;
 import com.beintoo.activities.marketplace.Marketplace;
-import com.beintoo.beintoosdk.BeintooPlayer;
 import com.beintoo.beintoosdk.BeintooUser;
 import com.beintoo.beintoosdk.DeveloperConfiguration;
 import com.beintoo.beintoosdkutility.Current;
@@ -59,17 +67,6 @@ import com.beintoo.wrappers.UserCredit;
 import com.beintoo.wrappers.Vgood;
 import com.beintoo.wrappers.VgoodChooseOne;
 import com.google.beintoogson.Gson;
-
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
-import android.view.Gravity;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-import android.webkit.WebView;
-import android.widget.LinearLayout;
 
  
 public class Beintoo{
@@ -125,10 +122,6 @@ public class Beintoo{
 	public static Map<String, String> virtualCurrencyData = null;
 	
 	public static int CONNECTION_ERRORS = 0;
-	
-	public static String GIVE_1_BEDOLLAR = "GIVE_BEDOLLARS_1";
-	public static String GIVE_2_BEDOLLAR = "GIVE_BEDOLLARS_2";
-	public static String GIVE_5_BEDOLLAR = "GIVE_BEDOLLARS_5";
 	
 	/**
 	 * Set the developer apikey
@@ -318,30 +311,30 @@ public class Beintoo{
 		GetVgood(ctx, null, isMultiple, container, notificationType, null);
 	}
 	
-	public static void getSpecialReward(Context ctx, String developerUserGuid, final BGetVgoodListener listener){
-		currentContext = ctx;			
-		gvl = listener;
-		GetVgoodManager gvm = new GetVgoodManager(ctx);
-		gvm.GetSpecialReward(developerUserGuid, listener);
-	}
-	
-	public static void getSpecialReward(Context ctx, String developerUserGuid){
-		getSpecialReward(ctx, developerUserGuid, null);
-	}
+//	public static void getSpecialReward(Context ctx, String developerUserGuid, final BGetVgoodListener listener){
+//		currentContext = ctx;			
+//		gvl = listener;
+//		GetVgoodManager gvm = new GetVgoodManager(ctx);
+//		gvm.GetSpecialReward(developerUserGuid, listener);
+//	}
+//	
+//	public static void getSpecialReward(Context ctx, String developerUserGuid){
+//		getSpecialReward(ctx, developerUserGuid, null);
+//	}
 	
 	/** 
 	 * Send a Banner to the user it runs in background on a thread. 
 	 * It retrieves the user location used to find a banner in nearby 
 	 */
-	public static void getAd(final Context ctx, final String codeID, final LinearLayout container, final int notificationType, final BGetVgoodListener listener){		
+	public static void requestAndDisplayAd(final Context ctx, final String developmentUserGuid, final String codeID, final BGetVgoodListener listener){		
 		currentContext = ctx;			
 		gvl = listener;
 		GetVgoodManager gvm = new GetVgoodManager(ctx);		
-        gvm.getAd(codeID, container, notificationType, listener);
+        gvm.requestAndDisplayAd(developmentUserGuid, codeID, listener);
 	}
 	
-	public static void getAd(final Context ctx, final String codeID, final LinearLayout container, final int notificationType){
-		getAd(ctx, codeID, container, notificationType, null);
+	public static void requestAndDisplayAd(final Context ctx, final String developmentUserGuid, final String codeID){
+		requestAndDisplayAd(ctx, developmentUserGuid, codeID, null);
 	}
 		
 	/**
@@ -564,11 +557,11 @@ public class Beintoo{
 	 * @param ctx
 	 * @param amount is one of GIVE_BEDOLLARS_1 GIVE_BEDOLLARS_2 GIVE_BEDOLLARS_5
 	 */
-	public static void giveBedollars(final Context ctx, final String amount, final boolean showNotification, final BGiveBedollarsListener callback){
+	public static void giveBedollars(final Context ctx, final Double amount, final boolean showNotification, final BGiveBedollarsListener callback){
 		new AppManager().giveBedollars(ctx, amount, showNotification, callback);
 	}
 	
-	public static void giveBedollars(final Context ctx, final String amount, final boolean showNotification){
+	public static void giveBedollars(final Context ctx, final Double amount, final boolean showNotification){
 		giveBedollars(ctx, amount, showNotification, null);
 	}
 	

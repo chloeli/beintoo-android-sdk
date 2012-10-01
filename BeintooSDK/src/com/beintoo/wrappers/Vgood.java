@@ -34,7 +34,7 @@ public class Vgood {
     private String contentType;
     private String content;
     private String rewardText;
-    private boolean openInBrowser;
+    private boolean openInBrowser = true;
     private String shareURL;
     private Integer rating;
     private Integer bedollars;

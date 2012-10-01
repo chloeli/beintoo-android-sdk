@@ -18,7 +18,6 @@ package com.beintoo.vgood;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
@@ -27,16 +26,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
-
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-
 import android.widget.LinearLayout;
 
-
 import com.beintoo.R;
+import com.beintoo.beintoosdkui.BeintooBrowser;
 import com.beintoo.beintoosdkutility.DebugUtility;
 import com.beintoo.main.Beintoo.BGetVgoodListener;
 import com.beintoo.wrappers.VgoodChooseOne;
@@ -67,8 +63,6 @@ public class BeintooRecomDialogHTML extends Dialog{
 		webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 		this.setContentView(webview);
 	    getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-	    
-	    DebugUtility.showLog("DIALO");
 	}
 	
 	public void loadAlert(){
@@ -87,8 +81,14 @@ public class BeintooRecomDialogHTML extends Dialog{
 						}
 
 						public boolean shouldOverrideUrlLoading(WebView view, String url) {
-					    	Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
-							ctx.startActivity(browserIntent);
+							DebugUtility.showLog("URL: "+url);
+							if(!vgood.getVgoods().get(0).isOpenInBrowser()){
+								BeintooBrowser bb = new BeintooBrowser(ctx, url.toString());
+								bb.show();
+							}else{
+								Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+								ctx.startActivity(browserIntent);
+							}
 							UIhandler.sendEmptyMessage(HIDE_DIALOG);
 					        return true;
 					    }
@@ -97,7 +97,7 @@ public class BeintooRecomDialogHTML extends Dialog{
 						public void onReceivedError(WebView view,
 								int errorCode, String description,
 								String failingUrl) {
-							System.out.println(description + " "+ errorCode);
+					    	DebugUtility.showLog(description + " "+ errorCode);
 							super.onReceivedError(view, errorCode, description, failingUrl);
 						}
 
@@ -119,7 +119,7 @@ public class BeintooRecomDialogHTML extends Dialog{
 						@Override
 						public void onConsoleMessage(String message,
 								int lineNumber, String sourceID) {							
-							System.out.println(""+message);
+							DebugUtility.showLog(""+message);
 							super.onConsoleMessage(message, lineNumber, sourceID);
 						}
 						
@@ -131,11 +131,10 @@ public class BeintooRecomDialogHTML extends Dialog{
 					    }
 					});
 						
-					webview.loadDataWithBaseURL(null, vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "UTF-8", null);
-					
-				}catch (Exception e){e.printStackTrace();}
+					webview.loadDataWithBaseURL(null, vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "UTF-8", null);					
+				}catch (Exception e){if(DebugUtility.isDebugEnable) e.printStackTrace();}
 			} 
-		}).start();
+		}).start();		
 	}
 	
 	/*private int toDip (int px) {
@@ -161,7 +160,7 @@ public class BeintooRecomDialogHTML extends Dialog{
 		  public void handleMessage(Message msg) {
 			 if(msg.what == SHOW_DIALOG){
 				  current.show();
-
+				  
 				  if(gvl != null)
 					  gvl.onComplete(vgood);
 			  }else if(msg.what == HIDE_DIALOG)

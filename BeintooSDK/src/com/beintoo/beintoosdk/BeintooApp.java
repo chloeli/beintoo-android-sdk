@@ -22,8 +22,8 @@ import java.util.Map;
 import android.net.Uri;
 
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
-import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
+import com.beintoo.beintoosdkutility.PostParams;
 import com.beintoo.wrappers.Contest;
 import com.beintoo.wrappers.LeaderboardContainer;
 import com.beintoo.wrappers.UserCredit;
@@ -163,15 +163,15 @@ public class BeintooApp {
 	 * 
 	 * @return
 	 */
-	public UserCredit giveBedollars(String userExt, String amount){		
+	public UserCredit giveBedollars(String userExt, Double amount){		
 		Uri.Builder apiUrl = Uri.parse(apiPreUrl+"app/givebedollars/"+userExt).buildUpon();
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
 		header.getValue().add(DeveloperConfiguration.apiKey);
 		PostParams post = new PostParams();
-		post.getKey().add("reason");
-		post.getValue().add(amount);
+		post.getKey().add("amount");
+		post.getValue().add(amount.toString());
 				
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl.toString(), header, post, true);

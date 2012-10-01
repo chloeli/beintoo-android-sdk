@@ -22,7 +22,6 @@ import android.net.Uri;
 
 import com.beintoo.beintoosdkutility.BeintooSdkParams;
 import com.beintoo.beintoosdkutility.HeaderParams;
-
 import com.beintoo.main.Beintoo;
 import com.beintoo.wrappers.Category;
 import com.beintoo.wrappers.Message;
@@ -56,7 +55,7 @@ public class BeintooVgood {
 	 * @return a json object with vgood data
 	 */
 	public VgoodChooseOne getVgoodList(String guid, String deviceUUID, String imei, String macaddress, Integer rows, 
-			String codeID, String latitude, String longitude, String radius, boolean privategood, Boolean specialRewardOnly, String developerUserGuid) {
+			String codeID, String latitude, String longitude, String radius, boolean privategood) {
 		
 		String apiUrl = apiPreUrl+"vgood/byguid/"+guid+"/?allowBanner=true";
 		
@@ -65,8 +64,6 @@ public class BeintooVgood {
 		if(longitude != null) apiUrl = apiUrl + "&longitude="+longitude;
 		if(radius != null) apiUrl = apiUrl + "&radius="+radius;
 		if(rows != null) apiUrl = apiUrl + "&rows="+rows;
-		if(specialRewardOnly != null) apiUrl = apiUrl + "&specialRewardOnly="+specialRewardOnly.toString();
-		if(developerUserGuid != null) apiUrl = apiUrl + "&developer_user_guid="+developerUserGuid;	
 		
 		HeaderParams header = new HeaderParams();
 		header.getKey().add("apikey");
@@ -106,11 +103,7 @@ public class BeintooVgood {
 		return vgoods;
 	}
 	
-	public VgoodChooseOne getVgoodList(String guid, String deviceUUID, String imei, String macaddress, Integer rows, 
-			String codeID, String latitude, String longitude, String radius, boolean privategood){
-		return getVgoodList(guid, deviceUUID, imei, macaddress, rows, codeID, latitude, longitude, radius, privategood, null, null);
-	}
-
+	
 	/**
 	 * Retrieve an ad
 	 * 

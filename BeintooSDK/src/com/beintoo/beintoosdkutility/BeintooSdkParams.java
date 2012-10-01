@@ -18,9 +18,11 @@ package com.beintoo.beintoosdkutility;
 public class BeintooSdkParams {
 	public static String apiUrl = "https://api.beintoo.com/api/rest/";
 	public static String sandboxUrl = "https://sandbox-elb.beintoo.com/api/rest/";
+	public static String displayUrl = "https://display.beintoo.com/api/rest/";
+	public static String displaySandboxUrl = "https://display-sand.beintoo.com/api/rest/";
 	public static String webUrl = "http://www.beintoo.com/";
 	public static String sandboxWebUrl = "http://sandbox.beintoo.com/";	
 	public static boolean useSandbox = false;
 	public static boolean internalSandbox = false;
-	public static String version = "2.10.7beta-android";
+	public static String version = "2.11.0beta-android";
 }

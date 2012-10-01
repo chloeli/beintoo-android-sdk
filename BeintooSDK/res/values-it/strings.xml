@@ -123,8 +123,8 @@
     <string name="earnedBalance">Il tuo punteggio totale é: %d</string>
     <string name="earnedScore">Hai guadagnato %d punti.\u0020</string>
     <string name="earnedMultiScore">Hai guadagnato punteggi multipli:\u0020 %s</string>
-    <string name="giveBedollarsEarned">Hai appena guadagnato %d Bedollars!\nUsali per ottenere esclusive offerte su Beintoo</string>
-    <string name="giveBedollarsEarned_s">Hai appena guadagnato %d Bedollar!\nUsa i tuoi Bedollar per ottenere esclusive offerte su Beintoo</string>
+    <string name="giveBedollarsEarned">Hai appena guadagnato %s Bedollars!\nUsali per ottenere esclusive offerte su Beintoo</string>
+    <string name="giveBedollarsEarned_s">Hai appena guadagnato %s Bedollar!\nUsa i tuoi Bedollar per ottenere esclusive offerte su Beintoo</string>
     
     <!-- BOXES -->
     <string name="boxWallet">I tuoi premi</string>

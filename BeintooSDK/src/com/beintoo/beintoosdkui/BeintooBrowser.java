@@ -25,11 +25,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.GeolocationPermissions.Callback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.GeolocationPermissions.Callback;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -38,8 +38,12 @@ import android.widget.Toast;
 
 import com.beintoo.R;
 import com.beintoo.beintoosdkutility.BDrawableGradient;
+import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DebugUtility;
+import com.beintoo.beintoosdkutility.PreferencesHandler;
 import com.beintoo.main.managers.LocationMManager;
+import com.beintoo.wrappers.Player;
+import com.google.beintoogson.Gson;
 
 
 public class BeintooBrowser extends Dialog implements android.webkit.GeolocationPermissions.Callback{
@@ -61,6 +65,7 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 		
 		webview = (WebView) findViewById(R.id.webview);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);		
+		webview.addJavascriptInterface(new BeintooJavaScriptInterface(getContext()), "Beintoo");
 		
 		WebSettings ws = webview.getSettings();
 		ws.setJavaScriptEnabled(true);
@@ -187,6 +192,21 @@ public class BeintooBrowser extends Dialog implements android.webkit.Geolocation
 	    cookieSyncMngr.stopSync();	    
 	}
 
+	public class BeintooJavaScriptInterface {
+	    Context mContext; 
+
+	    BeintooJavaScriptInterface(Context c) {
+	        mContext = c;
+	    }
+
+	    public void setPlayer(String player) {	    
+	    	DebugUtility.showLog("User logged in from webview: "+player);
+	    	Player p = new Gson().fromJson(player, Player.class);
+	    	Current.setCurrentPlayer(mContext, p);
+	    	PreferencesHandler.saveBool("isLogged", true, getContext());
+	    }
+	}
+	
 	public void invoke(String origin, boolean allow, boolean remember) {
 		// TODO Auto-generated method stub
 		

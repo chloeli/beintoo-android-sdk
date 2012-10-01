@@ -21,14 +21,14 @@ import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.UUID;
 
-import com.beintoo.beintoosdk.DeveloperConfiguration;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
+
+import com.beintoo.beintoosdk.DeveloperConfiguration;
 
 
 public class DeviceId {
@@ -158,5 +158,15 @@ public class DeviceId {
 		}
 		
 		return macAddress;
+	}
+	
+	public static String getNetworkOperator (Context context){
+		try {
+			final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			return tm.getNetworkOperator();
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

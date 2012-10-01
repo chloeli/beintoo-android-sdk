@@ -32,7 +32,7 @@ public class CustomFonts {
 				else
 					fontFile = new File(context.getCacheDir(),".beintoo/fonts/"+fontName);					
 			}
-			System.out.println(fontFile);
+			
 			Typeface font = Typeface.createFromFile(fontFile); 
 			
 			return font;

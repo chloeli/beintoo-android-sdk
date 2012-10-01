@@ -10,11 +10,11 @@ import android.net.Uri;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.GeolocationPermissions.Callback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.GeolocationPermissions.Callback;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -181,6 +181,7 @@ public class Marketplace extends Dialog implements android.webkit.GeolocationPer
 	    }
 
 	    public void setPlayer(String player) {
+	    	DebugUtility.showLog("User logged in from webview: "+player);
 	    	Player p = new Gson().fromJson(player, Player.class);
 	    	Current.setCurrentPlayer(mContext, p);
 	    	PreferencesHandler.saveBool("isLogged", true, getContext());
