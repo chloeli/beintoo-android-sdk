@@ -45,7 +45,7 @@ public class PlayerManager {
 		currentContext = ctx;
 	}
 	
-	public void playerLogin(final Context ctx, final String guid, final BPlayerLoginListener listener){
+	public void playerLogin(final Context ctx, final String guid, final Boolean showNotification, final Integer notificationGravity, final BPlayerLoginListener listener){
 		SerialExecutor executor = SerialExecutor.getInstance();
 		executor.execute(new Runnable(){     					
     		public void run(){
@@ -100,19 +100,24 @@ public class PlayerManager {
 		        				Bundle b = new Bundle();
 		        				Integer unread = null;
 		        				if(loginPlayer.getUnreadNotification() != null)
-		        					unread = loginPlayer.getUnreadNotification();        				
-		        				String message = ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname();
-		        				if(unread > 0) {
-		        					if(unread == 1)
-		        						message = message +"\n"+String.format(ctx.getString(R.string.messagenotification), unread);
-		        					else
-		        						message = message +"\n"+String.format(ctx.getString(R.string.messagenotificationp), unread);
+		        					unread = loginPlayer.getUnreadNotification();        
+		        				if((showNotification != null && showNotification) || unread > 0){
+			        				String message = ctx.getString(R.string.homeWelcome)+loginPlayer.getUser().getNickname();
+			        				if(unread > 0) {
+			        					if(unread == 1)
+			        						message = message +"\n"+String.format(ctx.getString(R.string.messagenotification), unread);
+			        					else
+			        						message = message +"\n"+String.format(ctx.getString(R.string.messagenotificationp), unread);
+			        				}
+			    					b.putString("Message", message);
+			    					if(notificationGravity != null)
+			    						b.putInt("Gravity", notificationGravity);
+			    					else
+			    						b.putInt("Gravity", Gravity.BOTTOM);
+			    					msg.setData(b);
+			    					msg.what = Beintoo.LOGIN_MESSAGE;
+			    					Beintoo.UIhandler.sendMessage(msg);
 		        				}
-		    					b.putString("Message", message);
-		    					b.putInt("Gravity", Gravity.BOTTOM);
-		    					msg.setData(b);
-		    					msg.what = Beintoo.LOGIN_MESSAGE;
-		    					Beintoo.UIhandler.sendMessage(msg);
 		    				}
 	    				}catch (Exception e){e.printStackTrace(); Beintoo.LAST_LOGIN = new AtomicLong(0);}
 	    				

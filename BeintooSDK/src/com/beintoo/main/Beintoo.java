@@ -52,6 +52,7 @@ import com.beintoo.main.managers.GetVgoodManager;
 import com.beintoo.main.managers.PlayerManager;
 import com.beintoo.main.managers.SubmitScoreManager;
 import com.beintoo.main.managers.UserManager;
+import com.beintoo.vgood.BeintooAdDialogHTML;
 import com.beintoo.vgood.BeintooRecomBanner;
 import com.beintoo.vgood.BeintooRecomBannerHTML;
 import com.beintoo.vgood.BeintooRecomDialog;
@@ -85,6 +86,9 @@ public class Beintoo{
 	public final static int GET_RECOMM_BANNER_HTML = 12;
 	public static final int GO_REG = 13;
 	public static final int USER_SEL = 14;
+	public static final int REQUEST_AND_DISPLAY_AD = 15;
+	public static final int REQUEST_AD = 16;	
+	public static final int DISPLAY_AD = 17;	
 	
 	public static int VGOOD_NOTIFICATION_BANNER = 1; 
 	public static int VGOOD_NOTIFICATION_ALERT = 2;
@@ -92,7 +96,10 @@ public class Beintoo{
 	
 	public static Vgood vgood = null;
 	public static VgoodChooseOne vgoodlist = null;
+	public static Vgood ad = null;
+	public static VgoodChooseOne adlist = null;
 	public static BGetVgoodListener gvl = null;
+	public static BDisplayAdListener bdal = null;
 	private final static int TRY_DIALOG_POPUP = 5;
 	
 	public static Dialog currentDialog = null;
@@ -122,6 +129,9 @@ public class Beintoo{
 	public static Map<String, String> virtualCurrencyData = null;
 	
 	public static int CONNECTION_ERRORS = 0;
+	
+	private static BeintooAdDialogHTML beintooAdDialog;
+	public static boolean adIsReady = false;
 	
 	/**
 	 * Set the developer apikey
@@ -311,32 +321,42 @@ public class Beintoo{
 		GetVgood(ctx, null, isMultiple, container, notificationType, null);
 	}
 	
-//	public static void getSpecialReward(Context ctx, String developerUserGuid, final BGetVgoodListener listener){
-//		currentContext = ctx;			
-//		gvl = listener;
-//		GetVgoodManager gvm = new GetVgoodManager(ctx);
-//		gvm.GetSpecialReward(developerUserGuid, listener);
-//	}
-//	
-//	public static void getSpecialReward(Context ctx, String developerUserGuid){
-//		getSpecialReward(ctx, developerUserGuid, null);
-//	}
-	
 	/** 
 	 * Send a Banner to the user it runs in background on a thread. 
 	 * It retrieves the user location used to find a banner in nearby 
 	 */
-	public static void requestAndDisplayAd(final Context ctx, final String developmentUserGuid, final String codeID, final BGetVgoodListener listener){		
+	public static void requestAndDisplayAd(final Context ctx, final String developerUserGuid, final String codeID, final BDisplayAdListener listener){		
 		currentContext = ctx;			
-		gvl = listener;
+		bdal = listener;
+		adIsReady = false;
 		GetVgoodManager gvm = new GetVgoodManager(ctx);		
-        gvm.requestAndDisplayAd(developmentUserGuid, codeID, listener);
+        gvm.requestAd(developerUserGuid, codeID, true, listener);
 	}
 	
-	public static void requestAndDisplayAd(final Context ctx, final String developmentUserGuid, final String codeID){
-		requestAndDisplayAd(ctx, developmentUserGuid, codeID, null);
+	public static void requestAndDisplayAd(final Context ctx, final String developerUserGuid, final String codeID){
+		requestAndDisplayAd(ctx, developerUserGuid, codeID, null);
 	}
-		
+	
+	public static void requestAd(final Context ctx, final String developerUserGuid, final String codeID, final BDisplayAdListener listener){		
+		currentContext = ctx;			
+		bdal = listener;
+		adIsReady = false;
+		GetVgoodManager gvm = new GetVgoodManager(ctx);		
+        gvm.requestAd(developerUserGuid, codeID, false, listener);
+	}
+	
+	public static void displayAd(){
+		Beintoo.UIhandler.sendEmptyMessage(Beintoo.DISPLAY_AD);
+	}
+	
+	public static boolean isAdReady(){
+		return Beintoo.adIsReady;
+	}
+	
+	public static void setAdListener(BDisplayAdListener listener){
+		bdal = listener;
+	}
+	
 	/**
 	 * Check if the user is eligible for a new virtual good
 	 * 
@@ -368,18 +388,22 @@ public class Beintoo{
 	 *  
 	 * @param ctx current Context
 	 */		
-	public static void playerLogin(final Context ctx, String guid, final BPlayerLoginListener listener){
+	public static void playerLogin(final Context ctx, String guid, final Boolean showNotification, final Integer notificationGravity, final BPlayerLoginListener listener){
 		currentContext = ctx;	
 		PlayerManager pm = new PlayerManager(ctx);
-		pm.playerLogin(ctx, guid, listener);
+		pm.playerLogin(ctx, guid, showNotification, notificationGravity, listener);
+	}
+	
+	public static void playerLogin(final Context ctx, String guid, final BPlayerLoginListener listener){
+		playerLogin(ctx, guid, true, Gravity.BOTTOM, listener);
 	}
 	
 	public static void playerLogin(final Context ctx, final BPlayerLoginListener listener){		
-		playerLogin(ctx, null, listener);
+		playerLogin(ctx, null, true, Gravity.BOTTOM, listener);
 	}
 	
 	public static void playerLogin(final Context ctx){
-		playerLogin(ctx, null, null);
+		playerLogin(ctx, null, true, Gravity.BOTTOM, null);
 	}
 	
 	/**
@@ -557,12 +581,16 @@ public class Beintoo{
 	 * @param ctx
 	 * @param amount is one of GIVE_BEDOLLARS_1 GIVE_BEDOLLARS_2 GIVE_BEDOLLARS_5
 	 */
-	public static void giveBedollars(final Context ctx, final Double amount, final boolean showNotification, final BGiveBedollarsListener callback){
-		new AppManager().giveBedollars(ctx, amount, showNotification, callback);
+	public static void giveBedollars(final Context ctx, final Double amount, final Boolean showNotification, final Integer notificationGravity, final BGiveBedollarsListener callback){
+		new AppManager().giveBedollars(ctx, amount, showNotification, notificationGravity, callback);
 	}
 	
-	public static void giveBedollars(final Context ctx, final Double amount, final boolean showNotification){
-		giveBedollars(ctx, amount, showNotification, null);
+	public static void giveBedollars(final Context ctx, final Double amount, final boolean showNotification, final int notificationGravity){
+		giveBedollars(ctx, amount, showNotification, notificationGravity, null);
+	}
+	
+	public static void giveBedollars(final Context ctx, final Double amount){
+		giveBedollars(ctx, amount, true, Gravity.BOTTOM, null);
 	}
 	
 	/** 
@@ -738,6 +766,21 @@ public class Beintoo{
 	            	BeintooRecomDialogHTML brah = new BeintooRecomDialogHTML(currentContext,vgoodlist,gvl);
 	            	brah.loadAlert();
 	            break;
+	            case REQUEST_AND_DISPLAY_AD:	            	
+	            	beintooAdDialog = new BeintooAdDialogHTML(currentContext, adlist, bdal);
+	            	beintooAdDialog.hasShownDialog = false;
+	            	beintooAdDialog.loadAlert();
+	            break;
+	            case REQUEST_AD:	            	
+	            	beintooAdDialog = new BeintooAdDialogHTML(currentContext, adlist, bdal);
+	            	beintooAdDialog.hasShownDialog = true;
+	            	beintooAdDialog.loadAlert();
+	            break;
+	            case DISPLAY_AD:
+	            	if(beintooAdDialog != null && adlist != null && ad != null){
+	            		beintooAdDialog.UIhandler.sendEmptyMessage(beintooAdDialog.SHOW_DIALOG);
+	            	}
+	            break;
 	            case UPDATE_USER_AGENT:
 	            	getUA();
 	            break;
@@ -804,6 +847,16 @@ public class Beintoo{
 		 public void onComplete(VgoodChooseOne v);
 		 public void isOverQuota();
 		 public void nothingToDispatch();
+		 public void onError();
+	}
+	
+	/** 
+	 *  Listener for getVgood callback
+	 */	
+	public static interface BDisplayAdListener {
+		 public void onAdDisplay();
+		 public void onAdFetched();
+		 public void onNoAd();
 		 public void onError();
 	}
 	

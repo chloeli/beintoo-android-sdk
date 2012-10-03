@@ -19,7 +19,8 @@ import com.beintoo.wrappers.UserCredit;
 public class AppManager {
 	private static AtomicLong LAST_OPERATION = new AtomicLong(0);
 	private long OPERATION_TIMEOUT = 2000;
-	public void giveBedollars(final Context ctx, final Double amount, final boolean showNotification, final BGiveBedollarsListener callback) {
+	public void giveBedollars(final Context ctx, final Double amount, final Boolean showNotification, final Integer notificationGravity,
+			final BGiveBedollarsListener callback) {
 		SerialExecutor executor = SerialExecutor.getInstance();
 		executor.execute(new Runnable() {
 			public void run() {
@@ -32,7 +33,7 @@ public class AppManager {
 						if(u != null){
 							BeintooApp ba = new BeintooApp();
 							UserCredit uc = ba.giveBedollars(u.getId(), amount);
-							if(showNotification){
+							if(showNotification != null && showNotification){
 								if(uc != null && uc.getValue() > 0){
 									final Message msg = new Message();
 									Bundle b = new Bundle();
@@ -44,7 +45,10 @@ public class AppManager {
 									}
 																	
 									b.putString("Message", message);
-									b.putInt("Gravity", Gravity.BOTTOM);
+									if(notificationGravity != null)
+			    						b.putInt("Gravity", notificationGravity);
+			    					else
+			    						b.putInt("Gravity", Gravity.BOTTOM);
 									
 									msg.setData(b);
 									msg.what = Beintoo.SUBMITSCORE_POPUP;

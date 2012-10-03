@@ -18,6 +18,10 @@ package com.beintoo.main.managers;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import android.content.Context;
+import android.location.Location;
+import android.os.Bundle;
+
 import com.beintoo.R;
 import com.beintoo.activities.mission.MissionAchievementMessage;
 import com.beintoo.activities.mission.MissionDialog;
@@ -33,10 +37,6 @@ import com.beintoo.wrappers.Mission;
 import com.beintoo.wrappers.Player;
 import com.beintoo.wrappers.PlayerAchievement;
 import com.beintoo.wrappers.PlayerAchievementContainer;
-
-import android.content.Context;
-import android.location.Location;
-import android.os.Bundle;
 
 public class AchievementManager {
 	

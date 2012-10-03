@@ -30,6 +30,7 @@ import com.beintoo.beintoosdkutility.Current;
 import com.beintoo.beintoosdkutility.DeviceId;
 import com.beintoo.beintoosdkutility.SerialExecutor;
 import com.beintoo.main.Beintoo;
+import com.beintoo.main.Beintoo.BDisplayAdListener;
 import com.beintoo.main.Beintoo.BEligibleVgoodListener;
 import com.beintoo.main.Beintoo.BGetVgoodListener;
 import com.beintoo.main.Beintoo.BIsRewardCoveredListener;
@@ -266,25 +267,26 @@ public class GetVgoodManager {
 	}
 	
 	
-	public void requestAndDisplayAd(final String developerUserGuid, final String codeID, final BGetVgoodListener listener){
+	public void requestAd(final String developerUserGuid, final String codeID, final boolean display, final BDisplayAdListener listener){
 		SerialExecutor executor = SerialExecutor.getInstance();	
 		executor.execute(new Runnable(){     					
     		public void run(){
     			try{    				
-    				final Player currentPlayer = Current.getCurrentPlayer(currentContext);	    				
-					if(currentPlayer.getGuid() == null) return;
-					
+    				final Player currentPlayer = Current.getCurrentPlayer(currentContext);
+    				String guid = null;
+    				if(currentPlayer != null)
+    					guid = currentPlayer.getGuid();
 					Long currentTime = System.currentTimeMillis();
 					Location l = LocationMManager.getSavedPlayerLocation(currentContext);
 		        	if(l != null){
 		        		if((currentTime - l.getTime()) <= 900000){ // TEST 20000 (20 seconds)
-		        			getAdHelper(developerUserGuid, codeID, currentPlayer, l, listener);
+		        			getAdHelper(developerUserGuid, codeID, guid, l, display, listener);
 		        		}else {	        		
-		        			getAdHelper(developerUserGuid, codeID, currentPlayer, null, listener);
+		        			getAdHelper(developerUserGuid, codeID, guid, null, display, listener);
 		    				LocationMManager.savePlayerLocation(currentContext);
 		        		}
 		        	}else{
-		        		getAdHelper(developerUserGuid, codeID, currentPlayer, null, listener);
+		        		getAdHelper(developerUserGuid, codeID, guid, null, display, listener);
 		        		LocationMManager.savePlayerLocation(currentContext);
 		        	}
     			}catch(Exception e){
@@ -294,18 +296,18 @@ public class GetVgoodManager {
     	});
 	}
 	
-	private void getAdHelper(final String developerUserGuid, final String codeID, final Player currentPlayer, final Location l, final BGetVgoodListener listener){
+	private void getAdHelper(final String developerUserGuid, final String codeID, final String guid, final Location l, 
+			final boolean displayAd, final BDisplayAdListener listener){
 		synchronized (LAST_OPERATION){
 			try {					
 				if(System.currentTimeMillis() < LAST_OPERATION.get() + OPERATION_TIMEOUT)
 					return;
 				
-				Beintoo.gvl = listener;
 				final BeintooDisplay display = new BeintooDisplay();
 				
 				 // ASSIGN A LIST OF VGOOD TO THE PLAYER
 	    		if(l != null){ 	    			
-	    			Beintoo.vgood = display.getAd(currentPlayer.getGuid(), 
+	    			Beintoo.ad = display.getAd(guid, 
 	    					DeviceId.getUniqueDeviceId(currentContext),
 	    					DeviceId.getImei(currentContext), 
 	    					DeviceId.getMACAddress(currentContext),
@@ -313,7 +315,7 @@ public class GetVgoodManager {
 	    					codeID, Double.toString(l.getLatitude()), 
 	    					Double.toString(l.getLongitude()), Double.toString(l.getAccuracy()), developerUserGuid);
 	    		}else {
-	    			Beintoo.vgood = display.getAd(currentPlayer.getGuid(), 
+	    			Beintoo.ad = display.getAd(guid, 
 	    					DeviceId.getUniqueDeviceId(currentContext),
 	    					DeviceId.getImei(currentContext), 
 	    					DeviceId.getMACAddress(currentContext),
@@ -322,30 +324,20 @@ public class GetVgoodManager {
 	    		}
 	    		
 	    		List<Vgood> list = new ArrayList<Vgood>();
-		    	list.add(Beintoo.vgood);
+		    	list.add(Beintoo.ad);
 		    	VgoodChooseOne v = new VgoodChooseOne(list);	    				    	
-		    	Beintoo.vgoodlist = v;
+		    	Beintoo.adlist = v;
 	    		
-		    	if(Beintoo.vgood != null){
-		    		Beintoo.UIhandler.sendEmptyMessage(Beintoo.GET_RECOMM_ALERT_HTML);
+		    	if(Beintoo.ad != null){		    		
+		    		if(displayAd)
+		    			Beintoo.UIhandler.sendEmptyMessage(Beintoo.REQUEST_AND_DISPLAY_AD);
+		    		else
+		    			Beintoo.UIhandler.sendEmptyMessage(Beintoo.REQUEST_AD);
 		    	}else{
 		    		if(listener != null)
-						listener.nothingToDispatch();
+						listener.onNoAd();
 		    	}			    
 				LAST_OPERATION.set(System.currentTimeMillis());			
-			}catch(ApiCallException e){	
-				try {
-					if(e.getId() == -11){
-						if(listener != null)
-							listener.isOverQuota();
-					}else if(e.getId() == -10 || e.getId() == -21){
-						if(listener != null)
-							listener.nothingToDispatch();
-					}else{
-						if(listener != null)
-							listener.onError();
-					}					 
-				}catch (Exception ex){ if(listener!= null) listener.onError(); }
 			}catch(Exception e){
 				if(listener != null)
 					listener.onError();

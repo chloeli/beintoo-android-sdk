@@ -15,8 +15,6 @@
  ******************************************************************************/
 package com.beintoo.beintoosdkutility;
 
-import com.beintoo.R; 
-
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -32,6 +30,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.beintoo.R;
 
 public class MessageDisplayer{
 	static Dialog toast = null;
@@ -93,40 +93,7 @@ public class MessageDisplayer{
 	 };
 	
 	 private static int getDelay(Integer lenght){
-		 if(wM.getDefaultDisplay().getWidth() < wM.getDefaultDisplay().getHeight())			 
-			 if(lenght < 40)
-				 return 3000;
-			 else if(lenght >=40 && lenght < 60)
-				 return 6000;
-			 else if(lenght >=60 && lenght < 80)
-				 return 8000;
-			 else if(lenght >=80 && lenght < 100)
-				 return 9000;
-			 else if(lenght >=100 && lenght < 120)
-				 return 12000;
-			 else if(lenght >=120 && lenght < 140)
-				 return 16000;
-			 else if(lenght >=140 && lenght < 160)
-				 return 19000;
-			 else if(lenght >=160 && lenght < 180)
-				 return 24000;
-			 else
-				 return 41000; 
-		 else
-			 if(lenght < 60)
-				 return 3000;
-			 else if(lenght >=60 && lenght <80)
-				 return 6000;
-			 else if(lenght >=80 && lenght <100)
-				 return 8000;
-			 else if(lenght >=100 && lenght <120)
-				 return 11000;
-			 else if(lenght >=120 && lenght <140)
-				 return 16000;
-			 else if(lenght >=140 && lenght <160)
-				 return 20000;
-			 else 
-				 return 25000;
+		 return 3000;
 	 }
 	 
 	@SuppressWarnings("unused")
