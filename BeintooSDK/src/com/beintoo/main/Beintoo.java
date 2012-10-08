@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -52,7 +53,7 @@ import com.beintoo.main.managers.GetVgoodManager;
 import com.beintoo.main.managers.PlayerManager;
 import com.beintoo.main.managers.SubmitScoreManager;
 import com.beintoo.main.managers.UserManager;
-import com.beintoo.vgood.BeintooAdDialogHTML;
+import com.beintoo.vgood.BeintooAdInterstitial;
 import com.beintoo.vgood.BeintooRecomBanner;
 import com.beintoo.vgood.BeintooRecomBannerHTML;
 import com.beintoo.vgood.BeintooRecomDialog;
@@ -130,7 +131,7 @@ public class Beintoo{
 	
 	public static int CONNECTION_ERRORS = 0;
 	
-	private static BeintooAdDialogHTML beintooAdDialog;
+	private static BeintooAdInterstitial beintooAdDialog;
 	public static boolean adIsReady = false;
 	
 	/**
@@ -767,18 +768,15 @@ public class Beintoo{
 	            	brah.loadAlert();
 	            break;
 	            case REQUEST_AND_DISPLAY_AD:	            	
-	            	beintooAdDialog = new BeintooAdDialogHTML(currentContext, adlist, bdal);
-	            	beintooAdDialog.hasShownDialog = false;
-	            	beintooAdDialog.loadAlert();
+	            	currentContext.startActivity(new Intent(currentContext, BeintooAdInterstitial.class));
 	            break;
-	            case REQUEST_AD:	            	
-	            	beintooAdDialog = new BeintooAdDialogHTML(currentContext, adlist, bdal);
-	            	beintooAdDialog.hasShownDialog = true;
-	            	beintooAdDialog.loadAlert();
+	            case REQUEST_AD:
 	            break;
 	            case DISPLAY_AD:
-	            	if(beintooAdDialog != null && adlist != null && ad != null){
-	            		beintooAdDialog.UIhandler.sendEmptyMessage(beintooAdDialog.SHOW_DIALOG);
+	            	if(adlist != null && ad != null && isAdReady()){
+	            		currentContext.startActivity(new Intent(currentContext, BeintooAdInterstitial.class));
+	            	}else{
+	            		DebugUtility.showLog("Ad is not ready, have you called requestAd()?");
 	            	}
 	            break;
 	            case UPDATE_USER_AGENT:

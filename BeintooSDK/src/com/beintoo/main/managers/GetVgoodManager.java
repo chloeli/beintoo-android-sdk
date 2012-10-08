@@ -328,11 +328,12 @@ public class GetVgoodManager {
 		    	VgoodChooseOne v = new VgoodChooseOne(list);	    				    	
 		    	Beintoo.adlist = v;
 	    		
-		    	if(Beintoo.ad != null){		    		
+		    	if(Beintoo.ad != null){
+		    		Beintoo.adIsReady = true;
+		    		if(listener != null)
+		    			listener.onAdFetched();
 		    		if(displayAd)
-		    			Beintoo.UIhandler.sendEmptyMessage(Beintoo.REQUEST_AND_DISPLAY_AD);
-		    		else
-		    			Beintoo.UIhandler.sendEmptyMessage(Beintoo.REQUEST_AD);
+		    			Beintoo.UIhandler.sendEmptyMessage(Beintoo.REQUEST_AND_DISPLAY_AD);		    		
 		    	}else{
 		    		if(listener != null)
 						listener.onNoAd();
