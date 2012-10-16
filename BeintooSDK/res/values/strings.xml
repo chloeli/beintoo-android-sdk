@@ -99,6 +99,7 @@
     <string name="profileDetach">Remove account from device</string>
 	<string name="profileOf">%s Profile</string>
 	<string name="password">Password</string>
+	<string name="email">Email</string>
     <string name="logout">Logout</string>
     
     <string name="vgoodWhoAlso">Who also purchased</string>
@@ -156,6 +157,7 @@
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    
     
     <!-- HOME -->
     <string name="profile">Profile</string>

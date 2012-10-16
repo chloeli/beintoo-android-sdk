@@ -43,28 +43,11 @@ public class BeintooAdInterstitial extends Activity{
 	public boolean hasShownDialog = false;
 	private BDisplayAdListener badl;
 	
-	/*public BeintooAdDialogHTML(Context context, VgoodChooseOne v, BDisplayAdListener listener) {
-		super(context, R.style.ThemeBeintooVgoodFullScreen);
-		this.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        
-		mContext = context;
-		vgood = v;
-		current = this;
-		badl = listener;
-		
-		webview = new WebView(mContext);
-		webview.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
-		webview.setBackgroundColor(Color.TRANSPARENT);
-		webview.getSettings().setJavaScriptEnabled(true);
-		webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-		this.setContentView(webview);
-	    getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-	}*/
-	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate(Bundle savedInstanceState) {		
+		super.onCreate(savedInstanceState);		
 		this.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+				
 		vgood = Beintoo.adlist;
 		badl = Beintoo.bdal;
 		mContext = this;
@@ -74,8 +57,8 @@ public class BeintooAdInterstitial extends Activity{
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 		this.setContentView(webview);
-	    getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 	    loadAlert();
+	    getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 	}
 	
 	public void loadAlert(){
@@ -132,7 +115,6 @@ public class BeintooAdInterstitial extends Activity{
 							DebugUtility.showLog(""+message);
 							super.onConsoleMessage(message, lineNumber, sourceID);
 						}
-						
 					});
 					
 					webview.setOnTouchListener(new View.OnTouchListener() {						
@@ -140,8 +122,7 @@ public class BeintooAdInterstitial extends Activity{
 					      return (event.getAction() == MotionEvent.ACTION_MOVE);
 					    }
 					});
-						
-					webview.loadDataWithBaseURL(null, vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "UTF-8", null);					
+					webview.loadDataWithBaseURL(null, vgood.getVgoods().get(0).getContent(), vgood.getVgoods().get(0).getContentType(), "UTF-8", null);
 				}catch (Exception e){if(DebugUtility.isDebugEnable) e.printStackTrace();}
 			} 
 		}).start();		
@@ -154,4 +135,10 @@ public class BeintooAdInterstitial extends Activity{
 			  badl.onAdDisplay();
 		  Beintoo.adIsReady = false;
 	}
+
+	@Override
+	protected void onDestroy() {
+		DebugUtility.showLog("DESTROYED");
+		super.onDestroy();
+	}	
 }

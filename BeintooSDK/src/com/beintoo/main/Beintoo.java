@@ -101,6 +101,7 @@ public class Beintoo{
 	public static VgoodChooseOne adlist = null;
 	public static BGetVgoodListener gvl = null;
 	public static BDisplayAdListener bdal = null;
+	public static boolean adIsReady = false;
 	private final static int TRY_DIALOG_POPUP = 5;
 	
 	public static Dialog currentDialog = null;
@@ -131,8 +132,7 @@ public class Beintoo{
 	
 	public static int CONNECTION_ERRORS = 0;
 	
-	private static BeintooAdInterstitial beintooAdDialog;
-	public static boolean adIsReady = false;
+	
 	
 	/**
 	 * Set the developer apikey

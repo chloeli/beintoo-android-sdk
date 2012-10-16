@@ -31,7 +31,7 @@
 			android:layout_width="fill_parent" android:background="#dadfe2"
 			android:paddingTop="0dip" android:layout_marginTop="0dip">
 			<EditText android:id="@+id/mail" android:layout_width="fill_parent"
-				android:hint="Email" android:layout_height="wrap_content"
+				android:hint="@string/email" android:layout_height="wrap_content"
 				android:singleLine="true"
 				android:maxLines="1" android:lines="1" android:nextFocusDown="@+id/password"
 				android:imeOptions="actionNext"></EditText>

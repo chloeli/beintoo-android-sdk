@@ -39,7 +39,7 @@
 						android:layout_height="wrap_content" android:text="Nickname"
 						android:textColor="#000000" />
 					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:text="Alliance"
+						android:layout_height="wrap_content" 
 						android:id="@+id/alliance" android:textColor="#878485"></TextView>
 					<TextView android:id="@+id/level" android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:text="Level"
@@ -105,8 +105,8 @@
 						android:paddingBottom="0dip" android:paddingTop="0dip"
 						android:background="@drawable/button_rollover"
 						android:layout_height="wrap_content" android:layout_width="wrap_content" />
-					<TextView android:id="@+id/alli" android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:text="@string/alliance"
+					<TextView android:id="@+id/alli" android:layout_width="wrap_content"					    
+						android:layout_height="wrap_content" android:text="@string/alliances"
 						android:textColor="#FFFFFF" android:textSize="12dip" />
 				</LinearLayout>
 
