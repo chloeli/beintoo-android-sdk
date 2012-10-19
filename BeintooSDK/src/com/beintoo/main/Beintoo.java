@@ -132,8 +132,6 @@ public class Beintoo{
 	
 	public static int CONNECTION_ERRORS = 0;
 	
-	
-	
 	/**
 	 * Set the developer apikey
 	 * 
@@ -330,6 +328,8 @@ public class Beintoo{
 		currentContext = ctx;			
 		bdal = listener;
 		adIsReady = false;
+		ad = null;
+		adlist = null;
 		GetVgoodManager gvm = new GetVgoodManager(ctx);		
         gvm.requestAd(developerUserGuid, codeID, true, listener);
 	}
@@ -342,6 +342,8 @@ public class Beintoo{
 		currentContext = ctx;			
 		bdal = listener;
 		adIsReady = false;
+		ad = null;
+		adlist = null;
 		GetVgoodManager gvm = new GetVgoodManager(ctx);		
         gvm.requestAd(developerUserGuid, codeID, false, listener);
 	}

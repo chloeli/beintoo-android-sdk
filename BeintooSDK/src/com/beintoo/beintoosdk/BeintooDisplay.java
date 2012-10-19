@@ -66,7 +66,7 @@ public class BeintooDisplay {
 		
 		BeintooConnection conn = new BeintooConnection();
 		String json = conn.httpRequest(apiUrl, header, null);
-		
+				
 		Vgood vgoods = new Gson().fromJson(json, Vgood.class);
 		
 		return vgoods;

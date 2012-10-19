@@ -327,8 +327,8 @@ public class GetVgoodManager {
 		    	list.add(Beintoo.ad);
 		    	VgoodChooseOne v = new VgoodChooseOne(list);	    				    	
 		    	Beintoo.adlist = v;
-	    		
-		    	if(Beintoo.ad != null){
+	        	
+		    	if(Beintoo.ad != null && Beintoo.ad.getContent() != null){
 		    		Beintoo.adIsReady = true;
 		    		if(listener != null)
 		    			listener.onAdFetched();

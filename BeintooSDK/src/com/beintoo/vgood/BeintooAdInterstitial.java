@@ -56,17 +56,26 @@ public class BeintooAdInterstitial extends Activity{
 		webview.setBackgroundColor(Color.TRANSPARENT);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-		this.setContentView(webview);
+		webview.getSettings().setPluginsEnabled(true);
+		
+		disableScrollingAndZoom();
+		this.setContentView(webview);		
 	    loadAlert();
-	    getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+	    getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);	    
 	}
+	
+	private void disableScrollingAndZoom() {
+		webview.setHorizontalScrollBarEnabled(false);
+		webview.setHorizontalScrollbarOverlay(false);
+		webview.setVerticalScrollBarEnabled(false);
+		webview.setVerticalScrollbarOverlay(false);
+		webview.getSettings().setSupportZoom(false);
+    }
 	
 	public void loadAlert(){
 		new Thread(new Runnable(){     					
 			public void run(){ 
 				try{
-					webview.setVerticalScrollBarEnabled(false);
-					webview.setHorizontalScrollBarEnabled(false);
 					webview.setWebViewClient(new WebViewClient() {						
 					    @Override
 						public void onLoadResource(WebView view, String url) {
